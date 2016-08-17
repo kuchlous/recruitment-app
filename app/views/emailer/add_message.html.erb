@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+  <% link = "<a href=#{url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @mesg.resume.uniqid.name)}>#{@mesg.resume.name}</a>" %>
+  <p> Hi <%= @emp_to.name %>, </p>
+  <p> <%= @emp_from.name %> has sent a message to you related to the resume <%= link %>. </p>
+  <p>
+  ============================================================== 
+  </br>
+  <%= @mesg.message %> 
+  </br>
+  ============================================================== 
+  </p>
+  <p>
+  This is a system generated message. Please do not reply to this email. Instead login into
+  the recruitment system. Here is a link to the resume
+  <%= link %>
+  </p>
+  </body>
+</html>
+

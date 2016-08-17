@@ -1,0 +1,31 @@
+--- 
+accounts_001: 
+  name:            Nokia
+  id:              1
+  acc_manager_id:  1
+  status:          ACTIVE
+accounts_002: 
+  name:            Qualcomm
+  id:              2
+  acc_manager_id:  2
+  status:          ACTIVE
+accounts_003: 
+  name:            Broadcomm
+  id:              3
+  acc_manager_id:  3
+  status:          ACTIVE
+accounts_004: 
+  name:            Cisco
+  id:              4
+  acc_manager_id:  4
+  status:          ACTIVE
+accounts_005: 
+  name:            Xilinx
+  id:              5
+  acc_manager_id:  1
+  status:          ACTIVE
+accounts_006: 
+  name:            Mirafra
+  id:              6
+  acc_manager_id:  11
+  status:          ACTIVE

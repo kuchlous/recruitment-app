@@ -1,0 +1,277 @@
+<div id="resume_details_div" class="common_class">
+  <span class="span_with_13"> 
+    <%= @resume.name %> 
+    <% if is_HR_ADMIN? || is_MANAGER? %> 
+      (Status : <%= @overall_status %>) 
+    <% end %>
+  </span>
+  <div id="resume_actions_div">
+    <% if is_HR_ADMIN? || is_MANAGER? %>
+      <div class="float_right_with_no_padding">
+        <%= link_to "Edit Details", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "edit", :id => @resume.id,:class => "green_color_link", :style => "color: green;" %>
+        <br />
+      </div>
+    <% end %>
+    <table id="send_message_table">
+      <tr>
+        <td id="message_and_download_image">
+          <%= render "download_box", :resume => @resume %>
+          <%= link_to_function image_tag("MailIcon.png"), "showMessageBoxAtTop(event, #{@resume.id})", :title => "Send Message" %>
+        </td>
+      </tr>
+    </table>
+    <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
+        <% unless @resume.status == "FUTURE" %>
+          <% form_tag(:host => "apps.mirafra.com/recruit", :action => "move_to_future" ) do %>
+            <div>
+              <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
+              <%= hidden_field_tag "resume_id", @resume.id %>
+            </div>
+          <% end %>
+        <br /> <br />
+        <% end %>
+        <% if @resume.status == "REJECTED" ||
+              @resume.status == "FUTURE"   ||
+              @resume.status == "NOT JOINED" ||
+              @resume.status == "N_ACCEPTED" ||
+              @resume.status == "JOINED" %>
+          <% form_tag(:host => "apps.mirafra.com/recruit", :action => "mark_active" ) do %>
+            <div>
+              <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
+              <%= hidden_field_tag "resume_id", @resume.id %>
+            </div>
+          <% end %>
+          <br /> <br />
+        <% end %>
+        <% form_tag(:host => "apps.mirafra.com/recruit", :action => "reject_all_forwards_req_matches" ) do %>
+          <div>
+            <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
+            <%= hidden_field_tag "resume_id", @resume.id %>
+          </div>
+        <% end %>
+    <% end %>
+  </div>
+  <form name="form" method="post">
+    <table id="resume_details_table">
+      <% if is_HR_ADMIN? || is_BD? %>
+        <tr>
+          <td> Resume Id </td>
+          <td> <%= @resume.id %> </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td> Phone Number </td>
+        <td> <%= @resume.phone %> </td>
+      </tr>
+      <tr>
+        <td> Email </td>
+        <td> <%= mail_to "#{@resume.email}" %> </td>
+      </tr>
+      <tr>
+        <td> Skype id </td>
+        <td> <%= @resume.skype_id %> </td>
+      </tr>
+      <tr>
+        <td> Qualification </td>
+        <td> <%= @resume.qualification %> </td>
+      </tr>
+      <tr>
+         <td> Experience </td>
+         <td> <%= get_current_experience_string(@resume) %> </td>
+      </tr>
+      <tr>
+        <td> Current Company </td>
+        <td> <%= @resume.current_company %> </td>
+      </tr>
+      <tr>
+        <td> Location </td>
+        <td> <%= @resume.location %> </td>
+      </tr>
+      <% if is_HR_ADMIN? || is_MANAGER? || is_GM? %>
+        <tr>
+          <td> Current CTC </td>
+          <td>
+              <%= @resume.ctc %> Lakhs
+          </td>
+        </tr>
+        <tr>
+          <td> Expected CTC </td>
+          <td>
+              <%= @resume.expected_ctc %> Lakhs
+          </td>
+        </tr>
+      <% end %>
+      <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
+        <tr>
+          <td> Notice Period </td>
+          <td> <%= @resume.notice %> days </td>
+        </tr>
+        <tr>
+          <td> Referral Type </td>
+          <td> <%= @resume.referral_type.titleize %> </td>
+        </tr>
+        <tr>
+          <td> Referral Name </td>
+          <td>
+            <% unless @resume.referral_type == "DIRECT" || @resume.referral_id == 0 %>
+              <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %>
+            <% end %>
+          </td>
+        </tr>
+        <% if @resume.joining_date %>
+          <tr>
+            <td> Joining date  </td>
+            <td> <%= print_date(@resume.joining_date) %> </td>
+          </tr>
+        <% end %>
+        <tr>
+          <td> Resume Summary </td>
+          <td> <%= simple_format @resume.summary %> </td>
+        </tr>
+      <% end %>
+      <tr>
+        <td> Uploaded at </td>
+        <td> <%= print_date_and_time(@resume.created_at) %> </td>
+    </table>
+    <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER?%>
+    <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
+      <br />
+      <span class="span_with_13"> Comments: </span>
+      <br/>
+      <table id="resume_details_comments_table">
+        <% unless @comments.nil? ||
+                  @comments.empty? %>
+          <% @comments.each do |comment| %>
+            <% class_name = cycle('color_line_odd', 'color_line_even') %>
+            <tr class="<%= class_name %>">
+              <td>
+                <span class="span_no_bold"> <%= comment.employee.name + " - " + print_date_and_time_and_year(comment.created_at) %> </span> <br />
+                <span class="span_no_bold left_padding"> <%= simple_format comment.comment %> </span>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <span class="span_with_8"> No comments available. </span>
+        <% end %>
+      </table>
+    
+      <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
+        <br />
+        <span class="span_with_13"> Feedback: </span>
+        <br/>
+        <table id="resume_details_feedback_table">
+          <% unless @feedbacks.nil? ||
+                    @feedbacks.empty? %>
+            <% @feedbacks.each do |feedback| %>
+              <% class_name = cycle('color_line_odd', 'color_line_even') %>
+              <tr class="<%= class_name %>">
+                <td>
+                  <span class="span_no_bold"> By <%= feedback.employee.name + " (" + print_date(feedback.created_at) + ")" %> </span> <br />
+                  <span class="span_no_bold left_padding"> <%= simple_format feedback.feedback %> </span>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <span class="span_with_8"> No feedback available. </span>
+          <% end %>
+        </table> <br />
+      <% end %>
+    
+      <br />
+      <span class="span_with_13"> Messages: </span>
+      <br/>
+      <table id="resume_details_messages_table">
+        <% unless @messages.nil? ||
+                  @messages.empty? %>
+          <% @messages.each do |message| %>
+            <% class_name = cycle('color_line_odd', 'color_line_even') %>
+            <tr class="<%= class_name %>">
+              <td>
+                <span class="span_no_bold">
+                  By - <%= message.sent_by.name %> <br />
+                  To - <%= message.sent_to.name + " (" + print_date(message.created_at) + ")" %>
+                 </span> <br />
+                 <span class="span_no_bold left_padding"> <%= message.message %> </span>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <span class="span_with_8"> No messages available. </span>
+        <% end %>
+      </table> <br />
+    <% end %>
+    <% end %>
+
+    <div id="error_messages_div" class="error_messages_div"> </div>
+    <% if is_HR_ADMIN? %>
+      <br />
+      <table id="resume_list_table">
+        <span class="span_with_13">  Resume Details: </span>
+        <tr class="header_row">
+          <td> Req Name/Forwarded to </td>
+          <td> Req Status   </td>
+          <td> Action   </td>
+        </tr>
+        <% matches  = []
+           matches  = @resume.forwards.find_all { |f|
+             f.status != "ACTION TAKEN"
+           }
+           matches += @resume.req_matches %>
+        <% matches.each do |m| %>
+          <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+            <td>
+              <% if m.is_a?(ReqMatch) %>
+                <%= get_requirement_link_with_mouse_over_and_mouseout(m.requirement) %>
+                <% status = "REQMATCH" %>
+              <% else %>
+                <%= m.forwarded_to.name %> <br />
+                ( <%  m.requirements.each do |r| %>
+                  <%= r.name %>,
+                <% end %> )
+                <% status = "FORWARDED" %>
+              <% end %>
+            </td>
+            <td>
+              <%= m.status.titleize %>
+              <%= "(" + print_date(m.resume.joining_date) + ")" if m.status == "JOINING" %>
+            </td>
+            <td>
+              <%= get_actions_ddl(@resume, m, status) %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    <% elsif is_REQ_MANAGER? %>
+      <span class="span_with_13">  Forwards: </span>
+      <br />
+      <% @status    = "FORWARDED"
+         @forwards  = get_resume_req_matches_of_employee(@resume, @status)
+         unless @forwards.nil? || @forwards.empty?
+           @resumes  = get_forwards_resumes(@forwards)
+           @is_req_match = 0
+           @row_id_prefix = "forwards_show_index" 
+           @after_shortlist_page = false %>
+           <%= render "manager_index" %>
+      <% else %>
+        No Forwards
+      <% end %>
+      <br /> <br />
+  
+  
+      <span class="span_with_13">  Shortlisted: </span>
+      <br />
+      <% @forwards = []
+         @status   = "SHORTLISTED"
+         @forwards = get_resume_req_matches_of_employee(@resume, @status)
+         unless @forwards.nil? || @forwards.empty?
+           @resumes       = get_reqmatches_resumes(@forwards)
+           @is_req_match  = 1
+           @row_id_prefix = "reqmatches_show_index" 
+           @after_shortlist_page = true %>
+           <%= render "manager_index" %>
+      <% else %>
+        No Shortlisted
+      <% end %>
+    <% end %>
+  </form>
+</div>

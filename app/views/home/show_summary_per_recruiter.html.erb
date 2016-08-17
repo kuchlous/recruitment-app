@@ -1,0 +1,52 @@
+<div id="reqowner_summary_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> Recruiter Summary </span>
+  <br/>
+  <% if RAILS_ENV == "production"
+       path = "/recruit/home/show_summary_per_recruiter"
+     else 
+       path = "/home/show_summary_per_recruiter" 
+     end
+  %>
+  <% form_tag path, :method => 'get' do %>
+    <table id="summaries_recruiter_table">
+      <tr>
+        <td> From </td>
+        <td> To </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td> <%= calendar_date_select :sdate, :sdate, :year_range => 1.years.ago..1.years.since, :value => date_in_calendar_format(@sdate)%> </td>
+        <td> <%= calendar_date_select :edate, :edate, :year_range => 1.years.ago..1.years.since, :value => date_in_calendar_format(@edate)%> </td>
+        <td class="summaries_recruiter_submit_button"> <%= submit_tag "Change Dates" %> </td>
+      </tr>
+    </table>
+  <% end %>
+  <br /> <br />
+  <% if @recruiter_summary_table && @recruiter_summary_table.size > 0 %>
+    <table class="reqowner_summary_table">
+      <tr class="header_row">
+        <td> Name      </td>
+        <td> Uploaded  </td>
+        <td> Forwarded </td>
+        <td> Shortlisted </td>
+      </tr>
+      <% @recruiter_summary_table.each do |employee, row| %>
+        <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+          <td> <%= link_to employee.name, :controller => "resumes", :action => "my_resumes", :id => employee.id %> </td>
+          <td> <%= row[:uploads] %> </td>
+          <td> <%= row[:forwards] %> </td>
+          <td> <%= row[:shortlists] %> </td>
+        </tr>
+      <% end %>
+      <tr> <td colspan="9"> &nbsp; </td> </tr>
+      <tr class="blue">
+        <td> Total </td>
+        <td> <%= @total_row[:uploads] %> </td>
+        <td> <%= @total_row[:forwards] %> </td>
+        <td> <%= @total_row[:shortlists] %> </td>
+      </tr>
+    </table>
+  <% else %>
+    No recruiter summary.
+  <% end %>
+</div>

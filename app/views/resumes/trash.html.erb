@@ -1,0 +1,30 @@
+<div id="trash_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> Trash </span>
+  <br />
+  <form name="form" method="post">
+    <div id="error_messages_div" class="error_messages_div"> </div>
+    <% if @trash && @trash.size > 0 %>
+      <%= will_paginate @trash %> <br />
+      <table id="resume_list_table">
+        <tr class="header_row">
+          <td class="resume_list_header_name">     Resume Name </td>
+          <td class="resume_list_header_message">  Message     </td>
+          <td class="resume_list_header_sent">     Sent On     </td>
+        </tr>
+        <% counter_value = 1
+           row_id_prefix = "trash_msg_row" %>
+        <% @trash.each do |msg| %>
+          <tr id="<%= row_id_prefix %><%= counter_value %>" class="<%= cycle('color_line_odd', 'color_line_even') %>">
+            <td> <%= get_resume_link_with_mouse_over_and_mouseout(msg.resume) %> </td>
+            <td> <%= msg.message     %> </td>
+            <td> <%= print_date_and_time(msg.created_at) %> </td>
+          </tr>
+          <% counter_value = counter_value + 1 %>
+        <% end %>
+      </table>
+      <br /><%= will_paginate @trash %>
+    <% else %>
+      No messages available.
+    <% end %>
+  </form>
+</div>

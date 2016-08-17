@@ -1,0 +1,18 @@
+<br /> <br />
+<% form_for(@agency, :url => "/recruit/agencies") do |f| %>
+  <%= f.error_messages %>
+  <table id="agency_from_table">
+    <tr>
+      <td class="<%= class_label %>"> Agency Name </td>
+      <td class="<%= class_field %>"> <%= f.text_field :name %> </td>
+    </tr>
+    <tr>
+      <td class="agency_submit_button" colspan="2">
+        <%= f.submit("#{button_tag}") %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+<br />
+<%= link_to "List of agencies", :host => "apps.mirafra.com/recruit", :controller => "agencies", :action => "index", :style => "color: #0000FF;" %> </div>
+<br /> <br />

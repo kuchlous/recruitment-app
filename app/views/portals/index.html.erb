@@ -1,0 +1,28 @@
+<div id="portal_index_div" class="common_class">
+  <span> List of Portals </span>
+  <div class="add_link">
+  <%= link_to "Add new portal", :host => "apps.mirafra.com/recruit", :controller => "portals", :action => "new" %>
+  </div>
+  <br /> <br />
+  <table>
+    <tr class="header_row">
+      <td> Portal Name </td>
+      <td> Created on  </td>
+      <td> Actions     </td>
+    </tr>
+    <% @portals.each do |portal| %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td>
+          <%= portal.name %>
+        </td>
+        <td>
+          <%= print_date(portal.created_at) %>
+        </td>
+        <td>
+          <%= link_to 'Edit', :host => "apps.mirafra.com/recruit", :controller => "portals", :action => "edit", :id => portal.id, :style => "font-weight: bold; color: green;" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <br /> <br />
+</div>

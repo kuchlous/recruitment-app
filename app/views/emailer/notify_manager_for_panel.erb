@@ -1,0 +1,10 @@
+Hi <%= @emp_to.name %>,
+  <%= @emp_from.name %> has added interview panel for your requirement <%= @req.name %>.
+  Interview panel added is <%= @emp_array %> for <%= @resume.name %>.
+  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "requirements", :action => "show", :id => @req.id) %>
+  Link to requirement:-  <%= "https://#{APP_CONFIG['host_name']}#{url}" %>
+
+  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
+  Link to resume:-  <%= url %>
+  Please login to your account for more information.
+  

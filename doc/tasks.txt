@@ -1,0 +1,25 @@
+REQUIREMENTS:-
+ . Automatically close the requirement if anyone joined against it.
+ . Add group while adding requirements
+
+EMPLOYEES:-
+ . Automatically create the employee in database whenever we create a new
+  email address in mirafra.
+ . See if we can merge the code for show resume comments and show feedback
+  comments.
+
+RESUMES:-
+ . See if we can clean up the code for methods in the helpers.
+ . Resume gets uploaded even after validations error.
+ . Provide "Select" in ddls everywhere(Not necessary)
+ . Testing of downloading resumes
+
+LOGIN:-
+ . Enable proper login before checked in.
+
+EMAILERS:-
+ . See if we can share the code between email views and models.
+
+
+ . Database limit on contents of phone and email.
+ . Checkout how you can retain the form values even after error comes.

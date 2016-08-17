@@ -1,0 +1,21 @@
+<p> Hello <%= @employee.name %>, </p>
+<p>  You have following interviews scheduled for today. </p>
+  <table style="border: 1px solid black; border-collapse:collapse">
+    <tbody>
+      <tr>
+        <th style="background: #B8B8B8; border: 1px solid black"> Name </th>
+        <th style="background: #B8B8B8; border: 1px solid black"> Date/Time </th>
+        <th style="background: #B8B8B8; border: 1px solid black"> Type </th>
+      </tr>
+      <% @interviews.each do |interview| %>
+      <tr>
+        <% resume = interview.req_match.resume %>
+        <td style="border: 1px solid black"> <%= resume.name %> </td>
+        <td style="border: 1px solid black"> <%= interview.interview_date.strftime('%b %d') + " " + interview.interview_time.strftime("%I:%M%p") %> 
+        <td style="border: 1px solid black"> <%= interview.itype ? interview.itype.titleize : "Telephonic" %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<p> Thanks, </p>
+<p> Recruitment Team </p>

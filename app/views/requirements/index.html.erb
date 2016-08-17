@@ -1,0 +1,59 @@
+<div id="req_list_div" class="common_class">
+  <span> Requirements : <%= @requirements.size %> </span>
+  <% if is_HR_ADMIN? %>
+    <div class="add_link" style="padding-left: 10px;">
+      <%= link_to "Requirement Analysis", :host => "apps.mirafra.com/recruit", :action => "req_analysis" %>
+    </div>
+    <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
+      <%= link_to "Add new requirement", :host => "apps.mirafra.com/recruit", :controller => "requirements", :action => "new" %>
+    </div>
+    <div class="add_link" style="padding-right: 10px;">
+      <% if params[:action] == "index" %>
+        <%= link_to "All requirements", :host => "apps.mirafra.com/recruit", :action => "all_reqs" %>
+      <% else %>
+        <%= link_to "Active requirements", :host => "apps.mirafra.com/recruit", :action => "index" %>
+      <% end %>
+    </div>
+  <% end %>
+  <br /> <br />
+  <table>
+   <tr class="header_row">
+     <td> Name             </td>
+     <td> Skills/Desc      </td>
+     <td style="width:75px;"> Exp        		   </td>
+     <td> End              </td>
+     <td> Positions        </td>
+     <td> Owner            </td>
+   </tr>
+
+   <% @requirements.each do |requirement| %>
+     <% if requirement.req_type == "HOT" %>
+       <tr style="background: #FF8080;">
+     <% else %>
+       <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+     <% end %>
+       <td>
+         <%= get_requirement_link_with_mouse_over_and_mouseout(requirement) %>
+       </td>
+       <td title = "<%= requirement.skill %> <%= requirement.description %>" >
+         <%= snippet(requirement.skill, 5) %> <br />
+       </td>
+       <td>
+         <%= requirement.exp.gsub(/ /,"") %> ( <%= requirement.designation.name %> )
+       </td>
+       <td>
+         <% if requirement.edate %>
+           <%= print_date(requirement.edate) %>
+         <% end %>
+       </td>
+       <td>
+         <%= requirement.nop %> 
+       </td>
+       <td>
+         <%= get_words(requirement.employee.name, 1) %>
+       </td>
+     </tr>
+   <% end %>
+ </table>
+ <br /> <br />
+</div>

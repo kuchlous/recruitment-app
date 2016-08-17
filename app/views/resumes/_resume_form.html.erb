@@ -1,0 +1,139 @@
+<br /> <br />
+<% form_for(@resume, :url => "/recruit/resumes/", :method => @resume.persisted? ? "put" : "post", :html => { :multipart => true }) do |f| %>
+  <table id="resume_form_table">
+   <tr>
+      <td colspan="2"> <%= f.error_messages %> </td>
+    </tr>
+    <tr>
+      <td> Name </td>
+      <td> <%= f.text_field :name %> </td>
+    </tr>
+    <tr>
+      <td> Email </td>
+      <td> <%= f.text_field :email %> </td>
+    </tr>
+    <tr>
+      <td> Phone Number </td>
+      <td> <%= f.text_field :phone %> </td>
+    </tr>
+    <tr>
+      <td> Skype id </td>
+      <td> <%= f.text_field :skype_id %> </td>
+    </tr>
+    <tr>
+      <td> Current CTC </td>
+      <td>
+        <%= f.text_field :ctc %> <br />
+        <span class="span_with_grey_color"> Enter in lakhs </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Expected CTC </td>
+      <td>
+        <%= f.text_field :expected_ctc %> <br />
+        <span class="span_with_grey_color"> Enter in lakhs </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Notice Period </td>
+      <td>
+        <%= f.text_field :notice %> <br />
+        <span class="span_with_grey_color"> Enter in days </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Experience </td>
+      <td>
+        <% year, month = get_year_month_of_experience(@resume) %>
+        <%= select_tag "experience_years",   options_for_select(get_experience_years,  year.to_i),  :class => "two_tds_same_line" %> Yrs
+        <%= select_tag "experience_months",  options_for_select(get_experience_months, month.to_i), :class => "two_tds_same_line" %> Months
+      </td>
+    </tr>
+    <tr>
+      <td> Current Company </td>
+      <td> <%= f.text_field :current_company %> </td>
+    </tr>
+    <tr>
+      <td> Location of candidate   </td>
+      <td> <%= f.text_field :location %> </td>
+    </tr>
+    <tr>
+      <td> Candidate's Qualification </td>
+      <td> <%= f.text_area :qualification %> </td>
+    </tr>
+    <tr>
+      <td> Summary about this resume </td>
+      <td> <%= f.text_area :summary %> </td>
+    </tr>
+    <tr>
+      <td>
+        <% if display_var == 1 %> Update <% end %>
+        Resume path
+      </td>
+      <td> <%= f.file_field("upload_resume", :size => "31")%> </td>
+    </tr>
+    <tr>
+      <td> Requirement name </td>
+      <td class="radio_buttons_one_liner ddl_with_multiples">
+        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), :multiple => true, :onclick => "selectAllValuesOfDropDownListAtStart();" %>
+      </td>
+    </tr>
+    <tr id="swap_ddl_with_multiples">
+      <td colspan="2">
+        <% if display_var == 1 %>
+          <b> Current selection: <br />
+          <% @resume.req_matches.each do |match| %>
+            &nbsp; &middot; <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %>(<%= match.requirement.group.name %>) <br /> </b>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td> <span class="span_with_grey_color"> (Hold control key for multiple selections) </span> </td>
+    </tr>
+    <tr>
+      <td> Referral of resume </td>
+      <td class="radio_buttons_one_liner">
+        <%= f.radio_button :referral_type, "EMPLOYEE", :onclick => "showReferrals([#{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], 0);" %> <%= f.label(:referral_type_employee, "Employee") %>
+        <%= f.radio_button :referral_type, "PORTAL",   :onclick => "showReferrals([#{all_record_ids("Portal").join(", ")}], ['#{all_record_names("Portal").join("', '")}'], 1);" %> <%= f.label(:referral_type_portal, "Portal") %>
+        <%= f.radio_button :referral_type, "AGENCY",   :onclick => "showReferrals([#{all_record_ids("Agency").join(", ")}], ['#{all_record_names("Agency").join("', '")}'], 2);" %> <%= f.label(:referral_type_agency, "Agency") %>
+        <%= f.radio_button :referral_type, "DIRECT",   :onclick => "hideReferrals();" %> <%= f.label(:referral_type_direct, "Direct") %>
+      </td>
+    </tr>
+    <tr id="swap_td_for_referrals">
+      <td>
+        <% if display_var == 1 %>
+          <b> Current Referral:
+          &nbsp;
+          <% if @resume.referral_type == "DIRECT" %>
+            ( Direct )
+          <% else %>
+            <% if @resume.referral_id != 0%>
+              <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %> (<%= @resume.referral_type.titleize %>) <br /> </b>
+	          <% end %>
+          <% end %>
+        <% end %>
+      </td>
+      <td>
+        &nbsp;
+      </td>
+    </tr>
+    <% if display_var == 1 %>
+      <tr>
+        <td> Add resume comments </td>
+        <td>
+          <%= text_area "resumes", "comments", :value => "" %> <br />
+          <%= get_view_comments_icon(@resume) %>
+          <span style="font-size: 10pt;"> ( View resume comments ) </span>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="add_resume_submit_button"> <%= f.submit "#{button_tag}" %> </td>
+    </tr>
+  </table>
+<% end %>
+
+<br /> <br />

@@ -1,0 +1,44 @@
+<div id="inbox_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> InBox </span>
+  <br />
+  <form name="form" method="post">
+    <div id="error_messages_div" class="error_messages_div"> </div>
+    <% if @inbox && @inbox.size > 0 %>
+      <%= will_paginate @inbox %> <br />
+      <table id="resume_list_table">
+        <tr class="header_row">
+          <td class="resume_list_header_name">     Resume Name </td>
+          <td class="resume_list_sender_name">     Sent By     </td>
+          <td class="resume_list_header_message">  Message     </td>
+          <td class="resume_list_header_sent">     Sent On     </td>
+          <td class="resume_list_header_actions">  Select      </td>
+        </tr>
+        <% counter_value = 1
+           row_id_prefix = "inbox_msg_row" %>
+        <% @inbox.each do |msg| %>
+          <% if msg.is_read %>
+            <% iclass = "normal" %>
+          <% else %>
+             <% iclass = "bold" %>
+          <% end %>
+          <tr id="<%= row_id_prefix %><%= counter_value %>" class="<%= cycle('color_line_odd', 'color_line_even') %> <%= iclass %>">
+            <td> <%= get_resume_link_with_mouse_over_and_mouseout(msg.resume) %> </td>
+            <td> <%= get_words(msg.sent_by.name, 2) %> </td>
+            <td onclick="replyToBox(event, '<%= msg.message.gsub(/[\r\n]/, "") %>', '<%= Message.find(msg.reply_to).message.gsub(/[\r\n]/, "") %>', <%= msg.id %>);"> <%= msg.message     %> </td>
+            <td title="<%= print_date(msg.created_at) %>"> <%= print_date_and_time(msg.created_at) %> </td>
+            <td>
+              <%= check_box_tag "chkbox_number#{counter_value}", msg.id %> &nbsp;
+            </td>
+          </tr>
+          <% counter_value = counter_value + 1 %>
+        <% end %>
+      </table>
+      <div class="button_for_deleting_selected_messages" >
+        <%= button_to_function "Delete All Selected", "return deleteSelectedMessage();" %>
+      </div>
+      <br /> <%= will_paginate @inbox %>
+    <% else %>
+      No messages available.
+    <% end %>
+  </form>
+</div>

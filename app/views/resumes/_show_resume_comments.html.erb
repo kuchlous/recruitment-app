@@ -1,0 +1,23 @@
+<td colspan="<%= @cols %>" class="align_left">
+  <div id="resume_comments">
+    <div id="comment_tagline">
+      <u> Resume Comments </u>
+      <span class="close_box_link">
+        <%= link_to_function image_tag("RedCross.png", :size => "22x22"), "deleteAjaxRequestTr('ajax_request_tr')" %>
+      </span> <br />
+      <span class="span_with_8">
+        ( Latest first )
+      </span>
+    </div>
+    <div id="resume_summary_box">
+      SUMMARY: <%= @resume.summary %> <br />
+      <b> <%= @resume.employee.login.titleize %> </b> <%= print_date(@resume.created_at) %>
+    </div>
+    <% @resume_comments.each do |comment| %>
+      <div>
+        <%= simple_format comment.comment %> <br />
+        <b> <%= comment.employee.login.titleize %> </b> <%= print_date(comment.created_at) %>.
+      </div>
+    <% end %>
+  </div>
+</td>

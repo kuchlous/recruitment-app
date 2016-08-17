@@ -1,0 +1,8 @@
+Hi <%= @emp_name %>,
+  The resume which you had been forwarded to <%= @logged_emp %> has been <%= @status %>.
+
+  <% resume_tag   = url_for(:controller => "resumes", :action => "download_resume", :name => @resume_path) %>
+  <% download_tag = "http://" + @host + ":" + @port.to_s + resume_tag %>
+  To download this resume, copy this link and paste in your address bar.
+  <%= download_tag %>
+  For more details, please login to your recruitment account.

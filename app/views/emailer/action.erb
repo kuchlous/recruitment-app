@@ -1,0 +1,21 @@
+Hi <%= @resume.employee.name %>,
+  <% if @status == "SHORTLISTED" || @status == "REJECTED"   || @status == "OFFERED"
+       filling_tag = " has " + @status.downcase
+     elsif @status == "HOLD"
+       filling_tag = " has marked as Hold for "
+     elsif @status == "JOINING"
+       filling_tag = " have added joining date for "
+     elsif @status == "DECLINED"
+       filling_tag = " has declined " 
+     elsif @status == "COMMENTED"
+       filling_tag = " has commented on "
+     else
+     end %>
+  <%= @from_employee.name %> <%= filling_tag %> resume of
+  <%= @resume.name %> for requirement(<%= @req_name %>).
+
+  <% if @status == "DECLINED" %>
+    So, please reschedule interviews for <%= @resume.name %>.
+  <% end %>
+  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @uniqid.name) %>
+  Link to resume:-  <%= url %>

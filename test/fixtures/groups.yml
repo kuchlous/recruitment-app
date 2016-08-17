@@ -1,0 +1,17 @@
+--- 
+groups_0001:
+  name:         SYSTEM SOFTWARE
+  employee_id:  2
+  id:           1
+groups_0002:
+  name:         EDA SOFTWARE
+  employee_id:  2
+  id:           2
+groups_0003:
+  name:         Design & Verification
+  employee_id:  1
+  id:           3
+groups_0004:
+  name:         Implementation
+  employee_id:  2
+  id:           4

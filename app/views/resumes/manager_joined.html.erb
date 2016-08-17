@@ -1,0 +1,61 @@
+<div id="manager_joined_div" class="common_class">
+<span class="span_with_13_with_padding_0"> <%= "Joining(" + @joining_matches.size.to_s + ")" %> </span>
+<% if @joining_matches && @joining_matches.size > 0 %>
+  <table id="resume_list_table" class="sortable">
+    <tr>
+      <th class="manager_joh_name"> Resume Name        </td>
+      <th class="manager_joh_req_name"> Requirement Name   </td>
+      <th class="manager_joh_joining_date sorttable_nosort"> Joining Date </td>
+    </tr>
+    <% @joining_matches.each do |f|
+      resume = f.resume %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td>
+          <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+        </td>
+        <td>
+          <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
+        </td>
+        <td>
+          <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <br />
+  No Joining resumes.
+<% end %>  
+
+<br/>
+<br/>
+<br/>
+
+<span class="span_with_13_with_padding_0"> <%= "Joined(" + @joined_matches.size.to_s + ")" %> </span>
+<% if @joined_matches && @joined_matches.size > 0 %>
+  <table id="resume_list_table" class="sortable">
+    <tr>
+      <th class="manager_joh_name"> Resume Name        </td>
+      <th class="manager_joh_req_name"> Requirement Name   </td>
+      <th class="manager_joh_joining_date sorttable_nosort"> Joining Date </td>
+    </tr>
+    <% @joined_matches.each do |f|
+      resume = f.resume %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td>
+          <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+        </td>
+        <td>
+          <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
+        </td>
+        <td>
+          <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <br />
+  No Joining resumes.
+<% end %>  
+</div>

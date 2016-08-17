@@ -1,0 +1,45 @@
+<div id="error_messages_div"> </div>
+<% unless @forwards.nil? || @forwards.size == 0 %>
+  <table id="resume_list_table" class="sortable">
+    <tr class="header_row">
+      <td class="resume_list_header_name">                      Resume Name   </td>
+      <td class="resume_list_header_education">                 Education     </td>
+      <td class="resume_list_header_experience">                Exp           </td>
+      <td class="resume_list_header_notice_period">             Notice Period </td>
+      <td class="resume_list_header_status">                    Status        </td>
+      <td class="resume_list_date_uploaded sorttable_nosort">   Upload Date   </td>
+      <td class="resume_list_header_reqs sorttable_nosort">     Requirements  </td>
+      <td class="resume_list_header_location">                  Location      </td>
+      <td class="resume_list_header_actions sorttable_nosort">  Actions       </td>
+    </tr>
+    <% counter_value = 0
+       @forwards.each do |fwd|
+         resume = fwd.resume
+         if @is_req_match == 0
+           reqs = fwd.get_reqs_to_forward
+         else
+           reqs = resume.get_resume_req_matches(get_current_employee)
+         end %>
+         <tr id="<%= @row_id_prefix %><%= counter_value %>" class="<%= cycle('color_line_odd', 'color_line_even') %>">
+           <td> <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>  </td>
+           <td title="<%= resume.qualification %>"> <%= snippet(resume.qualification, 5) %> </td>
+           <% year, month = resume.get_current_experience %>
+           <td> <%= "#{year}-#{month}" %> </td>
+           <td> <%= resume.notice %> </td>
+           <td>
+             <% manual_status = resume.manual_status %>
+             <%= link_to_function (manual_status ? manual_status : "Add status"), "showManualStatusBox(event, #{resume.id});" %>
+           </td>
+           <td> <%= print_date_no_year (fwd.created_at) %> </td>
+           <td> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>
+           <td> <%= resume.location %> </td>
+           <td>
+             <%= get_manager_actions_dropdownlist(resume, fwd, counter_value, @after_shortlist_page) %>
+           </td>
+         </tr>
+         <% counter_value = counter_value + 1 %>
+       <% end %>
+  </table>
+<% else %>
+  <br /> No <%= @status.downcase %> resumes.
+<% end %>

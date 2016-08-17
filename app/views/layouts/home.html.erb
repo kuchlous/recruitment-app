@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title> Mirafra - Recruitment Drive </title>
+    <% if RAILS_ENV == "development" || RAILS_ENV == "test" %>
+      <%= javascript_tag "server_type = 0" %>
+    <% else %>
+      <%= javascript_tag "server_type = 1" %>
+    <% end %>
+    <%= load_google_api_or_internal_files_based_upon_ip_address %>
+    <%= javascript_include_tag :all, :recursive => true %>
+    <%= yield :head %>
+    <%= calendar_date_select_includes "silver" %>
+    <%= stylesheet_link_tag :all, :recursive => true %>
+    <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  </head>
+  <body onload="loadInitialContext();">
+    <div id="allcontent">
+      <table width="100%" id="top_table" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr id="logo_row">
+            <td class="logo">
+              <%= link_to image_tag("MirafraLogo.gif", :size => "120x40" ), { :controller => "home", :action => "actions"}, :id => "logo_link", :title => "Recuitment Database" %>
+            </td>
+            <td class="logo_tagline">
+              Mirafra Recruitment
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="content">
+        <%= render("shared/empl_top_line") %>
+        <br /> <br /> <br />
+        <div id="emp_layout">
+          <% if params[:action] == "interview_requests" %>
+            <form action="" name="form" id="interview_requests_form">
+          <% end %>
+          <%= yield :layout %>
+          <% if params[:action] == "interview_requests" %>
+            </form>
+          <% end %>
+        </div>
+      </div>
+      <div id="footer">
+        <table id="footer_table">
+          <tbody>
+            <tr>
+              <td class="confidential_tag">
+                Mirafra Technologies Confidential
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <% unless flash[:notice].nil? -%>
+        <div id="alert_box">
+          <%= flash[:notice] %>
+          <div align="center" style="margin-top: 20px;">
+            <%= image_submit_tag("/images/Ok.png", :onclick => "closeBox('alert_box'); return false;") %>
+          </div>
+        </div>
+        <% flash[:notice] = nil %>
+      <% end %>
+      <div id="background_shader" style="opacity: 0.5; filter:alpha(opacity=40); display: block;"> </div>
+    </div>
+  </body>
+</html>

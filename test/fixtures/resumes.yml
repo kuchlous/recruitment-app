@@ -1,0 +1,75 @@
+--- 
+#resumes_0001:
+#  referral_id:     2
+#  summary:         Test Resume. Used only for testing purposed. Having dummy data.
+#  name:            Test Resume
+#  joining_date: 
+#  employee_id:     3
+#  file_name:       test_resume
+#  id:              1
+#  ctc:             2.4
+#  phone:           +911234567890
+#  qualification:   Testing qualifications.
+#  referral_type:   "EMPLOYEE"
+#  search_data:     Adding first resume with mobile number as 911234567890 and email as test_resume@gmail.com
+#  experience:      2-3
+#  email:           test_resume@gmail.com
+#  uniqid_id:       1
+#resumes_0002: 
+#  referral_id:     2
+#  summary:         She had done lecture ship for around 3 years.
+#  name:            Annu Dhankhar
+#  joining_date: 
+#  employee_id:     1
+#  file_name:       annu_dhankhar
+#  id:              2
+#  ctc:             4.5
+#  phone:           +919813333530
+#  qualification:   M Tech in CSE from M D University
+#  referral_type:   PORTAL
+#  search_data:     "\n\n\n\n\n\n\n\n                                 Annu Sindhu\n\n\n\
+#    1\n\n\n\n\
+#    2\n\n\n\
+#    3\n\n\n\
+#    4 Career Objective\n\n\n\n\
+#    I would like to work with  an  organization,  which  nourishes  professional\n\
+#    growth and creativity. I would look  myself  as  an  organization  and  make\n\
+#    positive contribution with my hard work and  skill  and  realize  my  dreams\n\
+#    into reality.\n\n\n\n\n\n      5 EXPERIENCE\n\n\n\n\
+#    \xE2\x97\x8F Worked as lecturer in U.I.E.T (M.D.U. Engg College), Rohtak on lecture\n  basis from Aug, 2006 to Dec, 2008\n\
+#    \xE2\x97\x8F Worked as lecturer in CSE deptt in HIT, Asodha. from Feb,2009 to July,\n  2009\n\
+#    \xE2\x97\x8F Worked as lecturer in CSE deptt in RIEM, Rohtak (Haryana)  from 15th\n  July 2009 to 31 March 2010\n\n\n\n\n\
+#    6\n\n\n\
+#    7 Education\n\n\n \xC3\x98   M.Tech(CE) from [PDM,Bahadurgarh] with 78% \xE2\x80\x98A\xE2\x80\x99Grade in August,2009 \xC2\xA0\n\n\n \xC3\x98 B.E[CSE] from [M.D. University, Rohtak] with First  class  Hons  [71.  6%\n   aggregate] in July 2006\n\n\n \xC3\x98 Higher Secondary Passed in First class, [69.4%] from [C.B.S.E, Delhi]  in\n   [May 2002.]\n\n\n \xC3\x98 Matriculation Passed in First class, [76.6%]  from  [C.B.S.E,  Delhi]  in\n   [June 2000.]\n\n\n\n\n\n\n      8 PAPER PRESENTED\n\n\n\n      \xE2\x80\x9CArchitecture of  Dynamic  Priority  Based  Incremental  Web  Crawler\xE2\x80\x9D\n      presented in ICIT, 09\n\n\n      \xE2\x80\x9CEfficient Management  of  Volatile  Information  in  Incremental  Web\n      Crawler\xE2\x80\x9D published in IJCSI Journal, September Edition (Vol-4)\n\n\n\n\n\n\n\n\n\n      9 Software Skills\n\n\n\n\n\n    \xE2\x80\xA2 Operating System                        Win 9X/XP, Win NT\n\n\n    \xE2\x80\xA2 Languages               C, C++,  V.B  .net,  ASP  .net,  C#,  ADO.net,\n      Crystal Reports\n\n    \xE2\x80\xA2 Software Packages                     MS Office, SQLServer2000\n\n\n\n\n\
+#    10\n\n\n\
+#    11\n\n\n\
+#    12 Interests & Activities\n\n\n      \xE2\x80\xA2 Active member of College Cultural Committee\n      \xE2\x80\xA2 Participated in Various Cultural Events\n      \xE2\x80\xA2 Dancing, Listening to Music\n      \xE2\x80\xA2 Net Surfing\n\n\n\n\n      13\n\n\n\
+#    14 Personal information\n\n\n\n\n\n      Date of Birth:                    23rd March, 1985\n\n\n      Husband  Name:               Mr. Manjeet Sindhu\n\n\n      Address for Communication:        Flat No 104 , Daisy Block 8\n      (Permanent Address)                Amravati Society , Baddi\n                                                                  H.P\n      (173205)\n                                   (M) 09418074733\n                                          09218659401\n\n\n      Marital Status:                   Married\n\n             Sex:                                                   Female\n\n      Languages:                  English and Hindi\n\n\n\n\n\n                                        (ANNU)\n\
+#    -----------------------\n\
+#    Mob:      +91- 9418074733\n               +91- 9218659401\n\
+#    E Mail:  msbaddi@gmail.com\n             annu_dh23@yahoo.co.in\n\n\n\n\
+#    Flat No 104\n\
+#    Daisy, Block 8,\n\
+#    Amravati Society, Baddi, (HP)\n\n\n She had done lecture ship for around 3 years."
+#  experience:      3 - 4
+#  email:           dhankhar.annu@gmail.com
+#  uniqid_id:       2
+#resumes_0003:
+#  referral_id:     9
+#  summary:         "Possesses good problem solving skills.\r\n\
+#      \r\n\
+#       Worked on architecture as well. "
+#  name:            Shubhodeep Roy Chaudhary
+#  joining_date:
+#  employee_id:     1
+#  file_name:       shubhodeep_roy_chaudhary
+#  id:              3
+#  ctc:             9.6
+#  phone:           +919945955622
+#  qualification:   B Tech from IIT Guwahati
+#  referral_type:   EMPLOYEE
+#  search_data:     "SHUBHODEEP ROY CHOUDHURY\n\
+#                    Phone: (+91) 9845735129 E-mail: deepsrc@gmail.com Date of Birth: 15th June 1982 Current Address: E-103, ND Sepal, Somasandrapalya, HSR Layout Sector 2 Extension, Agara Post, Bangalore, Karnataka, PIN - 560102 Permanent Address: C/O S. Roy Choudhury, Flat No "
+#  experience:      4 - 5
+#  email:           deepsrc@gmail.com
+#  uniqid_id:       3

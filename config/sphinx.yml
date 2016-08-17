@@ -1,0 +1,2 @@
+production:
+  binlog_path: /apps/log

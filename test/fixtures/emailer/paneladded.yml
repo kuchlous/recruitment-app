@@ -1,0 +1,11 @@
+Hi <%= @emp_name %>,
+  You have been added to the interview panel for the recuitment of candidate '<%= @resume_name %> ' on date <%= @int_date %>.
+  <% filenames = `ls resumes/#{@resume_path}.*`.split("\n")
+     filenames.each do |filename|
+       file_size  = File.size(filename)
+       resume_tag = url_for(:controller => "resumes", :action => 'download_resume', :name => filename)
+       download_tag = "http://" + @host + ":" + @port.to_s + resume_tag %>
+       To download this resume copy this link and paste in your address bar.
+       <%= download_tag %>
+     <% end %>
+  For more details, please login to your recruitment account.

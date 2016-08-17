@@ -1,0 +1,27 @@
+<% @start_month = @smonth
+   @end_month   = @emonth
+  ispan = @end_month - @start_month + 1 %>
+<% span, smonth, emonth = get_start_end_month(@start_month, ispan) %>
+<table id="span_arrow_table">
+  <tr>
+    <td colspan=2 class="cell_with_arrows align_center">
+      <%= link_to_remote "&laquo", :url => {:host=> "apps.mirafra.com/recruit", :controller => controller, :action => action, :smonth => @start_month, :emonth => @end_month, :year => @year - 1, :partial => 1 }, :update => update %>
+      <%= @year %>
+      ( <%= get_year_str(@start_month, @end_month) %> )
+      <%= link_to_remote "&raquo", :url => {:host=> "apps.mirafra.com/recruit",  :controller => controller, :action => action, :smonth => @start_month, :emonth => @end_month, :year => @year + 1, :partial => 1 }, :update => update %>
+    </td>
+  </tr>
+  <tr>
+    <td class="cell_with_arrows align_left">
+      <% if smonth >= 1 %>
+        <%= link_to_remote "&laquo;" + " " + get_month_str(smonth, emonth), :url => {:host=> "apps.mirafra.com/recruit", :controller => controller, :action => action, :smonth => smonth, :emonth => emonth, :year => @year, :partial => 1 }, :update => update %>
+      <% end %>
+    </td>
+    <td class="cell_with_arrows align_right">
+      <% if @end_month < 12 %>
+        <%= link_to_remote get_month_str(@end_month + 1, @end_month + ispan) + "&raquo;", :url => {:host=> "apps.mirafra.com/recruit", :controller => controller, :action => action, :smonth => @end_month + 1, :emonth => @end_month+ ispan , :year => @year, :partial => 1 }, :update => update %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+<br />

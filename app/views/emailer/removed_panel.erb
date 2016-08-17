@@ -1,0 +1,9 @@
+Hi <%= @emp_to.name %>,
+  Your interview with '<%= @resume.name %>' scheduled on
+  <% if @interview.interview_date %>
+    <%= @interview.interview_date %>
+  <% else %>
+    ( No date given )
+  <% end %> at time
+  <%= @interview.interview_time.to_s[11..18] %> for requirement (<%= @requirement.name %>).
+  has been cancelled.

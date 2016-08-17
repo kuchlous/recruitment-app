@@ -1,0 +1,145 @@
+--- 
+employees_0001:
+  eid:             1
+  name:            Alok Kuchlous
+  joining_date:    "2004-01-01"
+  employee_type:   ADMIN
+  account_id:      1
+  manager_id:      1
+  employee_status: ACTIVE
+  id:              1
+  is_admin:        1
+  login:           alokk
+  email:           alokk_1@mirafra.com
+employees_0002:
+  eid:             2
+  name:            Shyam Rao Padala
+  joining_date:    "2004-01-01"
+  employee_type:   ADMIN
+  account_id:      1
+  manager_id:      2
+  employee_status: ACTIVE
+  id:              2
+  is_admin:        1
+  login:           shyam
+  email:           shyam_1@mirafra.com
+employees_0003: 
+  eid:             3
+  name:            Himanshu Aggawal
+  joining_date:    "2008-01-01"
+  employee_type:   MANAGER
+  account_id:      4
+  manager_id:      1
+  employee_status: ACTIVE
+  id:              3
+  is_admin:        0
+  login:           himanshu
+  email:           himanshu_1@mirafra.com
+employees_0004: 
+  eid:             4
+  name:            Sudipto
+  joining_date:    "2008-01-01"
+  employee_type:   MANAGER
+  account_id:      2
+  manager_id:      2
+  employee_status: ACTIVE
+  id:              4
+  is_admin:        0
+  login:           sudipto
+  email:           sudipto_1@mirafra.com
+employees_0005: 
+  eid:             5
+  name:            Bhagwandas Paliwal
+  joining_date:    "2009-01-01"
+  employee_type:   MANAGER
+  account_id:      4
+  manager_id:      3
+  employee_status: ACTIVE
+  id:              5
+  is_admin:        0
+  login:           bhagwandas
+  email:           bhagwandas_1@mirafra.com
+employees_0006: 
+  eid:             6
+  name:            Shweta Gehlot
+  joining_date:    "2009-01-01"
+  employee_type:   MANAGER
+  account_id:      4
+  manager_id:      3
+  employee_status: ACTIVE
+  id:              6
+  is_admin:        0
+  login:           shweta
+  email:           shweta_1@mirafra.com
+employees_0007: 
+  eid:             7
+  name:            Pratish Behra
+  joining_date:    "2009-02-01"
+  employee_type:   MANAGER
+  account_id:      6
+  manager_id:      4
+  employee_status: ACTIVE
+  id:              7
+  is_admin:        0
+  login:           pratish
+  email:           pratish_1@mirafra.com
+employees_0008:
+  eid:             8
+  name:            Anand Ramakarishnan
+  joining_date:    "2009-01-01"
+  employee_type:   MANAGER
+  account_id:      5
+  manager_id:      4
+  employee_status: ACTIVE
+  id:              8
+  is_admin:        0
+  login:           anand
+  email:           anand_1@mirafra.com
+employees_0009:
+  eid:             9
+  name:            Tridip Sarkar
+  joining_date:    "2009-01-01"
+  employee_type:   INDIVIDUAL
+  account_id:      5
+  manager_id:      8
+  employee_status: ACTIVE
+  id:              9
+  is_admin:        0
+  login:           tridip
+  email:           tridip_1@mirafra.com
+employees_0010:
+  eid:             10
+  name:            Subha Rao
+  joining_date:    "2010-01-21"
+  employee_type:   HR
+  account_id:      1
+  manager_id:      2
+  employee_status: ACTIVE
+  id:              10
+  is_admin:        0
+  login:           subha
+  email:           shubha_1@mirafra.com
+employees_0011:
+  eid:             11
+  name:            Hemant Bhargava
+  joining_date:    "2010-01-21"
+  employee_type:   INDIVIDUAL
+  account_id:      1
+  manager_id:      1
+  employee_status: ACTIVE
+  id:              11
+  is_admin:        0
+  login:           hemant
+  email:           hemant_1@mirafra.com
+employees_0012:
+  eid:             12
+  name:            Somshekhar
+  joining_date:    "2010-01-21"
+  employee_type:   INDIVIDUAL
+  account_id:      1
+  manager_id:      2
+  employee_status: ACTIVE
+  id:              12
+  is_admin:        0
+  login:           somu
+  email:           somu_1@mirafra.com

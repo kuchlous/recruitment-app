@@ -1,0 +1,19 @@
+--- 
+designations_0001: 
+  name:       SE
+  id:         1
+designations_0002: 
+  name:       SSE
+  id:         2
+designations_0003: 
+  name:       LE
+  id:         3
+designations_0004: 
+  name:       SLE
+  id:         4
+designations_0005: 
+  name:       Manager
+  id:         5
+designations_0006: 
+  name:       Director
+  id:         6

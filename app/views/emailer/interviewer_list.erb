@@ -1,0 +1,18 @@
+<p> Hello <%= @employee.name %>, </p>
+<p>  Following have completed another set of 25 interviews today. </p>
+  <table style="border: 1px solid black; border-collapse:collapse">
+    <tbody>
+      <tr>
+        <th style="background: #B8B8B8; border: 1px solid black"> Name </th>
+        <th style="background: #B8B8B8; border: 1px solid black"> Interviews</th>
+      </tr>
+      <% @interviewer_pairs.each do |pair| %>
+      <tr>
+        <td style="border: 1px solid black"> <%= pair[0].name %> </td>
+        <td style="border: 1px solid black; text-align:center"> <%= pair[1].size %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<p> Thanks, </p>
+<p> Recruitment Team </p>

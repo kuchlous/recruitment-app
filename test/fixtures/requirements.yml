@@ -1,0 +1,71 @@
+--- 
+requirements_0001:
+  name:           Verification Engineer
+  group_id:       2
+  account_id:     1
+  employee_id:    2
+  id:             1
+  skill:          Verilog, SV, OVM
+  exp:            2-4
+  description:    Understanding of verification environments
+  posting_emp_id: 3
+  status:         OPEN
+  designation_id: 1
+  sdate:          2011-01-01
+  edate:          2011-01-02
+requirements_0002:
+  name:           DFT Engineer
+  group_id:       2
+  account_id:     1
+  employee_id:    2
+  id:             2
+  skill:          Verilog, SV
+  exp:            3-5
+  description:    Understanding of writing DUTs
+  posting_emp_id: 3
+  status:         OPEN
+  designation_id: 2
+  sdate:          2011-02-01
+  edate:          2011-02-02
+requirements_0003: 
+  name:           R & D Engineer
+  group_id:       1
+  account_id:     1
+  employee_id:    1
+  id:             3
+  skill:          C, C++, Lex & Yac
+  exp:            4-5
+  description:    Understanding of writing compilers and simulators
+  posting_emp_id: 2
+  status:         OPEN
+  designation_id: 3
+  sdate:          2011-03-01
+  edate:          2011-03-02
+requirements_0004: 
+  name:           Eda developer
+  group_id:       1
+  account_id:     1
+  employee_id:    1
+  id:             4
+  skill:          C, C++, Perl
+  exp:            5-6
+  description:    Understanding of finite automatas. Should know how to write comilers and simulators
+  posting_emp_id: 2
+  status:         OPEN
+  designation_id: 4
+  sdate:          2011-04-01
+  edate:          2011-04-02
+requirements_0005: 
+  name:           Java-J2ee Developer
+  group_id:       1
+  account_id:     1
+  employee_id:    1
+  id:             5
+  skill:          Java, J2EE
+  exp:            5-6
+  description:    Understanding of Java along with oops
+  posting_emp_id: 2
+  status:         OPEN
+  designation_id: 4
+  sdate:          2011-04-01
+  edate:          2011-04-02

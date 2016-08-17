@@ -1,0 +1,28 @@
+<div id="designation_index_div" class="common_class">
+  <span> List of Designations </span>
+  <div class="add_link">
+  <%= link_to "Add new designation", :host => "apps.mirafra.com/recruit", :controller => "designations", :action => "new" %>
+  </div>
+  <br /> <br />
+  <table>
+    <tr class="header_row">
+      <td> Designation Name </td>
+      <td> Created on  </td>
+      <td> Actions     </td>
+    </tr>
+    <% @designations.each do |d| %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td>
+          <%= d.name %>
+        </td>
+        <td>
+          <%= print_date(d.created_at) %>
+        </td>
+        <td>
+          <%= link_to 'Edit', :host => "apps.mirafra.com/recruit", :controller => "designations", :action => "edit", :id => d.id, :style => "font-weight: bold; color: green;" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <br /> <br />
+</div>

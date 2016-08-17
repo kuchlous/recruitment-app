@@ -1,0 +1,60 @@
+<% if params[:action]    == "manager_joined"  || params[:action] == "joined"  || @join_on_req_page  == 1
+     join_display = 1
+   else
+     join_display = 0
+   end
+   if params[:action]    == "manager_offered" || params[:action] == "offered" || @offer_on_req_page == 1
+     offer_display = 1
+   else
+     offer_display = 0
+   end %>
+
+<% if @matches && @matches.size > 0 %>
+  <table id="resume_list_table" class="sortable">
+    <tr>
+      <th class="manager_joh_name"> Resume Name        </td>
+      <th class="manager_joh_req_name"> Requirement Name   </td>
+      <% if join_display == 1 %>
+        <th class="manager_joh_joining_date sorttable_nosort"> Joining Date </td>
+      <% elsif offer_display == 1 %>
+        <th class="manager_joh_mark_location"> Location </td>
+        <th class="manager_joh_mark_joining sorttable_nosort"> Mark Joining </td>
+        <th class="manager_joh_actions sorttable_nosort"> Actions </td>
+      <% end %>
+    </tr>
+    <% @matches.each do |f|
+      resume = f.resume %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td>
+          <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+        </td>
+        <td>
+          <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
+        </td>
+        <% if join_display == 1 %>
+          <td>
+            <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+          </td>
+        <% elsif offer_display == 1 %>
+          <td>
+            <%= resume.location %>
+          </td>
+          <td>
+            <%= calendar_date_select "resume", "joining_date#{f.id}", :year_range => 1.years.ago..1.years.since, :class => "joining_date_input" %>
+            <%= button_to_function "Go", "markJoining(#{f.id}, #{resume.id}, event)", :id => "button#{f.id}" %>
+          </td>
+          <td>
+            <% unless resume.status == "N_ACCEPTED" %>
+              <%= button_to_function "Not Accepted", "markNotAccepted(#{resume.id}, event)", :id => "button#{f.id}" %>
+            <% else %>
+              Not accepted
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <br />
+  No <%= @status.titleize %> resumes.
+<% end %>

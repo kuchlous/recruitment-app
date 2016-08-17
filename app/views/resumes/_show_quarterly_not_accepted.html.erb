@@ -1,0 +1,27 @@
+<% if params[:action] == "show_quarterly_not_accepted"
+     month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @year.to_s
+   end %>
+<table id="not_accepted_resumes_table" class="sortable">
+  <tr id="no_border">
+    <% if params[:action] == "show_quarterly_not_accepted" %>
+      <td colspan="3"> <b> <%= month_year_str %> (<%= @not_accepted_comments.size %>) </b> </td>
+    <% elsif params[:action] == "show_all_not_accepted" %>
+      <td colspan="3"> <b> ALL <%= @status.titleize %> Resumes (<%= @not_accepted_comments.size %>) </b> </td>
+    <% else %>
+      <td colspan="3"> <b> <%= @status.titleize %> resumes for current quarter (<%= @not_accepted_comments.size %>) </b> </td>
+    <% end %>
+  </tr>
+  <tr>
+    <th> Resume Name </th>
+    <th> Requirement </th>
+    <th> Refusal date </th>
+  </tr>
+  <% @not_accepted_comments.each do |c| %>
+    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+      <% req = get_requirement_from_comment(c[:offered], "OFFERED") %>
+      <td class="not_accepted_resumes_label"> <%= get_resume_link_with_mouse_over_and_mouseout(c[:not_accepted].resume) %> </td>
+      <td class="not_accepted_resumes_label"> <%= (req ? get_requirement_link_with_mouse_over_and_mouseout(req) : "") %> </td>
+      <td class="not_accepted_resumes_label"> <%= print_date(c[:not_accepted].created_at) %> </td>
+    </tr>
+  <% end %>
+</table>

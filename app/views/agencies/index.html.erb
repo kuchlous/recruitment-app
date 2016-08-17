@@ -1,0 +1,28 @@
+<div id="agency_list_div" class="common_class">
+  <span> List of Agencies </span>
+  <div class="add_link">
+  <%= link_to "Add new agency", :host => "apps.mirafra.com/recruit", :controller => "agencies", :action => "new" %>
+  </div>
+  <br /> <br />
+  <table> 
+    <tr class="header_row">
+      <td> Agency Name </td>
+      <td> Created on  </td>
+      <td> Actions     </td>
+    </tr>
+    <% @agencies.each do |agency| %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td>
+          <%= agency.name %>
+        </td>
+        <td>
+          <%= print_date(agency.created_at) %>
+        </td>
+        <td>
+          <%= link_to 'Edit', :host => "apps.mirafra.com/recruit", :controller => "agencies", :action => "edit", :id => agency.id, :style => "font-weight: bold; color: green;" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <br /> <br />
+</div>

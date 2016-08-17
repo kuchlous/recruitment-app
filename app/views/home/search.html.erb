@@ -1,0 +1,49 @@
+<div id="resume_search_div" class="common_class">
+  <% if @results.size > 0 %>
+    <div id="search_results_summary">
+      <div id="searched_results_description">
+        <% unless @search_text.nil? %>
+          Search parameters - <%= @search_text %>
+        <% end %>
+      </div>
+      <%= will_paginate @results %>
+      <%= hidden_field_tag "search[box]", :value => @search_text %>
+      <table>
+        <tr>
+          <th class="search_resume_name">      Name                </th>
+          <th class="search_resume_qual">      Qualification       </th>
+          <th class="search_resume_skills">    Skills/Summaries    </th>
+          <th class="search_resume_status">    Overall Status      </th>
+          <th class="search_resume_activity">  Recent Activity On  </th>
+        </tr>
+        <% @results.each do |result| %>
+          <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
+            <td class="search_resume_name" title="<%= result.name %>">
+              <div class="search_resume_name_div">
+                <%= resume_link_with_20_characters(result) %>
+              </div>
+            </td>
+            <td class="search_resume_qual" title="<%= result.qualification %>">
+              <%= result.qualification[0..20] %>
+            </td>
+            <td class="search_resume_skills" title="<%= result.summary %>">
+              <%= result.summary[0..20] %>
+            </td>
+            <td class="search_resume_status">
+              <%= result.resume_overall_status %>
+            </td>
+            <td class="search_resume_activity">
+              <% if result.comments.size > 0 %>
+                <%= print_date(result.comments.last.updated_at) %>
+              <% else %>
+                <%= print_date(result.updated_at) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <%= will_paginate @results %>
+  <% else %>
+    <span class="span_with_13_with_padding_0"> Sorry there are no results found corresponding to your search parameters. </span>
+  <% end %>
+</div>

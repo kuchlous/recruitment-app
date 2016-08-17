@@ -1,0 +1,92 @@
+<div id="reqowner_summary_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> Owner Summary </span>
+  <br />
+  <% if @owner_summary_table && @owner_summary_table.size > 0 %>
+    <table class="reqowner_summary_table">
+      <tr class="header_row">
+        <td> Name      </td>
+        <td> Positions </td>
+        <td> Joining   </td>
+        <td> Offered   </td>
+        <td> Scheduled </td>
+        <td> Shortlisted </td>
+        <td> Forwards  </td>
+        <td> Holds     </td>
+        <td> Rejects   </td>
+      </tr>
+      <% @owner_summary_table.each do |row| %>
+        <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+          <td> <%= link_to row[:owner].name, :controller=>"employees", :action=>"change_to", :id=> row[:owner].id %> </td>
+          <td> <%= row[:positions] %> </td>
+          <td> <%= row[:joining] %> </td>
+          <td> <%= row[:offered] %> </td>
+          <td> <%= row[:scheduled] %> </td>
+          <td> <%= row[:shortlists] %> </td>
+          <td> <%= row[:forwards] %> </td>
+          <td> <%= row[:held] %> </td>
+          <td> <%= row[:rejected] %> </td>
+        </tr>
+      <% end %>
+      <tr> <td colspan="9"> &nbsp; </td> </tr>
+      <tr class="blue">
+        <td> Total </td>
+        <td> <%= @owner_total_row[:positions] %> </td>
+        <td> <%= @owner_total_row[:joining] %> </td>
+        <td> <%= @owner_total_row[:offered] %> </td>
+        <td> <%= @owner_total_row[:scheduled] %> </td>
+        <td> <%= @owner_total_row[:shortlists] %> </td>
+        <td> <%= @owner_total_row[:forwards] %> </td>
+        <td> <%= @owner_total_row[:held] %> </td>
+        <td> <%= @owner_total_row[:rejected] %> </td>
+      </tr>
+    </table>
+  <% else %>
+    No owner summaries available.
+  <% end %>
+
+  <br /> <br />
+  <span class="span_with_13_with_padding_0"> Requirement Summary </span>
+  <br />
+  <% if @req_summary_table && @req_summary_table.size > 0 %>
+    <table class="reqowner_summary_table">
+      <tr class="header_row">
+        <td> Name      </td>
+        <td> Positions </td>
+        <td> Joining   </td>
+        <td> Offered   </td>
+        <td> Scheduled </td>
+        <td> Shortlisted </td>
+        <td> Forwards  </td>
+        <td> Holds     </td>
+        <td> Rejects   </td>
+      </tr>
+      <% @req_summary_table.each do |row| %>
+        <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+          <td> <%= get_requirement_link_with_mouse_over_and_mouseout(row[:owner]) %>
+          <td> <%= row[:positions] %> </td>
+          <td> <%= row[:joining] %> </td>
+          <td> <%= row[:offered] %> </td>
+          <td> <%= row[:scheduled] %> </td>
+          <td> <%= row[:shortlists] %> </td>
+          <td> <%= row[:forwards] %> </td>
+          <td> <%= row[:held] %> </td>
+          <td> <%= row[:rejected] %> </td>
+        </tr>
+      <% end %>
+      <tr> <td colspan="9"> &nbsp; </td> </tr>
+      <tr class="blue">
+        <td> Total </td>
+        <td> <%= @owner_total_row[:positions] %> </td>
+        <td> <%= @owner_total_row[:joining] %> </td>
+        <td> <%= @owner_total_row[:offered] %> </td>
+        <td> <%= @owner_total_row[:scheduled] %> </td>
+        <td> <%= @owner_total_row[:shortlists] %> </td>
+        <td> <%= @owner_total_row[:forwards] %> </td>
+        <td> <%= @owner_total_row[:held] %> </td>
+        <td> <%= @owner_total_row[:rejected] %> </td>
+      </tr>
+    </table>
+  <% else %>
+    No req summaries available.
+  <% end %>
+</div>

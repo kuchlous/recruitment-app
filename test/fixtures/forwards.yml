@@ -1,0 +1,29 @@
+--- 
+#forwards_0001: 
+#  created_at:   2010-06-18 12:16:16
+#  resume_id:    1
+#  updated_at:   2010-06-18 12:16:16
+#  forwarded_to: 2
+#  id:           1
+#  status:       FORWARDED
+#forwards_0002:
+#  created_at:   2010-06-18 12:16:16
+#  resume_id:    1
+#  updated_at:   2010-06-18 12:16:16
+#  forwarded_to: 1
+#  id:           2
+#  status:       FORWARDED
+#forwards_0003: 
+#  created_at:   2010-06-18 12:18:05
+#  resume_id:    2
+#  updated_at:   2010-06-18 12:18:05
+#  forwarded_to: 2
+#  id:           3
+#  status:       FORWARDED
+#forwards_0004: 
+#  created_at:   2010-06-18 12:18:05
+#  resume_id:    2
+#  updated_at:   2010-06-18 12:18:05
+#  forwarded_to: 1
+#  id:           4
+#  status:       FORWARDED
