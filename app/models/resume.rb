@@ -604,7 +604,7 @@ private
     if file_type_simple == "UNDEFINED"
       errors.add("Empty Resume")
     elsif ( ![ "application/pdf", "text/plain", "text/html", "text/rtf", "application/msword",
-               "application/msword application/msword", "application/msword", "application/x-zip" ].include?(file_type_simple))
+               "application/msword application/msword", "application/msword", "application/x-zip", "application/zip" ].include?(file_type_simple))
       errors.add("Unknown filetype. Please provide file types of .doc, .docx, .pdf, .rtf, .html and .txt")
     end
   end

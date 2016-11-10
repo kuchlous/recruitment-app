@@ -301,8 +301,9 @@ module ApplicationHelper
       |req| req.status == "OPEN"
     }
     requirements.each do |req|
-      req_name_array << req.name
+      req_name_array << req.name.gsub("'", "\'") if req.name
     end
+    req_name_array.map! { |e| e.gsub /'|"/, '' }
     req_name_array
   end
 
@@ -503,23 +504,19 @@ module ApplicationHelper
   end
 
   def get_actions_ddl(resume, req_match, status)
-    all_reqs = all_reqs_names()
-    all_reqs.map! { |e| e.gsub /'|"/, '' }
     select_tag "actions_name", options_for_select(get_actions_drop_down(status)),
                                                   :class    => "actions_drop_down_list_small",
-                                                  :onchange => "actionBox(this.value, event, [ #{all_reqs_ids().join(", ")}],
-                                                                                             ['#{all_reqs.join("', '")}'],
+                                                  :onchange => "actionBox(this.value, event, all_req_ids,
+                                                                                             all_req_names,
                                                                                                #{req_match.id},
                                                                                                #{resume.id});"
   end
 
   def get_manager_actions_dropdownlist(resume, fwd, counter_value, is_shortlist_page = false)
-    all_reqs = all_reqs_names()
-    all_reqs.map! { |e| e.gsub /'|"/, '' }
     select_tag "manager_actions_name#{counter_value}", options_for_select(get_manager_actions_drop_down(is_shortlist_page)),
                                                        :class    => "manager_actions_drop_down_list",
-                                                       :onchange => "actionBoxManager(this.value, event, [ #{all_reqs_ids().join(", ")}],
-                                                                                                         ['#{all_reqs.join("', '")}'],
+                                                       :onchange => "actionBoxManager(this.value, event, all_req_ids,
+                                                                                                         all_req_names,
                                                                                                            #{fwd.id},
                                                                                                            #{resume.id}, #{is_shortlist_page});"
   end

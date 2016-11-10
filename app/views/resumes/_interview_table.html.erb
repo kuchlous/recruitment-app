@@ -1,3 +1,7 @@
+<script>
+  var all_req_ids = [ <%= all_reqs_ids().join(",") %>];
+  var all_req_names = [ <%= all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
+</script>
 <% unless @matches.nil? || @matches.size == 0 %>
   <table id="resume_list_table" class="sortable">
     <tr class="header_row">

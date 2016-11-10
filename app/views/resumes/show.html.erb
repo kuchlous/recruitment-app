@@ -204,6 +204,11 @@
 
     <div id="error_messages_div" class="error_messages_div"> </div>
     <% if is_HR_ADMIN? %>
+<script>
+  var all_req_ids = [ <%= all_reqs_ids().join(",") %>];
+  var all_req_names = [ <%= all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
+</script>
+
       <br />
       <table id="resume_list_table">
         <span class="span_with_13">  Resume Details: </span>

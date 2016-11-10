@@ -1,3 +1,7 @@
+<script>
+  var all_req_ids = [ <%= all_reqs_ids().join(",") %>];
+  var all_req_names = [ <%= all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
+</script>
 <div id="error_messages_div"> </div>
 <% unless @forwards.nil? || @forwards.size == 0 %>
   <table id="resume_list_table" class="sortable">

@@ -1,5 +1,5 @@
 <br /> <br />
-<% form_for(@group, :url => "/recruit/groups") do |f| %>
+<% form_for(@group, :url =>  url_for(:host => "apps.mirafra.com/recruit", :controller => "groups", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
   <%= f.error_messages %>
   <table id="group_form_table">
     <tr>

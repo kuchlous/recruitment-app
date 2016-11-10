@@ -1,5 +1,5 @@
 <br /> <br />
-<% form_for(@requirement, :url => "/recruit/requirements") do |f|
+<% form_for(@requirement, :url => url_for(:host => "apps.mirafra.com/recruit", :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post")}) do |f|
   if @requirement
     if @requirement.exp
       exp      = @requirement.exp.split("-")

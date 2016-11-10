@@ -1,5 +1,5 @@
 <br /> <br />
-<% form_for(@portal, :url => "/recruit/portals") do |f| %>
+<% form_for(@portal, :url =>  url_for(:host => "apps.mirafra.com/recruit", :controller => "portals", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
   <%= f.error_messages %>
   <table id="portal_form_table">
     <tr>

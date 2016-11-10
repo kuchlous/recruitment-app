@@ -790,7 +790,8 @@ class ResumesController < ApplicationController
       mesg = Resume.create_reqs(resume, req_ids, get_logged_employee, get_current_employee)
       flash[:notice] = mesg
     end
-    redirect_to :back
+    render :nothing => true
+    # redirect_to :back
   end
 
   ####################################################################################################

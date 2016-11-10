@@ -1,5 +1,5 @@
 <br /> <br />
-<% form_for(@resume, :url => "/recruit/resumes/", :method => @resume.persisted? ? "put" : "post", :html => { :multipart => true }) do |f| %>
+<% form_for(@resume, :url => url_for(:host => "apps.mirafra.com/recruit", :controller => "resumes", :action => (display_var == 1 ? "update" : "create")), :html => {:method => (display_var == 1 ? "put" : "post"), :multipart => true }) do |f| %>
   <table id="resume_form_table">
    <tr>
       <td colspan="2"> <%= f.error_messages %> </td>

@@ -6,7 +6,7 @@
   <%= link_to "Export", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => action, :requirement_id => @requirement.id, :for_status => @status %>
   <% render_type = (@render == "interview_table") ? @render : "shared_" + @render %>
   <span class="span_with_padding_0_float">
-    <%= link_to "Export", :host => "apps.mifra.com/recruit", :controller => "resumes", :action => action, :requirement_id => @requirement.id, :for_status => @status %>
+    <%= link_to "Export", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => action, :requirement_id => @requirement.id, :for_status => @status %>
   </span>
   <%= render "resumes/#{render_type}" %>
 </div>

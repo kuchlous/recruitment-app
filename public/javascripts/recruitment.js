@@ -419,7 +419,7 @@ function addInterviewRow(existing_interview_num, req_match_id, row_index, emp_id
 
     // Third element for image to pop up calendar
     var element3  = document.createElement("img");
-    element3.src  = "/images/calendar_date_select/calendar.gif";
+    element3.src  = prepend_with_image_path + "/images/calendar_date_select/calendar.gif";
     element3.style.cursor = "pointer";
     element3.style.paddingLeft = "5px";
 
@@ -636,13 +636,13 @@ function showReferrals(id_array, name_array, add_status_var)
   link      = document.createElement('a');
   if ( add_status_var == 1 )
   {
-    link.setAttribute('href', '/portals/new');
+    link.setAttribute('href', prepend_with_image_path + '/portals/new');
     createLineBreakElement(link, 1);
     text_node = document.createTextNode('If panel is not in list. Add here');
   }
   else if ( add_status_var == 2 )
   {
-    link.setAttribute('href', '/agencies/new');
+    link.setAttribute('href', prepend_with_image_path + '/agencies/new');
     createLineBreakElement(link, 1);
     text_node = document.createTextNode('If agency is not in list. Add here');
   }
@@ -933,7 +933,7 @@ function getJoiningDateBox(div_element)
   div_element.appendChild(input_element);
 
   var image_element  = document.createElement("img");
-  image_element.src  = "/images/calendar_date_select/calendar.gif";
+  image_element.src  = prepend_with_image_path + "/images/calendar_date_select/calendar.gif";
   image_element.className    = "joining_date_image";
   image_element.style.cursor = "pointer";
   Event.observe(image_element, "click",
@@ -1558,7 +1558,7 @@ function createRow()
 function imageForGoIcon(mright, mtop)
 {
   var element                = document.createElement("img");
-  element.src                = "/images/GoIcon.gif";
+  element.src                = prepend_with_image_path + "/images/GoIcon.gif";
   element.className          = "goto_image";
   element.style.marginRight  = mright + "px";
   element.style.marginTop    = mtop   - 2 + "px";
@@ -1570,7 +1570,7 @@ function imageForGoIcon(mright, mtop)
 function imageforCrossIcon()
 {
   var img_element          = document.createElement("img");
-  img_element.src          = "/images/RedCross.png";
+  img_element.src          = prepend_with_image_path + "/images/RedCross.png";
   img_element.className    = "cross_icon_image";
 
   return img_element;
@@ -1799,12 +1799,12 @@ function showHide(elem)
   var table = elem.next('table');
   if ( table.style.display == 'none' )
   {
-    elem.src            = "/images/minusIcon.gif";
+    elem.src            = prepend_with_image_path + "/images/minusIcon.gif";
     table.style.display = '';
   }
   else
   {
-    elem.src = "/images/plusIcon.gif";
+    elem.src = prepend_with_image_path + "/images/plusIcon.gif";
     table.style.display = 'none';
   }
 }
@@ -1882,7 +1882,7 @@ function get_image_name(likely_to_join) {
   } else {
     img_name = "Orange";
   }
-  return '/images/' + img_name + '_Image.png';
+  return prepend_with_image_path + '/images/' + img_name + '_Image.png';
 }
 
 function get_image_tag(likely_to_join, resume_id) {

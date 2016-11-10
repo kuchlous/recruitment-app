@@ -68,8 +68,9 @@ class ApplicationController < ActionController::Base
   end
 
   def check_for_login(msg = "Please login to your account first")
-    session[:return_to] = request.request_uri
+    session[:return_to] = "/recruit" + request.request_uri
     logger.info("IP: " + request.remote_ip)
+    logger.info("/recruit" + request.request_uri)
     @logged_employee  = get_current_employee
     if @logged_employee.nil? && params[:key] != "26a79dtu"
       flash[:notice] = msg
