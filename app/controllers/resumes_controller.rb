@@ -550,7 +550,7 @@ class ResumesController < ApplicationController
     # Adding Comments 
     resume.add_resume_comment("NOT ACCEPTED: Candidate did not accept our offer.", "INTERNAL", get_current_employee)
     flash[:notice] = "You have succesfully marked #{resume.name} as not accepted"
-    redirect_to :back
+    render :nothing => true
   end
 
   ###################################################################################################
@@ -581,7 +581,7 @@ class ResumesController < ApplicationController
 
     email_for_joined(resume, status)
 
-    render "resume_action.js"
+    render :nothing => true
   end
 
   ####################################################################################################
@@ -721,9 +721,7 @@ class ResumesController < ApplicationController
       forward.save
     end
 
-    respond_to do |format|
-      format.js 
-    end
+    render :nothing => true
   end
 
   ####################################################################################################
@@ -740,9 +738,7 @@ class ResumesController < ApplicationController
     # Sending mail
     send_email_for_declining(interview)
 
-    # After rendering this we do not need to create an js file for decline_interview
-    # (decline_interview.js)
-    render "resume_action.js"
+    render :nothing => true
   end
 
   ####################################################################################################
@@ -771,7 +767,7 @@ class ResumesController < ApplicationController
     # Adding Comments 
     resume.add_resume_comment(comment, "INTERNAL", get_current_employee)
     flash[:notice] = mesg
-    redirect_to :back
+    render :nothing => true
   end
 
   ####################################################################################################
@@ -791,7 +787,6 @@ class ResumesController < ApplicationController
       flash[:notice] = mesg
     end
     render :nothing => true
-    # redirect_to :back
   end
 
   ####################################################################################################
