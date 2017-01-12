@@ -123,4 +123,12 @@ class Requirement < ActiveRecord::Base
     end
   end
 
+  def name_for_js
+    if name
+      return name.gsub(/'|"/, '')
+    else
+      return name
+    end
+  end
+
 end
