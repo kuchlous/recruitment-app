@@ -2,7 +2,7 @@ Hi <%= @to_employee.name %>,
 
 This is for your reference. Resume for <%= @resume.name %> referred by you has been uploaded in to the recruitment system.
 
-  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
   Link to resume:-  <%= url %>
 
 Thanks,

@@ -3,5 +3,5 @@ Hi <%= @emp_to.name %>,
   <%= @interview.interview_date %> at <%= @interview.interview_time.strftime("%I:%M%p") %>.
 
   Please login to you account for more details.
-  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @interview.req_match.resume.uniqid.name) %>
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @interview.req_match.resume.uniqid.name) %>
   Link to resume:-  <%= url %>

@@ -8,7 +8,7 @@
   <div id="resume_actions_div">
     <% if is_HR_ADMIN? || is_MANAGER? %>
       <div class="float_right_with_no_padding">
-        <%= link_to "Edit Details", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "edit", :id => @resume.id,:class => "green_color_link", :style => "color: green;" %>
+        <%= link_to "Edit Details", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id,:class => "green_color_link", :style => "color: green;" %>
         <br />
       </div>
     <% end %>
@@ -22,7 +22,7 @@
     </table>
     <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
         <% unless @resume.status == "FUTURE" %>
-          <% form_tag(:host => "apps.mirafra.com/recruit", :action => "move_to_future" ) do %>
+          <% form_tag(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
             <div>
               <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
               <%= hidden_field_tag "resume_id", @resume.id %>
@@ -35,7 +35,7 @@
               @resume.status == "NOT JOINED" ||
               @resume.status == "N_ACCEPTED" ||
               @resume.status == "JOINED" %>
-          <% form_tag(:host => "apps.mirafra.com/recruit", :action => "mark_active" ) do %>
+          <% form_tag(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
             <div>
               <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
               <%= hidden_field_tag "resume_id", @resume.id %>
@@ -43,7 +43,7 @@
           <% end %>
           <br /> <br />
         <% end %>
-        <% form_tag(:host => "apps.mirafra.com/recruit", :action => "reject_all_forwards_req_matches" ) do %>
+        <% form_tag(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
           <div>
             <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
             <%= hidden_field_tag "resume_id", @resume.id %>

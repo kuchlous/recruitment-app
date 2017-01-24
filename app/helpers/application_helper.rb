@@ -482,7 +482,7 @@ module ApplicationHelper
   def resume_link_with_20_characters(resume)
     company = resume.current_company ? resume.current_company : ""
     uniqid_name = resume.uniqid.name;
-    link_to get_characters(resume.name.titleize, 17), {:host=> "apps.mirafra.com/recruit", :controller  => "resumes", :action => "show", :id => uniqid_name },
+    link_to get_characters(resume.name.titleize, 17), {:host=> APP_CONFIG['host_name'], :controller  => "resumes", :action => "show", :id => uniqid_name },
                                                :onMouseOver => "popUpDescriptionForResume(#{resume.id}, \"#{snippet(resume.qualification, 10)}\", \"#{get_current_experience_string(resume)}\", \"#{company}\");",
                                                :onMouseOut  => "HideContent(\"#{resume.id}\");",
                                                :onClick     => "openResumeInNewTab(\"#{uniqid_name}\"); return false;"
@@ -533,7 +533,7 @@ module ApplicationHelper
     return '' unless resume
     company      = resume.current_company ? resume.current_company : ""
     uniqid_name  = resume.uniqid.name
-    link_to resume.name, { :controller  => "resumes", :action => "show", :host => "apps.mirafra.com/recruit", :id => uniqid_name },
+    link_to resume.name, { :controller  => "resumes", :action => "show", :host => APP_CONFIG['host_name'], :id => uniqid_name },
                            :onMouseOver => "popUpDescriptionForResume(#{resume.id}, \"#{snippet(resume.qualification, 10)}\", \"#{get_current_experience_string(resume)}\", \"#{company}\");",
                            :onMouseOut  => "HideContent(\"#{resume.id}\");",
                            :onClick     => "openResumeInNewTab(\"#{uniqid_name}\"); return false;"
@@ -549,7 +549,7 @@ module ApplicationHelper
       d = d.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
     end
 
-    link_to requirement.name, {:host=> "apps.mirafra.com/recruit", :controller  => "requirements", :action => "show", :id => requirement.id },
+    link_to requirement.name, {:host=> APP_CONFIG['host_name'], :controller  => "requirements", :action => "show", :id => requirement.id },
                                 :onMouseOver => "popUpDescriptionForRequirements(#{requirement.id}, \"#{s}\", \"#{d}\");",
                                 :onMouseOut  => "HideContent(\"#{requirement.id}\");"
     # link_to requirement.name, {:controller  => "requirements", :action => "show", :id => requirement.id}
@@ -652,31 +652,31 @@ module ApplicationHelper
 
   def get_ajax_request_for_quarterly_joined(smonth, emonth, year, status, text)
     status == "JOINED" ? div = "joined_resumes_div" : div = "not_joined_resumes_div"
-    link_to_remote "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :url => { :host=> "apps.mirafra.com/recruit", :controller => "resumes", :action => "show_quarterly_joined", :smonth => smonth, :emonth => emonth, :year => year, :status => status }, :update => "#{div}"
+    link_to_remote "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :url => { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_joined", :smonth => smonth, :emonth => emonth, :year => year, :status => status }, :update => "#{div}"
   end
 
   def get_ajax_request_for_all_joined_or_not_joined(text, status)
     status == "JOINED" ? div = "joined_resumes_div" : div = "not_joined_resumes_div"
-    link_to_remote text, :url => { :host=> "apps.mirafra.com/recruit", :controller => "resumes", :action => "show_all_joined_or_not_joined", :status => status }, :update => "#{div}"
+    link_to_remote text, :url => { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_all_joined_or_not_joined", :status => status }, :update => "#{div}"
   end
 
   def get_ajax_request_for_quarterly_offered(smonth, emonth, year, status, text)
     div    = "offered_resumes_div"
-    link_to_remote "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :url => { :host=> "apps.mirafra.com/recruit", :controller => "resumes", :action => "show_quarterly_offered", :smonth => smonth, :emonth => emonth, :year => year, :status => status }, :update => "#{div}"
+    link_to_remote "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :url => { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_offered", :smonth => smonth, :emonth => emonth, :year => year, :status => status }, :update => "#{div}"
   end
 
   def get_ajax_request_for_all_offered(text, status)
     div    = "offered_resumes_div"
-    link_to_remote text, :url => { :host=> "apps.mirafra.com/recruit", :controller => "resumes", :action => "show_all_offered", :status => status }, :update => "#{div}"
+    link_to_remote text, :url => { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_all_offered", :status => status }, :update => "#{div}"
   end
 
   def get_ajax_request_for_quarterly_not_accepted(smonth, emonth, year, status, text)
     div    = "not_accepted_resumes_div"
-    link_to_remote "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :url => { :host=> "apps.mirafra.com/recruit", :controller => "resumes", :action => "show_quarterly_not_accepted", :smonth => smonth, :emonth => emonth, :year => year, :status => status }, :update => "#{div}"
+    link_to_remote "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :url => { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_not_accepted", :smonth => smonth, :emonth => emonth, :year => year, :status => status }, :update => "#{div}"
   end
 
   def get_ajax_request_for_all_not_accepted(text, status)
     div    = "not_accepted_resumes_div"
-    link_to_remote text, :url => { :host=> "apps.mirafra.com/recruit", :controller => "resumes", :action => "show_all_not_accepted", :status => status }, :update => "#{div}"
+    link_to_remote text, :url => { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_all_not_accepted", :status => status }, :update => "#{div}"
   end
 end

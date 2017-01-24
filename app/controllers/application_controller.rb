@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
 
   def default_url_options(options=nil)
     if Rails.env.production?
-      {:protocol => "https", :host => "apps.mirafra.com/recruit", :only_path => false}
+      {:protocol => "https", :host => APP_CONFIG['host_name'], :only_path => false}
     else  
      {}
     end

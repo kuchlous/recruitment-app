@@ -2,7 +2,7 @@ Hi <%= @to_employee.name %>,
 
 This is for your reference. <%= @resume.name %> referred by <%= @resume.referral_name %> <% if    @status == "JOINED"     %> has joined on <%= @resume.joining_date %>. <% elsif @status == "REJECTED"   %> has not joined. <% elsif @status == "FUTURE"     %> has not joined. <% elsif @status == "NOT JOINED" %> has not joined. <% elsif @status == "JOINING"    %> is joining on <%= @resume.joining_date %>. <% else %> has changed joining date to <%= @resume.joining_date %>. <% end %>
 
-  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
   Link to resume:-  <%= url %>
 
 Thanks,

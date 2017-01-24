@@ -1,5 +1,5 @@
 Hi <%= @to_employee.name %>,
   You have got resume of <%= @resume.name %> from <%= @from_employee.name %>.
   For more details, please login to your recruitment account.
-  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
   Link to resume:-  <%= url %>

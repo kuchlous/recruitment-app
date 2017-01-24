@@ -2,16 +2,16 @@
   <span> Requirements : <%= @requirements.size %> </span>
   <% if is_HR_ADMIN? %>
     <div class="add_link" style="padding-left: 10px;">
-      <%= link_to "Requirement Analysis", :host => "apps.mirafra.com/recruit", :action => "req_analysis" %>
+      <%= link_to "Requirement Analysis", :host => APP_CONFIG['host_name'], :action => "req_analysis" %>
     </div>
     <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
-      <%= link_to "Add new requirement", :host => "apps.mirafra.com/recruit", :controller => "requirements", :action => "new" %>
+      <%= link_to "Add new requirement", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "new" %>
     </div>
     <div class="add_link" style="padding-right: 10px;">
       <% if params[:action] == "index" %>
-        <%= link_to "All requirements", :host => "apps.mirafra.com/recruit", :action => "all_reqs" %>
+        <%= link_to "All requirements", :host => APP_CONFIG['host_name'], :action => "all_reqs" %>
       <% else %>
-        <%= link_to "Active requirements", :host => "apps.mirafra.com/recruit", :action => "index" %>
+        <%= link_to "Active requirements", :host => APP_CONFIG['host_name'], :action => "index" %>
       <% end %>
     </div>
   <% end %>

@@ -9,5 +9,5 @@ Hi <%= @to_employee.name %>,
   <%= @interview.interview_time.to_s[11..18] %> for requirement (<%= @requirement.name %>).
 
   For more details, please login to your recruitment account.
-  <% url = url_for(:protocol => "https", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "show", :id => @uniqid.name) %>
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @uniqid.name) %>
   Link to resume:-  <%= url %>

@@ -1,7 +1,7 @@
 <div id="portal_index_div" class="common_class">
   <span> List of Portals </span>
   <div class="add_link">
-  <%= link_to "Add new portal", :host => "apps.mirafra.com/recruit", :controller => "portals", :action => "new" %>
+  <%= link_to "Add new portal", :host => APP_CONFIG['host_name'], :controller => "portals", :action => "new" %>
   </div>
   <br /> <br />
   <table>
@@ -19,7 +19,7 @@
           <%= print_date(portal.created_at) %>
         </td>
         <td>
-          <%= link_to 'Edit', :host => "apps.mirafra.com/recruit", :controller => "portals", :action => "edit", :id => portal.id, :style => "font-weight: bold; color: green;" %>
+          <%= link_to 'Edit', :host => APP_CONFIG['host_name'], :controller => "portals", :action => "edit", :id => portal.id, :style => "font-weight: bold; color: green;" %>
         </td>
       </tr>
     <% end %>

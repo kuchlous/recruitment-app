@@ -1,6 +1,6 @@
 <div id="recent_resume_div" class="common_class">
   <span class="span_with_13"> Recently updated resumes (<%= @resumes.size %>) </span>
-  <% form_tag(:host => "apps.mirafra.com/recruit", :action => 'find_resume_within_given_dates' ) do %>
+  <% form_tag(:host => APP_CONFIG['host_name'], :action => 'find_resume_within_given_dates' ) do %>
     <span class="float_right">
       From: <%= calendar_date_select :recent, :sdate, :year_range => 5.years.ago..5.years.since, :value => @start_date %>
       To:   <%= calendar_date_select :recent, :edate, :year_range => 5.years.ago..5.years.since, :value => @end_date   %>

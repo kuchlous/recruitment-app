@@ -1,5 +1,5 @@
 <br /> <br />
-<% form_tag(url_for(:host => "apps.mirafra.com/recruit", :controller => "home", :action => "advanced_search_results"), :method => "get") do %>
+<% form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search_results"), :method => "get") do %>
   <table id="resume_form_table">
     <tr>
       <td> Search Pattern </td>

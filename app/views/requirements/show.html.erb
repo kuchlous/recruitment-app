@@ -1,6 +1,6 @@
 <div id="req_details_div" class="common_class">
   <div class="add_link">
-    <%= link_to "Edit", :host => "apps.mirafra.com/recruit", :controller => "requirements", :action => "edit", :id => @requirement.id %>
+    <%= link_to "Edit", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "edit", :id => @requirement.id %>
   </div>
   <form name="form" method="post">
     <table id="req_details_table">
@@ -72,7 +72,7 @@
     </table>
     <br /> <br />
     <span class="span_with_13">  Req Description: </span>
-    ( <%= link_to "Export all", :host => "apps.mirafra.com/recruit", :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id %> ) <br /> <br />
+    ( <%= link_to "Export all", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id %> ) <br /> <br />
     <table id="resume_list_table">
       <tr class="header_row">
         <td> Forwards    </td>
@@ -84,13 +84,13 @@
         <td> Joining     </td>
       </tr>
       <tr class="blue">
-        <td> <%= link_to @req_forwards.size, :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Forwards"    %>   </td>
-        <td> <%= link_to @shortlists.size,   :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Shortlisted" %>   </td>
-        <td> <%= link_to @scheduled.size,    :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Scheduled"   %>   </td>
-        <td> <%= link_to @rejected.size,     :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Rejected"    %>   </td>
-        <td> <%= link_to @hold.size,         :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Hold"        %>   </td>
-        <td> <%= link_to @offered.size,      :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Offered"     %>   </td>
-        <td> <%= link_to @joining.size,      :host => "apps.mirafra.com/recruit", :action => "show", :id => @requirement.id, :status => "Joining"     %>   </td>
+        <td> <%= link_to @req_forwards.size, :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"    %>   </td>
+        <td> <%= link_to @shortlists.size,   :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted" %>   </td>
+        <td> <%= link_to @scheduled.size,    :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"   %>   </td>
+        <td> <%= link_to @rejected.size,     :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Rejected"    %>   </td>
+        <td> <%= link_to @hold.size,         :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"        %>   </td>
+        <td> <%= link_to @offered.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"     %>   </td>
+        <td> <%= link_to @joining.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"     %>   </td>
       </tr>
     </table>
     <div id="show_requirements_description_div">
@@ -100,5 +100,5 @@
     </div>
   </form>
   <br /> <br />
-  <%= link_to "List of requirements", :host => "apps.mirafra.com/recruit", :controller => "requirements", :style => "color: #0000FF;" %> </div>
+  <%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %> </div>
 </div>

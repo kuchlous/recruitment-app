@@ -9,7 +9,7 @@
     <tr>
       <td class="align_left">
         <% if i > 1 %>
-          <b> <%= link_to_remote "&laquo;", :url => {:host => "apps.mirafra.com/recruit" :controller => "resumes", :action => @action, :month => i-1, :year => year }, :update => 'interview_calendar' %> </b>
+          <b> <%= link_to_remote "&laquo;", :url => {:host => APP_CONFIG['host_name'] :controller => "resumes", :action => @action, :month => i-1, :year => year }, :update => 'interview_calendar' %> </b>
         <% else %>
           &nbsp;
         <% end %>
@@ -21,7 +21,7 @@
 
       <td class="align_right">
         <% if i < 12 %>
-          <b> <%= link_to_remote "&raquo;", :url => {:host => "apps.mirafra.com/recruit" :controller => "resumes", :action => @action, :month => i+1, :year => year }, :update => 'interview_calendar' %> </b>
+          <b> <%= link_to_remote "&raquo;", :url => {:host => APP_CONFIG['host_name'] :controller => "resumes", :action => @action, :month => i+1, :year => year }, :update => 'interview_calendar' %> </b>
         <% else %>
           &nbsp;
         <% end %>

@@ -1,7 +1,7 @@
 <div id="group_index_div" class="common_class">
   <span> List of Departments </span>
   <div class="add_link">
-  <%= link_to "Add new department", :host => "apps.mirafra.com/recruit", :controller => "groups", :action => "new" %>
+  <%= link_to "Add new department", :host => APP_CONFIG['host_name'], :controller => "groups", :action => "new" %>
   </div>
   <br /> <br />
   <table class="group_list_class">
@@ -13,13 +13,13 @@
     <% @groups.each do |group| %>
       <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
         <td>
-          <%= link_to group.name, :host => "apps.mirafra.com/recruit", :controller => "groups", :action => "show", :id => group.id  %>
+          <%= link_to group.name, :host => APP_CONFIG['host_name'], :controller => "groups", :action => "show", :id => group.id  %>
         </td>
         <td>
           <%= group.employee.name %>
         </td>
         <td>
-          <%= link_to "Edit", :host => "apps.mirafra.com/recruit", :controller => "groups", :action => "edit", :id => group.id, :style => "font-weight: bold; color: green;" %>
+          <%= link_to "Edit", :host => APP_CONFIG['host_name'], :controller => "groups", :action => "edit", :id => group.id, :style => "font-weight: bold; color: green;" %>
         </td>
       </tr>
     <% end %>

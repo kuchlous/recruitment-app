@@ -1,7 +1,7 @@
 <div id="designation_index_div" class="common_class">
   <span> List of Designations </span>
   <div class="add_link">
-  <%= link_to "Add new designation", :host => "apps.mirafra.com/recruit", :controller => "designations", :action => "new" %>
+  <%= link_to "Add new designation", :host => APP_CONFIG['host_name'], :controller => "designations", :action => "new" %>
   </div>
   <br /> <br />
   <table>
@@ -19,7 +19,7 @@
           <%= print_date(d.created_at) %>
         </td>
         <td>
-          <%= link_to 'Edit', :host => "apps.mirafra.com/recruit", :controller => "designations", :action => "edit", :id => d.id, :style => "font-weight: bold; color: green;" %>
+          <%= link_to 'Edit', :host => APP_CONFIG['host_name'], :controller => "designations", :action => "edit", :id => d.id, :style => "font-weight: bold; color: green;" %>
         </td>
       </tr>
     <% end %>
