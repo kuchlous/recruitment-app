@@ -5,6 +5,13 @@
       (Status : <%= @overall_status %>) 
     <% end %>
   </span>
+  <div class="span_with_8">
+		 <h2> Go To:
+       <a href="#comment">Comment</a>
+       <a href="#feedback">Feedback</a>
+       <a href="#messages">Messages</a>
+     </h2>
+  </div>
   <div id="resume_actions_div">
     <% if is_HR_ADMIN? || is_MANAGER? %>
       <div class="float_right_with_no_padding">
@@ -136,7 +143,9 @@
     <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER?%>
     <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
       <br />
-      <span class="span_with_13"> Comments: </span>
+      <div id="comment">
+        <span class="span_with_13"> Comments: </span>
+      </div>
       <br/>
       <table id="resume_details_comments_table">
         <% unless @comments.nil? ||
@@ -157,7 +166,10 @@
     
       <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
         <br />
-        <span class="span_with_13"> Feedback: </span>
+        <div id="feedback">
+          <span class="span_with_13"> Feedback: </span>
+        </div>
+        <span class="span_with_8"> Summary : <%= get_feedback_rating_average(@feedbacks) %> </span>
         <br/>
         <table id="resume_details_feedback_table">
           <% unless @feedbacks.nil? ||
@@ -166,7 +178,9 @@
               <% class_name = cycle('color_line_odd', 'color_line_even') %>
               <tr class="<%= class_name %>">
                 <td>
-                  <span class="span_no_bold"> By <%= feedback.employee.name + " (" + print_date(feedback.created_at) + ")" %> </span> <br />
+                  <span class="span_no_bold"> By <%= feedback.employee.name + " (" + print_date(feedback.created_at) + ")" %> :: 
+                    <%= get_rating(feedback) %>
+                  </span> <br />
                   <span class="span_no_bold left_padding"> <%= simple_format feedback.feedback %> </span>
                 </td>
               </tr>
@@ -179,6 +193,9 @@
     
       <br />
       <span class="span_with_13"> Messages: </span>
+      <div id="messages">
+        <span class="span_with_13"> Messages: </span>
+      </div>
       <br/>
       <table id="resume_details_messages_table">
         <% unless @messages.nil? ||
