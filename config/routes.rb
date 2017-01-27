@@ -44,6 +44,7 @@ ActionController::Routing::Routes.draw do |map|
                                            :upload_xls                   => :any,
                                            :update_resume_likely_to_join => :any,
                                            :process_xls_and_zipped_resumes => :any,
+                                           :close_requirement     => :any,
                                            :export_interviews_per_date     => :any
                                          }
   map.resources :home,   :collection => { :advanced_search               => :any,

@@ -16,6 +16,8 @@
     </div>
   <% end %>
   <br /> <br />
+
+<% form_tag(:controller => "requirements", :action => "close_requirement") do %>
   <table>
    <tr class="header_row">
      <td> Name             </td>
@@ -24,6 +26,7 @@
      <td> End              </td>
      <td> Positions        </td>
      <td> Owner            </td>
+		 <td> <%= (@requirements.size != 0) ? submit_tag('Delete') : "delete"  %> </td>
    </tr>
 
    <% @requirements.each do |requirement| %>
@@ -52,8 +55,11 @@
        <td>
          <%= get_words(requirement.employee.name, 1) %>
        </td>
+			 <td> <%= check_box("req", "commands", {:multiple => true}, requirement.id, nil) %>
+			</td>
      </tr>
    <% end %>
  </table>
+	<% end %>
  <br /> <br />
 </div>

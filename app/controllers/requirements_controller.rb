@@ -185,6 +185,23 @@ class RequirementsController < ApplicationController
     redirect_to :back
   end
 
+  def close_requirement
+    reqs_to_close = params[:req][:commands] - [""]
+    req_closed_string = ""
+    if reqs_to_close.length > 0
+      reqs_to_close.each do |req_id|
+        req = Requirement.find(req_id)
+        if(req.update_attributes!(:status => "CLOSED EXPIRED"))
+          req_closed_string += req.name+","
+        end
+      end
+      flash[:notice] = "You have successfully INACTIVATED requirement \'#{req_closed_string}\' "
+    else
+      flash[:notice] = "Please select checkbox to INACTIVE requirements."
+    end
+    redirect_to :back
+  end
+
 private
   def error_catching_and_flashing(object)
     unless object.valid?
