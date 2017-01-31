@@ -17,49 +17,51 @@
   <% end %>
   <br /> <br />
 
-<% form_tag(:controller => "requirements", :action => "close_requirement") do %>
-  <table>
-   <tr class="header_row">
-     <td> Name             </td>
-     <td> Skills/Desc      </td>
-     <td style="width:75px;"> Exp        		   </td>
-     <td> End              </td>
-     <td> Positions        </td>
-     <td> Owner            </td>
-		 <td> <%= (@requirements.size != 0) ? submit_tag('Delete') : "delete"  %> </td>
-   </tr>
-
-   <% @requirements.each do |requirement| %>
-     <% if requirement.req_type == "HOT" %>
-       <tr style="background: #FF8080;">
-     <% else %>
-       <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-     <% end %>
-       <td>
-         <%= get_requirement_link_with_mouse_over_and_mouseout(requirement) %>
-       </td>
-       <td title = "<%= requirement.skill %> <%= requirement.description %>" >
-         <%= snippet(requirement.skill, 5) %> <br />
-       </td>
-       <td>
-         <%= requirement.exp.gsub(/ /,"") %> ( <%= requirement.designation.name %> )
-       </td>
-       <td>
-         <% if requirement.edate %>
-           <%= print_date(requirement.edate) %>
-         <% end %>
-       </td>
-       <td>
-         <%= requirement.nop %> 
-       </td>
-       <td>
-         <%= get_words(requirement.employee.name, 1) %>
-       </td>
-			 <td> <%= check_box("req", "commands", {:multiple => true}, requirement.id, nil) %>
-			</td>
-     </tr>
-   <% end %>
- </table>
-	<% end %>
+  <% form_tag(:controller => "requirements", :action => "close_requirement") do %>	
+    <table>
+      <tr class="header_row">
+        <td> Name             </td>
+        <td> Skills/Desc      </td>
+        <td style="width:75px;"> Exp        		   </td>
+        <td> End              </td>
+        <td> Positions        </td>
+        <td> Owner            </td>
+        <%if is_HR_ADMIN? %>
+          <td> <%= (@requirements.size != 0) ? submit_tag('Delete') : "delete"  %> </td>
+        <%end%>
+      </tr>
+      <% @requirements.each do |requirement| %>
+        <% if requirement.req_type == "HOT" %>
+          <tr style="background: #FF8080;">
+        <% else %>
+          <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <% end %>
+        <td>
+        <%= get_requirement_link_with_mouse_over_and_mouseout(requirement) %>
+        </td>
+        <td title = "<%= requirement.skill %> <%= requirement.description %>" >
+          <%= snippet(requirement.skill, 5) %> <br />
+        </td>
+        <td>
+          <%= requirement.exp.gsub(/ /,"") %> ( <%= requirement.designation.name %> )
+        </td>
+        <td>
+          <% if requirement.edate %>
+            <%= print_date(requirement.edate) %>
+          <% end %>
+        </td>
+        <td>
+          <%= requirement.nop %> 
+        </td>
+        <td>
+          <%= get_words(requirement.employee.name, 1) %>
+        </td>
+        <%if is_HR_ADMIN? %>
+          <td> <%= check_box("req", "commands", {:multiple => true}, requirement.id, nil) %>	</td>
+        <%end%>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
  <br /> <br />
 </div>
