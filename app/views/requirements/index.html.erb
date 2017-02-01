@@ -1,5 +1,9 @@
 <div id="req_list_div" class="common_class">
-  <span> Requirements : <%= @requirements.size %> </span>
+    <div class="float_left">
+      <span> Requirements : <%= @requirements.size %></span><br /><br />
+      <div class="background_green"> Closed Requirements </div>
+      <div class="background_red"> Hot Requirements </div>
+    </div>
   <% if is_HR_ADMIN? %>
     <div class="add_link" style="padding-left: 10px;">
       <%= link_to "Requirement Analysis", :host => APP_CONFIG['host_name'], :action => "req_analysis" %>
@@ -14,6 +18,15 @@
         <%= link_to "Active requirements", :host => APP_CONFIG['host_name'], :action => "index" %>
       <% end %>
     </div>
+    <br />
+    <br />
+    <div class="add_link float-md-right col-md-2">
+      <% form_tag search_requirements_path, :method => 'post' do %>
+        <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()' %>
+        <%= submit_tag "Search" %>
+      <% end %>
+    </div>
+    <br>
   <% end %>
   <br /> <br />
 
@@ -31,7 +44,9 @@
         <%end%>
       </tr>
       <% @requirements.each do |requirement| %>
-        <% if requirement.req_type == "HOT" %>
+        <% if requirement.status != "OPEN" %>
+          <tr style="background: #9df405;">
+        <% elsif requirement.req_type == "HOT" %>
           <tr style="background: #FF8080;">
         <% else %>
           <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">

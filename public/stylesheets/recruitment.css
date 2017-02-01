@@ -1741,3 +1741,20 @@ div.pagination .disabled:hover
   width:            100px;
 }
 
+.background_green {
+  background-color: #9df405;
+  height: 20px;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.background_red {
+  background-color: #ff8080;
+  height: 20px;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.float_left {
+  float: left;
+}

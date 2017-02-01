@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :groups, :portals, :agencies, :designations
-  map.resources :requirements, :collection => { :req_analysis => :any, :all_reqs => :any }
+  map.resources :requirements, :collection => { :req_analysis => :any, :all_reqs => :any, :search => :any }
   map.resources :employees, :collection => { :logout => :any,
                                            :list_my_employees => :any }
   map.resources :resumes,   :collection => { :inbox               => :any,

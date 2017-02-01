@@ -14,6 +14,12 @@ function fillInputBoxWithContents()
   element.autocomplete({source: empNames["listedEmployees"]});
 }
 
+function fillRequirementSearchBoxWithContents() {
+  $jq = jQuery.noConflict();
+  search_emp = jQuery("#search");
+  search_emp.autocomplete({source: empNames["listedEmployees"]});
+} 
+
 
 function showEventDetails(event)
 {
