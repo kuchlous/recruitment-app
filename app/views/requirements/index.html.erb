@@ -22,8 +22,8 @@
     <br />
   <% end %>
   <div class="add_link float-md-right col-md-2">
-    <% form_tag search_requirements_path, :method => 'post' do %>
-      <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()' %>
+    <% form_tag :host => APP_CONFIG['host_name'], :action => "search" do %>
+        <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()', :placeholder => "Search reqs by employee name" %>
       <%= submit_tag "Search" %>
     <% end %>
   </div>
