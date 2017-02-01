@@ -20,14 +20,14 @@
     </div>
     <br />
     <br />
-    <div class="add_link float-md-right col-md-2">
-      <% form_tag search_requirements_path, :method => 'post' do %>
-        <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()' %>
-        <%= submit_tag "Search" %>
-      <% end %>
-    </div>
-    <br>
   <% end %>
+  <div class="add_link float-md-right col-md-2">
+    <% form_tag search_requirements_path, :method => 'post' do %>
+      <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()' %>
+      <%= submit_tag "Search" %>
+    <% end %>
+  </div>
+  <br>
   <br /> <br />
 
   <% form_tag(:controller => "requirements", :action => "close_requirement") do %>	
