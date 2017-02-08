@@ -18,7 +18,7 @@ class RequirementsController < ApplicationController
   end
 
   def search
-    @requirements = Requirement.find(:all, :order => "employee_id")
+    @requirements = Requirement.find(:all, :conditions => { :status => "OPEN" }, :order => "employee_id")
     search_text = params[:search]
     if search_text != ""
       employee = Employee.find(:first, :conditions => ["name = ? OR login = ?", search_text, search_text] )
