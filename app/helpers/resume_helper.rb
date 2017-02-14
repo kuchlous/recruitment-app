@@ -96,7 +96,7 @@ module ResumeHelper
     feedback["Fair"] = 2
     feedback["Good"] = 3
     feedback["Very Good"] = 4
-    feedback["Excellant"] = 5
+    feedback["Excellent"] = 5
     feedbacks.each do |f|
       logger.info(f.rating)
       feedback_avg += feedback[f.rating]

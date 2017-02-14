@@ -100,6 +100,8 @@ class Resume < ActiveRecord::Base
       return "Joining Date Given"
     elsif status_array.include?("OFFERED")
       return "Offered"
+    elsif status_array.include?("YTO")
+      return "Yet To Offer"
     elsif status_array.include?("HOLD")
       return "On Hold"
     elsif status_array.include?("SELECTED")

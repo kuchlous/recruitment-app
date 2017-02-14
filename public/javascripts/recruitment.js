@@ -675,7 +675,6 @@ function actionBox(value, event, req_id_array, req_name_array, req_match_id, res
 {
   // Finding element where mouse(which td/tr) is clicked
   cur_element = Event.element(event);
-
   if ( value == "Add Comment" )
   {
     // Show the add comment box
@@ -726,6 +725,11 @@ function actionBox(value, event, req_id_array, req_name_array, req_match_id, res
   {
     // Show the joining box
     showActionBoxReqMatchInternal(cur_element, req_match_id, "Joining", "req_match_id", 0);
+  }
+  else if (value == "Yet to Offer" )
+  {
+    // Show yet to offer box
+    showActionBoxReqMatchInternal(cur_element, req_match_id, "YTO", "req_match_id", 0);
   }
 }
 
@@ -824,8 +828,10 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
         // Show the links to interview
         getInterviews(cur_element, req_match_id);
       }
-      else
+      else if ( value == "YTO" )
       {
+        // Show the YTO box
+        showActionBoxReqMatchInternal(cur_element, selValue, "YTO", req_match_id_or_req_id, req_match_id);
       }
     }
     else

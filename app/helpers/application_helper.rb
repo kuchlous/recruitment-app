@@ -184,14 +184,14 @@ module ApplicationHelper
     unless status == "FORWARDED"
       unless params[:action] == "forwarded"
         if is_HR? || is_ADMIN? || is_REQ_MANAGER?
-          for action in [ "Set Status", "Interviews", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
+          for action in [ "Set Status", "Interviews", "Yet to Offer", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
             actions_arr.push([action])
           end
         else
           if status == "FORWARDED"
             actions_arr.push(["Interviews"])
           else
-            for action in [ "Set Status", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
+            for action in [ "Set Status", "Yet to Offer", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
               actions_arr.push([action])
             end
           end
@@ -209,7 +209,7 @@ module ApplicationHelper
     else
       acts << ["Interviews"]
     end
-    acts += [["Reject"], ["Hold"], ["Offer"], ["Joining"]]
+    acts += [["YTO"], ["Reject"], ["Hold"], ["Offer"], ["Joining"]]
   end
 
   def status_array
@@ -593,6 +593,15 @@ module ApplicationHelper
       year_str = Date::MONTHNAMES[start_month] + ".." + Date::MONTHNAMES[end_month]
     else
       year_str = Date::MONTHNAMES[start_month]
+    end
+  end
+
+  def get_req_match_requirement(resume, status)
+    matches = resume.req_matches
+    matches.each do |match|
+      if match.status == status
+        return get_requirement_link_with_mouse_over_and_mouseout(match.requirement)
+      end
     end
   end
 

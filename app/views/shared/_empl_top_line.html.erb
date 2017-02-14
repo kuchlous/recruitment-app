@@ -87,6 +87,7 @@
                offered    = "manager_offered"
                joined     = "manager_joined"
                interviews = "manager_interviews_status"
+               yto        = "manager_yto"
                shortlisted = "manager_shortlisted"
                forwarded  = "manager_index"
                rejected   = "manager_rejected"
@@ -98,6 +99,7 @@
                offered    = "offered"
                joined     = "joined"
                interviews = "interviews_status"
+               yto        = "yto"
                shortlisted = "shortlisted"
                forwarded  = "forwarded"
                rejected   = "rejected"
@@ -115,6 +117,7 @@
           <% if forwarded   %> <td> <%= link_to "Forwarded",   :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{forwarded}"   %>    </td> <% end %>
           <% if shortlisted %> <td> <%= link_to "Shortlisted", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{shortlisted}" %>    </td> <% end %>
           <% if interviews  %> <td> <%= link_to "Interviews",  :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{interviews}"  %>    </td> <% end %>
+          <% if yto         %> <td> <%= link_to "YTO",         :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{yto}"         %>    </td> <% end %>
           <% if hold        %> <td> <%= link_to "Hold",        :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{hold}"        %>    </td> <% end %>
           <% if rejected    %> <td> <%= link_to "Rejected",    :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{rejected}"    %>    </td> <% end %>
           <% if offered     %> <td> <%= link_to "Offered",     :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{offered}"     %>    </td> <% end %>

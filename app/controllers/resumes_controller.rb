@@ -223,6 +223,14 @@ class ResumesController < ApplicationController
 
   end
 
+  def manager_yto
+    @status  = "YTO"
+    @matches = ReqMatch.find_employee_requirements_req_matches(get_current_employee, false)
+    @matches = @matches.find_all { |m|
+       m.status == @status
+    }
+  end
+
   def manager_joined
     @status           = "JOINING"
     @join_on_req_page = @offer_on_req_page = 0
@@ -284,6 +292,12 @@ class ResumesController < ApplicationController
     @join_on_req_page = @offer_on_req_page = 0
     @matches          = get_all_req_matches_of_status(@status)
   end
+
+  def yto
+    @status           = "YTO"
+    @matches          = get_all_req_matches_of_status(@status)
+  end
+
 
   def find_joining_resumes
     matches = ReqMatch.find_by_sql("SELECT * FROM req_matches INNER JOIN resumes ON resumes.id = req_matches.resume_id WHERE req_matches.status = \"JOINING\" AND resumes.status != \"JOINED\" AND resumes.joining_date > \"#{(Date.today - 365).to_s}\" ORDER BY resumes.joining_date")
@@ -1866,6 +1880,8 @@ class ResumesController < ApplicationController
       return "JOINING"
     elsif istatus == "Declined"
       return "Declined"
+    elsif istatus == "YTO"
+      return "YTO"
     end
   end
 
