@@ -1947,13 +1947,14 @@ class ResumesController < ApplicationController
   def fill_offered_data(sheet, matches)
 
     sheet.column(0).width = 30
-    sheet.column(1).width = 30
+    sheet.column(1).width = 50
     sheet.column(2).width = 30
     sheet.column(3).width = 30
     sheet.column(4).width = 30
     sheet.column(5).width = 30
+    sheet.column(6).width = 30
 
-    sheet.row(0).concat %w{Name Req Status Email Phone Referral}
+    sheet.row(0).concat %w{Name Current\ Company Req Status Email Phone Referral}
     blue = Spreadsheet::Format.new :weight => :bold,
                                    :size   => 12
     sheet.row(0).default_format = blue
@@ -1961,6 +1962,7 @@ class ResumesController < ApplicationController
     matches.each do |m|
       sheet.row(row).height = 20
       sheet.row(row).push Spreadsheet::Link.new get_resume_url(m.resume.uniqid), m.resume.name
+      sheet.row(row).push m.resume.current_company
       sheet.row(row).push m.requirement.name
       sheet.row(row).push m.resume.resume_overall_status
       sheet.row(row).push m.resume.email
@@ -2036,11 +2038,12 @@ class ResumesController < ApplicationController
  end
 
  def fill_forwarded_shortlisted_data(sheet, forwards)
-    sheet.row(0).concat %w{Name Education Exp Req Email Phone\ Number Referral}
+    sheet.row(0).concat %w{Name Education Current\ Company Exp Req Email Phone\ Number Referral}
     blue = Spreadsheet::Format.new :weight => :bold,
                                    :size   => 12
     sheet.column(0).width = 30
     sheet.column(1).width = 50
+    sheet.column(2).width = 50
     sheet.column(3).width = 30
     sheet.column(4).width = 30
     sheet.column(5).width = 30
@@ -2053,6 +2056,7 @@ class ResumesController < ApplicationController
       resume = fwd.resume
       sheet.row(row).push Spreadsheet::Link.new get_resume_url(resume.uniqid), resume.name
       sheet.row(row).push resume.qualification
+      sheet.row(row).push resume.current_company
       sheet.row(row).push resume.experience
       if (fwd.class == Forward) 
         req_names = nil
