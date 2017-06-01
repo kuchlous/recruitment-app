@@ -46,7 +46,8 @@
       <% if is_HR_ADMIN? || is_GM? %>
         | <%= link_to "Misc.", { :host=> APP_CONFIG['host_name'], :controller => "home",    :action => "actions" },       :class => "primary_action", :id => "misc_home",     :onmouseover => "showSecondaryActions('misc_home');", :onfocus => "showSecondaryActions('misc_home');" %>
       <% else %>
-        | <%= link_to "Requirements", { :host=> APP_CONFIG['host_name'], :controller => "requirements", :action => "index" } %>
+        | <%= link_to "All Requirements", { :host=> APP_CONFIG['host_name'], :controller => "requirements", :action => "index" } %>
+        | <%= link_to "My Requirements", { :host=> APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" } %>
       <% end %>
         | <%= link_to "Messages",      { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "inbox" },         :class => "primary_action", :id => "messages_home", :onmouseover => "showSecondaryActions('messages_home');", :onfocus => "showSecondaryActions('messages_home');" %>
       <% if is_HR_ADMIN? %>
@@ -61,7 +62,8 @@
       </div>
       <% if is_HR_ADMIN? || is_GM? %>
         <div id="misc_home_actions">
-          <%= link_to "Requirements",           {  :host=> APP_CONFIG['host_name'], :controller => "requirements" },  :class => "secondary_action" %>
+          <%= link_to "All Requirements",           {  :host=> APP_CONFIG['host_name'], :controller => "requirements" },  :class => "secondary_action" %>
+          <%= link_to "My Requirements",        {  :host=> APP_CONFIG['host_name'], :controller => "requirements",    :action => "my_requirements" }, :class => "secondary_action" %>
           <% if is_HR_ADMIN? %>
             <%= link_to "Designations",           {  :host=> APP_CONFIG['host_name'], :controller => "designations" },  :class => "secondary_action" %>
             <%= link_to "Groups",                 {  :host=> APP_CONFIG['host_name'], :controller => "groups"       },  :class => "secondary_action" %>

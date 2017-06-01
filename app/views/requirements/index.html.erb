@@ -1,9 +1,11 @@
+<% only_my_requirement = (params[:action] == "my_requirements") ? true : false %>
+
 <div id="req_list_div" class="common_class">
-    <div class="float_left">
-      <span> Requirements : <%= @requirements.size %></span><br /><br />
-      <div class="background_green"> Closed Requirements </div>
-      <div class="background_red"> Hot Requirements </div>
-    </div>
+  <div class="float_left">
+    <span> Requirements : <%= @requirements.size %></span><br /><br />
+    <div class="background_green"> Closed Requirements </div>
+    <div class="background_red"> Hot Requirements </div>
+  </div>
   <% if is_HR_ADMIN? %>
     <div class="add_link" style="padding-left: 10px;">
       <%= link_to "Requirement Analysis", :host => APP_CONFIG['host_name'], :action => "req_analysis" %>
@@ -18,27 +20,34 @@
         <%= link_to "Active requirements", :host => APP_CONFIG['host_name'], :action => "index" %>
       <% end %>
     </div>
-    <br />
-    <br />
   <% end %>
-  <div class="add_link float-md-right col-md-2">
-    <% form_tag :host => APP_CONFIG['host_name'], :action => "search" do %>
+  <br />
+  <br />
+  <% if !only_my_requirement %>
+    <div class="add_link float-md-right col-md-2">
+      <% form_tag :host => APP_CONFIG['host_name'], :action => "search" do %>
         <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()', :placeholder => "Search reqs by employee name" %>
-      <%= submit_tag "Search" %>
-    <% end %>
-  </div>
+        <%= submit_tag "Search" %>
+      <% end %>
+    </div>
+  <% end %>
   <br>
   <br /> <br />
 
-  <% form_tag(:controller => "requirements", :action => "close_requirement") do %>	
+  <% form_tag(:controller => "requirements", :action => "close_requirement") do %>      
     <table>
       <tr class="header_row">
         <td> Name             </td>
         <td> Skills/Desc      </td>
-        <td style="width:75px;"> Exp        		   </td>
+        <td style="width:75px;"> Exp </td>
         <td> End              </td>
-        <td> Positions        </td>
-        <td> Owner            </td>
+        <% if !only_my_requirement %>
+          <td> Positions        </td>
+          <td> Owner            </td>
+        <% else %>
+          <td> Number of forwards     </td>
+          <td> Number of shortlists    </td>
+        <% end %>
         <%if is_HR_ADMIN? %>
           <td> <%= (@requirements.size != 0) ? submit_tag('Delete') : "delete"  %> </td>
         <%end%>
@@ -65,14 +74,23 @@
             <%= print_date(requirement.edate) %>
           <% end %>
         </td>
-        <td>
-          <%= requirement.nop %> 
-        </td>
-        <td>
-          <%= get_words(requirement.employee.name, 1) %>
-        </td>
+        <% if !only_my_requirement %>
+          <td>
+            <%= requirement.nop %> 
+          </td>
+          <td>
+            <%= get_words(requirement.employee.name, 1) %>
+          </td>
+        <% else %>
+          <td>
+            <%= get_forwards_count(requirement) %> 
+          </td>
+          <td>
+            <%= get_shortlisted_count(requirement) %>
+          </td>
+        <% end %>
         <%if is_HR_ADMIN? %>
-          <td> <%= check_box("req", "commands", {:multiple => true}, requirement.id, nil) %>	</td>
+          <td> <%= check_box("req", "commands", {:multiple => true}, requirement.id, nil) %>    </td>
         <%end%>
         </tr>
       <% end %>

@@ -29,6 +29,16 @@ class RequirementsController < ApplicationController
     render "index"
   end
 
+  def my_requirements
+    @requirements        = get_current_employee.requirements
+    if @requirements.size == 0
+      flash[:notice] = "You do not have any requirements on your name."
+      redirect_to :back
+    else
+      render "index"
+    end
+  end 
+
   def new
     @requirement  = Requirement.new
 
