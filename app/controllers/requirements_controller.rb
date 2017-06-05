@@ -30,7 +30,7 @@ class RequirementsController < ApplicationController
   end
 
   def my_requirements
-    @requirements        = get_current_employee.requirements
+    @requirements        = get_current_employee.requirements.select { |req| req.status == "OPEN" }
     if @requirements.size == 0
       flash[:notice] = "You do not have any requirements on your name."
       redirect_to :back
