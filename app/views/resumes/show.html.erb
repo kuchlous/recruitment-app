@@ -192,7 +192,6 @@
       <% end %>
     
       <br />
-      <span class="span_with_13"> Messages: </span>
       <div id="messages">
         <span class="span_with_13"> Messages: </span>
       </div>
@@ -294,6 +293,20 @@
       <% else %>
         No Shortlisted
       <% end %>
-    <% end %>
+      <br /> <br />
+  
+      <span class="span_with_13">  Scheduled: </span>
+      <br />
+      <% @forwards = []
+         @status   = "SCHEDULED"
+         @forwards = get_resume_req_matches_of_employee(@resume, @status)
+         unless @forwards.nil? || @forwards.empty?
+           @resumes       = get_reqmatches_resumes(@forwards)
+           @is_req_match  = 1
+           @row_id_prefix = "reqmatches_show_index" 
+           @after_shortlist_page = true %>
+           <%= render "manager_index" %>
+      <% end %>
+     <% end %>
   </form>
 </div>
