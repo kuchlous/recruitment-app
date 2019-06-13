@@ -44,6 +44,13 @@ class ResumesController < ApplicationController
     end
   end
 
+  def new_resumes
+   resumes = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"\" AND resumes.nforwards = 0 AND resumes.nreq_matches = 0")
+   new_resumes = Resume.find_all_by_status("NEW")
+   resumes += new_resumes
+   @resumes      = resumes
+  end
+
   def show_by_id
     unless params[:id].nil?
       resume         = Resume.find_by_id(params[:id])

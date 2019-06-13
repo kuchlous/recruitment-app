@@ -58,7 +58,8 @@ ActionController::Routing::Routes.draw do |map|
                                           :advanced_search_results => :any,
                                           :show_summary_per_recruiter => :any,
                                           :show_summary_per_manager => :any,
-                                          :show_summary_per_interviewer => :any
+                                          :show_summary_per_interviewer => :any,
+                                          :dashboard => :any
   }
 
   # The priority is based upon order of creation: first created -> highest priority.

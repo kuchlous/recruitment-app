@@ -210,6 +210,96 @@ class HomeController < ApplicationController
     end
     @interviewers_data = @interviewers_data.sort { |row1, row2| row2[:interviews] <=> row1[:interviews] }
   end
+
+  def classify_resumes(resumes)
+    @forwards = []
+    @shortlists = []
+    @scheduled = []
+    @rejected = []
+    @holds = []
+    @ytos = []
+    @offered = []
+    @joining = []
+    @new = []
+
+    resumes.each do |r|
+      resume_overall_status = r.resume_overall_status
+      if resume_overall_status == "Joining Date Given"
+        @joining << r
+      elsif resume_overall_status == "Offered"
+        @offered << r
+      elsif resume_overall_status == "Yet To Offer"
+        @ytos << r
+      elsif resume_overall_status == "On Hold"
+        @holds << r
+      elsif resume_overall_status == "Interview Scheduled"
+        @scheduled << r
+      elsif resume_overall_status == "Shortlisted"
+        @shortlists << r
+      elsif resume_overall_status == "Forwarded"
+        @forwards << r
+      elsif resume_overall_status == "New"
+        @new << r
+      elsif resume_overall_status == "Rejected"
+        @rejected << r
+      end
+    end
+   end
+
+  def dashboard
+    e = get_current_employee
+    resumes = get_employee_referred_resumes(e)
+    classify_resumes(resumes)
+    @employee = e
+    status = params[:status]
+    if status == "New"
+      @resumes = @new
+    elif status == "Forwards"
+      @resumes = @forwards
+      @render  = "manager_index"
+      @forwards = []
+      @resumes.each do |r|
+        @forwards += r.forwards
+      end
+      @is_req_match  = 0
+    elif status == "Shortlisted"
+      @resumes = @shortlists
+      @render  = "manager_index"
+      @forwards = []
+      @resumes.each do |r|
+        @forwards += r.req_matches
+      end
+      @is_req_match  = 1
+    elif status == "Scheduled"
+      @resumes = @scheduled
+      @matches = []
+      @resumes.each do |r|
+        @matches += r.req_matches.find_all { |r|
+          r.status == "SCHEDULED" &&
+          r.resume.resume_overall_status != "Future"
+        }
+      end
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @is_req_match  = 1
+    elif status == "Rejected"
+      @resumes = @rejected
+      @is_req_match  = 1
+      @forwards = []
+    elif status == "Hold"
+      @resumes = @holds
+      @is_req_match  = 1
+    elif status == "YTO"
+      @resumes = @ytos
+      @is_req_match  = 1
+    elif status == "Offered"
+      @resumes = @offered
+      @is_req_match  = 1
+    elif status == "Joining"
+      @resumes = @joining
+      @is_req_match  = 1
+    end
+    @status = status
+  end
  
 private
   def get_summary_for_reqs(reqs, row, totalrow)

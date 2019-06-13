@@ -1,5 +1,4 @@
 <% req_match     = 0
-   @resumes      = get_admin_resumes_of_status("NEW")
    row_id_prefix = get_row_id_prefix("NEW") %>
 <script> 
   var req_names_string = <%= "['#{all_reqs_names(1).join("','")}']" %>;
