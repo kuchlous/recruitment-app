@@ -87,7 +87,7 @@
         <td> <%= link_to @req_forwards.size, :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"    %>   </td>
         <td> <%= link_to @shortlists.size,   :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted" %>   </td>
         <td> <%= link_to @scheduled.size,    :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"   %>   </td>
-        <td> <%= link_to @rejected.size,     :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Rejected"    %>   </td>
+        <td> <%= @rejected.size %> </td>
         <td> <%= link_to @hold.size,         :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"        %>   </td>
         <td> <%= link_to @offered.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"     %>   </td>
         <td> <%= link_to @joining.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"     %>   </td>
