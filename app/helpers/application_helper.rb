@@ -324,11 +324,8 @@ module ApplicationHelper
   def all_record_names(ifield)
     name_array = []
     if ifield == "Employee"
-      all_active_emps = ifield.constantize.all.find_all { |emp| emp.employee_status == "ACTIVE" }
-      all_active_emps.each do |e|
-        name_array << e.name
-      end
-      name_array.sort!
+      all_active_emps = Employee.find_by_sql("SELECT name FROM employees WHERE EMPLOYEE_STATUS = \"ACTIVE\" ORDER BY name")
+      name_array = all_active_emps.map{|e| e.name}
     else
       ifield.constantize.all.each do |e|
         name_array << e.name
@@ -340,10 +337,8 @@ module ApplicationHelper
   def all_record_ids(ifield)
     id_array = []
     if ifield == "Employee"
-      all_active_emps  = all_record_names("Employee")
-      all_active_emps.each do |e|
-        id_array << Employee.find_by_name(e).id
-      end
+      all_active_emps = Employee.find_by_sql("SELECT id FROM employees WHERE EMPLOYEE_STATUS = \"ACTIVE\" ORDER BY name")
+      id_array = all_active_emps.map{|e| e.id}
     else
       ifield.constantize.all.each do |e|
         id_array << e.id
