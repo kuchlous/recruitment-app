@@ -2,7 +2,6 @@ class ResumesController < ApplicationController
   require 'spreadsheet'
 
   before_filter :check_for_login, :except => [ :get_summary_by_id ]
-  before_filter :find_filter_interviews_based_upon_processing, :only => [ :interviews_status ]
   before_filter :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD,    :only => [ :hold,           :offered,
                                                                           :edit,           :recent,
                                                                           :joined,         :rejected,
@@ -45,10 +44,13 @@ class ResumesController < ApplicationController
   end
 
   def new_resumes
-   resumes = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"\" AND resumes.nforwards = 0 AND resumes.nreq_matches = 0")
-   new_resumes = Resume.find_all_by_status("NEW")
-   resumes += new_resumes
-   @resumes      = resumes
+    if params[:mine]
+      employee = get_current_employee
+      resumes = Resume.all(:conditions => ["referral_type = ? AND referral_id = ? AND status = ? AND nforwards = ? AND nreq_matches = ?", "EMPLOYEE", employee.id, "", 0, 0])
+    else
+      resumes = Resume.all(:conditions => ["status = ? AND nforwards = ? AND nreq_matches = ?", "", 0, 0])
+    end
+    @resumes      = resumes
   end
 
   def show_by_id
@@ -272,6 +274,9 @@ class ResumesController < ApplicationController
     @is_req_match  = 0
     @after_shortlist_page = false
     @forwards = get_hr_matches(@status)    
+    if params[:mine]
+      @forwards = @forwards.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
     render "manager_index"
   end
 
@@ -280,6 +285,9 @@ class ResumesController < ApplicationController
     @is_req_match  = 1
     @after_shortlist_page = true
     @forwards = get_hr_matches(@status)
+    if params[:mine]
+      @forwards = @forwards.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
                
     render "manager_index"
   end
@@ -290,6 +298,9 @@ class ResumesController < ApplicationController
     @is_req_match   = 1
     @after_shortlist_page = true
     @forwards = get_hr_matches_cached(@status)
+    if params[:mine]
+      @forwards = @forwards.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
     @forwards = @forwards.paginate(:page => params[:page], :per_page => 100)
     render "manager_index"
   end
@@ -298,13 +309,18 @@ class ResumesController < ApplicationController
     @status           = "HOLD"
     @join_on_req_page = @offer_on_req_page = 0
     @matches          = get_all_req_matches_of_status(@status)
+    if params[:mine]
+      @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
   end
 
   def yto
     @status           = "YTO"
     @matches          = get_all_req_matches_of_status(@status)
+    if params[:mine]
+      @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
   end
-
 
   def find_joining_resumes
     matches = ReqMatch.find_by_sql("SELECT * FROM req_matches INNER JOIN resumes ON resumes.id = req_matches.resume_id WHERE req_matches.status = \"JOINING\" AND resumes.status != \"JOINED\" AND resumes.joining_date > \"#{(Date.today - 365).to_s}\" ORDER BY resumes.joining_date")
@@ -314,6 +330,11 @@ class ResumesController < ApplicationController
               }
     joined_resumes     = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"JOINED\" ORDER BY joining_date")
     not_joined_resumes = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"NOT JOINED\" ORDER BY joining_date")
+    if params[:mine]
+      matches = matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+      joined_resumes = joined_resumes.find_all{|r| r.referral_type == "EMPLOYEE" && r.referral_id == get_current_employee.id} 
+      not_joined_resumes = not_joined_resumes.find_all{|r| r.referral_type == "EMPLOYEE" && r.referral_id == get_current_employee.id} 
+    end
     [matches, joined_resumes, not_joined_resumes]
   end
 
@@ -427,6 +448,9 @@ class ResumesController < ApplicationController
     @matches          = @matches.find_all { |m|
       m.resume.status != "N_ACCEPTED"
     }
+    if params[:mine]
+      @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
   end
 
   def future
@@ -917,6 +941,15 @@ class ResumesController < ApplicationController
       events << { :id => event.id, :title => "#{title}", :description => "#{description}", :start => "#{iso8601_format_time}", :end => "", :allDay => 0, :recurring => false, :resume_uniqid => resume.uniqid.name, :interviewer_id => event.employee.id }
     end
     render :text => events.to_json
+  end
+
+  def interviews_status
+    @interviews_late, @interviews_done, @under_process = ResumesController.filter_interviews_based_upon_processing
+    if params[:mine]
+      @interviews_late = @interviews_late.find_all{|r| r.resume.referral_type == "EMPLOYEE" && r.resume.referral_id == get_current_employee.id }
+      @interviews_done = @interviews_done.find_all{|r| r.resume.referral_type == "EMPLOYEE" && r.resume.referral_id == get_current_employee.id }
+      @under_process = @under_process.find_all{|r| r.resume.referral_type == "EMPLOYEE" && r.resume.referral_id == get_current_employee.id }
+    end
   end
 
   ####################################################################################################

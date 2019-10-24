@@ -24,7 +24,7 @@ class HomeController < ApplicationController
 
   def actions_page
     if is_HR?
-      redirect_to :controller => "resumes", :action => "new_resumes"
+      redirect_to :controller => "home", :action => "dashboard"
     elsif is_ADMIN? || is_REQ_MANAGER?
       redirect_to :controller => "resumes", :action => "manager_index"
     else
