@@ -427,7 +427,7 @@ function addInterviewRow(existing_interview_num, req_match_id, row_index, emp_id
     Event.observe(element3, "click",
       function(element3)
       {
-        new CalendarDateSelect( $(this).previous(), {year_range:[2015, 2017]} );
+        new CalendarDateSelect( $(this).previous(), {year_range:[2018, 2020]} );
       }
     );
     cell.appendChild(element3);
@@ -945,7 +945,7 @@ function getJoiningDateBox(div_element)
   Event.observe(image_element, "click",
     function(image_element)
     {
-      new CalendarDateSelect( $(this).previous(), {year_range:[2015, 2017]} );
+      new CalendarDateSelect( $(this).previous(), {year_range:[2018, 2020]} );
     }
   );
   div_element.appendChild(image_element);
