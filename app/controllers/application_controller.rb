@@ -69,8 +69,8 @@ class ApplicationController < ActionController::Base
 
   def check_for_login(msg = "Please login to your account first")
     session[:return_to] = "/recruit" + request.request_uri
-    logger.info("IP: " + request.remote_ip)
     logger.info("/recruit" + request.request_uri)
+    logger.info("IP:" + request.headers["X-Real-IP"])
     @logged_employee  = get_current_employee
     if @logged_employee.nil? && params[:key] != "26a79dtu"
       flash[:notice] = msg
@@ -87,7 +87,7 @@ class ApplicationController < ActionController::Base
 
   def check_for_HR_or_ADMIN(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
-    unless @logged_employee.is_HR? || @logged_employee.is_ADMIN?
+    unless is_HR? || @logged_employee.is_ADMIN?
       flash[:notice] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
@@ -111,7 +111,7 @@ class ApplicationController < ActionController::Base
 
   def check_for_HR_or_ADMIN_or_REQMANAGER(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
-    unless @logged_employee.is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER?
+    unless is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER?
       flash[:notice] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
@@ -119,7 +119,7 @@ class ApplicationController < ActionController::Base
 
   def check_for_HR_or_ADMIN_or_REQMANAGER_or_BD(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
-    unless @logged_employee.is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER?
+    unless is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER?
       flash[:notice] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
@@ -128,7 +128,7 @@ class ApplicationController < ActionController::Base
 
   def check_for_HR_or_ADMIN_or_REQMANAGER_or_PM(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
-    unless params[:key] == "26a79dtu" || @logged_employee.is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
+    unless params[:key] == "26a79dtu" || is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
       flash[:notice] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
@@ -136,15 +136,33 @@ class ApplicationController < ActionController::Base
 
   def check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
-    unless params[:key] == "26a79dtu" || @logged_employee.is_HR? || @logged_employee.is_BD? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
+    unless params[:key] == "26a79dtu" || is_HR? || @logged_employee.is_BD? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
       flash[:notice] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
 
+  @@internal_IPs = [
+    "192.168.0.1",
+    "182.76.199.14",
+    "106.51.77.156",
+    "106.51.72.184",
+    "115.98.3.6",
+    "117.195.136.5",
+    # "122.172.85.163"
+    "192.168.1.111",
+    "58.84.22.195",
+  ]
+
+  def internal_IP?
+    ip = request.headers["X-Real-IP"]
+    return true if ip[0..8] == "192.168.1"
+    @@internal_IPs.include? ip
+  end
 
   def is_HR?
     @logged_employee = get_current_employee
+    return false if !internal_IP? && !@logged_employee.login == 'saipriya' && !@logged_employee.login == 'mdaariff' 
     @logged_employee.is_HR?
   end
 
@@ -316,9 +334,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_employee_referred_resumes(employee)
-    resumes = Resume.all.find_all { |r| r.referral_type == "EMPLOYEE" &&
-                                        r.referral_id   == employee.id
-    }
+    resumes = Resume.all(:conditions => ["referral_type = ? AND referral_id = ?", "EMPLOYEE", employee.id])
     resumes
   end
 
