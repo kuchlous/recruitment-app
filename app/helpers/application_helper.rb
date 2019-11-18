@@ -297,13 +297,8 @@ module ApplicationHelper
     unless prompt_var == 1
       req_name_array << "Select requirement"
     end
-    requirements = Requirement.all(:order => "name").find_all {
-      |req| req.status == "OPEN"
-    }
-    requirements.each do |req|
-      req_name_array << req.name.gsub("'", "\'") if req.name
-    end
-    req_name_array.map! { |e| e.gsub /'|"/, '' }
+    all_active_reqs = Requirement.find_by_sql("SELECT name FROM requirements WHERE STATUS = \"OPEN\" ORDER BY name")
+    req_name_array += all_active_reqs.map{|r| r.name.gsub(/'|"/, '')}
     req_name_array
   end
 
@@ -312,12 +307,8 @@ module ApplicationHelper
     unless prompt_var == 1
       req_ids_array << nil
     end
-    requirements = Requirement.all(:order => "name").find_all {
-      |req| req.status == "OPEN"
-    }
-    requirements.each do |req|
-      req_ids_array << req.id
-    end
+    all_active_reqs = Requirement.find_by_sql("SELECT id FROM requirements WHERE STATUS = \"OPEN\" ORDER BY name")
+    req_ids_array += all_active_reqs.map{|r| r.id}
     req_ids_array
   end
 
