@@ -1,0 +1,136 @@
+<br /> <br />
+<% form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post")}) do |f|
+  if @requirement
+    if @requirement.exp
+      exp      = @requirement.exp.split("-")
+      min_exp  = exp[0]
+      max_exp  = exp[1]
+    end
+
+    status   = @requirement.status
+    req_type = @requirement.req_type
+    nop      = @requirement.nop
+    sdate    = date_in_calendar_format(@requirement.sdate) if @requirement.sdate
+    edate    = date_in_calendar_format(@requirement.edate) if @requirement.edate
+  else
+    min_exp  = max_exp = status = req_type = sdate = edate = nop = ""
+  end
+%>
+  <%= f.error_messages %>
+  <table id="req_form_table">
+    <tr>
+      <td> Requirement name </td>
+      <td> <%= f.text_field :name %> </td>
+    </tr>
+    <tr>
+      <td> Number of positions </td>
+      <td>
+        <%= select_tag "requirement[nop]", options_for_select(get_experience_years, nop) %>
+      </td>
+    </tr>
+    <tr>
+      <td> Position Name </td>
+      <td> <%= collection_select(:requirement, :designation_id, @designations, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td> Requirement skills </td>
+      <td> <%= f.text_area :skill %> </td>
+    </tr>
+    <tr>
+      <td> Requirement description </td>
+      <td> <%= f.text_area :description %> </td>
+    </tr>
+    <tr>
+      <td> Management comment </td>
+      <td> <%= f.text_area :mgt_comment %> </td>
+    </tr>
+    <tr>
+      <td> Start Date </td>
+      <td> <%= calendar_date_select :requirement, :sdate, :year_range => 1.years.ago..1.years.since, :value => sdate %> </td>
+    </tr>
+    <tr>
+      <td> End Date </td>
+      <td> <%= calendar_date_select :requirement, :edate, :year_range => 1.years.ago..1.years.since, :value => edate %> </td>
+    </tr>
+    <tr>
+      <td> Required Experience </td>
+      <td class="two_dropdownlist_single_td">
+        <%= select_tag "req[min_exp]", options_for_select(get_experience_years, min_exp.to_i) %> Min
+        <%= select_tag "req[max_exp]", options_for_select(get_experience_years, max_exp.to_i) %> Max
+      </td>
+    </tr>
+    <tr>
+      <td> Group </td>
+      <td> <%= collection_select(:requirement, :group_id, @groups, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td> Customer </td>
+      <td>
+        <div class="multi_selected_qualification">
+          <table id="customer_list_table">
+            <tr>
+              <% count = 0 %>
+              <% for acc in @accounts %>
+                <% recordVal = acc.name %>
+                <% if count < 3 %>
+                  <td>
+                    <% if @requirement.accounts.include?(acc) %>
+                      <div class="one_element_div_qual" id="one_element_div_qual_<%= acc.id %>" style="background-color: #ffffff;">
+                        <input type="checkbox" id="qual_checkbox_<%= acc.id %>" name="account_ids[]" value="<%= acc.id %>" checked="checked" class="input_with_low_width"/>
+                    <% else %>
+                      <div class="one_element_div_qual" id="one_element_div_qual_<%= acc.id %>">
+                        <input type="checkbox" id="qual_checkbox_<%= acc.id %>" name="account_ids[]" value="<%= acc.id %>" class="input_with_low_width"/>
+                    <% end %>
+                      <label for="qual_checkbox_<%= acc.id %>"> <%= recordVal.titleize %> </label>
+                    </div>
+                  </td>
+                  <% count = count + 1 %>
+                <% else %>
+                  </tr> <tr>
+                  <td>
+                    <% if @requirement.accounts.include?(acc) %>
+                      <div class="one_element_div_qual" id="one_element_div_qual_<%= acc.id %>" style="background-color: #ffffff;">
+                        <input type="checkbox" id="qual_checkbox_<%= acc.id %>" name="account_ids[]" value="<%= acc.id %>" checked="checked" class="input_with_low_width"/>
+                    <% else %>
+                      <div class="one_element_div_qual" id="one_element_div_qual_<%= acc.id %>">
+                        <input type="checkbox" id="qual_checkbox_<%= acc.id %>" name="account_ids[]" value="<%= acc.id %>" class="input_with_low_width"/>
+                    <% end %>
+                      <label for="qual_checkbox_<%= acc.id %>"> <%= recordVal.titleize %> </label>
+                    </div>
+                  </td>
+                  <% count = 1 %>
+                <% end %>
+              <% end %>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td> Manager </td>
+      <td> <%= collection_select(:requirement, :employee_id, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td> Source owner </td>
+      <td> <%= collection_select(:requirement, :source_owner, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td> Schedule owner </td>
+      <td> <%= collection_select(:requirement, :schedule_owner, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td> Requirement status   </td>
+      <td> <%= select_tag "requirement[status]", options_for_select([["Open", "OPEN"], ["Closed - Expired", "CLOSED EXPIRED"], ["Closed - Offered", "CLOSED OFFERED"], ["Closed - Joining", "CLOSED JOINING"], ["Closed - Delete", "CLOSED DELETE"] ], status) %> </td>
+    </tr>
+    <tr>
+      <td> Requirement type     </td>
+      <td> <%= select_tag "requirement[req_type]", options_for_select([["Ordinary", "ORDINARY"], ["Hot", "HOT"]], req_type) %> </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="requirement_submit_button"> <%= f.submit("#{button_tag}") %> </td>
+    </tr>
+  </table>
+<% end %>
+<br /> <br />
+<%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %>

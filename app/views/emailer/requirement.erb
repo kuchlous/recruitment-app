@@ -1,0 +1,13 @@
+Hi <%= @req.employee.name %>
+  <% if @is_create == 1
+       filling_tag = "added"
+     else
+       filling_tag = "updated"
+     end %>
+  <% if @cur_emp == @req.employee %>
+    You have <%= filling_tag %> a requirement <%= @req.name %> of group <%= @req.group.name %>
+  <% else %>
+    <%= @cur_emp.name %> have <%= filling_tag %> a requirement <%= @req.name %> of group <%= @req.group.name %> on behalf of you.
+  <% end %>
+  For more details, please login to your recruitment account.
+  Link to requirement:- <%=  url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "requirements", :protocol => "https", :action => "show", :id => @req.id) %>

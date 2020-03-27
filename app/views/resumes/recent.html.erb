@@ -1,0 +1,48 @@
+<div id="recent_resume_div" class="common_class">
+  <span class="span_with_13"> Recently updated resumes (<%= @resumes.size %>) </span>
+  <% form_tag(:host => APP_CONFIG['host_name'], :action => 'find_resume_within_given_dates' ) do %>
+    <span class="float_right">
+      From: <%= calendar_date_select :recent, :sdate, :year_range => 5.years.ago..5.years.since, :value => @start_date %>
+      To:   <%= calendar_date_select :recent, :edate, :year_range => 5.years.ago..5.years.since, :value => @end_date   %>
+      <%= submit_tag 'GO' %>
+    </span>
+  <% end %> <br /> <br />
+
+  <% if @resumes.size > 0 %>
+    <div id="recent_resumes_div">
+      <table>
+        <tr>
+          <th class="recent_resumes_label">      Name                </th>
+          <th class="recent_resumes_label">      Overall Status      </th>
+          <th class="recent_resumes_label">      Upload Date         </th>
+          <th class="recent_resumes_label">      Recent Activity On  </th>
+          <th class="recent_resumes_label">      Phone Number        </th>
+          <th class="recent_resumes_label">      Email               </th>
+        </tr>
+        <% @resumes.each do |resume| %>
+          <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
+            <td class="recent_resumes_label" title="<%= resume.name %>">
+              <%= resume_link_with_20_characters(resume) %>
+            </td>
+            <td class="recent_resumes_label">
+              <%= resume.resume_overall_status %>
+            </td>
+            <td class="recent_resumes_label">
+              <%= print_date(resume.created_at) %>
+            </td>
+            <td class="recent_resumes_label">
+              <%= print_date(resume.change_date) %>
+            </td>
+            <td class="recent_resumes_label" title="<%= resume.phone %>">
+               <%= resume.phone %>
+            </td>
+            <td class="recent_resumes_label" title="<%= resume.email %>">
+               <%= resume.email %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+  <% else %>
+    <span class="span_with_13_with_padding_0"> <br /> Sorry there are no resumes found. </span>
+  <% end %>
+</div>

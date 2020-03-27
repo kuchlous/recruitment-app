@@ -1,0 +1,45 @@
+<% req_match     = 0
+   row_id_prefix = get_row_id_prefix("NEW") %>
+<script> 
+  var req_names_string = <%= "['#{all_reqs_names(1).join("','")}']" %>;
+  var req_ids_string = <%= "['#{all_reqs_ids(1).join("','")}']" %>;
+</script>
+
+<div id="new_resumes_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> New Resumes (<%= @resumes.size %>)</span>
+  <form name="form" method="post">
+    <table id="resume_list_table" class="sortable">
+      <% unless @resumes.nil? || @resumes.size == 0 %>
+        <tr class="header_row">
+          <td class="resume_list_header_name">                      Resume Name   </td>
+          <td class="resume_list_header_exp">                       Exp           </td>
+          <td class="resume_list_header_qual sorttable_nosort">     Qualification </td>
+          <td class="resume_list_header_summary sorttable_nosort">  Skills        </td>
+          <td class="resume_list_header_action sorttable_nosort">   Actions       </td>
+        </tr>
+        <% counter_value          = 1 %>
+        <% req_names_string = all_reqs_names(1).join("','") %>
+        <% req_ids_string = all_reqs_ids(1).join("','") %>
+        <% @resumes.each do |resume| %>
+          <% row_class            = cycle("white", "yellow") %>
+          <tr id="<%= row_id_prefix %><%= counter_value %>" class=<%= row_class %>>
+            <td> <%= get_resume_link_with_mouse_over_and_mouseout(resume) %> </td>
+            <td> <%= resume.experience %>                                    </td>
+            <td title="<%= resume.qualification %>"> <%= resume.qualification[0..35] %>..  </td>
+            <td title="<%= resume.summary %>">       <%= resume.summary[0..45]       %>..  </td>
+            <td>
+              <%= link_to_function "Comment", "AddCommentBox(event, #{resume.id})" %> &nbsp; | &nbsp;
+              <%= link_to_function "Forward", "ForwardBox(event, req_names_string, req_ids_string, #{resume.id})" %> &nbsp; | &nbsp;
+              <%= link_to_function "Reject",  "RejectBox(event, #{resume.id}, 'Reject');" %>
+            </td>
+          </tr>
+          <% counter_value = counter_value + 1 %>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="5" class="align_left"> No new resumes. </td>
+        </tr>
+      <% end %>
+    </table>
+  </form>
+</div>

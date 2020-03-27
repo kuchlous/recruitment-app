@@ -1,0 +1,69 @@
+<br /> <br />
+<% form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search_results"), :method => "get") do %>
+  <table id="resume_form_table">
+    <tr>
+      <td> Search Pattern </td>
+      <td> <%= text_field_tag :search %> </td>
+    </tr>
+    <tr>
+      <td> Min Current CTC </td>
+      <td>
+        <%= text_field_tag :ctc_min %> <br />
+        <span class="span_with_grey_color"> Enter in lakhs </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Max Current CTC </td>
+      <td>
+        <%= text_field_tag :ctc_max %> <br />
+        <span class="span_with_grey_color"> Enter in lakhs </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Min Expected CTC </td>
+      <td>
+        <%= text_field_tag :expected_ctc_min %> <br />
+        <span class="span_with_grey_color"> Enter in lakhs </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Max Expected CTC </td>
+      <td>
+        <%= text_field_tag :expected_ctc_max %> <br />
+        <span class="span_with_grey_color"> Enter in lakhs </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Min Experience </td>
+      <td>
+        <%= select_tag "experience_years_min",   options_for_select(get_experience_years),  :class => "two_tds_same_line" %> Yrs
+        <%= select_tag "experience_months_min",  options_for_select(get_experience_months), :class => "two_tds_same_line" %> Months
+      </td>
+    </tr>
+    <tr>
+      <td> Max Experience </td>
+      <td>
+        <%= select_tag "experience_years_max",   options_for_select(get_experience_years),  :class => "two_tds_same_line" %> Yrs
+        <%= select_tag "experience_months_max",  options_for_select(get_experience_months), :class => "two_tds_same_line" %> Months
+      </td>
+    </tr>
+    <tr>
+      <td> Status </td>
+      <td>
+        <%= select_tag "status",   options_for_select(Resume.get_resume_statuses),  :class => "two_tds_same_line" %>
+      </td>
+    </tr>
+    <tr>
+      <td> Requirement </td>
+      <td>
+        <%= select_tag "requirement", options_for_select(Requirement.get_all_requirement_array_for_select) %>
+      </td>
+    </tr>
+    <tr>
+      <td> &nbsp; </td>
+      <td class="add_resume_submit_button"> <%= submit_tag "Search" %> </td>
+    </tr>
+  </table>
+<% end %>
+
+<br /> <br />

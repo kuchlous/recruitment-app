@@ -1,0 +1,48 @@
+<div id="reqowner_summary_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> Interviewer Summary </span>
+  <br />
+  <% path = url_for :controller => "home", :action => "show_summary_per_interviewer" %>
+  <% form_tag path, :method => 'get' do %>
+    <table id="summaries_recruiter_table">
+      <tr>
+        <td> From </td>
+        <td> To </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td> <%= calendar_date_select :interviews, :sdate, :year_range => 1.years.ago..1.years.since, :value => @sdate %> </td>
+        <td> <%= calendar_date_select :interviews, :edate, :year_range => 1.years.ago..1.years.since, :value => @edate %> </td>
+        <td class="summaries_recruiter_submit_button"> <%= submit_tag "Change Dates", :style => "width:200px" %> </td>
+      </tr>
+    </table>
+  <% end %>
+ <% if @interviewers_data && @interviewers_data.size > 0 %>
+    <table class="reqowner_summary_table">
+      <tr class="header_row">
+        <td> Name      </td>
+        <td> Interviews </td>
+        <td> Feedbacks  </td>
+        <td> Average Rating   </td>
+        <td> Excellent </td>
+        <td> V. Good  </td>
+        <td> Good     </td>
+        <td> Fair     </td>
+        <td> Poor     </td>
+      </tr>
+      <% @interviewers_data.each do |row| %>
+        <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+	  <td> <%= link_to row[:employee].name, :controller => "employees", :action => "change_to", :id => row[:employee].id %> </td>
+          <td> <%= row[:interviews] %> </td>
+          <td> <%= row[:nratings]  %> </td>
+          <td> <%= row[:average_rating].to_s[0..3] %> </td>
+          <% ratings = row[:ratings] %>
+          <% ratings.reverse_each do |r| %>
+            <td> <%= r %> </td>
+          <% end %>
+        </tr>
+      <% end %>
+   </table>
+  <% else %>
+    No summary for interviewer.
+  <% end %>
+</div>

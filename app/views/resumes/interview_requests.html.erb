@@ -1,0 +1,54 @@
+<% @interviews   = @interview_requests
+   counter_value = 1 %>
+<div id="interviews_requests" class="common_class">
+  <span class="span_with_13_with_padding_0"> Interview requests (<%= @interviews.size %>) </span>
+  <br />
+  <% if @interviews && @interviews.size > 0 %>
+    <table id="resume_list_table" class="sortable">
+      <tr class="header_row">
+        <td class="int_reqt_name"> Name    </td>
+        <td class="int_reqt_date"> Date/Time    </td>
+        <td class="int_reqt_req">  Req     </td>
+        <td class="int_reqt_type"> Type    </td>
+        <td class="int_reqt_focus"> Focus  </td>
+        <td class="int_reqt_actions sorttable_nosort"> Actions </td>
+      </tr>
+      <% @interviews.each do |i| %>
+        <% resume = i.req_match.resume
+           req    = i.req_match.requirement
+           iclass = get_interview_row_class(i.req_match, i) %>
+        <tr id="interview_request_<%= counter_value.to_s %>" class="<%= iclass %>">
+          <td>
+            <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+          </td>
+          <td title="<%= print_date(i.interview_date) %>">
+            <%= print_date_no_year(i.interview_date) + ' ' + print_time(i.interview_time) %>
+          </td>
+          <td>
+            <%= get_requirement_link_with_mouse_over_and_mouseout(req) %>
+          </td>
+          <td>
+            <%  itype = "Telephonic" %>
+            <%  itype = i.itype unless i.itype.nil? %>
+            <%= itype.titleize %>
+          </td>
+          <% focus = " " %>
+          <% focus = i.focus unless i.focus.nil? %>
+          <td title="<%= focus %>">
+            <%= focus[0..25] %>
+          </td>
+          <td>
+            <%= link_to_function "Add Feedback",      "createFeedbackBox(event, '#{resume.id}', '#{req.name_for_js}');" %> |
+            <%= link_to_function "Decline", "declineInterviewBox(event, #{i.id})" %>
+            <span class="float_right_with_10_padding" style="padding-bottom: 0px;">
+              <%= get_view_feedback_icon(resume, 6) %>
+            </span>
+          </td>
+        </tr>
+        <% counter_value += 1 %>
+      <% end %>
+    </table>
+  <% else %>
+    No interview requests.
+  <% end %>
+</div>

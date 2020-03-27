@@ -1,0 +1,7 @@
+<div id="summaries_home" class="common_class">
+  <ul>
+    <li> <%= link_to "Interviewer Summary", {:host => APP_CONFIG['host_name'],  :controller => "home", :action => "show_summary_per_interviewer" } %> </li>
+    <li> <%= link_to "Recruiter Summary",   {:host => APP_CONFIG['host_name'],  :controller => "home", :action => "show_summary_per_recruiter" } %>   </li>
+    <li> <%= link_to "Manager Summary",     {:host => APP_CONFIG['host_name'],  :controller => "home", :action => "show_summary_per_manager" } %>     </li>
+  </ul>
+</div>

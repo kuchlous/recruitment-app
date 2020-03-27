@@ -1,0 +1,26 @@
+<td colspan="<%= @cols %>" style="text-align: left;">
+  <div id="resume_feedback">
+    <div id="feedback_tagline">
+      <u> Resume Feedback </u>
+      <span class="close_box_link">
+        <%= link_to_function image_tag("RedCross.png", :size => "22x22"), "deleteAjaxRequestTr('ajax_request_tr')" %>
+      </span> <br />
+      <span class="span_with_8">
+        ( Latest first )
+      </span>
+    </div>
+    <% if @resume_feedback.nil? || @resume_feedback.empty? %>
+      <div>
+        Sorry no feedback for this resume.
+      </div>
+    <% else %>
+      <% @resume_feedback.each do |feedback| %>
+        <div>
+          <u> Rating: <%= feedback.rating %> </u> <br />
+          <%= simple_format feedback.feedback %> <br />
+          <b> <%= feedback.employee.login.titleize %> </b> <%= print_date(feedback.created_at) %>.
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</td>

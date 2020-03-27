@@ -1,0 +1,227 @@
+<div id="resumes_joined" class="common_class">
+  <span class="span_with_13_with_padding_0"> Monthly Summary </span>
+  <table id="summary_table">
+    <tr>
+      <th> </th>
+      <% @months_table.each do |m| %>
+        <th> <%= print_month_and_year(Date::civil(m[:year], m[:month], 1)) %> </th>
+      <% end %>
+    </tr>
+    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+      <th> Joined </th>
+      <% @months_table.each do |m| %>
+        <td> <%= m[:joined] %> </td>
+      <% end %>
+    </tr>
+    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+      <th> Joining </th>
+      <% @months_table.each do |m| %>
+        <td> <%= m[:joining] %> </td>
+      <% end %>
+    </tr>
+    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+      <th> Not Joined </th>
+      <% @months_table.each do |m| %>
+        <td> <%= m[:not_joined] %> </td>
+      <% end %>
+    </tr> 
+  </table>
+
+  <br /> <br />
+  <span class="span_with_13_with_padding_0"> <%= @status.titleize + "(" + @matches.size.to_s + ")" %> </span>
+  <%= link_to "(Expand)", :id => "expand_joining_table_link", :onclick => "show_column_for_date_when_resume_moved_to_joining(); return false;" %>
+  <br />
+  <% if @matches && @matches.size > 0 %>
+    <table id="joining_resumes_table" class="sortable">
+      <tr>
+        <th> Name   </th>
+        <th> Requirement   </th>
+        <th> Joining Date  </th>
+        <th> Likely to join </th>
+        <th class="hidden_by_default"> Accept Date  </th>
+      </tr>
+      <% @matches.each do |f|
+        resume = f.resume %>
+        <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+          <td>
+            <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+          </td>
+          <td>
+            <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
+          </td>
+          <td>
+            <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+          </td>
+          <td id=<%= "likely-to-join-" + resume.id.to_s %> >
+            <%= link_to_function image_tag("#{get_image_name(resume)}_Image.png", :size => "20x20"), "showAllImagesForLikelyToJoin(event," + resume.id.to_s + ")" %>
+          </td>
+          <td class="hidden_by_default">
+            <% joining_date = ""
+               if (get_date_when_resume_moved_to_joining(resume))
+                 joining_date = print_date(get_date_when_resume_moved_to_joining(resume))
+               else
+                 joining_date = "Not Available";
+               end %>
+            <%= joining_date %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    No resumes given joining date.
+  <% end %>
+
+  <br /> <br />
+  <span class="span_with_13_with_padding_0"> Joined - <%= get_ajax_request_for_all_joined_or_not_joined("ALL", "JOINED") %> </span>
+  <table id ="span_arrow_table" style="width: 50%;">
+    <tr>
+      <td> <b> - 2015 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2015, "JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2015, "JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2015, "JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2015, "JOINED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b> - 2016 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2016, "JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2016, "JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2016, "JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2016, "JOINED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b> - 2017 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2017, "JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2017, "JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2017, "JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2017, "JOINED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b> - 2018 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2018, "JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2018, "JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2018, "JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2018, "JOINED", "Q4") %> </td>
+    </tr>
+  </table>
+  <br /> <br />
+  <div id="joined_resumes_div">
+    <% @status = "JOINED" %>
+    <%= render "resumes/show_quarterly_joined", :status => @status %>
+  </div>
+
+  <br /> <br />
+  <span class="span_with_13_with_padding_0"> Not Joined - <%= get_ajax_request_for_all_joined_or_not_joined("ALL", "NOT JOINED") %> </span>
+  <table id ="span_arrow_table" style="width: 50%;">
+    <tr>
+      <td> <b>  - 2015 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2015, "NOT JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2015, "NOT JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2015, "NOT JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2015, "NOT JOINED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2016 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2016, "NOT JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2016, "NOT JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2016, "NOT JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2016, "NOT JOINED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2017 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2017, "NOT JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2017, "NOT JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2017, "NOT JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2017, "NOT JOINED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2018 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(1,  3,  2018, "NOT JOINED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(4,  6,  2018, "NOT JOINED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(7,  9,  2018, "NOT JOINED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_joined(10, 12, 2018, "NOT JOINED", "Q4") %> </td>
+    </tr>
+   </table>
+  <br /> <br />
+  <div id="not_joined_resumes_div">
+    <% @status = "NOT JOINED"
+       # Assigning not_joined_resumes into joined_resumes because template show_quarterly_joined will only understand @joined_resumes
+       @joined_resumes = @not_joined_resumes %>
+    <%= render "resumes/show_quarterly_joined", :status => @status %>
+  </div>
+
+  <br /> <br />
+  <span class="span_with_13_with_padding_0"> Offers Made - <%= get_ajax_request_for_all_offered("ALL", "OFFERED") %> </span>
+  <table id ="span_arrow_table" style="width: 50%;">
+    <tr>
+      <td> <b>  - 2015 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(1,  3,  2015, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(4,  6,  2015, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(7,  9,  2015, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(10, 12, 2015, "OFFERED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2016 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(1,  3,  2016, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(4,  6,  2016, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(7,  9,  2016, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(10, 12, 2016, "OFFERED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2017 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(1,  3,  2017, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(4,  6,  2017, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(7,  9,  2017, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(10, 12, 2017, "OFFERED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2018 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(1,  3,  2018, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(4,  6,  2018, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(7,  9,  2018, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_offered(10, 12, 2018, "OFFERED", "Q4") %> </td>
+    </tr>
+   </table>
+  <br /> <br />
+  <div id="offered_resumes_div">
+    <% @status = "OFFERED" %>
+    <%= render "resumes/show_quarterly_offered", :status => @status %>
+  </div>
+
+  <br /> <br />
+  <span class="span_with_13_with_padding_0"> Not Accepted - <%= get_ajax_request_for_all_not_accepted("ALL", "NOT ACCEPTED") %> </span>
+  <table id ="span_arrow_table" style="width: 50%;">
+    <tr>
+      <td> <b>  - 2015 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(1,  3,  2015, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(4,  6,  2015, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(7,  9,  2015, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(10, 12, 2015, "OFFERED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2016 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(1,  3,  2016, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(4,  6,  2016, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(7,  9,  2016, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(10, 12, 2016, "OFFERED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2017 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(1,  3,  2017, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(4,  6,  2017, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(7,  9,  2017, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(10, 12, 2017, "OFFERED", "Q4") %> </td>
+    </tr>
+    <tr>
+      <td> <b>  - 2018 - </b> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(1,  3,  2018, "OFFERED", "Q1") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(4,  6,  2018, "OFFERED", "Q2") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(7,  9,  2018, "OFFERED", "Q3") %> </td>
+      <td> <%= get_ajax_request_for_quarterly_not_accepted(10, 12, 2018, "OFFERED", "Q4") %> </td>
+    </tr>
+   </table>
+  <br /> <br />
+  <div id="not_accepted_resumes_div">
+    <% @status = "NOT ACCEPTED" %>
+    <%= render "resumes/show_quarterly_not_accepted", :status => @status %>
+  </div>
+</div>

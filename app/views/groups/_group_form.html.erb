@@ -1,0 +1,22 @@
+<br /> <br />
+<% form_for(@group, :url =>  url_for(:host => APP_CONFIG['host_name'], :controller => "groups", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
+  <%= f.error_messages %>
+  <table id="group_form_table">
+    <tr>
+      <td> Department Name </td>
+      <td> <%= f.text_field :name %> </td>
+    </tr>
+    <tr>
+      <td> Owner of this group </td>
+      <td> <%= collection_select(:group, :employee_id, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td class="group_submit_button" colspan="2">
+        <%= f.submit("#{button_tag}") %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+<br />
+<%= link_to "List of departments", , :host => APP_CONFIG['host_name'], :controller => "groups", :action => "index", :style => "color: #0000FF;" %> </div>
+<br /> <br />

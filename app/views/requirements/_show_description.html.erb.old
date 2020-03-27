@@ -1,0 +1,19 @@
+<!---
+<div id="show_requirements_description_div_<%= @status %>">
+  <span class="span_with_13_with_padding_0"> <%= @status.titleize %>
+  (<% if @render == "manager_index" %>
+    <%= @forwards.size %>
+   <% else %>
+    <%= @matches.size %>
+   <% end %>
+  ) </span>
+  <% action = "export_as_xls_requirement_for_" + @status.downcase %>
+  <%= link_to "Export", :controller => "resumes", :action => action, :requirement_id => @requirement.id, :for_status => @status %>
+  <span class="span_with_padding_0_float">
+    <%= link_to_function image_tag("RedCross.png", :size => "22x22"), "closeShowCommentsBox('show_requirements_description_div')" %>
+  </span>
+  <% @render = "shared_" + @render unless @render == "interview_table" %>
+  <%= render "resumes/#{@render}" %>
+</div>
+-->
+

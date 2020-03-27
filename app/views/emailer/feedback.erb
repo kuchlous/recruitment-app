@@ -1,0 +1,7 @@
+Hi <%= @resume.employee.name %>,
+  Feedback has been added for the resume of <%= @resume.name %> by <%= @from_employee.name %>
+  for the requirement <%= @req.name %>.
+  The feedback is:- <%= @feedback.feedback %>
+  Please login to you account for more details.
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
+  Link to resume:-  <%= url %>

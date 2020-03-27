@@ -1,0 +1,30 @@
+<div id="employees_login_div" class="common_class">
+  <div id="login_form">
+    <span class="login_desc_line"> Login to your recruitment account </span>
+    <%= form_with url:login_path do |form| %>
+      <table>
+        <tr>
+          <td class="login_text"> <label for="login_text"> Mirafra user name </td>
+        </tr>
+        <tr>
+          <td class="login_field">
+            <%= form.text_field :login %>
+          </td>
+        </tr>
+        <tr>
+          <td class="login_text"> <label for="login_text"> Password </td>
+        </tr>
+        <tr>
+          <td class="login_field">
+            <%= password_field_tag :password, params[:password], :value => "Password", :onfocus => "textBoxContentsOnFocus(this.id, 'Password');", :onblur => "textBoxContentsOnBlur(this.id, 'Password');"  %>
+          </td>
+        </tr>
+        <tr>
+          <td class="login_submit_button">
+            <%= submit_tag( "Go" ) %>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+</div>

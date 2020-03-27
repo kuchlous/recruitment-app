@@ -1,0 +1,12 @@
+<div id="show_requirements_description_div_<%= @status %>">
+  <span class="span_with_13_with_padding_0"> <%= @status.titleize %>
+    (<%= (@render == "manager_index") ? @forwards.size : @matches.size %>)
+  </span>
+  <% action = "export_as_xls_requirement_for_" + @status.downcase %>
+  <%= link_to "Export", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => action, :requirement_id => @requirement.id, :for_status => @status %>
+  <% render_type = (@render == "interview_table") ? @render : "shared_" + @render %>
+  <span class="span_with_padding_0_float">
+    <%= link_to "Export", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => action, :requirement_id => @requirement.id, :for_status => @status %>
+  </span>
+  <%= render "resumes/#{render_type}" %>
+</div>

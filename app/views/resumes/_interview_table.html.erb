@@ -1,0 +1,53 @@
+<script>
+  var all_req_ids = [ <%= all_reqs_ids().join(",") %>];
+  var all_req_names = [ <%= all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
+</script>
+<% unless @matches.nil? || @matches.size == 0 %>
+  <table id="resume_list_table" class="sortable">
+    <tr class="header_row">
+      <td class="resume_list_header_name">     Name    </td>
+      <td class="resume_list_header_req_name"> Req     </td>
+      <td class="interview_date_class">        Date    </td>
+      <td class="interview_rating_class">      Rating  </td>
+      <td class="interview_location_class">    Location</td>
+      <td class="interview_status_class">      Status  </td>
+      <td class="interview_actions_class sorttable_nosort">     Actions </td>
+    </tr>
+    <% counter_value = 1 %>
+    <% @matches.each do |match| %>
+      <% row_class = cycle("yellow", "white") %>
+      <% resume = match.resume %>
+      <tr id="all_interviews_table<%= counter_value.to_s %>" class="<%= row_class %>">
+        <td>
+          <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+        </td>
+        <td>
+          <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %>
+        </td> 
+        <td>
+          <%= print_date_no_year(match.get_display_interview_date) %>
+        </td> 
+        <td title="<%= get_all_ratings(match) %>">
+          <% if resume.rating != "N/A" %>
+            <%= "%.2f" % resume.rating %>
+          <% else %>
+            N/A
+          <% end %>
+        </td> 
+        <td>
+          <%= resume.location %>
+        </td>
+        <td title="<%= resume.manual_status %>">
+          <%= resume.manual_status ? resume.manual_status[0..25] : '' %>
+        </td> 
+        <td>
+          <%= get_view_feedback_icon(resume, 7) %> 
+          <%= get_actions_ddl(resume, match, "SCHEDULED") %>
+        </td>
+      </tr>
+      <% counter_value += 1 %>
+    <% end %>
+  </table>
+<% else %>
+  <br /> No interviews scheduled.
+<% end %>

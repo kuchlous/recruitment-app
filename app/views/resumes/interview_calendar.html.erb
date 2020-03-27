@@ -1,0 +1,54 @@
+<% content_for :head do %>
+  <%= javascript_include_tag "/optional-js/fullcalendar.js" %>
+<% end %>
+<div id="interview_calendar_div" class="half_common_class">
+  <span class="span_with_13_with_padding_0"> Interviews Calendar </span> <br /> <br />
+  <script>
+    var path;
+    if ( server_type == 0 )
+    {
+      path = "";
+    }
+    else
+    {
+      path = "/recruit";
+    }
+    jQuery.noConflict();
+    jQuery(document).ready(function() {
+      jQuery("#calendar").fullCalendar(
+      {
+        header:
+        {
+          left:   'prev,next today',
+          center: 'title',
+          right:  'month,agendaWeek,agendaDay'
+        },
+        defaultView: 'month',
+        height:      1200,
+        slotMinutes: 15,
+        events:      path + "/resumes/get_interviews",
+        timeFormat:  'h:mm tt{ - h:mm tt} ',
+        eventClick: function(event)
+        {
+          redirectToResumeDetails(path, event);
+        },
+        eventMouseover: function(event)
+        {
+          showEventDetails(event);
+          ShowContent("full_calendar_dialog_div");
+        },
+        eventMouseout: function(event, ui)
+        {
+          $jq('#desc_dialog').dialog('destroy');
+        },
+      });
+    });
+  </script>
+  <div>
+    <div id='calendar'>
+    </div>
+  </div>
+  <div id="desc_dialog" style="display:none;">
+    <div id="event_desc">  </div>
+  </div>
+</div>

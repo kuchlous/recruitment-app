@@ -1,0 +1,11 @@
+<% filenames = `ls resumes/#{@uniqid.name}.*`.split("\n")
+   filenames.each do |filename|
+     resume_tag = url_for(:protocol   => "https", 
+                          :host       => APP_CONFIG['host_name'], 
+                          :controller => "resumes",
+                          :action     => "download_resume",
+                          :name       => filename)
+     To download this resume copy this link and paste in your address bar.
+     <%= resume_tag %>
+   <% end %>
+  For more details, please login to your recruitment account.

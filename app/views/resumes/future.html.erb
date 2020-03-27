@@ -1,0 +1,24 @@
+<div id="future_list_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> <%= @status.titleize + "(" + @resumes.size.to_s + ")" %> </span>
+  <br />
+  <% if @resumes && @resumes.size > 0 %>
+    <table id="resume_list_table" class="sortable">
+      <tr class="header_row">
+        <td class="future_resume_name">    Resume Name   </td>
+        <td class="future_resume_req">     Requirement   </td>
+        <td class="future_resume_summary"> Summary       </td>
+        <td class="future_resume_status">  Status        </td>
+      </tr>
+      <% @resumes.each do |r| %>
+        <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+          <td> <%= get_resume_link_with_mouse_over_and_mouseout(r) %> </td>
+          <td> <%= get_resume_requirement(r, "FUTURE") %> </td>
+          <td> <%= r.summary %> </td>
+          <td> <%= r.status %> </td>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    No resumes in future list.
+  <% end %>
+</div>

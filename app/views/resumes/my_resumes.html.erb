@@ -1,0 +1,105 @@
+<div id="resume_search_div" class="common_class">
+  <span class="span_with_13"> All <%= @status %>  Resumes: (<%= @resumes.size %>) </span>
+  <% is_hr = @employee.is_HR? %>
+
+  <% if is_hr || params[:status] %>
+    ( <%= link_to "Export all", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_all_uploaded_resumes" %> ) <br /> <br />
+    <%= link_to "New",         :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "New"                 , :id => @employee.id  %> |
+    <%= link_to "Forwarded",   :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Forwarded"           , :id => @employee.id  %> |
+    <%= link_to "Shortlisted", :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Shortlisted"         , :id => @employee.id  %> |
+    <%= link_to "Hold",        :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "On Hold"             , :id => @employee.id  %> |
+    <%= link_to "Offered",     :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Offered"             , :id => @employee.id  %> |
+    <%= link_to "Joining",     :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Joining Date Given"  , :id => @employee.id  %> |
+    <%= link_to "Interviews",  :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Interview Scheduled" , :id => @employee.id  %> |
+    <%= link_to "Rejected",    :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Rejected"            , :id => @employee.id  %> |
+    <%= link_to "Future",      :host => APP_CONFIG['host_name'], :action => "my_resumes", :status => "Future"              , :id => @employee.id  %> |
+    <%= link_to "Recent",      :host => APP_CONFIG['host_name'], :action => "recent" %> |
+  <% end %>
+  <br /> <br />
+  <% if @resumes.size > 0 %>
+    <div id="my_resumes_div">
+      <table class="sortable">
+        <tr>
+          <th class="my_resumes_label">      Name                </th>
+          <th class="my_resumes_label">      Upload Date         </th>
+          <% if is_hr && ( @status == "Forwarded"   ||
+                           @status == "Shortlisted" ||
+                           @status == "Interview Scheduled" ) %>
+            <th class="my_resumes_label">      Req Names           </th>
+          <% end %>
+          <% if !is_hr %>
+            <th class="my_resumes_label">      Overall Status      </th>
+          <% end %>
+          <th class="my_resumes_label">      Recent Activity On  </th>
+          <th class="my_resumes_label">      Phone Number        </th>
+          <th class="my_resumes_label">      Email               </th>
+        </tr>
+        <% @resumes.each do |resume| %>
+          <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
+            <td class="my_resumes_label" title="<%= resume.name %>">
+              <%= resume_link_with_20_characters(resume) %>
+            </td>
+            <td class="my_resumes_label">
+              <%= print_date(resume.created_at) %>
+            </td>
+            <% if is_hr && ( @status == "Forwarded"   ||
+                             @status == "Shortlisted" ||
+                             @status == "Interview Scheduled" ) %>
+              <% if @status == "Forwarded" %>
+                <% forwards = get_resume_forwards(resume) %>
+                <% title_tag_for_multiple_fwds = [] %>
+                <% forwards.each do |f| %>
+                  <% f.requirements.each do |r| %>
+                    <% title_tag_for_multiple_fwds << r.name %>
+                  <% end %>
+                <% end %>
+                <td class="my_resumes_label_light" title="<%= title_tag_for_multiple_fwds.join(", ") %>"> 
+                  <% if forwards.size > 1 %>
+                    <b> Multiple </b>
+                  <% else %>
+                    <%= get_requirement_link_with_mouse_over_and_mouseout(forwards.first.requirements.first) %>
+                  <% end %>
+                </td>
+              <% elsif @status == "Shortlisted" %>
+                <% matches  = get_resume_req_matches(resume, @status.upcase) %>
+                <% title_tag_for_multiple_shortlisted_matches = [] %>
+                <% matches.each do |m| %>
+                  <% title_tag_for_multiple_shortlisted_matches << m.requirement.name %>
+                <% end %>
+                <td class="my_resumes_label_light" title="<%= title_tag_for_multiple_shortlisted_matches.join(", ") %>">
+                  <% if matches.size > 1 %>
+                    <b> Multiple </b>
+                  <% else %>
+                    <%= get_requirement_link_with_mouse_over_and_mouseout(matches.first.requirement) %>
+                  <% end %>
+                </td>
+              <% elsif @status == "Interview Scheduled" %>
+                <td class="my_resumes_label_light">
+                  <% interviews  = get_resume_req_matches(resume, "SCHEDULED")
+                     interviews.each do |int| %>
+                       <b> <%= get_requirement_link_with_mouse_over_and_mouseout(int.requirement) %> </b>
+                     <% end %>
+                </td>
+              <% end %>
+            <% end %>
+            <% if ! @employee.is_HR? %>
+              <td class="my_resumes_label">
+                <%= resume.resume_overall_status %>
+              </td>
+            <% end %>
+            <td class="my_resumes_label">
+              <%= print_date(resume.change_date) %>
+            </td>
+            <td class="my_resumes_label" title="<%= resume.phone %>">
+               <%= resume.phone %>
+            </td>
+            <td class="my_resumes_label" title="<%= resume.email %>">
+               <%= resume.email %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+  <% else %>
+    <span class="span_with_13_with_padding_0"> <br /> Sorry there are no resumes found. </span>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<table id="req_analysis_<%= id_var %>_table">
+  <tr class="header_row">
+    <th> Designation Name  </th>
+    <% @smonth.upto @emonth do |month| %>
+      <th class="align_middle"> <%= month  %>/<%= @year %> </th>
+    <% end %>
+  </tr>
+  <% object.each do |desg, row| %>
+    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+      <td> <%= desg[:name] %> </td>
+      <% row.each do |r| %>
+        <% unless r.nil? %>
+          <% if r == 0 %>
+            <td> <%= r %> </td>
+          <% else %>
+            <td class="text_as_red"> <%= r %> </td>
+          <% end %>
+        <% end %>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

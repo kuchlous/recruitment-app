@@ -1,0 +1,15 @@
+<div id="group_details_div" class="common_class">
+  <table id="group_details_table">
+    <tr>
+      <td>
+        <span> <%= @group.name %> </span>
+      </td>
+    </tr>
+    <tr>
+      <td> Name of owner - </td>
+      <td> <%= @group.employee.name %> </td>
+    </tr>
+  </table>
+  <br /> <br />
+  <%= link_to "List of departments", :host => APP_CONFIG['host_name'], :controller => "groups", :action => "index", :style => "color: #0000FF;" %> </div>
+</div>

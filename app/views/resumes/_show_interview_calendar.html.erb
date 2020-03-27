@@ -1,0 +1,41 @@
+<% i = @month %>
+<% if @year
+     year = @year
+   else
+     year = Date.today.year
+   end %>
+<div id="inside_interview_calendar_div" style="margin-top: 30px;">
+  <table class="center_table" style="margin-bottom: 20px; color: #222266; border: none;">
+    <tr>
+      <td class="align_left">
+        <% if i > 1 %>
+          <b> <%= link_to_remote "&laquo;", :url => {:host => APP_CONFIG['host_name'] :controller => "resumes", :action => @action, :month => i-1, :year => year }, :update => 'interview_calendar' %> </b>
+        <% else %>
+          &nbsp;
+        <% end %>
+      </td>
+
+      <td style="text-align: center; font-size: 8pt; width: 150px;">
+        <b> <%= Date::MONTHNAMES[i] %>, <%= year %> </b>
+      </td>
+
+      <td class="align_right">
+        <% if i < 12 %>
+          <b> <%= link_to_remote "&raquo;", :url => {:host => APP_CONFIG['host_name'] :controller => "resumes", :action => @action, :month => i+1, :year => year }, :update => 'interview_calendar' %> </b>
+        <% else %>
+          &nbsp;
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+
+  <%= calendar(:year => year, :month => i) do |d|
+    interviews = get_interviews_with_date(@interview_requests, year, i, d.mday)
+    unless interviews.nil? || interviews.size == 0
+      [ [ get_interview_title_with_mouse_over_and_mouseout(d.mday, interviews) ], { :class => "interviewDay" } ]
+    else
+      [ [ d.mday ], { :class => "day" }]
+    end
+    end %>
+</div>

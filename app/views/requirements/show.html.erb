@@ -1,0 +1,104 @@
+<div id="req_details_div" class="common_class">
+  <div class="add_link">
+    <%= link_to "Edit", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "edit", :id => @requirement.id %>
+  </div>
+  <form name="form" method="post">
+    <table id="req_details_table">
+      <tr>
+        <td class="header_line" colspan="2">
+          <span> <%= "#{@requirement.name} (#{@requirement.nop})" %> </span> <br /> <br />
+       </td>
+      </tr>
+      <tr>
+        <td> Designation Name - </td>
+        <td> <%= @requirement.designation.name %> </td>
+      </tr>
+      <tr>
+        <td> Skills required for this position - </td>
+        <td> <%= @requirement.skill %> </td>
+      </tr>
+      <tr>
+        <td> Job description for this position - </td>
+        <td> <%= @requirement.description %> </td>
+      </tr>
+      <tr>
+        <td> Management comment - </td>
+        <td> <%= @requirement.mgt_comment %> </td>
+      </tr>
+      <tr>
+        <td> Start Date - </td>
+        <td>
+          <% if @requirement.sdate %>
+            <%= date_in_calendar_format(@requirement.sdate) %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td> End Date - </td>
+        <td>
+          <% if @requirement.sdate %>
+            <%= date_in_calendar_format(@requirement.edate) %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td> Experience required for this position - </td>
+        <td> <%= @requirement.exp %> yrs </td>
+      </tr>
+      <tr>
+        <td> Requirement posted by - </td>
+        <td> <%= @requirement.posted_by.name %> </td>
+      </tr>
+      <tr>
+        <td> Requirement owner - </td>
+        <td> <%= @requirement.employee.name %> </td>
+      </tr>
+      <tr>
+        <td> Group - </td>
+        <td> <%= @requirement.group.name %> </td>
+      </tr>
+      <tr>
+        <td> Customer - </td>
+        <% acc_arr = []
+           @accounts.each do |a|
+             acc_arr << a.name
+           end %>
+        <td> <%= acc_arr.join(", ") %> </td>
+      </tr>
+      <tr>
+        <td> Type - </td>
+        <td> <%= @requirement.req_type %> </td>
+      </tr>
+    </table>
+    <br /> <br />
+    <span class="span_with_13">  Req Description: </span>
+    ( <%= link_to "Export all", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id %> ) <br /> <br />
+    <table id="resume_list_table">
+      <tr class="header_row">
+        <td> Forwards    </td>
+        <td> Shortlisted </td>
+        <td> Scheduled   </td>
+        <td> Rejected    </td>
+        <td> Holds       </td>
+        <td> Offered     </td>
+        <td> Joining     </td>
+      </tr>
+      <tr class="blue">
+        <td> <%= link_to @req_forwards.size, :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"    %>   </td>
+        <td> <%= link_to @shortlists.size,   :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted" %>   </td>
+        <td> <%= link_to @scheduled.size,    :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"   %>   </td>
+        <td> <%= @rejected.size %> </td>
+        <td> <%= link_to @hold.size,         :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"        %>   </td>
+        <td> <%= link_to @offered.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"     %>   </td>
+        <td> <%= link_to @joining.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"     %>   </td>
+      </tr>
+    </table>
+    <div id="show_requirements_description_div">
+      <% unless @status.nil? %>
+        <%= render "requirements/show_description" %>
+      <% end %>
+    </div>
+  </form>
+  <br /> <br />
+  <%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %> </div>
+</div>

@@ -1,0 +1,22 @@
+<div id="upload_xls_index_div" class="common_class">
+  <br/> <br />
+  <% form_for(@resume, :url => "/recruit/resumes/process_xls_and_zipped_resumes", :html => { :multipart => true }) do |f| %>
+  <table id="upload_xls_table">
+    <tr>
+      <td class="text_as_red"> Please provide the excel* file </td>
+    </tr>
+    <tr>
+      <td> <%= f.file_field("upload_xls", :size => "31") %> </td>
+    </tr>
+    <tr>
+      <td class="text_as_red"> Please provide the resume's zipped* file </td>
+    </tr>
+    <tr>
+      <td> <%= f.file_field("upload_zipped_resume", :size => "31") %> </td>
+    </tr>
+    <tr>
+      <td class="upload_xls_submit_button"> <%= f.submit "GO" %> </td>
+    </tr>
+  </table>
+  <% end %>
+</div>

@@ -1,0 +1,19 @@
+<% display_form = is_display_form %>
+
+<div id="manager_index_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> <%= @status.titleize %> (<%= @forwards.size %>) </span>
+  <% if @status == "REJECTED" && @row_id_prefix == "rejected_resume_row" %>
+    <%= will_paginate @forwards %>
+  <% end %>
+
+  <% if display_form == 1 %>
+    <form name="form" method="post">
+  <% end %>
+
+  <%= render "resumes/shared_manager_index" %>
+
+  <% if display_form == 1 %>
+    </form>
+  <% end %>
+
+</div>

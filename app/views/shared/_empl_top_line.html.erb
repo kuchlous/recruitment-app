@@ -1,0 +1,133 @@
+<% if  get_current_employee %>
+  <div id="employee_logged_info">
+    <% current_employee = get_current_employee  
+       logged_employee  = get_logged_employee %>
+    <div id="logged_info">
+      <div id="logging_name_info">
+        Login: <b> <%=  get_words(logged_employee.name, 2) %> </b> |
+        <%= link_to "Logout", :host => APP_CONFIG['host_name'], :controller => "employees", :action => "logout" %>
+        <% if logged_employee != current_employee %>
+          | <%= link_to "My Account", :controller => "employees", :action => "change_to", :id => logged_employee.id %>
+        <% end %>
+      </div>
+      <br /> <br />
+      <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? %>
+        <div id="search_box">
+          <% form_tag :controller => "home", :action => "search", :host => APP_CONFIG['host_name'], :method => 'post' do %>
+            <table>
+              <tr>
+                <td class="search_box_field">         <%= text_field "search", "box" %> </td>
+                <td class="search_box_submit_button"> <%= submit_tag "Search" %> </td>
+              </tr>
+            </table>
+          <% end %>
+          <%= link_to "(Advanced Search)", {:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search"}, :class => "float_right_with_no_padding" %>
+        </div>
+      <% end %>
+    </div>
+    <div id="user_action_list">
+      <% if logged_employee != current_employee %>
+        Account: <b> <%= current_employee.name.split(' ')[0..1].join(' ') %> </b> ||
+      <% end %>
+      <% if is_HR? %>
+        <%= link_to "Upload Resume",                :host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "new" %>
+        | <%= link_to "Upload XLS",                   :host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "upload_xls" %>
+        | <%= link_to "Interview XL",                 :host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "export_interviews_per_date" %>
+      <% else %>
+        <%= link_to "My Interviews",   {:host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "interview_requests" } %>
+      <% end %>
+      | <%= link_to "My Resumes",                   :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "my_resumes" %>
+      | <%= link_to "Interview Calendar",{ :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "interview_calendar" } %>
+      <% if is_ADMIN? %>
+        | <%= link_to "All employees", { :host=> APP_CONFIG['host_name'], :controller => "employees", :action => "index" } %>
+      <% elsif current_employee.is_manager? %>
+        | <%= link_to "My employees", { :host=> APP_CONFIG['host_name'], :controller => "employees", :action => "list_my_employees" } %>
+      <% end %>
+      <% if is_HR_ADMIN? || is_GM? %>
+        | <%= link_to "Misc.", { :host=> APP_CONFIG['host_name'], :controller => "home",    :action => "actions" },       :class => "primary_action", :id => "misc_home",     :onmouseover => "showSecondaryActions('misc_home');", :onfocus => "showSecondaryActions('misc_home');" %>
+      <% else %>
+        | <%= link_to "All Requirements", { :host=> APP_CONFIG['host_name'], :controller => "requirements", :action => "index" } %>
+        | <%= link_to "My Requirements", { :host=> APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" } %>
+      <% end %>
+        | <%= link_to "Messages",      { :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "inbox" },         :class => "primary_action", :id => "messages_home", :onmouseover => "showSecondaryActions('messages_home');", :onfocus => "showSecondaryActions('messages_home');" %>
+      <% if is_HR_ADMIN? %>
+        | <%= link_to "Export XLS",     :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls" %>
+      <% end %>
+    </div>
+    <div id="user_secondary_action_list">
+      <div id="messages_home_actions">
+        <%= link_to "Inbox",                    {  :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "inbox"  }, :class  => "secondary_action" %>
+        <%= link_to "Outbox",                   {  :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "outbox"  }, :class  => "secondary_action" %>
+        <%= link_to "Trash",                    {  :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "trash"  }, :class  => "secondary_action" %>
+      </div>
+      <% if is_HR_ADMIN? || is_GM? %>
+        <div id="misc_home_actions">
+          <%= link_to "All Requirements",           {  :host=> APP_CONFIG['host_name'], :controller => "requirements" },  :class => "secondary_action" %>
+          <%= link_to "My Requirements",        {  :host=> APP_CONFIG['host_name'], :controller => "requirements",    :action => "my_requirements" }, :class => "secondary_action" %>
+          <% if is_HR_ADMIN? %>
+            <%= link_to "Designations",           {  :host=> APP_CONFIG['host_name'], :controller => "designations" },  :class => "secondary_action" %>
+            <%= link_to "Groups",                 {  :host=> APP_CONFIG['host_name'], :controller => "groups"       },  :class => "secondary_action" %>
+            <%= link_to "Portals",                {  :host=> APP_CONFIG['host_name'], :controller => "portals"      },  :class => "secondary_action" %>
+            <%= link_to "Agencies",               {  :host=> APP_CONFIG['host_name'], :controller => "agencies"     },  :class => "secondary_action" %>
+          <% end %>
+          <% if is_ADMIN? || is_GM? %>
+            <%= link_to "Summaries",             {  :host=> APP_CONFIG['host_name'], :controller => "home", :action => "summaries"}, :class => "secondary_action" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div id="bottom_fixed_div">
+    <table id="bottom_fixed_table">
+      <tr>
+        <% if is_HR? %>
+          <td> <%= link_to "New",         :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "new_resumes"         %> </td>
+        <% end %>
+        <% if is_HR_ADMIN? || is_PM? || is_BD? || is_GM? || is_REQ_MANAGER? %>
+          <% if is_REQ_MANAGER? 
+               hold       = "manager_hold"
+               offered    = "manager_offered"
+               joined     = "manager_joined"
+               interviews = "manager_interviews_status"
+               yto        = "manager_yto"
+               shortlisted = "manager_shortlisted"
+               forwarded  = "manager_index"
+               rejected   = "manager_rejected"
+               future     = "future"
+             end 
+          %>
+          <% if is_HR_ADMIN? || is_BD? || is_GM?
+               hold       = "hold"
+               offered    = "offered"
+               joined     = "joined"
+               interviews = "interviews_status"
+               yto        = "yto"
+               shortlisted = "shortlisted"
+               forwarded  = "forwarded"
+               rejected   = "rejected"
+               future     = "future"
+             end
+          %>
+          <% if is_PM?
+               joined = "joined"
+             end
+          %>
+          <% if is_HR?
+               recent = "recent"
+             end
+          %>
+          <% if forwarded   %> <td> <%= link_to "Forwarded",   :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{forwarded}"   %>    </td> <% end %>
+          <% if shortlisted %> <td> <%= link_to "Shortlisted", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{shortlisted}" %>    </td> <% end %>
+          <% if interviews  %> <td> <%= link_to "Interviews",  :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{interviews}"  %>    </td> <% end %>
+          <% if yto         %> <td> <%= link_to "YTO",         :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{yto}"         %>    </td> <% end %>
+          <% if hold        %> <td> <%= link_to "Hold",        :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{hold}"        %>    </td> <% end %>
+          <% if rejected    %> <td> <%= link_to "Rejected",    :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{rejected}"    %>    </td> <% end %>
+          <% if offered     %> <td> <%= link_to "Offered",     :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{offered}"     %>    </td> <% end %>
+          <% if joined      %> <td> <%= link_to "Joining",     :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{joined}"      %>    </td> <% end %> 
+          <% if future      %> <td> <%= link_to "Future",      :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{future}"      %>    </td> <% end %>
+          <% if recent      %> <td> <%= link_to "Recent",      :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{recent}", :all => '1'     %>    </td> <% end %>
+        <% end %>
+      </tr>
+    </table>
+  </div>
+<% end %>

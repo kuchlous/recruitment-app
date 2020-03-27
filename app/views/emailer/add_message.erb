@@ -1,0 +1,6 @@
+Hi <%= @emp_to.name %>,
+  <%= @emp_from.name %> has sent a message to you related to the
+  resume <%= @mesg.resume.name %>.
+  For more details, please login to your recruitment account.
+  <% url = url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @mesg.resume.uniqid.name) %>
+  Link to resume:-  <%= url %>

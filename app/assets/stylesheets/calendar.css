@@ -1,0 +1,131 @@
+/*
+  A blue based theme, inspired by Blinksale and their ColorBurn widget. http://firewheeldesign.com
+  
+  AUTHOR: Geoffrey Grosenbach http://nubyonrails.com
+  
+  Colors: 
+    Light Blue: bbccff 
+    White: eeddee
+    Turq: 003355
+    Cream: ffffdd
+*/
+
+.center_table
+{
+  margin: auto;
+}
+
+.center_table tr td,
+.calendar     tr th
+{
+  border: none;
+}
+
+.calendar     tr td
+{
+  border:1px dotted #FFFFFF;
+}
+
+.calendar
+{
+  margin:           auto;
+  border-collapse:  separate;
+  font-size:        14px;
+  margin-bottom:    2em;
+}
+
+#interview_calendar
+{
+  padding-top:      2em;
+}
+
+.monthName th
+{
+  font-weight:      normal;
+  text-align:       right;
+  padding-top:      1em;
+  padding-bottom:   0.7em;
+}
+
+.dayName th
+{
+  font-size:        0.7em;
+  padding-top:      0.6em;
+  padding-bottom:   0.3em;
+  background-color: #ebeff9;
+  color:            #222266;
+}
+
+.otherMonth, .day, .specialDay
+{
+  padding:          0.7em 1em;
+  height:           40px;
+  width:            50px;
+}
+
+.day, .specialDay
+{
+  text-align:       center;
+  background-color: #bbccff;
+  border:           1px dotted #ffffff;
+}
+
+.interviewDay
+{
+  padding:          0.7em 1em;
+  height:           40px;
+  width:            50px;
+  text-align:       center;
+  background-color: #cccccc;
+  border:           1px dotted #ffffff;
+}
+
+.specialHalfDay
+{
+  background-image: url("/images/halfDay.jpg");
+  color:            #222266;
+  text-align:       center;
+}
+
+.specialDay a, .specialDay a:visited
+{
+  text-decoration:  none;
+  padding:          1em;
+}
+.specialDay a:hover
+{
+  text-decoration:  underline;
+}
+.weekendDay
+{
+  text-align:       center;
+  background-color: #ebeff9;
+  color:            #222266;
+}
+
+.otherMonth
+{
+  color:            #DDDDDD;
+  background-color: white;
+}
+
+.center_table #weekend_day_color_box, .center_table #interview_day_color_box, .center_table #othermonth_day_color_box
+{
+  width:            1em;
+  background-color: #ebeff9;
+}
+
+.center_table #interview_day_color_box
+{
+  background-color: #9299ae;
+}
+
+.center_table #othermonth_day_color_box
+{
+  background-color: #ffffff;
+}
+
+.center_table .color_information
+{
+  font-size:        10pt;
+}

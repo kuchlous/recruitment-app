@@ -1,0 +1,17 @@
+<div id="interviews_div" class="common_class">
+  <div id="error_messages_div" class="error_messages_div"> </div>
+  <form name="form" method="post">
+    <% @matches = @interviews_late %>
+    <% @matches += @interviews_done %>
+    <% @matches += @under_process %>
+    <% @matches = sort_interviews_in_display_order(@matches) %>
+    <span class="span_with_13_with_padding_0"> Interviews (<%= @matches.size%>) </span>
+    <%= link_to "(Export Today's Interviews)", {:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_interviews"}, :class => "float_right_with_no_padding" %>
+    <br />
+    <% if @matches.size > 0 %>
+      <%= render "resumes/interview_table", :matches => @matches %>
+    <% else %>
+      No interviews scheduled.
+    <% end %>
+  </form>
+</div>

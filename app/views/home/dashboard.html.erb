@@ -1,0 +1,34 @@
+<h2> My Dashboard </h2>
+<div class="common_class">
+  <table>
+    <thead>
+      <tr class="header_row">
+        <td> New         </td>
+        <td> Forwards    </td>
+        <td> Shortlisted </td>
+        <td> Scheduled   </td>
+        <td> Rejected    </td>
+        <td> Holds       </td>
+        <td> YTO         </td>
+        <td> Offered     </td>
+        <td> Joining     </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="blue">
+        <td> <%= link_to @new.size, :host => APP_CONFIG['host_name'], :controller=> "resumes", :action => "new_resumes", :mine => "true" %>   </td>
+        <td> <%= link_to @forwards.size,   :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "forwarded", :mine => "true"%>   </td>
+        <td> <%= link_to @shortlists.size,   :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "shortlisted", :mine => "true"%>   </td>
+        <td> <%= link_to @scheduled.size,    :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "interviews_status", :mine => "true"%>   </td>
+        <td> <%= link_to @rejected.size,    :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "rejected", :mine => "true"%>   </td>
+        <td> <%= link_to @holds.size,    :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "hold", :mine => "true"%>   </td>
+        <td> <%= link_to @ytos.size,    :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "yto", :mine => "true"%>   </td>
+        <td> <%= link_to @offered.size,    :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "offered", :mine => "true"%>   </td>
+        <td> <%= link_to @joining.size,      :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "joined", :mine => "true"%>   </td>
+      </tr>
+    </tbody>
+  </table>
+  <% unless @status.nil? %>
+    <%= render home/dashboard_type %>
+  <% end %>
+</div>

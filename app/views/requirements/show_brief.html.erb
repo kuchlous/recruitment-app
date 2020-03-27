@@ -1,0 +1,32 @@
+<div id="req_breif_details_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> <%= @requirement.name %> </span>
+  <br /> <br />
+  <table id="req_breif_details_table">
+    <tr>
+      <td> Skills required for this position - </td>
+      <td> <%= @requirement.skill %> </td>
+    </tr>
+    <tr>
+      <td> Job description for this position - </td>
+      <td> <%= @requirement.description %> </td>
+    </tr>
+    <tr>
+      <td> Experience required for this position - </td>
+      <td> <%= @requirement.exp %> yrs </td>
+    </tr>
+    <tr>
+      <td> Requirement owner - </td>
+      <td> <%= @requirement.employee.name %> </td>
+    </tr>
+    <tr>
+      <td> Group - </td>
+      <td> <%= @requirement.group.name %> </td>
+    </tr>
+    <tr>
+      <td> Type - </td>
+      <td> <%= @requirement.req_type %> </td>
+    </tr>
+  </table>
+  <br /> <br />
+  <%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %> </div>
+</div>

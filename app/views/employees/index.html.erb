@@ -1,0 +1,16 @@
+<div id="employees_index_div" class="common_class">
+  <span class="span_with_13_with_padding_0"> List of all employees </span>
+  ( <% ('A'..'Z').each do |a| %>
+      <%= link_to a, :action => "list_my_employees", :character_name => a, :page => "with_alphabet" %>
+    <% end %>
+  )
+  <%= link_to "All Employees", { :controller => "employees", :action => "list_my_employees" } %>
+  <br /> <br />
+  <table id="employee_details_table">
+    <% @employees.each do |e| %>
+      <tr>
+        <td style="font-weight: bold;"> <%= link_to h(e.name), :controller => "employees", :action => "change_to", :id => e.id %> </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

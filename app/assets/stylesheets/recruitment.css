@@ -1,0 +1,1760 @@
+/* ==========================================================
+   Styling Rules - Basic body properties
+   Description   - This chunk of code is used to style the body font-family
+   ========================================================== */
+body
+{
+/*  font-family: Verdana, "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif; */
+}
+
+/* ==========================================================
+   Styling Rules - Default css properties
+   Description   - Imports the default html/css properties for body elements
+   ========================================================== */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td
+{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  background: transparent;
+}
+
+body
+{
+  line-height: 1;
+}
+
+ol, ul
+{
+  list-style: none;
+}
+
+blockquote, q
+{
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after
+{
+  content: '';
+  content: none;
+}
+
+/* remember to define focus styles! */
+:focus
+{
+  outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins
+{
+  text-decoration: none;
+}
+
+del
+{
+  text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table
+{
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ==========================================================
+    Styling Rules - Popup Information Boxes
+    Description   - These popup boxes act as a medium to convey information
+                    messages/errors to the user. When they appear the transparency
+                    of the rest of the content gets reduced in the background.
+   ========================================================== */
+#alert_box
+{
+  position:         absolute;
+  width:            500px;
+  left:             0;
+  top:              -400px;
+  color:            white;
+  font-size:        20pt;
+  text-align:       center;
+  border:           5px solid #FFFFFF;
+  background-color: #146EB4;
+  padding:          20px;
+  z-index:          100;
+  display:          table-cell;
+  visibility:       hidden;
+}
+
+/* ==========================================================
+   Styling Rules - Background Shader
+   Description   - This is the background that is made visible when the alert,
+                   information or error boxes appear in the foreground. This
+                   is done to de-emphasise the contents that are present in the
+                   background.
+   ========================================================== */
+#background_shader
+{
+  background-color: #000000;
+  border-color:     #000000;
+  display:          none;
+  height:           100%;
+  left:             0;
+  position:         fixed;
+  top:              0;
+  width:            100%;
+  z-index:          50;
+  visibility:       hidden;
+}
+
+/* ==========================================================
+   Styling Rules - Layout div
+   Description   - This is for the stylings of the layout div which will be rendered
+                   in the layouts page.
+   ========================================================== */
+#emp_layout
+{
+  margin:           20px;
+  line-height:      1.5em;
+  background-color: white;
+}
+
+#emp_layout .title_td
+{
+  text-align:       left;
+  padding-left:     5px;
+  min-width:        150px;
+  max-width:        150px;
+}
+
+#emp_layout .id_field
+{
+  text-align:       center;
+  min-width:        30px;
+  max-width:        30px;
+}
+
+/* ==========================================================
+   Styling Rules - All content table
+   Description   - Styling table in which all yielded data will come.
+   ========================================================== */
+#allcontent
+{
+  /*
+  max-width:        1000px;
+  */
+  min-width:        1200px;
+  padding-top:      0px;
+  padding-bottom:   5px;
+  margin:           0 auto;
+  /*
+  border:           solid lightgray 1px;
+  */
+}
+
+/* ==========================================================
+   Styling Rules - All links in application
+   Description   - This chunk of code is used to style all links in the application.
+                   Links will be of color deep blue and underlined on hover.
+   ========================================================== */
+#allcontent a, #allcontent a:visited
+{
+  color:            #222266;
+  text-decoration:  none;
+}
+
+#allcontent a:hover
+{
+  color:            #222266;
+  text-decoration:  underline;
+}
+
+/* ==========================================================
+   Styling Rules - Calendar links in application
+   Description   - This chunk of code is used to style links in the calendar.
+                   Links will be of color white and underlined on hover.
+   ========================================================== */
+#calendar .fc-view a, #calendar .fc-view a:visited
+{
+  color:            white;
+  text-decoration:  none;
+}
+
+#calendar .fc-view a:hover
+{
+  color:            white;
+  text-decoration:  underline;
+}
+
+/* ==========================================================
+   Styling Rules - Logged info
+   Description   - This chunk of code is used to style the information after an
+                   employee logged in succesfully to his account.
+                   Styling for search box as well to keep them right.
+   ========================================================== */
+#logged_info,
+#search_box
+{
+  clear:            both;
+  float:            right;
+}
+
+#logging_name_info
+{
+  float:            right;
+  padding-right:    5px;
+}
+
+/* ==========================================================
+   Styling Rules - Table in page
+   Description   - This chunk of code is used to style table, tr, td and span in the page(common_class)
+                   which is used by all layouts.
+   ========================================================== */
+.common_class table,
+.half_common_class table
+{
+  width:            100%;
+  font-size:        8pt;
+}
+
+.common_class td, .common_class th
+{
+  border:           1px solid #cccccc;
+  text-align:       center;
+}
+
+.half_common_class td, .half_common_class th
+{
+  text-align:       center;
+}
+
+.common_class span
+{
+  font-size:        18pt;
+  font-weight:      bold;
+  padding-bottom:   20px;
+}
+
+.half_common_class span
+{
+  font-size:        12px;
+  font-weight:      bold;
+ /* padding-bottom:   20px; */
+}
+
+.common_class #login_form_table
+{
+  margin: 50px 0px 0px 0px;
+}
+
+/* ==========================================================
+   Styling Rules - Background divs for every pages
+   Description   - . This is for apply the background color of a div that is
+                   created on each page of application.
+                   . Class is same for every page but id is different.
+                   . Alternate color for even/odd rows
+                   . Go to image as well as styling spans
+   ========================================================== */
+.common_class,
+.half_common_class
+{
+  padding:          20px;
+  vertical-align:   middle;
+  overflow:         auto;
+  color:            #222266;
+/*  margin:           20px 20px 0px 20px; */
+  position:         relative;
+  text-align:       justify;
+  background:       #e3e4fa;
+  border:           1px solid #D8DCDF;
+  font-size:        10pt;
+}
+
+.common_class .color_line_odd,
+.common_class .color_line_even
+{
+  margin:           5px;
+  border:           1px solid #D8DCDF;
+  padding-bottom:   5px;
+}
+
+.common_class .color_line_even,
+.common_class .color_line_even a
+{
+  background:       #f5f5dc;
+  color:            #222266;
+}
+
+.common_class .color_line_odd,
+.common_class .color_line_odd a
+{
+  background:       white;
+  color:            #222266;
+}
+
+.common_class .color_line_odd:hover,
+.common_class .color_line_even:hover
+{
+  border:           1px solid #5b80ca;
+}
+
+.common_class .multi_selected_qualification
+{ 
+  height:           80px;
+  width:            500px;
+  overflow-y:       scroll;
+  border:           1px solid #D8DCDF;
+  margin:           5px 0px 5px 0px;
+}
+
+.common_class .one_element_div_qual
+{
+  height:           40px;
+  margin:           2px;
+  padding:          2px 0px 0px 2px;
+  overflow:         hidden;
+  border:           1px solid #D8DCDF;
+  width:            150px;
+}
+
+.commom_class .one_element_div_qual_with_no_border
+{
+  height:           40px;
+  margin:           2px;
+  padding:          2px 0px 0px 2px;
+  overflow:         hidden;
+  width:            100px;
+  text-align:       left;
+}
+
+.common_class #show_requirements_description_div
+{
+  margin:           20px 0px 0px 0px;
+  background-color: #a4a4a4;
+}
+
+.common_class #ajax_request_tr .goto_image
+{
+  height:           20px;
+  width :           20px;
+  float :           right;
+  cursor:           pointer;
+}
+
+.common_class #ajax_request_tr .cross_icon_image
+{
+  height :          22px;
+  width  :          22px;
+  cursor :          pointer;
+}
+
+.common_class .span_with_13
+{
+  font-size:        13pt;
+}
+
+.common_class .span_with_13_with_padding_0,
+.half_common_class .span_with_13_with_padding_0
+{
+  font-size:        13pt;
+  padding:          0px;
+}
+
+.common_class .span_with_padding_0_float
+{
+  float:            right;
+  padding:          0px;
+}
+
+.common_class .span_with_8
+{
+  font-size:        8pt;
+}
+
+.common_class .span_with_grey_color
+{
+  color:            #a4a4a4;
+  font-size:        8pt;
+}
+
+.common_class textarea
+{
+  width:            230px;
+  height:           50px;
+  font-size:        12pt;
+  cursor:           text;
+  font-size:        100%;
+  margin-top:       5px;
+  background-color: #E6E6E6;
+}
+
+/* ==========================================================
+   Styling Rules - Special links in application
+   Description   - . This chunk of code is used to style special links(such as add links
+                   and edit links for portals, agencies etc.
+                   . Links background will be of something blue color.
+                   . Edit links will be of green color.
+   ========================================================== */
+.common_class .add_link
+{
+  float:            right;
+  border:           solid 1px;
+  background-color: #AFEEEE;
+  padding:          2px;
+}
+
+.common_class .green_color_link
+{
+  font-weight:      bold;
+  color:            green;
+  float:            right;
+}
+
+/* ==========================================================
+   Styling Rules - Td's
+   Description   - For styling the td's of table. Setting size/width. Removing borders as well
+   ========================================================== */
+#group_details_table td,
+#group_form_table    td,
+#req_details_table   td,
+#req_form_table      td,
+#portal_form_table   td,
+#designation_form_table td,
+#agency_from_table   td,
+#summaries_recruiter_table td,
+#employee_details_table td,
+#login_form_table    td,
+#resume_details_table td,
+#resume_details_comments_table td,
+#resume_details_feedback_table td,
+#resume_details_messages_table td,
+#resume_form_table   td,
+#req_breif_details_table td,
+#edit_resume_joining_table td,
+#req_analysis_table td,
+#upload_xls_table td
+{
+  font-size:        8pt;
+  text-align:       left;
+  width:            300px;
+  padding:          2px;
+  border:           none;
+}
+
+#span_arrow_table
+{
+  font-weight:      bold;
+  width:            100%;
+}
+
+#span_arrow_table tr td
+{
+  border:           none;
+}
+
+#span_arrow_table .align_left,
+.align_left
+{
+  text-align:       left;
+}
+
+#span_arrow_table .align_right,
+.align_right
+{
+  text-align:       right;
+}
+
+#span_arrow_table .align_center
+{
+  text-align:       center;
+}
+
+/* ==========================================================
+   Styling Rules - Customer multiselected drop down list in new requirements page
+   Description   - This chunk of code is for styling the multiselected drop down list
+                   on requirements new page.
+   ========================================================== */
+#customer_list_table
+{
+  width: 500px;
+}
+
+#customer_list_table td
+{
+  width: 350px;
+}
+
+#customer_list_table .input_with_low_width
+{
+  width: 20px;
+}
+
+
+/* ==========================================================
+   Styling Rules - Input fields
+   Description   - For styling the inputs fields of table/form/page.
+                   Setting font-size/height/width.
+                   Setting vertical-aligning as well.
+   ========================================================== */
+#group_form_table    td input,
+#req_form_table      td input,
+#portal_form_table   td input,
+#designation_form_table   td input,
+#agency_from_table   td input, 
+#summaries_recruiter_table td input,
+#login_form_table    td input,
+#resume_form_table   td input,
+#search_box          td input,
+#edit_resume_joining_table td input,
+#upload_xls_table td input
+{
+  height:           25px;
+  width:            230px;
+  font-size:        11pt;
+  vertical-align:   left;
+  cursor:           text;
+  font-size:        100%;
+  background-color: #E6E6E6;
+}
+
+/* ==========================================================
+   Styling Rules - Select fields
+   Description   - For styling the select tag/fields of table/form/page.
+   ========================================================== */
+#group_form_table   td select,
+#req_form_table     td select,
+#agency_from_table  td select,
+#resume_form_table  td select,
+#edit_resume_joining_table td select
+{
+  height:           30px;
+  width:            230px;
+  font-size:        12pt;
+}
+
+#resume_form_table .two_tds_same_line
+{
+  height:           30px;
+  width:            100px;
+  font-size:        12pt;
+}
+
+/* ==========================================================
+   Styling Rules - Submit buttons
+   Description   - For styling the submit buttons/tags of table/form/page
+   ========================================================== */
+#group_form_table  .group_submit_button       input,
+#portal_form_table .portal_submit_button      input,
+#designation_form_table .designation_submit_button      input,
+#req_form_table    .requirement_submit_button input,
+#agency_from_table .agency_submit_button      input,
+#summaries_recruiter_table .summaries_recruiter_submit_button input
+{
+  font-size:        25px;
+  width:            100px;
+  margin-top:       20px;
+  height:           40px;
+  cursor:           default;
+  float:            right;
+}
+
+/* ==========================================================
+   Styling Rules - Small Submit buttons
+   Description   - For styling the submit buttons for search box(emp top line)
+                   and edit joining(Offered page)
+   ========================================================== */
+#search_box .search_box_submit_button input
+{
+  font-size:        15px;
+  height:           33px;
+  width:            70px;
+  margin:           0px 0px 0px 10px;
+}
+
+/* ==========================================================
+   Styling Rules - Td for radio buttons
+   Description   - Styling the td/cell for radio buttons to come in only one line at upload page.
+   ========================================================== */
+#resume_form_table .radio_buttons_one_liner
+{
+  height:           10px;
+  width:            230px;
+  font-size:        8pt;
+  vertical-align:   left;
+  cursor:           default;
+  padding-top:      10px;
+}
+
+/* ==========================================================
+   Styling Rules - Radio buttons
+   Description   - Styling the radio buttons to come in only one line at upload page.
+                   Setting width to 20px so that 4 radio buttons can come.
+   ========================================================== */
+#resume_form_table .radio_buttons_one_liner input
+{
+  cursor:           default;
+  width:            20px;
+}
+
+#resume_form_table .radio_buttons_one_liner label
+{
+  vertical-align:   top;
+}
+
+/* ==========================================================
+   Styling Rules - Multiple drop down list
+   Description   - Styling multiple drop down list for upload page
+   ========================================================== */
+#resume_form_table .ddl_with_multiples select
+{
+  height:           100px;
+  width:            230px;
+  font-size:        12pt;
+  background-color: #E6E6E6;
+}
+
+/* ==========================================================
+   Styling Rules - Error messsages div
+   Description   - Styling error messages div. Used when HR/ADMIN tries to add more than 
+                   5 employees for an candidate.
+   ========================================================== */
+#error_messages_div
+{
+  width:            100%;
+  font-size:        10pt;
+  font-weight:      bold;
+  border: solid     #FF0000 1px;
+  visibility:       hidden;
+  margin:           2px;
+  padding:          2px;
+  background-color: red;
+  color:            white;
+}
+
+/* ==========================================================
+   Styling Rules - Employee logged info
+   Description   - Styling div which is used when employee will logged in.
+   ========================================================== */
+#employee_logged_info
+{
+  height:           20px;
+  padding:          7px 5px 0px 5px;
+  color:            #222266;
+  margin:           10px 20px 0px 20px;
+  position:         relative;
+  text-align:       justify;
+  background:       #e3e4fa;
+  border:           1px solid #D8DCDF;
+  font-size:        10pt;
+}
+
+/* ==========================================================
+   Styling Rules - User's Signatures
+   Description   - These rule defines the style for the signature along with the link
+                   to sign out when the user is logged in to the application
+   ========================================================== */
+#user_action_list
+{
+  padding:          0;
+  float:            left;
+}
+
+#user_secondary_action_list
+{
+  float:            left;
+  clear:            left;
+  margin-top:       15px;
+}
+
+#user_secondary_action_list .secondary_action
+{
+  color:            #222266;
+  margin-right:     10px;
+  padding:          1px 3px 2px 3px;
+  border:           1px solid #D8DCDF;
+}
+
+#user_secondary_action_list #messages_home_actions,
+#user_secondary_action_list #misc_home_actions
+{
+  display:          none;
+  visibility:       hidden;
+  padding:          3px;
+}
+
+#user_action_list a,
+#user_secondary_action_list #messages_home_actions a,
+#user_secondary_action_list #misc_home_actions a
+{
+  text-decoration:  none;
+}
+
+#user_action_list a:hover,
+#user_secondary_action_list #messages_home_actions a:hover,
+#user_secondary_action_list #misc_home_actions a:hover
+{
+  text-decoration:  underline;
+}
+
+/* ==========================================================
+   Styling Rules - Top Table
+   Description   - This chunk of code contains the logo and top table styles
+   ========================================================== */
+#top_table
+{
+  top:              0px;
+  border:           0;
+  min-width:        800px;
+  position:         relative;
+  margin-top:       5px;
+}
+
+.logo
+{
+  width:            235px;
+  margin:           0;
+  float:            left;
+  font-size:        30pt;
+}
+
+.logo #logo_link
+{
+  position:         relative;
+  border:           0 solid #fff;
+  outline:          none;
+  text-decoration:  none;
+  color:            #00008B;
+}
+
+.logo_tagline
+{
+  width:            200px;
+  margin:           0;
+  padding-right:    5px;
+  float:            right;
+  font-size:        12pt;
+  position:         relative;
+  top:              12px;
+  color:            #222266;
+}
+
+/* ==========================================================
+   Styling Rules - Bottom Table
+   Description   - This chunk of code contains the footer styles
+   ========================================================== */
+#footer
+{
+  position:         relative;
+  padding-bottom:   50px;
+  padding-top:      50px;
+}
+
+#footer_table
+{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#footer .confidential_tag
+{
+  color:            #222266;
+  font-size:        12pt;
+  font-weight:      bold;
+  text-align:       left;
+}
+
+/* ==========================================================
+   Styling Rules - Bottom Fixed Div
+   Description   - Used to display the div/table which is fixed at the bottom
+   ========================================================== */
+#bottom_fixed_div
+{
+  width:            97%;
+  background-color: #BDBDBD;
+  bottom:           2px;
+  height:           25px;
+  position:         fixed;
+  z-index:          10;
+  margin:           20px 20px 0px 20px;
+  text-align:       justify;
+  border:           1px solid #D8DCDF;
+}
+
+#bottom_fixed_div a,
+#bottom_fixed_div a:visited
+{
+  color:            #222266;
+  text-decoration:  none;
+  font-size:        14px;
+  font-weight:      bold;
+}
+
+#bottom_fixed_div a:hover
+{
+  color:            #222266;
+  text-decoration:  underline;
+}
+
+#bottom_fixed_table
+{
+  margin:           5px 10px 0px 5px;
+  width:            100%;
+  z-index:          10;
+}
+
+#bottom_fixed_div #bottom_fixed_table td
+{
+  padding-right:    20px;
+}
+
+
+/* ==========================================================
+   Styling Rules - Ajax Request Tr
+   Description   - Styling row which will be created when a new ajax request is about to sent.
+   ========================================================== */
+#ajax_request_tr
+{
+  font-size:        10pt;
+  background-color: #e6e6e6;
+  width:            800px;
+  position:         relative;
+  z-index:          10;
+}
+
+#ajax_request_tr .parent_message_color
+{
+  color:            #FF9966;
+  font-size:        10px;
+}
+
+#ajax_request_tr .message_box_employee_name
+{
+  margin:           2px 0px 0px 10px;
+}
+
+#ajax_request_tr .comment_textarea
+{
+  float:            left;
+  margin:           10px;
+  width:            730px;
+  height:           75px;
+  background-color: #ffffff;
+  color:            #A4A4A4;
+}
+
+#ajax_request_tr .focus_textarea
+{
+  height:           12px;
+  width:            130px;
+  color:            #A4A4A4;
+  vertical-align:   bottom;
+}
+
+#ajax_request_tr .employee_name_text_field_in_message_box
+{
+  float:            left;
+  height:           20px;
+  background-color: #E6E6E6;
+  margin:           4px 0px 0px 10px;
+}
+
+#ajax_request_tr .message_in_reply_to_div
+{
+  margin-left:      10px;
+  text-align:       left;
+}
+
+#ajax_request_tr #joining_date,
+#ajax_request_tr #resume_status
+{
+  width:            150px;
+  font-size:        8pt;
+  cursor:           text;
+  background-color: #E6E6E6;
+  margin:           10px;
+  float:            left;
+}
+
+#ajax_request_tr .joining_date_image
+{
+  margin-top:       10px;
+  float:            left;
+}
+
+#ajax_request_tr .one_element_div_qual_with_no_border
+{
+  height:           30px;
+  width:            190px;
+  margin:           2px;
+  overflow:         hidden;
+  text-align:       left;
+}
+
+#ajax_request_tr .manage_interviews_cell input
+{
+  width:            100px;
+  font-size:        11pt;
+  vertical-align:   left;
+  cursor:           text;
+  font-size:        100%;
+  background-color: #E6E6E6;
+  margin:           2px;
+}
+
+#ajax_request_tr .manage_interviews_cell img
+{
+  vertical-align: middle;
+}
+
+#ajax_request_tr .manage_interviews_last_cell input
+{
+  height:           30px;
+  vertical-align:   bottom;
+  font-size:        100%;
+}
+
+#ajax_request_tr .manage_interviews_last_cell label
+{
+  vertical-align: bottom;
+}
+
+#ajax_request_tr .manage_interviews_cell_submit_button
+{
+  height:           30px;
+  width:            100px;
+  font-size:        11pt;
+  vertical-align:   left;
+  font-size:        100%;
+  font-weight:      bold;
+  margin:           5px 0px 0px 5px;
+  background-color:#E6E6E6;
+}
+
+#ajax_request_tr .stage_span_for_border
+{
+  font-size:        12px;
+  padding:          0px 50px 0px 15px;
+}
+
+#ajax_request_tr .type_span_for_border
+{
+  font-size:        12px;
+  padding:          0px 20px 0px 50px;
+}
+
+#ajax_request_tr .feedback_fields
+{
+  float: left;
+  margin: 5px 0px 0px 10px;
+  background-color: white;
+}
+
+/* ==========================================================
+   Styling Rules - Comments/Feeedbacks
+   Description   - Styling the div for displaying the comments/feedbacks of resume.
+                   These will be displayed in ajax_request_tr
+   ========================================================== */
+#resume_comments div,
+#resume_feedback div
+{
+  background-color: #F2F2F2;
+  color:            #000000;
+  font-weight:      normal;
+  border:           1px solid white;
+  padding:          5px;
+}
+
+#resume_comments #comment_tagline,
+#resume_feedback #feedback_tagline
+{
+  background-color: #F2F2F2;
+  border:           1px solid white;
+  font-size:        11pt;
+  color:            #222266;
+  font-weight:      bold;
+}
+
+#resume_comments #resume_summary_box
+{
+  background-color: #C0C0C0;
+}
+
+#resume_comments .close_box_link,
+#resume_feedback .close_box_link,
+#ajax_request_tr .close_box_link
+{
+  font-size:        6pt;
+  float:            right;
+  padding:          10px 10px 0px 0px;
+}
+
+/* ==========================================================
+   Styling Rules - Search Page
+   Description   - Styling for look and feel of search results page
+   ========================================================== */
+#resume_search_div #search_results_summary
+{
+  color:            #222266;
+  text-align:       right;
+  padding-top:      3px;
+  margin-bottom:    5px;
+  font:             normal 10pt "Trebuchet MS";
+}
+
+#resume_search_div #searched_results_description
+{
+  text-align:       right;
+  color:            #222266;
+  font-weight:      bold;
+  font-size:        8pt;
+  margin:           0px 5px 0px 0px;
+}
+
+#result_list
+{
+  top:              10px;
+  margin-left:      0;
+  padding-left:     0;
+  position:         relative;
+  list-style-image: none;
+  list-style-position: inside;
+  list-style-type:  none;
+}
+
+#resume_search_div .download_description
+{
+  float:            right;
+  font-size:        8pt;
+}
+
+#resume_search_div .result_line_even,
+#resume_search_div .result_line_odd,
+#recent_resume_div .result_line_even,
+#recent_resume_div .result_line_odd
+{
+  border:           1px solid #D8DCDF;
+  margin-top:       5px;
+}
+
+#resume_search_div .result_line_even,
+#resume_search_div .result_line_even a,
+#recent_resume_div .result_line_even,
+#recent_resume_div .result_line_even a
+{
+  background:       #f5f5dc;
+  color:            #222266;
+}
+
+#resume_search_div .result_line_odd,
+#resume_search_div .result_line_odd a,
+#recent_resume_div .result_line_odd,
+#recent_resume_div .result_line_odd a
+{
+  background:       white;
+  color:            #222266;
+}
+
+#resume_search_div .result_line_even:hover,
+#resume_search_div .result_line_odd:hover,
+#recent_resume_div .result_line_even:hover,
+#recent_resume_div .result_line_odd:hover
+{
+  border:           1px solid #5b80ca;
+}
+
+#resume_search_div .search_resume_name,
+#resume_search_div .search_resume_status,
+#resume_search_div .search_resume_qual,
+#resume_search_div .search_resume_skills,
+#resume_search_div .search_resume_activity,
+
+/* Did not changed name of div into my_resumes_div page because it will lead to some more lines of code otherwise */
+#resume_search_div .my_resumes_label,
+#recent_resume_div .recent_resumes_label
+{
+  width:            150px;
+  text-align:       left;
+  font-size:        12px;
+  margin:           5px 5px 5px 5px;
+  padding:          5px 5px 5px 5px;
+  font-weight:      bold;
+  font-family:      "Trebuchet MS", Verdana;
+  overflow:         hidden;
+}
+
+/* Did not changed name of div into my_resumes_div page because it will lead to some more lines of code otherwise */
+#resume_search_div .my_resumes_label_light
+{
+  width:            150px;
+  text-align:       left;
+  font-size:        12px;
+  margin:           5px 5px 5px 5px;
+  padding:          5px 5px 5px 5px;
+  font-family:      "Trebuchet MS", Verdana;
+  overflow:         hidden;
+}
+
+
+#resume_search_div .search_resume_name_div
+{
+  width:            150px;
+  overflow:         hidden;
+}
+
+/* ==========================================================
+   Styling Rules - Table headers and their size
+   Description   - These lines will define the respective header's width
+   ========================================================== */
+th
+{
+  background-color: #222266;
+  color:            white;
+}
+
+.header_row
+{
+  background-color: #222266;
+  color:            white;
+}
+
+#resume_list_table .resume_list_header_name
+{
+  width:            100px;
+}
+
+#resume_list_table .resume_list_header_req_name,
+#resume_list_table .resume_list_header_education
+{
+  width:            150px;
+}
+
+#resume_list_table .interview_date_class
+{
+  width:            80px;
+}
+
+#resume_list_table .interview_status_class
+{
+  width:            220px;
+}
+
+#resume_list_table .interview_actions_class
+{
+  width:            200px;
+}
+
+#resume_list_table .resume_list_header_action_box
+{
+  width:            500px;
+}
+
+#resume_list_table .resume_list_header_download_box,
+#resume_list_table .resume_list_header_experience,
+#resume_list_table .resume_list_header_notice_period,
+#resume_list_table .resume_list_header_status,
+#resume_list_table .resume_list_date_uploaded
+{
+  width:            50px;
+}
+
+#resume_list_table .resume_list_header_reqs
+{
+  width:            200px;
+}
+
+#resume_list_table .resume_list_header_actions
+{
+  width:            150px;
+}
+
+#resume_list_table .resume_list_header_location
+{
+  width:            50px;
+}
+
+#resume_list_table .select_box_with_full_width
+{
+  width:            170px;
+  font-size:        8pt;
+  font-weight:      bold;
+}
+
+#resume_list_table .select_box_with_low_width
+{
+  width:            80px;
+  font-size:        8pt;
+  font-weight:      bold;
+}
+
+#resume_list_table .align_left
+{
+  text-align:       left;
+  border:           none;
+}
+
+#new_resumes_div .resume_list_header_name
+{
+  width:            100px;
+}
+
+#new_resumes_div .resume_list_header_exp
+{
+  width:            50px;
+}
+
+#new_resumes_div .resume_list_header_qual,
+#new_resumes_div .resume_list_header_action
+{
+  width:            200px;
+}
+
+#new_resumes_div .resume_list_header_summary
+{
+  width:            250px;
+}
+
+#inbox_div  .resume_list_header_name,
+#outbox_div .resume_list_header_name
+{
+  width:            100px;
+}
+
+#inbox_div  .resume_list_header_message,
+#outbox_div .resume_list_header_message
+{
+  width:            400px;
+}
+
+#inbox_div  .resume_list_header_sent,
+#outbox_div .resume_list_header_sent
+{
+  width:            100px;
+}
+
+#inbox_div  .resume_list_header_actions,
+#outbox_div .resume_list_header_actions
+{
+  width:            100px;
+}
+
+/* For Manager index page */
+#resume_list_table .resume_list_header_name,
+#resume_list_table .resume_list_header_education,
+#resume_list_table .resume_list_header_experience,
+#resume_list_table .resume_list_header_notice_period,
+#resume_list_table .resume_list_header_status,
+/* For Manager hold page */
+#resume_list_table .header_row .manager_joh_name,
+#resume_list_table .header_row .manager_joh_req_name,
+#resume_list_table .header_row .int_reqt_name,
+#resume_list_table .header_row .int_reqt_date,
+#resume_list_table .header_row .int_reqt_req,
+/* For Interview status page */
+#resume_list_table .header_row .resume_list_header_name,
+#resume_list_table .header_row .resume_list_header_req_name,
+#resume_list_table .header_row .interview_date_class,
+#resume_list_table .header_row .interview_rating_class,
+#resume_list_table .header_row .interview_location_class,
+#resume_list_table .header_row .interview_status_class,
+#resume_list_table .header_row .future_resume_name,
+#resume_list_table .header_row .resume_list_header_name,
+#resume_list_table .header_row .resume_list_header_exp,
+#joining_resumes_table .header_row td,
+#joined_resumes_table  .header_row td,
+#not_joined_resumes_table .header_row td
+{
+  cursor:           pointer;
+}
+
+#resume_list_table .header_row .interview_location_class
+{
+  width:            50px;
+}
+
+#resume_list_table .header_row .manager_joh_name,
+#resume_list_table .header_row .manager_joh_actions,
+#resume_list_table .header_row .int_reqt_name,
+#resume_list_table .header_row .int_reqt_req,
+#resume_list_table .header_row .int_reqt_focus
+{
+  width:            150px;
+}
+
+#resume_list_table .header_row .manager_joh_req_name,
+#resume_list_table .header_row .int_reqt_actions
+{
+  width:            200px;
+}
+
+#resume_list_table .header_row .manager_joh_joining_date
+{
+  width:            300px;
+}
+
+#resume_list_table .header_row .int_reqt_date,
+#resume_list_table .header_row .int_reqt_type
+{
+  width:            75px;
+}
+
+/* ==========================================================
+   Styling Rules - Validation errors
+   Description   - When we try to add a new record (resume, group or whatever) and after it
+                   if validation failed then we need to highlight those boxes on which error came.
+   ========================================================== */
+.fieldWithErrors
+{
+  padding:          2px;
+  display:          table;
+  border:           2px solid #222266;
+}
+
+#errorExplanation
+{
+  width:            780px;
+  border:           2px solid #222266;
+  padding:          7px;
+  padding-bottom:   12px;
+  margin-bottom:    20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2
+{
+  text-align:       left;
+  font-weight:      bold;
+  padding:          5px 5px 5px 15px;
+  font-size:        12px;
+  margin:           -7px;
+  background-color: #c00;
+  color:            #fff;
+}
+
+#errorExplanation p
+{
+  margin-bottom:    0;
+  padding:          5px;
+}
+
+#errorExplanation ul li
+{
+  font-size:        12px;
+  list-style:       square;
+  margin-left:      30px;
+}
+
+ul
+{
+  font-family:      verdana, arial, helvetica, sans-serif;
+  font-size:        13px;
+  line-height:      18px;
+}
+
+/* ==========================================================
+   Styling Rules - Row background color
+   Description   - Styling the row's background colors respective of their class
+   ========================================================== */
+.white
+{
+  background:       #ffffff;
+}
+
+.red
+{
+  background-color: #FF6666;
+}
+
+.pink
+{
+  background-color: pink;
+}
+
+.yellow
+{
+  background-color: #FFFFE6;
+}
+
+.green
+{
+  background-color: #DBEEDB;
+}
+
+.blue
+{
+  background-color: #B8B8FF;
+}
+
+/* ==========================================================
+   Styling Rules - Resume Description Div
+   Description   - Used to display the div which comes while we hover over the resume name
+   ========================================================== */
+.resume_description_div
+{
+  display:          none;
+  position:         absolute;
+  color:            #222266;
+  border-style:     1px solid #000000;
+  background-color: #FFCC66;
+  padding:          5px;
+  font-size:        10px;
+}
+
+/* ==========================================================
+   Styling Rules - Labels
+   Description   - This is for apply on the labels(text) of the application when they
+                   against their corresponding fields.
+                   Right now only used when creating requirements.
+   ========================================================== */
+#req_create_div .requirement_create_label
+{
+  font-size:        8pt;
+  text-align:       left;
+  vertical-align:   top;
+  width:            300px;
+  padding:          7px;
+}
+
+/* ==========================================================
+   Styling Rules - Pagination
+   Description   - These rules are for the infrastructure required to display
+                   paginated results with links to each set of pages including
+                   the next and previous ones.
+   ========================================================== */
+#pagination_bottom
+{
+  top:              28px;
+  position:         relative;
+  margin-bottom:    60px;
+}
+
+.pagination
+{
+  text-align:       right;
+  vertical-align:   right;
+  font-family:      "Trebuchet MS", Verdana;
+  margin-top:       20px;
+  margin-bottom:    20px;
+}
+
+.pagination a,
+.pagination a:visited
+{
+  padding:          2px 8px;
+  border:           1px solid #D8DCDF;
+  text-decoration:  none;
+  color:            #222266;
+}
+
+.pagination a:hover,
+.pagination a:active
+{
+  padding:          2px 8px;
+  border:           1px solid #D8DCDF;
+  color:            #FFFFFF;
+  background-color: #007000;
+  background-color: #ffffff;
+}
+
+div.pagination .current
+{
+  padding:          2px 8px;
+  border:           2px double #D8DCDF;
+  background-color: #007000;
+  background-color: #222266;
+  color:            #FFFFFF;
+  font-weight:      bold;
+  cursor:           default;
+  margin-bottom:    20px;
+  font-size:        13px;
+}
+
+div.pagination .disabled,
+div.pagination .disabled:hover
+{
+  padding:          2px 8px;
+  background-color: white;
+  cursor:           default;
+  color:            #A4A4A4;
+  border: 1px solid #A4A4A4;
+  font-weight:      normal;
+  font-size:        13px;
+}
+
+/* ==========================================================
+   Styling Rules - Login page
+   Description   - This chunk of code is used to style the login page
+                   as same as leave's login page
+   ========================================================== */
+#login_form
+{
+  margin-top: 50px;
+  padding:    15px;
+}
+
+#employees_login_div .login_desc_line
+{
+  color: #222266;
+  font-size: 16pt;
+  text-align: left;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+#login_form .login_text
+{
+  color: #222266;
+  font-size: 11pt;
+  text-align: left;
+  font-weight: bold;
+}
+
+#login_form .login_field input
+{
+  height: 25px;
+  width: 300px;
+  font-size: 18pt;
+  cursor: text;
+  text-align: left;
+  vertical-align: center;
+  color: #A4A4A4;
+}
+
+#login_form .login_submit_button input
+{
+  width: 100px;
+  font-size: 16pt;
+  text-align: center;
+  vertical-align: center;
+  float: left;
+  margin: 20px 0px 0px 200px;
+  font-family: "Trebuchet MS", Tahoma, Verdana;
+}
+
+#employees_login_div table
+{
+  margin-top: 40px;
+}
+
+#employees_login_div td
+{
+  text-align:       left;
+  width:            300px;
+  border:           none;
+}
+
+/* ==========================================================
+   Styling Rules - Classes for font-size & Weight
+   Description   - These are the classes used to style
+                   font-size and font-weight
+   ========================================================== */
+.normal
+{
+  font-weight: normal;
+}
+
+.bold
+{
+  font-weight: bold;
+}
+
+/* ==========================================================
+   Styling Rules - Miscallaneous
+   Description   - 
+   ========================================================== */
+.cell_after_changing_status
+{
+  font-size:        12pt;
+  font-weight:      bold;
+}
+
+#inbox_div .button_for_deleting_selected_messages
+{
+  float:            right;
+  margin-top:       10px;
+}
+
+#resume_details_div .resume_actions_button
+{
+  float:            right;
+  width:            250px;
+}
+
+#resume_details_div .float_right
+{
+  padding:          0px;
+}
+
+.manager_index_mutilple_ddl
+{
+  height:           40px;
+  width:            200px;
+  background-color: #E6E6E6;
+}
+
+#req_create_div .two_dropdownlist_single_td select,
+#req_update_div .two_dropdownlist_single_td select
+{
+  height:           30px;
+  width:            90px;
+  font-size:        12pt;
+}
+
+#resume_list_table .float_right,
+#resume_details_div .float_right
+{
+  clear:            both;
+  float:            right;
+  padding-right:    42px;
+}
+
+#resume_details_div .float_right_with_no_padding
+{
+  clear:            both;
+  float:            right;
+}
+
+#manage_interviews_table .float_right
+{
+  clear:            both;
+  float:            right;
+  padding-right:    50px;
+}
+
+#manage_interviews_table .manage_interviews_cell,
+#manage_interviews_table .manage_interviews_last_cell
+{
+  border: medium none;
+}
+
+.align_center
+{
+  text-align:       center;
+}
+
+.actions_drop_down_list_small
+{
+  width:            100px;
+  font-size:        8pt;
+  font-weight:      bold;
+  float:            left;
+  vertical-align:   top;
+}
+
+.float_right_with_no_padding, .float_right_with_10_padding
+{
+  clear: both;
+  float: right;
+}
+
+.float_right_with_10_padding
+{
+  padding-right:    10px;
+}
+
+#resume_list_table .joining_date_input
+{
+  height:           15px;
+  width:            130px;
+  font-size:        11pt;
+  vertical-align:   left;
+  cursor:           text;
+  font-size:        100%;
+  background-color: #E6E6E6;
+}
+
+#font_14
+{
+  font-size:        14pt;
+}
+
+.text_as_red
+{
+  color:            red;
+}
+
+.common_class .span_no_bold
+{
+  font-size:        8pt;
+  font-weight:      normal;
+}
+
+.common_class .left_padding
+{
+  padding:          0px 0px 0px 5px;
+}
+
+.common_class #no_border td
+{
+  border:           none;
+  text-align:       left;
+  font-size:        13pt;
+  padding:          0px;
+}
+
+#send_message_table #message_and_download_image
+{
+  border:           none;
+  float:            right;
+  font-weight:      bold;
+  padding:          5px;
+}
+
+#send_message_table #message_and_download_image img
+{
+  padding:          0px 0px 0px 10px;
+}
+
+#resume_actions_div
+{
+  clear:            both;
+  float:            right;
+  width:            100%;
+}
+
+#resume_details_table
+{
+  margin:           17px 0px 0px 0px;
+}
+
+#recent_resume_div .float_right
+{
+  clear:            both;
+  float:            right;
+  font-size:        12px;
+  font-weight:      bold;
+}
+
+#recent_resume_div .float_right input
+{
+  width:            100px;
+}
+
+.background_green {
+  background-color: #9df405;
+  height: 20px;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.background_red {
+  background-color: #ff8080;
+  height: 20px;
+  font-size: 10pt;
+  font-weight: bold;
+}
+
+.float_left {
+  float: left;
+}

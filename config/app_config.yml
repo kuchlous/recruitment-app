@@ -1,0 +1,35 @@
+development:
+  upload_directory: resumes
+  temp_directory:   tmp
+  temp_file:        temp_file
+  file_size:        1048576
+  number_positions: 15
+  xls_temp_file:    xls_tmp
+  zip_temp_file:    zip_tmp
+  temp_resumes:     tmp_resumes
+  status_file:      status
+  host_name:        localhost:3000
+
+test:
+  upload_directory: resumes/test
+  temp_directory:   tmp
+  temp_file:        temp_file
+  file_size:        1048576
+  number_positions: 15
+  xls_temp_file:    xls_tmp
+  zip_temp_file:    zip_tmp
+  temp_resumes:     tmp_resumes
+  status_file:      status
+  host_name:        localhost:3010
+
+production:
+  upload_directory: resumes
+  temp_directory:   resumes
+  temp_file:        temp_file
+  file_size:        1048576
+  number_positions: 15
+  xls_temp_file:    xls_tmp
+  zip_temp_file:    zip_tmp
+  temp_resumes:     tmp_resumes
+  status_file:      status
+  host_name:        apps.mirafra.com/recruit
