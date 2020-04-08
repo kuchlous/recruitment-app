@@ -1359,9 +1359,8 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Methods written for messaging.                                                     #
   ####################################################################################################
   def inbox
-    @inbox = get_current_employee.in_messages.find_all { |m|
-      m.deleted == false
-    }
+    @inbox = get_current_employee.in_messages.where(deleted: false)
+      
     @inbox = sort_by_created_at_date(@inbox)
     @inbox = @inbox.paginate(:page => params[:page], :per_page => get_per_page)
   end
@@ -1893,10 +1892,18 @@ class ResumesController < ApplicationController
     end
 
     req_matches.sort {|x, y| x.requirement_id <=> y.requirement_id}
+    p req_matches, open_reqs_only,status
+    p get_current_employee
+    p "++++++++++++++++++++++++++++++++="
 
-    req_matches += get_current_employee.forwards.find_all {
-      |fwd| fwd.status == status
-    }
+    # req_matches += get_current_employee.forwards.find(:all) {
+    #   |fwd| fwd.status == status
+    # }
+    # TODO: Above code is throwing this error
+    # irb(main):006:0> get_current_employee.forwards
+    # Traceback (most recent call last):
+    # SystemStackError (stack level too deep)
+    return req_matches
   end
 
   # TODO: Minimize this code as well

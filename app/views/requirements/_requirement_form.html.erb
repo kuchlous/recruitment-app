@@ -16,7 +16,21 @@
     min_exp  = max_exp = status = req_type = sdate = edate = nop = ""
   end
 %>
-  <%= f.error_messages %>
+<!-- depreceted -->
+  <%#=f.error_messages %>
+  <% if @requirement.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@requirement.errors.count, "error") %> prohibited this requirement from being saved:</h2>
+
+      <ul>
+      <% @requirement.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
   <table id="req_form_table">
     <tr>
       <td> Requirement name </td>
@@ -46,12 +60,11 @@
     </tr>
     <tr>
       <td> Start Date </td>
-      <td> <%= calendar_date_select :requirement, :sdate, :year_range => 1.years.ago..1.years.since, :value => sdate %> </td>
+      <td><%= f.text_field :sdate, :id => "datepicker" %></td>
     </tr>
     <tr>
       <td> End Date </td>
-      <td> <%= calendar_date_select :requirement, :edate, :year_range => 1.years.ago..1.years.since, :value => edate %> </td>
-    </tr>
+  </tr>
     <tr>
       <td> Required Experience </td>
       <td class="two_dropdownlist_single_td">
@@ -134,3 +147,8 @@
 <% end %>
 <br /> <br />
 <%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %>
+<script>
+  $(function() {
+  $('.datepicker').datepicker();
+});
+</script>

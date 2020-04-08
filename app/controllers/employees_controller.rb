@@ -11,6 +11,8 @@ class EmployeesController < ApplicationController
   end
 
   def list_my_employees
+    p "inside list_my_employees"
+    p "+++++++++++++++++++++++++++++++++++++++"
     @employees = Employee.find_all_by_employee_status("ACTIVE", :order => :name).find_all { 
                         |e| e.provides_visibility_to?(get_current_employee) 
     }

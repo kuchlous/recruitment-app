@@ -32,7 +32,7 @@
            <td> <%= resume.notice %> </td>
            <td>
              <% manual_status = resume.manual_status %>
-             <%= link_to_function (manual_status ? manual_status : "Add status"), "showManualStatusBox(event, #{resume.id});" %>
+             <%= link_to (manual_status ? manual_status : "Add status"), "showManualStatusBox(event, #{resume.id});" %>
            </td>
            <td> <%= print_date_no_year (fwd.created_at) %> </td>
            <td> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>

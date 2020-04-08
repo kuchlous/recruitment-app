@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
 
+require 'will_paginate/array'
   # Use layout for home for all the controllers
   layout "home"
 

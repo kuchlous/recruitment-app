@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   match 'resumes/export_as_xls',to: 'resumes#export_as_xls'         , via: :get
   match 'resumes/export_interviews',to: 'resumes#export_interviews' , via: :get
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates' , via: :get
+  match 'employees/list_my_employees',to: 'employees#list_my_employees' , via: :get
+
 
 
 
@@ -44,7 +46,7 @@ Rails.application.routes.draw do
   match 'resumes/offered',to: 'resumes#offered'              , via: :get
   match 'resumes/rejected',to: 'resumes#rejected'            , via: :get
   match 'resumes/future',to: 'resumes#future'                , via: :get
-  match 'resumes/interview_requests',to: 'resumes#interview_requests'        , via: :get
+  match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get
   match 'resumes/manager_joined',to: 'resumes#manager_joined'               , via: :get
   match 'resumes/manager_offered',to: 'resumes#manager_offered'             , via: :get
