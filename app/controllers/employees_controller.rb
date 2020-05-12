@@ -11,15 +11,13 @@ class EmployeesController < ApplicationController
   end
 
   def list_my_employees
-    p "inside list_my_employees"
-    p "+++++++++++++++++++++++++++++++++++++++"
-    @employees = Employee.find_all_by_employee_status("ACTIVE", :order => :name).find_all { 
+    @employees = Employee.where(employee_status:"ACTIVE").order(:name).find_all { 
                         |e| e.provides_visibility_to?(get_current_employee) 
     }
 
     if params[:page]
       character_name = params[:character_name]
-      @employees     = Employee.find(:all, :conditions => ["name like ?", character_name + "%"], :order => :eid)
+      @employees     = Employee.where("name like ?", character_name + "%").order(:eid)
       @employees     = @employees.find_all {
                         |e| e.provides_visibility_to?(get_current_employee) && e.employee_status == "ACTIVE"
       }

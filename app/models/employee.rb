@@ -20,7 +20,7 @@ class Employee < ActiveRecord::Base
               :foreign_key => "employee_id"
   has_many    :in_messages,
               :class_name  => "Message",
-              :foreign_key => "sent_to"
+              :foreign_key => "id"
   has_many    :out_messages,
               :class_name  => "Message",
               :foreign_key => "sent_by"

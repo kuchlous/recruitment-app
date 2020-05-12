@@ -1359,7 +1359,7 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Methods written for messaging.                                                     #
   ####################################################################################################
   def inbox
-    @inbox = get_current_employee.in_messages.where(deleted: false)
+    @inbox = get_current_employee.in_messages.where(is_deleted: false)
       
     @inbox = sort_by_created_at_date(@inbox)
     @inbox = @inbox.paginate(:page => params[:page], :per_page => get_per_page)

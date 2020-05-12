@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
-  resources :employees
+  # resources :employees'
   match 'login', to: 'employees#login'                              , via: :post
   match 'logout', to: 'employees#logout'                            , via: :get
   resources :requirements
@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   match 'resumes/export_interviews',to: 'resumes#export_interviews' , via: :get
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates' , via: :get
   match 'employees/list_my_employees',to: 'employees#list_my_employees' , via: :get
+  match 'employees/change_to',to: 'employees#change_to' , via: :get
 
 
 
