@@ -11,6 +11,8 @@
     <%#= load_google_api_or_internal_files_based_upon_ip_address %>
     <%= yield :head %>
     <%#= calendar_date_select_includes "silver" %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
+
     <%= stylesheet_link_tag :application, :recursive => true %>
     <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
   </head>
