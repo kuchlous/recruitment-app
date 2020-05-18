@@ -2,6 +2,7 @@
 // This file is automatically included by javascript_include_tag :defaults
 //= require jquery
 //= require turbolinks
+//= require prototype
 //= require_tree .
 
 $().ready(function() {
