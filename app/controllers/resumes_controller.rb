@@ -88,7 +88,7 @@ class ResumesController < ApplicationController
   end
 
   def create
-    @resume    = Resume.new(params[:resume])
+    @resume    = Resume.new(params.require(:resume).permit!)
     flash_mesg = status = ""
     if params[:resume][:referral_type] == "DIRECT"
       @resume.referral_id   = 0
@@ -99,6 +99,7 @@ class ResumesController < ApplicationController
     end
     @resume.employee   = get_current_employee
     @resume.summary    = "UPLOADED without comments." if params[:resume][:summary].nil?
+    @resume.uniqid     = Uniqid.generate_unique_id(@resume.name, @resume)
     respond_to do |format|
       if @resume.save
         # Adding comment while uploading resume
@@ -117,8 +118,8 @@ class ResumesController < ApplicationController
         flash[:notice] = flash_mesg
         format.html { redirect_to :action => "new" }
       else
-        @resume.errors.each_full { |mesg|
-          logger.info(mesg)
+        @resume.errors.each { |mesg|
+           logger.info(mesg)
         }
         format.html { render "new" }
       end
