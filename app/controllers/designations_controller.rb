@@ -1,6 +1,6 @@
 class DesignationsController < ApplicationController
-  before_filter :check_for_login
-  before_filter :check_for_HR_or_ADMIN
+  before_action :check_for_login
+  before_action :check_for_HR_or_ADMIN
 
   def index
     @designations = Designation.all

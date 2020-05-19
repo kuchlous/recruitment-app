@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
   # resources :employees'
+  # resources :resumes
   match 'login', to: 'employees#login'                              , via: :post
   match 'logout', to: 'employees#logout'                            , via: :get
   resources :requirements
@@ -43,6 +44,7 @@ Rails.application.routes.draw do
   match 'resumes/export_as_xls_requirement_for_joining',to: 'resumes#export_as_xls_requirement_for_joining'        , via: :get
   match 'resumes/xport_as_xls_all_uploaded_resumes',to: 'resumes#export_as_xls_all_uploaded_resumes'               , via: :get  
   match 'resumes/joined',to: 'resumes#joined'                , via: :get
+  match 'resumes/show/:id',to: 'resumes#show'                , via: :get
   match 'resumes/hold',to: 'resumes#hold'                    , via: :get
   match 'resumes/offered',to: 'resumes#offered'              , via: :get
   match 'resumes/rejected',to: 'resumes#rejected'            , via: :get
@@ -73,5 +75,13 @@ Rails.application.routes.draw do
   match 'resumes/export_interviews_per_date',to: 'resumes#export_interviews_per_date'         , via: :get
   match 'resumes/yto',to: 'resumes#yto'                                                       , via: :get
   match 'resumes/manager_yto',to: 'resumes#manager_yto'                                       , via: :get
+  match 'resumes/move_to_future',to: 'resumes#move_to_future'                                       , via: :post
+  match 'resumes/reject_all_forwards_req_matches',to: 'resumes#reject_all_forwards_req_matches'                                       , via: :post
+  match 'resumes/mark_active',to: 'resumes#mark_active'                                       , via: :post
+
  resources :resumes
+ resources :portals
+ resources :agencies
+ resources :groups
+ resources :designations
 end

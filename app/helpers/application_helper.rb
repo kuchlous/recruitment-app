@@ -475,7 +475,7 @@ module ApplicationHelper
   end
 
   def get_view_comments_icon(resume, cols=4)
-    link_to_function image_tag("ViewComments.png", :size    => "20x20",
+    link_to_if image_tag("ViewComments.png", :size    => "20x20",
                                                    :class   => "view_icon_class",
                                                    :title   => "View all comments for this resume"),
                                                    :onclick => "viewCommentsFeedback(event, #{resume.id}, 'show_resume_comments', #{cols});"

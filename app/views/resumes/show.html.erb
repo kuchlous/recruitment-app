@@ -23,13 +23,13 @@
       <tr>
         <td id="message_and_download_image">
           <%= render "download_box", :resume => @resume %>
-          <%= link_to_function image_tag("MailIcon.png"), "showMessageBoxAtTop(event, #{@resume.id})", :title => "Send Message" %>
+          <%= link_to_if image_tag("MailIcon.png"), "showMessageBoxAtTop(event, #{@resume.id})", :title => "Send Message" %>
         </td>
       </tr>
     </table>
     <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
         <% unless @resume.status == "FUTURE" %>
-          <% form_tag(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
+          <%= form_tag(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
             <div>
               <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
               <%= hidden_field_tag "resume_id", @resume.id %>
@@ -42,7 +42,7 @@
               @resume.status == "NOT JOINED" ||
               @resume.status == "N_ACCEPTED" ||
               @resume.status == "JOINED" %>
-          <% form_tag(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
+          <%= form_tag(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
             <div>
               <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
               <%= hidden_field_tag "resume_id", @resume.id %>
@@ -50,7 +50,7 @@
           <% end %>
           <br /> <br />
         <% end %>
-        <% form_tag(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
+        <%= form_tag(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
           <div>
             <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
             <%= hidden_field_tag "resume_id", @resume.id %>
