@@ -23,7 +23,7 @@ class Employee < ActiveRecord::Base
               :foreign_key => "id"
   has_many    :out_messages,
               :class_name  => "Message",
-              :foreign_key => "sent_by"
+              :foreign_key => "id"
   belongs_to  :group,
               :class_name  => "Group",
               :foreign_key => "group_id"

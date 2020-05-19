@@ -1183,7 +1183,7 @@ class ResumesController < ApplicationController
    Spreadsheet.client_encoding = 'UTF-8'
    book                        = Spreadsheet::Workbook.new
    if get_current_employee.is_HR?
-     resumes                     = Resume.all.find_all { |r| r.employee.id == get_current_employee.id }
+     resumes                     = get_current_employee.resumes 
      output                      = "#{Rails.root}/tmp/All_Uploaded_Resumes.xls"
      sheet                       = book.create_worksheet :name => "Resumes"
      fill_resume_data(sheet, resumes)
