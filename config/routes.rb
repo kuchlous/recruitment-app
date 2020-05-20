@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   match 'requirements/my_requirements', to: 'requirements#my_requirements'  , via: :get
   match 'requirements/req_analysis', to: 'requirements#req_analysis'        , via: :get
   match 'requirements/all_reqs', to: 'requirements#all_reqs'                , via: :get
-  match 'requirements/search', to: 'requirements#search'                    , via: :get
+  match 'requirements/search', to: 'requirements#search'                    , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   match 'home/search', to: 'home#search'                                       , via: :get
   match 'home/actions', to: 'home#actions'                                     , via: :get
