@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   match 'requirements/all_reqs', to: 'requirements#all_reqs'                , via: :get
   match 'requirements/search', to: 'requirements#search'                    , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
-  match 'home/search', to: 'home#search'                                       , via: :get
+  match 'home/search', to: 'home#search'                                       , via: :post
   match 'home/actions', to: 'home#actions'                                     , via: :get
   match 'home/advanced_search_results', to: 'home#advanced_search_results'     , via: :get
   match 'home/advanced_search', to: 'home#advanced_search'          , via: :get
