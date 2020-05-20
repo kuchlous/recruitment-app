@@ -25,7 +25,7 @@
   <br />
   <% if !only_my_requirement %>
     <div class="add_link float-md-right col-md-2">
-      <% form_tag :host => APP_CONFIG['host_name'], :action => "search" do %>
+      <%= form_tag :host => APP_CONFIG['host_name'], :action => "search" do %>
         <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()', :placeholder => "Search reqs by employee name" %>
         <%= submit_tag "Search" %>
       <% end %>
@@ -34,7 +34,7 @@
   <br>
   <br /> <br />
 
-  <% form_tag(:controller => "requirements", :action => "close_requirement") do %>      
+  <%= form_tag(:controller => "requirements", :action => "close_requirement") do %>      
     <table>
       <tr class="header_row">
         <td> Name             </td>
