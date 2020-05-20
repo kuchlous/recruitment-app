@@ -134,7 +134,8 @@ class ResumesController < ApplicationController
        params[:experience_months]
       @resume.experience = params[:experience_years] + "-" + params[:experience_months]
     end
-    if @resume.update_attributes(params[:resume])
+    # TODO:Change to strong parameters 
+    if @resume.update_attributes(params.require(:resume).permit!)
       if params[:resume][:upload_resume]
         @resume.cleanup_update_resume_data(params[:resume])
       end
