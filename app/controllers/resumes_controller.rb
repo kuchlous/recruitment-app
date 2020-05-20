@@ -317,8 +317,6 @@ class ResumesController < ApplicationController
   end
 
   def yto
-    p params
-    p "++++++++++++++++++++++++++++++==== "
     @status           = "YTO"
     @matches          = get_all_req_matches_of_status(@status)
     if params[:mine]
@@ -1894,10 +1892,6 @@ class ResumesController < ApplicationController
     end
 
     req_matches.sort {|x, y| x.requirement_id <=> y.requirement_id}
-    p req_matches, open_reqs_only,status
-    p get_current_employee
-    p "++++++++++++++++++++++++++++++++="
-
     # req_matches += get_current_employee.forwards.find(:all) {
     #   |fwd| fwd.status == status
     # }

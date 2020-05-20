@@ -13,7 +13,7 @@
       <br /> <br />
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? %>
         <div id="search_box">
-          <% form_tag :controller => "home", :action => "search", :host => APP_CONFIG['host_name'], :method => 'post' do %>
+          <%= form_tag :controller => "home", :action => "search", :host => APP_CONFIG['host_name'], :method => 'post' do %>
             <table>
               <tr>
                 <td class="search_box_field">         <%= text_field "search", "box" %> </td>
