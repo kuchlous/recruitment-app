@@ -1,21 +1,21 @@
 <br /> <br />
-<%= form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post")}) do |f|
-  if @requirement
-    if @requirement.exp
-      exp      = @requirement.exp.split("-")
-      min_exp  = exp[0]
-      max_exp  = exp[1]
-    end
+<%= form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post")}) do |f|%>
 
-    status   = @requirement.status
-    req_type = @requirement.req_type
-    nop      = @requirement.nop
-    sdate    = date_in_calendar_format(@requirement.sdate) if @requirement.sdate
-    edate    = date_in_calendar_format(@requirement.edate) if @requirement.edate
-  else
-    min_exp  = max_exp = status = req_type = sdate = edate = nop = ""
-  end
-%>
+  <%if @requirement%>
+  <%  if @requirement.exp%>
+ <%     exp      = @requirement.exp.split("-")%>
+  <%    min_exp  = exp[0]%>
+  <%    max_exp  = exp[1]%>
+  <%  end%>
+
+  <%  status   = @requirement.status%>
+  <%  req_type = @requirement.req_type%>
+  <%  nop      = @requirement.nop%>
+  <%  sdate    = date_in_calendar_format(@requirement.sdate) if @requirement.sdate%>
+  <%  edate    = date_in_calendar_format(@requirement.edate) if @requirement.edate%>
+  <%else%>
+  <%  min_exp  = max_exp = status = req_type = sdate = edate = nop = ""%>
+  <%end%>
 <!-- depreceted -->
   <%#=f.error_messages %>
   <% if @requirement.errors.any? %>

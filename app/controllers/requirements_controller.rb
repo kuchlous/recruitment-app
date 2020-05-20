@@ -76,7 +76,7 @@ class RequirementsController < ApplicationController
     @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]
     exp          = params[:req][:min_exp] + "-" + params[:req][:max_exp]
     respond_to do |format|
-      if @requirement.update_attributes(params[:requirement]) && @requirement.update_attributes(:exp => exp)
+      if @requirement.update_attributes(params.require(:requirement).permit!) && @requirement.update_attributes(:exp => exp)
         email_for_updating_requirement(@requirement)
         # Need to releoad object from database as update_attributes does not
         # seem to change fields of @requirement
@@ -228,19 +228,19 @@ class RequirementsController < ApplicationController
 private
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each_full { |mesg|
+      object.errors.each{ |mesg|
         logger.info(mesg)
       }
     end
   end
 
   def email_for_adding_requirement(req)
-    Emailer.deliver_requirement(get_current_employee,
+    Emailer.requirement(get_current_employee,
                                 req)
   end
 
   def email_for_updating_requirement(req)
-    Emailer.deliver_requirement(get_current_employee,
+    Emailer.requirement(get_current_employee,
                                 req,
                                 0)
   end

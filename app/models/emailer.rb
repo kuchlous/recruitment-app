@@ -1,6 +1,6 @@
 class Emailer < ActionMailer::Base
-  $upload_dir    = RAILS_ROOT + "/" + APP_CONFIG['upload_directory']
-  $temp_dir      = RAILS_ROOT + "/" + APP_CONFIG['temp_directory']
+  $upload_dir    = Rails.root + "/" + APP_CONFIG['upload_directory']
+  $temp_dir      = Rails.root + "/" + APP_CONFIG['temp_directory']
   $temp_filename = APP_CONFIG['temp_file']
 
   def upload(resume, mail_to)
