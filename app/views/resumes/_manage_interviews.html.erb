@@ -2,7 +2,7 @@
   <table id="manage_interviews_table">
     <tr class="float_right_with_10_padding">
       <td style="border: none;">
-        <%= link_to_function image_tag("RedCross.png", :size => "22x22"), "deleteAjaxRequestTr('ajax_request_tr');" %>
+        <%= link_to image_tag("RedCross.png", :size => "22x22"), '#', :onclick =>"deleteAjaxRequestTr('ajax_request_tr');" %>
       </td>
     </tr>
     <% index = 0
@@ -37,7 +37,7 @@
        <% if @interviews.size < 5 %>
          <tr class="float_right_with_10_padding">
            <td class="manage_interviews_cell" style="border: none;">
-             <%= link_to_function "Add Interviews", "addInterviewRow(#{@interviews.size}, #{req_match_id}, #{index}, [ #{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], ['#{get_time_slot_array.join("', '")}']);", :style => "color: green; font-weight: bold;" %>
+             <%= link_to "Add Interviews",'#',:onclick => "addInterviewRow(#{@interviews.size}, #{req_match_id}, #{index}, [ #{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], ['#{get_time_slot_array.join("', '")}']);", :style => "color: green; font-weight: bold;" %>
            </td>
          </tr>
        <% end %>

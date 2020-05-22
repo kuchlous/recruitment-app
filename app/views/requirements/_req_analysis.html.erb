@@ -4,7 +4,7 @@
 <div id="analysis">
   <%= render "shared/arrow_links", :controller => "requirements", :action => "req_analysis", :update => "analysis" %>
   <% @req_analysis.each do |group, analysis| %>
-    <%= link_to_function group.name.titleize,          :onclick => "showHide(this);", :id     => "font_14" %>
+    <%= link_to group.name.titleize,'#',          :onclick => "showHide(this);", :id     => "font_14" %>
     <%= render "requirements/req_analysis_type_table", :object  => analysis,          :id_var => group.name.split(" ")[0].downcase %> <br /> <br />
   <% end %>
 

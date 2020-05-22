@@ -23,7 +23,7 @@
       <tr>
         <td id="message_and_download_image">
           <%= render "download_box", :resume => @resume %>
-          <%= link_to_if image_tag("MailIcon.png"), "showMessageBoxAtTop(event, #{@resume.id})", :title => "Send Message" %>
+          <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
         </td>
       </tr>
     </table>

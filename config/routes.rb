@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   match 'resumes/inbox',to: 'resumes#inbox'                         , via: :get
   match 'resumes/outbox',to: 'resumes#outbox'                       , via: :get
   match 'resumes/trash',to: 'resumes#trash'                         , via: :get
+  match 'resumes/show_resume_comments',to: 'resumes#show_resume_comments'  , via: :post
   match 'resumes/export_as_xls',to: 'resumes#export_as_xls'         , via: :get
   match 'resumes/export_interviews',to: 'resumes#export_interviews' , via: :get
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates' , via: :get
