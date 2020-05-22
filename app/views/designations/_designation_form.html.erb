@@ -1,6 +1,5 @@
 <br /> <br />
-<% form_for(@designation, :url =>  url_for(:host => APP_CONFIG['host_name'], :controller => "designations", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
-  <%= f.error_messages %>
+<%= form_for(@designation, :url =>  url_for(:host => APP_CONFIG['host_name'], :controller => "designations", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
   <table id="designation_form_table">
     <tr>
       <td> Designation Name </td>

@@ -20,7 +20,7 @@ class PortalsController < ApplicationController
   end
 
   def create
-    @portal = Portal.new(params[:portal])
+    @portal = Portal.new(params.require(:portal).permit!)
     respond_to do |format|
       if @portal.save
         flash[:notice] = "Please press F5 once if you are adding
@@ -40,7 +40,7 @@ class PortalsController < ApplicationController
   def update
     @portal = Portal.find(params[:id])
     respond_to do |format|
-      if @portal.update_attributes(params[:portal])
+      if @portal.update_attributes(params.require(:portal).permit!)
         flash[:notice] = "You have successfully updated portal (#{@portal.name})"
         format.html { redirect_to :action => "index" }
       else
@@ -52,7 +52,7 @@ class PortalsController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each_full { |mesg|
+      object.errors.each{ |mesg|
         logger.info(mesg)
       }
     end

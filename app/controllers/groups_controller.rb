@@ -22,7 +22,7 @@ class GroupsController < ApplicationController
 
   def create
     @employees = get_all_employees
-    @group = Group.new(params[:group])
+    @group = Group.new(params.require(:group).permit!)
     respond_to do |format|
       if @group.save
         flash[:notice] = "You have successfully created group (#{@group.name})"
@@ -43,7 +43,7 @@ class GroupsController < ApplicationController
     @employees = get_all_employees
     @group = Group.find(params[:id])
     respond_to do |format|
-      if @group.update_attributes(params[:group])
+      if @group.update_attributes(params.require(:group).permit!)
         flash[:notice] = "You have successfully updated group (#{@group.name})"
         format.html { redirect_to :action => "index" }
       else
@@ -72,7 +72,7 @@ class GroupsController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each_full { |mesg|
+      object.errors.each{ |mesg|
         logger.info(mesg)
       }
     end

@@ -1,6 +1,5 @@
 <br /> <br />
-<% form_for(@portal, :url =>  url_for(:host => APP_CONFIG['host_name'], :controller => "portals", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
-  <%= f.error_messages %>
+<%= form_for(@portal, :url =>  url_for(:host => APP_CONFIG['host_name'], :controller => "portals", :action => (button_tag == "Update" ? "update" : "create"))) do |f| %>
   <table id="portal_form_table">
     <tr>
       <td> Portal Name </td>

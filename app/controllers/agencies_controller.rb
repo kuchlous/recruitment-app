@@ -16,7 +16,7 @@ class AgenciesController < ApplicationController
   end
 
   def create
-    @agency = Agency.new(params[:agency])
+    @agency = Agency.new(params.require(:agency).permit!)
     respond_to do |format|
       if @agency.save
         flash[:notice] = "Please press F5 once if you are adding
@@ -36,7 +36,7 @@ class AgenciesController < ApplicationController
   def update
     @agency = Agency.find(params[:id])
     respond_to do |format|
-      if @agency.update_attributes(params[:agency])
+      if @agency.update_attributes(params.require(:agency).permit!)
         flash[:notice] = "You have successfully updated portal (#{@agency.name})"
         format.html { redirect_to :action => "index" }
       else
@@ -57,7 +57,7 @@ class AgenciesController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each_full { |mesg|
+      object.errors.each{ |mesg|
         logger.info(mesg)
       }
     end

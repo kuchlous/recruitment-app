@@ -19,7 +19,7 @@ class DesignationsController < ApplicationController
   end
 
   def create
-    @designation = Designation.new(params[:designation])
+    @designation = Designation.new(params.require(:designation).permit!)
     respond_to do |format|
       if @designation.save
         flash[:notice] = "#{@designation.name} added successfully"
@@ -38,7 +38,7 @@ class DesignationsController < ApplicationController
   def update
     @designation = Designation.find(params[:id])
     respond_to do |format|
-      if @designation.update_attributes(params[:designation])
+      if @designation.update_attributes(params.require(:designation).permit!)
         flash[:notice] = "#{@designation.name} updated successfully"
         format.html { redirect_to :action => "index" }
       else
@@ -50,7 +50,7 @@ class DesignationsController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each_full { |mesg|
+      object.errors.each{ |mesg|
         logger.info(mesg)
       }
     end
