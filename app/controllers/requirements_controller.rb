@@ -91,8 +91,7 @@ class RequirementsController < ApplicationController
   end
 
   def show
-    # @requirement   = Requirement.find(params[:id])
-    @requirement   = Requirement.find(1)
+    @requirement   = Requirement.find(params[:id])
     @status        = params[:status]
 
     # Finding matches/forwards/interviews based upon the parameter coming from the url

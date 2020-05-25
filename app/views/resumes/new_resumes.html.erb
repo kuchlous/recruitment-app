@@ -28,9 +28,9 @@
             <td title="<%= resume.qualification %>"> <%= resume.qualification[0..35] %>..  </td>
             <td title="<%= resume.summary %>">       <%= resume.summary[0..45]       %>..  </td>
             <td>
-              <%= link_to "Comment", "AddCommentBox(event, #{resume.id})" %> &nbsp; | &nbsp;
-              <%= link_to "Forward", "ForwardBox(event, req_names_string, req_ids_string, #{resume.id})" %> &nbsp; | &nbsp;
-              <%= link_to "Reject",  "RejectBox(event, #{resume.id}, 'Reject');" %>
+              <%= link_to "Comment","#",:onclick =>"AddCommentBox(event, #{resume.id})" %> &nbsp; | &nbsp;
+              <%= link_to "Forward","#",:onclick => "ForwardBox(event, req_names_string, req_ids_string, #{resume.id})" %> &nbsp; | &nbsp;
+              <%= link_to "Reject","#",:onclick =>  "RejectBox(event, #{resume.id}, 'Reject');" %>
             </td>
           </tr>
           <% counter_value = counter_value + 1 %>

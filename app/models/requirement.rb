@@ -11,9 +11,9 @@ class Requirement < ActiveRecord::Base
   belongs_to              :posted_by,
                           :class_name  => "Employee",
                           :foreign_key => "posting_emp_id"
-  belongs_to              :scheduling_emp,
-                          :class_name => "Employee",
-                          :foreign_key => "scheduling_employee_id"
+  # belongs_to              :scheduling_emp,
+  #                         :class_name => "Employee",
+  #                         :foreign_key => "scheduling_employee_id"
 
   # Presence stuff
   validates_presence_of :name

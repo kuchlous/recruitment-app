@@ -46,7 +46,7 @@ class ResumesController < ApplicationController
   def new_resumes
     if params[:mine]
       employee = get_current_employee
-      resumes = Resume.all(:conditions => ["referral_type = ? AND referral_id = ? AND status = ? AND nforwards = ? AND nreq_matches = ?", "EMPLOYEE", employee.id, "", 0, 0])
+      resumes = Resume.where("referral_type = ? AND referral_id = ? AND status = ? AND nforwards = ? AND nreq_matches = ?", "EMPLOYEE", employee.id, "", 0, 0)
     else
       resumes = Resume.where("status = ? AND nforwards = ? AND nreq_matches = ?", "", 0, 0)
     end
