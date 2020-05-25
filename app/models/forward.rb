@@ -16,7 +16,7 @@ class Forward < ActiveRecord::Base
 
   def get_reqs_to_forward
     req_array = []
-    all_requirements = self.requirements.find(:all, :order => "name")
+    all_requirements = self.requirements.all.order(:name)
     all_open_requirements = all_requirements.find_all {
       |r| r.status == "OPEN"
     }

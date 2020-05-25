@@ -532,7 +532,7 @@ class Resume < ActiveRecord::Base
           end
           uniqid = resume.uniqid
           # Sending email
-          Emailer.deliver_forward(current_employee, req_owner, resume, uniqid)
+          Emailer.forward(current_employee, req_owner, resume, uniqid)
           forwarded_employees << req_owner
           forwarded_reqs += new_reqs
         else

@@ -36,7 +36,7 @@ class Requirement < ActiveRecord::Base
   def Requirement.get_requirement_array_for_select
     req_array = []
     req_array.push("Select all reqs")
-    all_ordered_requirements = Requirement.where(name:name)
+    all_ordered_requirements = Requirement.all.order(:name)
     all_open_requirements = all_ordered_requirements.find_all {
       |req| req.status == "OPEN"
     }

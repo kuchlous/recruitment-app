@@ -2130,7 +2130,7 @@ class ResumesController < ApplicationController
   #               For adding message                                                                 #
   ####################################################################################################
   def email_for_forward_resume(mail_to, resume, uniqid)
-    Emailer.deliver_forward(get_current_employee,
+    Emailer.forward(get_current_employee,
                             mail_to,
                             resume,
                             uniqid)

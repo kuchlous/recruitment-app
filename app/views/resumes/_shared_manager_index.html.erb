@@ -1,6 +1,6 @@
 <script>
-  var all_req_ids = [ <%= all_reqs_ids().join(",") %>];
-  var all_req_names = [ <%= all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
+  var all_req_ids = [ <%= raw all_reqs_ids().join(",") %>];
+  var all_req_names = [ <%= raw all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
 </script>
 <div id="error_messages_div"> </div>
 <% unless @forwards.nil? || @forwards.size == 0 %>
@@ -32,7 +32,7 @@
            <td> <%= resume.notice %> </td>
            <td>
              <% manual_status = resume.manual_status %>
-             <%= link_to (manual_status ? manual_status : "Add status"), "showManualStatusBox(event, #{resume.id});" %>
+             <%= link_to (manual_status ? manual_status : "Add status"),"",:onclick => "showManualStatusBox(event, #{resume.id});" %>
            </td>
            <td> <%= print_date_no_year (fwd.created_at) %> </td>
            <td> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>

@@ -1837,6 +1837,8 @@ function openResumeInNewTab(resume_uniqid) {
 // Will replace the innerHTML of "ajax_request_tr" with the manual status box
 function showManualStatusBox(event, resume_id)
 {
+  event.preventDefault();
+
   // Finding element where mouse(which td/tr) is clicked
   cur_element = Event.element(event);
 
