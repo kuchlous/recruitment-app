@@ -13,7 +13,7 @@ class RequirementsController < ApplicationController
   end
 
   def all_reqs
-    @requirements = Requirement.find(:all, :order => "employee_id")
+    @requirements = Requirement.all.order("employee_id")
     render "index"
   end
 
@@ -182,7 +182,7 @@ class RequirementsController < ApplicationController
     Group.all.each do |group|
       @req_analysis[group] = get_analysis_data(@smonth, @emonth, @year, group.name)
     end
-    render :partial      => "requirements/req_analysis", :layout => !@partial
+    render :partial => "requirements/req_analysis"#, :layout => !@partial
   end
 
   def get_analysis_data(start_month, end_month, year, group)

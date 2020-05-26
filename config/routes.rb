@@ -3,14 +3,14 @@ Rails.application.routes.draw do
   root to: 'home#index'
   # resources :employees'
   # resources :resumes
-  match 'login', to: 'employees#login'                              , via: :post
-  match 'logout', to: 'employees#logout'                            , via: :get
-  match 'requirements/my_requirements', to: 'requirements#my_requirements'  , via: :get
-  resources :requirements
-  match 'requirements/req_analysis', to: 'requirements#req_analysis'        , via: :get
-  match 'requirements/all_reqs', to: 'requirements#all_reqs'                , via: :get
-  match 'requirements/search', to: 'requirements#search'                    , via: :post
+  match 'login', to: 'employees#login'                                        , via: :post
+  match 'logout', to: 'employees#logout'                                      , via: :get
+  match 'requirements/my_requirements', to: 'requirements#my_requirements'    , via: :get
+  match 'requirements/req_analysis', to: 'requirements#req_analysis'           , via: :get
+  match 'requirements/all_reqs', to: 'requirements#all_reqs'                   , via: :get
+  match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
+  resources :requirements
   match 'home/search', to: 'home#search'                                       , via: :post
   match 'home/actions', to: 'home#actions'                                     , via: :get
   match 'home/advanced_search_results', to: 'home#advanced_search_results'     , via: :get
@@ -26,20 +26,14 @@ Rails.application.routes.draw do
   match 'resumes/outbox',to: 'resumes#outbox'                       , via: :get
   match 'resumes/trash',to: 'resumes#trash'                         , via: :get
   match 'resumes/resume_action',to: 'resumes#resume_action'         , via: :post
-  match 'resumes/manage_interviews',to: 'resumes#manage_interviews'         , via: :post
-
-
-  match 'resumes/show_resume_comments',to: 'resumes#show_resume_comments'  , via: :post
-  match 'resumes/export_as_xls',to: 'resumes#export_as_xls'         , via: :get
-  match 'resumes/export_interviews',to: 'resumes#export_interviews' , via: :get
+  match 'resumes/manage_interviews',to: 'resumes#manage_interviews'          , via: :post
+  match 'resumes/show_resume_comments',to: 'resumes#show_resume_comments'    , via: :post
+  match 'resumes/export_as_xls',to: 'resumes#export_as_xls'                  , via: :get
+  match 'resumes/export_interviews',to: 'resumes#export_interviews'          , via: :get
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates' , via: :get
   match 'employees/list_my_employees',to: 'employees#list_my_employees' , via: :get
-  match 'employees/change_to',to: 'employees#change_to' , via: :get
-
-
-
-
-  match 'resumes/export_as_xls_requirement',to: 'resumes#export_as_xls_requirement'                                , via: :get
+  match 'employees/change_to',to: 'employees#change_to'                 , via: :get
+  match 'resumes/export_as_xls_requirement',to: 'resumes#export_as_xls_requirement'                                                                    , via: :get
   match 'resumes/export_as_xls_requirement_for_shortlisted',to: 'resumes#export_as_xls_requirement_for_shortlisted', via: :get
   match 'resumes/export_as_xls_requirement_for_forwards',to: 'resumes#export_as_xls_requirement_for_forwards'      , via: :get
   match 'resumes/export_as_xls_requirement_for_offered',to: 'resumes#export_as_xls_requirement_for_offered'        , via: :get 
