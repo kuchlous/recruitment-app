@@ -768,7 +768,7 @@ class ResumesController < ApplicationController
       forward.save
     end
 
-    render :nothing => true
+    render body: nil
   end
 
   ####################################################################################################
@@ -2179,7 +2179,7 @@ class ResumesController < ApplicationController
     else
       req_name = "No Requirement Specified"
     end
-    Emailer.deliver_action(get_current_employee,
+    Emailer.action(get_current_employee,
                                   resume,
                                   req_name,
                                   status,

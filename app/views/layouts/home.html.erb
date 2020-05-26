@@ -59,7 +59,7 @@
         <div id="alert_box">
           <%= flash[:notice] %>
           <div align="center" style="margin-top: 20px;">
-            <%= image_submit_tag("/images/Ok.png", :onclick => "closeBox('alert_box'); return false;") %>
+            <%= image_submit_tag("Ok.png", :onclick => "closeBox('alert_box'); return false;") %>
           </div>
         </div>
         <% flash[:notice] = nil %>
