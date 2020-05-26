@@ -1,11 +1,16 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 //= require jquery
+//= require jquery-ui
 //= require turbolinks
 //= require prototype
+//= require scriptaculous
+//= require effects
+//= require controls
+//= require dragdrop
 //= require_tree .
 
-$().ready(function() {
+$(jQuery).ready(function() {
    $jq = jQuery.noConflict();
    $jq('.hidden_by_default').hide();
 });
