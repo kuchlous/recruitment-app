@@ -1188,6 +1188,7 @@ function showMessageBox(cur_element, resume_id)
 // Function used to display the add comment box under current row
 function AddCommentBox(event, resume_id)
 {
+  event.preventDefault();
   cur_element = Event.element(event);
   showAddCommentBox(cur_element, resume_id);
 }
@@ -1195,6 +1196,7 @@ function AddCommentBox(event, resume_id)
 // Function used to display the reject box under current row
 function RejectBox(event, resume_id, action)
 {
+  event.preventDefault();
   cur_element  = Event.element(event);
   req_match_id = 0;
   createAjaxRequest(cur_element, req_match_id, action, resume_id, "req_match_id", 0);

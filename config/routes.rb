@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   # resources :resumes
   match 'login', to: 'employees#login'                              , via: :post
   match 'logout', to: 'employees#logout'                            , via: :get
-  resources :requirements
   match 'requirements/my_requirements', to: 'requirements#my_requirements'  , via: :get
+  resources :requirements
   match 'requirements/req_analysis', to: 'requirements#req_analysis'        , via: :get
   match 'requirements/all_reqs', to: 'requirements#all_reqs'                , via: :get
   match 'requirements/search', to: 'requirements#search'                    , via: :post
