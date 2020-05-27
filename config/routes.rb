@@ -77,6 +77,8 @@ Rails.application.routes.draw do
   match 'resumes/move_to_future',to: 'resumes#move_to_future'                                       , via: :post
   match 'resumes/reject_all_forwards_req_matches',to: 'resumes#reject_all_forwards_req_matches'                                       , via: :post
   match 'resumes/mark_active',to: 'resumes#mark_active'                                       , via: :post
+  match 'resumes/add_interviews',to: 'resumes#add_interviews'                                       , via: :post
+
 
  resources :resumes
  resources :portals

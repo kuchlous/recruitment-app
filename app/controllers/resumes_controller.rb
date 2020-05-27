@@ -2216,12 +2216,12 @@ class ResumesController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each_full { |mesg|
+      object.errors.each { |mesg|
         logger.info(mesg)
-        flash[:notice] = mesg.sub(/is invalid/, "")
+        flash[:notice] = mesg.to_s.sub(/is invalid/, "")
       }
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   ####################################################################################################
