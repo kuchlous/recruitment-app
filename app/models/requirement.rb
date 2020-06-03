@@ -14,6 +14,12 @@ class Requirement < ActiveRecord::Base
   belongs_to              :scheduling_emp,
                           :class_name => "Employee",
                           :foreign_key => "scheduling_employee_id"
+  belongs_to              :ta_lead,
+                          :class_name => "Employee",
+                          :foreign_key => "ta_lead_id"
+  belongs_to              :eng_lead,
+                          :class_name => "Employee",
+                          :foreign_key => "eng_lead_id"
 
   # Presence stuff
   validates_presence_of :name

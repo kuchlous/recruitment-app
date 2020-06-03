@@ -1,0 +1,18 @@
+  Hi <%= @to.name %>, 
+  <% if @hire_action %>
+    <p> <%= @resume.name %> has been selected by engineering (@hire_action) and is waiting for a decision. </p>
+  <% else %>
+    <%= @resume.name %> is waiting for a decision. <%= "\r\n" %>
+  <% end %>
+  Requirement: <%= @requirement.name %> <%= "\r\n" %>
+  ============================================================== <%= "\r\n" %>
+  The feedbacks are:- 
+  <%= "\r\n" %>
+  <% @resume.feedbacks.each do |feedback| %>
+    Interviewer: <%= feedback.employee.name %> <%= "\r\n" %>
+    Rating: <%= feedback.rating %> <%= "\r\n" %>
+    <%= feedback.feedback %>  <%= "\r\n" %>
+    <%= "\r\n" %>
+  <% end %>
+  ============================================================== <%= "\r\n" %>
+  This is a system generated message. Please do not reply to this email. Instead login into the recruitment system. Here is a link to the resume <%= url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>

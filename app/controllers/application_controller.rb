@@ -216,7 +216,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_all_employees
-    Employee.all(:order => :name)
+    Employee.find_all_by_employee_status("ACTIVE", :order => :name)
   end
 
   def get_all_accounts

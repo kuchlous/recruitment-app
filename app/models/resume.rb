@@ -78,6 +78,20 @@ class Resume < ActiveRecord::Base
     return true
   end
 
+  def req_for_decision
+    req_matches = self.req_matches
+    return nil if req_matches.size == 0
+    return req_matches.first.requirement if req_matches.size == 1
+    # Go over req_matches in latest updated to previous
+    req_matches = req_matches.sort_by {|r| r.updated_at}.reverse
+    req_matches.each do |req_match|
+      if req_match.status == "SELECTED" || req_match.status == "SCHEDULED"
+        return req_match.requirement
+      end
+    end
+    return nil
+  end
+
   def resume_overall_status
     if self.status   != ""
       return self.status.titleize
@@ -102,10 +116,12 @@ class Resume < ActiveRecord::Base
       return "Offered"
     elsif status_array.include?("YTO")
       return "Yet To Offer"
+    elsif status_array.include?("HAC")
+      return "HAC"
+    elsif status_array.include?("ENG_SELECT")
+      return "Engg. Select"
     elsif status_array.include?("HOLD")
       return "On Hold"
-    elsif status_array.include?("SELECTED")
-      return "Selected"
     elsif status_array.include?("SCHEDULED")
       return "Interview Scheduled"
     elsif status_array.include?("SHORTLISTED")
@@ -198,8 +214,8 @@ class Resume < ActiveRecord::Base
     matches_array = []
     matches       = self.req_matches.find_all { |r|
 			employee.is_HR?    ||
-      employee.is_ADMIN? ||
-      r.requirement.employee == employee
+      employee.is_ADMIN? || employee.is_GM? ||
+      r.requirement.employee == employee || r.requirement.eng_lead == employee
     }
     matches.each do |m|
       matches_array.push([m.requirement.name, m.id])
@@ -595,6 +611,31 @@ class Resume < ActiveRecord::Base
     end
   end
 
+  def preferred_file
+    filenames = self.resume_path
+    pdf_file = nil
+    docx_file = nil
+    doc_file = nil
+    rtf_file = nil
+    odt_file = nil
+    txt_file = nil
+    filenames.each do |filename|
+      pdf_file = filename if /(.pdf)$/.match(filename)
+      docx_file = filename if /(.docx)$/.match(filename)
+      doc_file = filename if /(.doc)$/.match(filename) 
+      rtf_file = filename if /(.rtf)$/.match(filename) 
+      odt_file = filename if /(.odt)$/.match(filename)
+      txt_file = filename if /(.txt)$/.match(filename)
+    end
+    return pdf_file, 'application/pdf' if pdf_file
+    return docx_file,'application/vnd.openxmlformats-officedocument.wordprocessingml.document' if docx_file
+    return doc_file, 'application/msword' if doc_file 
+    return odt_file, 'application/vnd.oasis.opendocument.text' if odt_file 
+    return rtf_file, 'application/rtf' if rtf_file
+    return txt_file, 'text/html' if txt_file
+    return nil, nil
+  end
+
 private
   def convert_rtf_to_txt(filename)
     txt = `unrtf -n --text -P /usr/local/lib/unrtf/ #{filename} 2>& 1`
@@ -674,4 +715,5 @@ private
   def remove_whitespaces
     self.phone.gsub!(/\s+/, "")
   end
+
 end

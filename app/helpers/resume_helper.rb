@@ -91,16 +91,8 @@ module ResumeHelper
 
   def get_feedback_rating_average(feedbacks)
     feedback_avg = 0;
-    feedback = Hash.new
-    feedback["Poor"] = 1
-    feedback["Fair"] = 2
-    feedback["Good"] = 3
-    feedback["Very Good"] = 4
-    feedback["Excellent"] = 5
     feedbacks.each do |f|
-      logger.info(f.rating)
-      feedback_avg += feedback[f.rating]
-      logger.info(feedback[f.rating])
+      feedback_avg += f.numerical_rating
     end
     logger.info(feedback_avg)
     return (feedbacks.size == 0) ? 0 : (feedback_avg.to_f/(feedbacks.size)).round(2)

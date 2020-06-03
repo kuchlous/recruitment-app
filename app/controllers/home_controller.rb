@@ -218,6 +218,8 @@ class HomeController < ApplicationController
     @rejected = []
     @holds = []
     @ytos = []
+    @eng_selects = []
+    @hacs = []
     @offered = []
     @joining = []
     @new = []
@@ -232,6 +234,10 @@ class HomeController < ApplicationController
         @ytos << r
       elsif resume_overall_status == "On Hold"
         @holds << r
+      elsif resume_overall_status == "Engg. Select"
+        @eng_selects << r
+      elsif resume_overall_status == "HAC"
+        @hacs << r
       elsif resume_overall_status == "Interview Scheduled"
         @scheduled << r
       elsif resume_overall_status == "Shortlisted"
@@ -290,6 +296,12 @@ class HomeController < ApplicationController
       @is_req_match  = 1
     elif status == "YTO"
       @resumes = @ytos
+      @is_req_match  = 1
+    elif status == "Engg. Select"
+      @resumes = @eng_selects
+      @is_req_match  = 1
+    elif status == "HAC"
+      @resumes = @hacs
       @is_req_match  = 1
     elif status == "Offered"
       @resumes = @offered

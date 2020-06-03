@@ -88,6 +88,10 @@ class Employee < ActiveRecord::Base
     /BD/.match(employee_type)
   end
 
+  def is_TA_HEAD?
+    /TA_HEAD/.match(employee_type)
+  end
+
   @@remote_access_disallowed = ["sruthinambiar@mirafra.com",
                                 "sivajyothi@mirafra.com",
                                 "sachinmirashe@mirafra.com",
@@ -181,10 +185,20 @@ class Employee < ActiveRecord::Base
   end
 
   def gm
-    manager = self.manager
+    manager = self
     while (true)
       return manager if manager.is_GM?
       return manager if manager == manager.manager
+      return nil if !manager.manager
+      manager = manager.manager
+    end
+  end
+
+  def ta_head
+    manager = self
+    while (true)
+      return manager if manager.is_TA_HEAD?
+      return nil if manager == manager.manager
       return nil if !manager.manager
       manager = manager.manager
     end
