@@ -1332,6 +1332,7 @@ function createRequirementsRow(tr, req_ids, req_names)
 // Creates ajax request for reject/comment/hold/offered/joining etc
 function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_match_id_or_req_id, forward_id)
 {
+  console.log("ajax_request_started");
   // Defining variable for aligning of joining box propperly
   var join_align_var = 0;
 
@@ -1391,6 +1392,7 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
           parameters: 'resume[comment]=' + encodeURIComponent($F('comment_textarea')) + params,
           onSuccess: function(transport)
           {
+            console.log("ajax_request_completed");
             value = findProperValueToBeDisplayed(value);
             deleteAndCreateTDAfterAction(elements[2], value);
             changeCurrentRowColor(elements[3]);
@@ -1566,7 +1568,7 @@ function createRow()
 function imageForGoIcon(mright, mtop)
 {
   var element                = document.createElement("img");
-  element.src                = prepend_with_image_path + "/images/GoIcon.gif";
+  element.src                = prepend_with_image_path + "/assets/GoIcon.gif";
   element.className          = "goto_image";
   element.style.marginRight  = mright + "px";
   element.style.marginTop    = mtop   - 2 + "px";
@@ -1578,7 +1580,7 @@ function imageForGoIcon(mright, mtop)
 function imageforCrossIcon()
 {
   var img_element          = document.createElement("img");
-  img_element.src          = prepend_with_image_path + "/images/RedCross.png";
+  img_element.src          = prepend_with_image_path + "/assets/RedCross.png";
   img_element.className    = "cross_icon_image";
 
   return img_element;
