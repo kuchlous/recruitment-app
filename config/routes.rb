@@ -46,6 +46,10 @@ ActionController::Routing::Routes.draw do |map|
                                            :process_xls_and_zipped_resumes => :any,
                                            :close_requirement     => :any,
                                            :export_interviews_per_date     => :any,
+                                           :eng_select                     => :any,
+                                           :manager_eng_select             => :any,
+                                           :hac                            => :any,
+                                           :manager_hac                    => :any,
                                            :yto                            => :any,
                                            :manager_yto                    => :any
                                          }

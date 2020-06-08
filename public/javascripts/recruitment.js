@@ -731,6 +731,16 @@ function actionBox(value, event, req_id_array, req_name_array, req_match_id, res
     // Show yet to offer box
     showActionBoxReqMatchInternal(cur_element, req_match_id, "YTO", "req_match_id", 0);
   }
+  else if (value == "Engg Select" )
+  {
+    // Show yet to offer box
+    showActionBoxReqMatchInternal(cur_element, req_match_id, "ENG_SELECT", "req_match_id", 0);
+  }
+  else if (value == "HAC" )
+  {
+    // Show yet to offer box
+    showActionBoxReqMatchInternal(cur_element, req_match_id, "HAC", "req_match_id", 0);
+  }
 }
 
 // Create the appropriate forms for actions based upon the value of drop down list
@@ -832,6 +842,14 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
       {
         // Show the YTO box
         showActionBoxReqMatchInternal(cur_element, selValue, "YTO", req_match_id_or_req_id, req_match_id);
+      }
+      else if ( value == "ENG_SELECT" )
+      {
+        showActionBoxReqMatchInternal(cur_element, selValue, "ENG_SELECT", req_match_id_or_req_id, req_match_id);
+      }
+      else if ( value == "HAC" )
+      {
+        showActionBoxReqMatchInternal(cur_element, selValue, "HAC", req_match_id_or_req_id, req_match_id);
       }
     }
     else
