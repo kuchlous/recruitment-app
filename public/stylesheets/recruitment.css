@@ -159,6 +159,7 @@ table
   padding-top:      0px;
   padding-bottom:   5px;
   margin:           0 auto;
+  position: relative;
   /*
   border:           solid lightgray 1px;
   */
