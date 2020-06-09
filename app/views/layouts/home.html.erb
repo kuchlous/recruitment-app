@@ -15,10 +15,13 @@
 
 
     <%= stylesheet_link_tag :application, :recursive => true %>
-    <link href="/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon" />
   </head>
   <body onload="loadInitialContext();">
     <div id="allcontent">
+      <div id="loader">
+        <%= link_to image_tag("loading-t.gif") %>
+      </div>
       <table width="100%" id="top_table" border="0" cellpadding="0" cellspacing="0">
         <tbody>
           <tr id="logo_row">
