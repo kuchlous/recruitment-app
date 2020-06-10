@@ -1762,7 +1762,7 @@ function createFeedbackBox(event, resumeId, req_name)
   closeBoxLink(elements[0]);
 
   // Create ratings drop down list
-  var ratings = [ "Select", "Poor", "Fair", "Good", "Very Good", "Excellent" ];
+  var ratings = [ "Select", "Poor", "Below Average", "Average", "Good", "Very Good" ];
   var select  = createDropDownList(elements[0], "feedback[rating]", "feedback[rating]", ratings, ratings, "feedback_fields");
 
   createLineBreakElement(elements[0], 2);
