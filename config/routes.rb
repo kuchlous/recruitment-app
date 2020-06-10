@@ -28,9 +28,11 @@ Rails.application.routes.draw do
   match 'resumes/resume_action',to: 'resumes#resume_action'         , via: :post
   match 'resumes/eng_select',to: 'resumes#eng_select'               , via: :get
   match 'resumes/hac',to: 'resumes#hac'                             , via: :get
-
   match 'resumes/send_for_eng_decision',to: 'resumes#send_for_eng_decision'                             , via: :post
   match 'resumes/send_for_decision',to: 'resumes#send_for_decision'                             , via: :post
+  match 'resumes/manager_eng_select',to: 'resumes#manager_eng_select'                             , via: :get
+  match 'resumes/manager_hac',to: 'resumes#manager_hac'                             , via: :get
+
 
 
   match 'resumes/manage_interviews',to: 'resumes#manage_interviews'          , via: :post

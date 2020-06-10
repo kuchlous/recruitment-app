@@ -204,7 +204,7 @@ require 'will_paginate/array'
   end
 
   def get_all_employees
-    Employee.where(status:"ACTIVE").order(:name)
+    Employee.where(employee_status:"ACTIVE").order(:name)
   end
 
   def get_all_accounts
