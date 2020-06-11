@@ -2,8 +2,7 @@
 // This file is automatically included by javascript_include_tag :defaults
 //= require jquery
 //= require jquery-ui
-//= rrequire rails-ujs
-//= require prototype
+//= require rails-ujs
 //= require scriptaculous
 //= require effects
 //= require controls

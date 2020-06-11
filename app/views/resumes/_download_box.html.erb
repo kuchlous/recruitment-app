@@ -7,16 +7,16 @@
        image_path = "/images/PdfIcon.png"
        title_var  = "Download this resume as a PDF file"
      elsif /(.doc)$/.match(filename) || /(.docx)$/.match(filename) || /(.rtf)$/.match(filename)
-       image_path = "/images/DocIcon.png"
+       image_path = "DocIcon.png"
        title_var  = "Download this resume as a Doc file"
      elsif /(.txt)$/.match(filename)
-       image_path = "/images/TxtIcon.png"
+       image_path = "TxtIcon.png"
        title_var  = "Download this resume as a Text file"
      elsif /(.odt)$/.match(filename)
-       image_path = "/images/OoIcon.png"
+       image_path = "OoIcon.png"
        title_var  = "Download this resume as a Odt file"
      else
-       image_path = "/images/DocIcon.png"
+       image_path = "DocIcon.png"
        title_var  = "Download this resume as an unknown format file"
      end %>
   <a href="<%= resume_tag %>" target="_blank" title="<%= title_var %>">

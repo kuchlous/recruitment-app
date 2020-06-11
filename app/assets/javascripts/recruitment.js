@@ -15,7 +15,7 @@ function loadInitialContext()
   else
   {
     // ALOK: TBD
-     prepend_with_image_path = "/recruit";
+     prepend_with_image_path = "/new-recruit";
      //prepend_with_image_path = "";
   }
   element = $("login");

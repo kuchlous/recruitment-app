@@ -67,6 +67,7 @@ class RequirementsController < ApplicationController
   end
 
   def update
+    logger.info("Trying to update requirement")
     @requirement  = Requirement.find(params[:id])
     # Destroying requirement accounts and then updating
 
@@ -75,6 +76,7 @@ class RequirementsController < ApplicationController
     exp          = params[:req][:min_exp] + "-" + params[:req][:max_exp]
     respond_to do |format|
       if @requirement.update_attributes(params.require(:requirement).permit!) && @requirement.update_attributes(:exp => exp)
+        logger.info("Updated requirement")
         email_for_updating_requirement(@requirement)
         # Need to releoad object from database as update_attributes does not
         # seem to change fields of @requirement
@@ -82,6 +84,7 @@ class RequirementsController < ApplicationController
         flash[:notice] = "You have successfully updated requirement (#{@requirement.name})"
         format.html { redirect_to :action => "index" }
       else
+        logger.info("Did not update requirement")
         error_catching_and_flashing(@requirement)
         format.html { render :action => "edit" }
       end

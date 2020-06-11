@@ -8,12 +8,14 @@ require 'will_paginate/array'
   # filter_parameter_logging "password"
 
   # See ActionController::RequestForgeryProtection for details
-  protect_from_forgery :only => [:create, :update, :destroy]
-  self.allow_forgery_protection = false unless ENV["RAILS_ENV"] == "production"
-
+  # protect_from_forgery :only => [:create, :update, :destroy]
+  # self.allow_forgery_protection = false unless ENV["RAILS_ENV"] == "production"
+  # protect_from_forgery :false
+  skip_before_action :verify_authenticity_token
+ 
   def default_url_options(options=nil)
     if Rails.env.production?
-      {:protocol => "https", :host => APP_CONFIG['host_name'], :only_path => false}
+      {:protocol => "https", :host => APP_CONFIG['host_name'], :only_path => false, :port => false}
     else  
      {}
     end

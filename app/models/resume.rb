@@ -46,9 +46,9 @@ class Resume < ActiveRecord::Base
   $tmp_xls          = APP_CONFIG['xls_temp_file'] + "-" + $date_time_suffix 
   $tmp_zip          = APP_CONFIG['zip_temp_file'] + "-" + $date_time_suffix
   $tmp_file         = APP_CONFIG['temp_file']
-  $upload_dir       = Rails.root + "/" + APP_CONFIG['upload_directory']
-  $tmp_directory    = Rails.root + "/" + APP_CONFIG['temp_directory']
-  $tmp_resumes_directory  = $tmp_directory + "/" + APP_CONFIG['temp_resumes']
+  $upload_dir       = Rails.root.join(APP_CONFIG['upload_directory'])
+  $tmp_directory    = Rails.root.join(APP_CONFIG['temp_directory'])
+  $tmp_resumes_directory  = $tmp_directory.join(APP_CONFIG['temp_resumes'])
 
   ThinkingSphinx::Index.define :resume, :with => :real_time do
     indexes :name

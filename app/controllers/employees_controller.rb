@@ -2,7 +2,7 @@ class EmployeesController < ApplicationController
   # before_filter :check_for_login, :except => [ "login" ]
 
   def index
-    @employees = Employee.find_all_by_employee_status("ACTIVE", :order => :name)
+    @employees = Employee.where(employee_status:"ACTIVE").order(:name)
 
     if params[:page]
       character_name = params[:character_name]

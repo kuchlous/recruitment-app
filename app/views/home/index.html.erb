@@ -1,7 +1,9 @@
 <div id="employees_login_div" class="common_class">
   <div id="login_form">
     <span class="login_desc_line"> Login to your recruitment account </span>
-    <%= form_with url:login_path do |form| %>
+    <% url = url_for :action => "login", :controller => "employees", :only_path => false, :port => false%>
+    <%= url %>
+    <%= form_with url:url do |form| %>
       <table>
         <tr>
           <td class="login_text"> <label for="login_text"> Mirafra user name </td>

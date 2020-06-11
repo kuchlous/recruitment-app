@@ -618,14 +618,12 @@ module ApplicationHelper
     extras  = ENV["RAILS_ENV"] == "development" ? "{ uncompressed: true }" : "{}"
     string  = "<script src=\"https://www.google.com/jsapi\" type=\"text/javascript\"> </script>"
     string += "<script type=\"text/javascript\">"
-    string += "google.load(\"prototype\", \"1.7.0.0\", " + extras + ");"
     string += "google.load(\"jquery\",    \"1.7.1\",   " + extras + ");"
     string += "google.load(\"jqueryui\",  \"1.8.16\",  " + extras + ");"
     string += "</script>"
   end
 
   def include_internal_files
-    string  = javascript_include_tag"/optional-js/prototype.js"
     string += javascript_include_tag"/optional-js/jquery.js"
     string += javascript_include_tag"/optional-js/jquery-ui.js"
   end
