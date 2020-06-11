@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
-  # resources :employees'
+  resources :employees
   # resources :resumes
   match 'login', to: 'employees#login'                                        , via: :post
   match 'logout', to: 'employees#logout'                                      , via: :get
@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   match 'home/advanced_search', to: 'home#advanced_search'          , via: :get
   match 'home/actions_page', to: 'home#actions_page'                , via: :get
   match 'home/dashboard', to: 'home#dashboard'                      , via: :get
+  match 'home/summaries', to: 'home#summaries'                      , via: :get
   match 'designations/index', to: 'designations#index'              , via: :get
   match 'groups/index', to: 'groups#index'                          , via: :get
   match 'portals/index', to: 'portals#index'                        , via: :get
