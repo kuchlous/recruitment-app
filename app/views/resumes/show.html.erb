@@ -6,7 +6,7 @@
     <% end %>
   </span>
   <div class="span_with_8">
-		 <h2> Go To:
+     <h2> Go To:
        <a href="#comment">Comment</a>
        <a href="#feedback">Feedback</a>
        <a href="#messages">Messages</a>
@@ -27,9 +27,27 @@
         </td>
       </tr>
     </table>
-    <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
+    <% if is_HR_ADMIN? %>
+      <% unless @resume.status == "JOINED" %>
+        <% form_tag(:host => APP_CONFIG['host_name'], :action => "send_for_eng_decision" ) do %>
+          <div>
+            <%= submit_tag "Send for Engg. Decision", :class => "resume_actions_button" %>
+            <%= hidden_field_tag "resume_id", @resume.id %>
+          </div>
+          <br /> <br />
+        <% end %>
+        <% form_tag(:host => APP_CONFIG['host_name'], :action => "send_for_decision" ) do %>
+          <div>
+            <%= submit_tag "Send for Mgmt. Decision", :class => "resume_actions_button" %>
+            <%= hidden_field_tag "resume_id", @resume.id %>
+          </div>
+          <br /> <br />
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
         <% unless @resume.status == "FUTURE" %>
-          <%= form_tag(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
+          <% form_tag(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
             <div>
               <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
               <%= hidden_field_tag "resume_id", @resume.id %>
@@ -42,7 +60,7 @@
               @resume.status == "NOT JOINED" ||
               @resume.status == "N_ACCEPTED" ||
               @resume.status == "JOINED" %>
-          <%= form_tag(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
+          <% form_tag(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
             <div>
               <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
               <%= hidden_field_tag "resume_id", @resume.id %>
@@ -50,7 +68,7 @@
           <% end %>
           <br /> <br />
         <% end %>
-        <%= form_tag(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
+        <% form_tag(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
           <div>
             <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
             <%= hidden_field_tag "resume_id", @resume.id %>
@@ -140,7 +158,7 @@
         <td> Uploaded at </td>
         <td> <%= print_date_and_time(@resume.created_at) %> </td>
     </table>
-    <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER?%>
+    <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
     <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
       <br />
       <div id="comment">
@@ -164,7 +182,7 @@
         <% end %>
       </table>
     
-      <% if is_HR_ADMIN? || is_REQ_MANAGER? %>
+      <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
         <br />
         <div id="feedback">
           <span class="span_with_13"> Feedback: </span>
@@ -219,94 +237,87 @@
     <% end %>
 
     <div id="error_messages_div" class="error_messages_div"> </div>
-    <% if is_HR_ADMIN? %>
-<script>
-  var all_req_ids = [ <%= raw all_reqs_ids().join(",") %>];
-  var all_req_names = [ <%= raw all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
-</script>
-
-      <br />
-      <table id="resume_list_table">
-        <span class="span_with_13">  Resume Details: </span>
-        <tr class="header_row">
-          <td> Req Name/Forwarded to </td>
-          <td> Req Status   </td>
-          <td> Action   </td>
-        </tr>
-        <% matches  = []
-           matches  = @resume.forwards.find_all { |f|
-             f.status != "ACTION TAKEN"
-           }
-           matches += @resume.req_matches %>
-        <% matches.each do |m| %>
-          <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-            <td>
-              <% if m.is_a?(ReqMatch) %>
-                <%= get_requirement_link_with_mouse_over_and_mouseout(m.requirement) %>
-                <% status = "REQMATCH" %>
-              <% else %>
-                <%= m.forwarded_to.name %> <br />
-                ( <%  m.requirements.each do |r| %>
-                  <%= r.name %>,
-                <% end %> )
-                <% status = "FORWARDED" %>
-              <% end %>
-            </td>
-            <td>
-              <%= m.status.titleize %>
-              <%= "(" + print_date(m.resume.joining_date) + ")" if m.status == "JOINING" %>
-            </td>
-            <td>
-              <%= get_actions_ddl(@resume, m, status) %>
-            </td>
+    <script>
+      var all_req_ids = [ <%= all_reqs_ids().join(",") %>];
+      var all_req_names = [ <%= all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
+    </script>
+    
+    <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+      <% matches = @resume.req_matches.find_all { |m| 
+           m.status != "SHORTLISTED" && m.status != "SCHEDULED"
+         }
+         matches += @resume.forwards.find_all { |f|
+           f.status != "ACTION TAKEN"
+         }
+      %>
+      <% unless matches.empty? %>
+        <table id="resume_list_table">
+          <tr class="header_row">
+            <td> Req Name/Forwarded to </td>
+            <td> Req Status   </td>
+            <td> Action   </td>
           </tr>
-        <% end %>
-      </table>
-    <% elsif is_REQ_MANAGER? %>
-      <span class="span_with_13">  Forwards: </span>
-      <br />
+          <% matches.each do |m| %>
+            <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+              <td>
+                <% if m.is_a?(ReqMatch) %>
+                  <%= get_requirement_link_with_mouse_over_and_mouseout(m.requirement) %>
+                  <% status = "REQMATCH" %>
+                <% else %>
+                  <%= m.forwarded_to.name %> <br />
+                  ( <%  m.requirements.each do |r| %>
+                    <%= r.name %>,
+                  <% end %> )
+                  <% status = "FORWARDED" %>
+                <% end %>
+              </td>
+              <td>
+                <%= m.status.titleize %>
+                <%= "(" + print_date(m.resume.joining_date) + ")" if m.status == "JOINING" %>
+              </td>
+              <td>
+                <%= get_actions_ddl(@resume, m, status) %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+
       <% @status    = "FORWARDED"
          @forwards  = get_resume_req_matches_of_employee(@resume, @status)
-         unless @forwards.nil? || @forwards.empty?
-           @resumes  = get_forwards_resumes(@forwards)
+      %>
+      <% unless @forwards.nil? || @forwards.empty? %>
+        <% @resumes  = get_forwards_resumes(@forwards)
            @is_req_match = 0
            @row_id_prefix = "forwards_show_index" 
-           @after_shortlist_page = false %>
-           <%= render "manager_index" %>
-      <% else %>
-        No Forwards
+           @after_shortlist_page = false 
+         %>
+         <%= render "manager_index" %>
       <% end %>
       <br /> <br />
   
-  
-      <span class="span_with_13">  Shortlisted: </span>
-      <br />
-      <% @forwards = []
-         @status   = "SHORTLISTED"
-         @forwards = get_resume_req_matches_of_employee(@resume, @status)
-         unless @forwards.nil? || @forwards.empty?
-           @resumes       = get_reqmatches_resumes(@forwards)
+      <% @status   = "SHORTLISTED"
+         @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
+      <% unless @forwards.nil? || @forwards.empty? %>
+        <% @resumes       = get_reqmatches_resumes(@forwards)
            @is_req_match  = 1
            @row_id_prefix = "reqmatches_show_index" 
-           @after_shortlist_page = true %>
-           <%= render "manager_index" %>
-      <% else %>
-        No Shortlisted
+           @after_shortlist_page = true 
+         %>
+         <%= render "manager_index" %>
       <% end %>
       <br /> <br />
   
-      <span class="span_with_13">  Scheduled: </span>
-      <br />
-      <% @forwards = []
-         @status   = "SCHEDULED"
-         @forwards = get_resume_req_matches_of_employee(@resume, @status)
-         unless @forwards.nil? || @forwards.empty?
-           @resumes       = get_reqmatches_resumes(@forwards)
+      <% @status   = "SCHEDULED"
+         @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
+      <% unless @forwards.nil? || @forwards.empty? %>
+        <% @resumes       = get_reqmatches_resumes(@forwards)
            @is_req_match  = 1
            @row_id_prefix = "reqmatches_show_index" 
-           @after_shortlist_page = true %>
-           <%= render "manager_index" %>
+           @after_shortlist_page = true 
+        %>
+        <%= render "manager_index" %>
       <% end %>
-     <% end %>
+    <% end %>
   </form>
 </div>

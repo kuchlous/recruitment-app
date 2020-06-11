@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+  <% link = "<a href=#{url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name)}>#{@resume.name}</a>" %>
+  <p> Hi <%= @to.name %>, </p>
+  <% if @hire_action %>
+    <p> <%= link %> has been selected by engineering (@hire_action) and is waiting for a decision. </p>
+  <% else %>
+    <p> <%= link %> is waiting for a decision. </p>
+  <% end %>
+  <p> Requirement: <%= @requirement.name %> </p>
+  <p>
+  ============================================================== 
+  </br>
+  The feedbacks are:- 
+  </br>
+  <% @resume.feedbacks.each do |feedback| %>
+    Interviewer: <%= feedback.employee.name %> </br>
+    Rating: <%= feedback.rating %> </br>
+    <%= simple_format feedback.feedback %>  </br>
+    </br>
+  <% end %>
+  ============================================================== 
+  </p>
+  <p>
+  This is a system generated message. Please do not reply to this email. Instead login into
+  the recruitment system. Here is a link to the resume
+  <%= link %>
+  </p>
+  </body>
+</html>

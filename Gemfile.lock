@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/rails/rails-observers.git
+  revision: 389b577322d8b17336730b2dc4e179060a23c8e7
+  specs:
+    rails-observers (0.2.0)
+      activemodel (>= 4.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -181,6 +188,7 @@ DEPENDENCIES
   mysql2
   puma (~> 3.11)
   rails (~> 5.2.4)
+  rails-observers!
   sanitize
   sass-rails (~> 5.0)
   spreadsheet

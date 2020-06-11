@@ -168,4 +168,20 @@ class Emailer < ActionMailer::Base
                    :resume    => resume,
                    :requirement  => interview.req_match.requirement
   end
+
+  def send_for_decision(resume, requirement, to, rattachment, filetype, recipients, hire_action)
+    subject        "Need Decision for #{resume.name}"
+    recipients     recipients.map{|r| r.email }
+    from           [ "recruitment-no-reply@mirafra.com" ]
+    sent_on        Time.now
+    content_type   'multipart/mixed'
+    part(:content_type => "multipart/alternative") do |p|
+      p.part         :content_type => 'text/html', 
+                     :body => render_message('send_for_decision', :resume => resume, :to => to, :requirement => requirement, :hire_action => hire_action)
+      p.part         :content_type => 'text/plain', 
+	             :body => render_message('send_for_decision_text', :resume => resume, :to => to, :requirement => requirement)
+    end
+    attachment     :filename => resume.uniqid.name, :content_type => filetype, :body => File.read(rattachment)
+  end
+
 end

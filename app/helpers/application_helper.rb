@@ -79,11 +79,13 @@ module ApplicationHelper
   def get_resume_req_matches_of_employee(resume, status)
     req_matches = resume.req_matches.find_all { |r|
       r.status   == status &&
-      r.requirement.employee == get_current_employee
+      (is_HR_ADMIN? || is_GM? || 
+       r.requirement.employee == get_current_employee || 
+       r.requirement.eng_lead == get_current_employee)
     }
     req_matches += resume.forwards.find_all { |r|
       r.status       == status &&
-      r.forwarded_to == get_current_employee
+      (is_HR_ADMIN? || is_GM? || r.forwarded_to == get_current_employee)
     }
   end
 
@@ -184,14 +186,14 @@ module ApplicationHelper
     unless status == "FORWARDED"
       unless params[:action] == "forwarded"
         if is_HR? || is_ADMIN? || is_REQ_MANAGER?
-          for action in [ "Set Status", "Interviews", "Yet to Offer", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
+          for action in [ "Set Status", "Interviews", "Yet to Offer", "Engg Select", "HAC", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
             actions_arr.push([action])
           end
         else
           if status == "FORWARDED"
             actions_arr.push(["Interviews"])
           else
-            for action in [ "Set Status", "Yet to Offer", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
+            for action in [ "Set Status", "Yet to Offer", "Engg Select", "HAC", "Reject", "Mark Hold", "Mark Offered", "Mark Joining" ]
               actions_arr.push([action])
             end
           end
@@ -209,7 +211,7 @@ module ApplicationHelper
     else
       acts << ["Interviews"]
     end
-    acts += [["YTO"], ["Reject"], ["Hold"], ["Offer"], ["Joining"]]
+    acts += [["Engg Select"], ["YTO"], ["HAC"], ["Reject"], ["Hold"], ["Offer"], ["Joining"]]
   end
 
   def status_array

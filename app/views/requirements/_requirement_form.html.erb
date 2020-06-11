@@ -125,13 +125,21 @@
     </tr>
     <tr>
       <td> Source owner </td>
-      <td> <%= collection_select(:requirement, :source_owner, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+      <td> <%= collection_select(:requirement, :source_owner, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
     </tr>
     <tr>
       <td> Schedule owner </td>
-      <td> <%= collection_select(:requirement, :schedule_owner, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+      <td> <%= collection_select(:requirement, :schedule_owner, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
     </tr>
     <tr>
+      <td> TA Lead </td>
+      <td> <%= collection_select(:requirement, :ta_lead_id, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+    <tr>
+      <td> Eng Lead </td>
+      <td> <%= collection_select(:requirement, :eng_lead_id, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
+      <tr>
       <td> Requirement status   </td>
       <td> <%= select_tag "requirement[status]", options_for_select([["Open", "OPEN"], ["Closed - Expired", "CLOSED EXPIRED"], ["Closed - Offered", "CLOSED OFFERED"], ["Closed - Joining", "CLOSED JOINING"], ["Closed - Delete", "CLOSED DELETE"] ], status) %> </td>
     </tr>

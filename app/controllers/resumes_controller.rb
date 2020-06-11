@@ -234,6 +234,24 @@ class ResumesController < ApplicationController
 
   end
 
+  def manager_eng_select
+    @status  = "ENG_SELECT"
+    @matches = ReqMatch.find_employee_requirements_req_matches(get_current_employee, false)
+    @matches = @matches.find_all { |m|
+       m.status == @status
+    }
+    render "manager_yto"
+  end
+
+  def manager_hac
+    @status  = "HAC"
+    @matches = ReqMatch.find_employee_requirements_req_matches(get_current_employee, false)
+    @matches = @matches.find_all { |m|
+       m.status == @status
+    }
+    render "manager_yto"
+  end
+
   def manager_yto
     @status  = "YTO"
     @matches = ReqMatch.find_employee_requirements_req_matches(get_current_employee, false)
@@ -314,6 +332,24 @@ class ResumesController < ApplicationController
     if params[:mine]
       @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
     end
+  end
+
+  def eng_select
+    @status           = "ENG_SELECT"
+    @matches          = get_all_req_matches_of_status(@status)
+    if params[:mine]
+      @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
+    render "yto"
+  end
+
+  def hac
+    @status           = "HAC"
+    @matches          = get_all_req_matches_of_status(@status)
+    if params[:mine]
+      @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
+    end
+    render "yto"
   end
 
   def yto
@@ -563,7 +599,6 @@ class ResumesController < ApplicationController
     end
   end
 
-
   def mark_active
     resume      = Resume.find(params[:resume_id])
     resume.update_attributes!(:status => "")
@@ -571,6 +606,40 @@ class ResumesController < ApplicationController
     # Adding Comments
     resume.add_resume_comment("MARK ACTIVE: Setting resume status as empty for further processing", "INTERNAL", get_current_employee)
     flash[:notice] = "You have successfully activated #{resume.name} for processing"
+    redirect_to :back
+  end
+
+  def send_for_eng_decision
+    resume      = Resume.find(params[:resume_id])
+    requirement = resume.req_for_decision
+    if !requirement
+      flash[:notice] = "No matching requirement found for #{resume.name}"
+      redirect_to :back
+    end
+    if !requirement.ta_lead
+      flash[:notice] = "No TA lead found for requirement #{requirement.name}"
+      redirect_to :back
+    end
+
+    email_for_decision(resume, requirement, true, nil)
+
+    resume.add_resume_comment("SENT FOR DECISION: Sending resume for engineering decision", "INTERNAL", get_current_employee)
+    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} for engineering decision, req: #{requirement.name}"
+    redirect_to :back
+  end
+
+  def send_for_decision
+    resume      = Resume.find(params[:resume_id])
+    requirement = resume.req_for_decision
+    if !requirement
+      flash[:notice] = "No matching requirement found for #{resume.name}"
+      redirect_to :back
+    end
+
+    email_for_decision(resume, requirement, false, nil)
+
+    resume.add_resume_comment("SENT FOR DECISION: Sending resume for decision", "INTERNAL", get_current_employee)
+    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} for decision, req: #{requirement.name}"
     redirect_to :back
   end
 
@@ -693,6 +762,7 @@ class ResumesController < ApplicationController
     # Checking errors in action
     check_resume_action_errors(req_match_id, req_ids, status)
 
+    match = nil
     if req_match_id && req_match_id.to_i != 0
       match  = ReqMatch.find(req_match_id)
       resume = match.resume
@@ -761,6 +831,12 @@ class ResumesController < ApplicationController
       req = nil
     end
     email_for_action(resume, status, comment, req)
+
+    if status == "ENG_SELECT" || status == "HAC" || status == "HOLD" || status == "YTO"
+      if match
+        email_for_decision(resume, match.requirement, false, status)
+      end
+    end
 
     if ( forward && status != "COMMENTED" ) ||
        ( req_ids )
@@ -1905,7 +1981,7 @@ class ResumesController < ApplicationController
   # TODO: Minimize this code as well
   ####################################################################################################
   # FUNCTIONS   : find_status                                                                        #
-  # DESCRIPTION : Find status which need to be stotred in database. From javascript we are sending   #
+  # DESCRIPTION : Find status which need to be stored in database. From javascript we are sending   #
   #               status as small letters(except shortlist).                                         #
   ####################################################################################################
   def find_status(istatus)
@@ -1923,10 +1999,8 @@ class ResumesController < ApplicationController
       return "OFFERED"
     elsif istatus == "Joining"
       return "JOINING"
-    elsif istatus == "Declined"
-      return "Declined"
-    elsif istatus == "YTO"
-      return "YTO"
+    else
+      return istatus
     end
   end
 
@@ -2204,6 +2278,31 @@ class ResumesController < ApplicationController
   def email_for_add_message(mesg)
     Emailer.deliver_add_message(mesg,
                                 get_logged_employee)
+  end
+
+  def email_for_decision(resume, requirement, eng_decision, hire_action)
+    attachment, filetype = resume.preferred_file
+    req_owner = requirement.employee
+    gm_for_decision = requirement.employee.gm
+    ta_head = requirement.employee.ta_head
+    # gm_for_decision = Employee.find_by_login('alokk')
+    ta = get_current_employee
+    attachment, filetype = resume.preferred_file
+    if !attachment
+      flash[:notice] = "No resume to attach for #{resume.name}"
+      redirect_to :back
+    end
+    attachment = Rails.root + attachment
+    recipients = [gm_for_decision, ta]
+    recipients << requirement.ta_lead if requirement.ta_lead
+    if eng_decision
+      recipients << requirement.eng_lead if requirement.eng_lead
+      to = requirement.ta_lead
+    else
+      to = gm_for_decision
+    end
+    recipients << ta_head if ta_head
+    Emailer.deliver_send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action)
   end
 
   def send_email_for_declining(interview)

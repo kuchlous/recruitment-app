@@ -296,6 +296,7 @@ private
     @groups       = get_all_groups
     @designations = get_all_designations
     @employees    = get_all_employees
+    @ta_employees = @employees.find_all{|e| e.is_HR?}
     @accounts     = get_all_accounts
   end
 end

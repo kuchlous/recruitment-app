@@ -27,6 +27,15 @@ Rails.application.routes.draw do
   match 'resumes/outbox',to: 'resumes#outbox'                       , via: :get
   match 'resumes/trash',to: 'resumes#trash'                         , via: :get
   match 'resumes/resume_action',to: 'resumes#resume_action'         , via: :post
+  match 'resumes/eng_select',to: 'resumes#eng_select'               , via: :get
+  match 'resumes/hac',to: 'resumes#hac'                             , via: :get
+  match 'resumes/send_for_eng_decision',to: 'resumes#send_for_eng_decision'                             , via: :post
+  match 'resumes/send_for_decision',to: 'resumes#send_for_decision'                             , via: :post
+  match 'resumes/manager_eng_select',to: 'resumes#manager_eng_select'                             , via: :get
+  match 'resumes/manager_hac',to: 'resumes#manager_hac'                             , via: :get
+
+
+
   match 'resumes/manage_interviews',to: 'resumes#manage_interviews'          , via: :post
   match 'resumes/show_resume_comments',to: 'resumes#show_resume_comments'    , via: :post
   match 'resumes/export_as_xls',to: 'resumes#export_as_xls'                  , via: :get

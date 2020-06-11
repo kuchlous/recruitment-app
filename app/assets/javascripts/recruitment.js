@@ -1362,6 +1362,8 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
   Event.observe(element, "click",
     function(element)
     {
+      document.getElementById("loader").style.display="flex";
+  
       // If action is shortlist then we have to pass forward_id as well as req_ids
       // So i merged forward_id with "Shortlist" earlier. Now i am extracting forward_id
       if ( value.match("Shortlist") )
@@ -1391,12 +1393,14 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
           parameters: 'resume[comment]=' + encodeURIComponent($F('comment_textarea')) + params,
           onSuccess: function(transport)
           {
+            document.getElementById("loader").style.display="none";
             value = findProperValueToBeDisplayed(value);
             deleteAndCreateTDAfterAction(elements[2], value);
             changeCurrentRowColor(elements[3]);
           },
           onFailure: function(transport)
           {
+            document.getElementById("loader").style.display="none";
             alert("Server was down while performing this action. Please contact administrators.");
           }
         });
@@ -1566,7 +1570,7 @@ function createRow()
 function imageForGoIcon(mright, mtop)
 {
   var element                = document.createElement("img");
-  element.src                = prepend_with_image_path + "/images/GoIcon.gif";
+  element.src                = prepend_with_image_path + "/assets/GoIcon.gif";
   element.className          = "goto_image";
   element.style.marginRight  = mright + "px";
   element.style.marginTop    = mtop   - 2 + "px";
@@ -1578,7 +1582,7 @@ function imageForGoIcon(mright, mtop)
 function imageforCrossIcon()
 {
   var img_element          = document.createElement("img");
-  img_element.src          = prepend_with_image_path + "/images/RedCross.png";
+  img_element.src          = prepend_with_image_path + "/assets/RedCross.png";
   img_element.className    = "cross_icon_image";
 
   return img_element;
