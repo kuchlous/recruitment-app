@@ -41,12 +41,12 @@
         <td> Skills/Desc      </td>
         <td style="width:75px;"> Exp </td>
         <td> End              </td>
+        <td> Positions        </td>
         <% if !only_my_requirement %>
-          <td> Positions        </td>
           <td> Owner            </td>
         <% else %>
-          <td> Number of forwards     </td>
-          <td> Number of shortlists    </td>
+          <td> Forwards     </td>
+          <td> Shortlists    </td>
         <% end %>
         <%if is_HR_ADMIN? %>
           <td> <%= (@requirements.size != 0) ? submit_tag('Delete') : "delete"  %> </td>
@@ -74,10 +74,10 @@
             <%= print_date(requirement.edate) %>
           <% end %>
         </td>
+        <td>
+          <%= requirement.nop %> 
+        </td>
         <% if !only_my_requirement %>
-          <td>
-            <%= requirement.nop %> 
-          </td>
           <td>
             <%= get_words(requirement.employee.name, 1) %>
           </td>
