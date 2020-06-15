@@ -1388,22 +1388,22 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
       {
         params = "";
       }
-      new Ajax.Request(prepend_with_image_path + "/resumes/resume_action?" + req_match_id_or_req_id + "=" + ids + "&status=" + value + "&resume_id=" + resume_id + url_params,
-        { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + encodeURIComponent($F('comment_textarea')) + params,
-          onSuccess: function(transport)
-          {
-            document.getElementById("loader").style.display="none";
+      jQuery.ajax({url: prepend_with_image_path + "/resumes/resume_action?" + req_match_id_or_req_id + "=" + ids + "&status=" + value + "&resume_id=" + resume_id + url_params, 
+      data: 'resume[comment]=' + encodeURIComponent($F('comment_textarea')) + params,
+      type: 'POST',
+      success: function(result){
+        document.getElementById("loader").style.display="none";
             value = findProperValueToBeDisplayed(value);
             deleteAndCreateTDAfterAction(elements[2], value);
             changeCurrentRowColor(elements[3]);
-          },
-          onFailure: function(transport)
-          {
-            document.getElementById("loader").style.display="none";
-            alert("Server was down while performing this action. Please contact administrators.");
-          }
-        });
+      },
+      error: function(err)
+      {
+        document.getElementById("loader").style.display="none";
+        console.log("from jquery");
+        alert("Server was down while performing this action. Please contact administrators.");
+      }
+    });
       return false;
      }
   );
