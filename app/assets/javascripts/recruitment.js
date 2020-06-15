@@ -391,8 +391,9 @@ function showDiv(id)
 total_interview_num = 0;
 index               = 0;
 total_interview_num_bkup = 0;
-function addInterviewRow(existing_interview_num, req_match_id, row_index, emp_ids, emp_names, time_array)
+function addInterviewRow(event,existing_interview_num, req_match_id, row_index, emp_ids, emp_names, time_array)
 {
+  event.preventDefault();
   if ( index == 0 )
   {
     total_interview_num = existing_interview_num;

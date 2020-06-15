@@ -37,7 +37,7 @@
        <% if @interviews.size < 5 %>
          <tr class="float_right_with_10_padding">
            <td class="manage_interviews_cell" style="border: none;">
-             <%= link_to "Add Interviews",'#',:onclick => "addInterviewRow(#{@interviews.size}, #{req_match_id}, #{index}, [ #{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], ['#{get_time_slot_array.join("', '")}']);", :style => "color: green; font-weight: bold;" %>
+             <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@interviews.size}, #{req_match_id}, #{index}, [ #{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], ['#{get_time_slot_array.join("', '")}']);", :style => "color: green; font-weight: bold;" %>
            </td>
          </tr>
        <% end %>
