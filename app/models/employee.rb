@@ -33,7 +33,7 @@ class Employee < ActiveRecord::Base
 
   def Employee.get_manager_array_for_select
     manager_array = []
-    all_managers = Employee.find(:all).find_all { |e| 
+    all_managers = Employee.all.find_all { |e| 
       e.is_manager? &&
       e.employee_status == "ACTIVE" 
     }
@@ -45,7 +45,7 @@ class Employee < ActiveRecord::Base
 
   def Employee.get_employee_array_for_select
     emp_array = []
-    all_emps = Employee.find(:all, :order => "name", :conditions => { :employee_status => "ACTIVE" })
+    all_emps = Employee.where(:employee_status => "ACTIVE" ).order(:name)
     all_emps.each do |emp|
       emp_array.push([emp.name, emp.id])
     end
@@ -174,7 +174,7 @@ class Employee < ActiveRecord::Base
 
   def get_reqs_to_forward
     req_array = []
-    all_requirements = self.requirements.find(:all, :order => "name")
+    all_requirements = self.requirements.all.order(:name)
     all_open_requirements = all_requirements.find_all {
       |req| req.status == "OPEN"
     }

@@ -93,7 +93,7 @@ class HomeController < ApplicationController
 
     @edate = (params[:edate] && params[:edate][:edate]) ? Date.parse(params[:edate][:edate]) : Date.today
 
-    resumes = Resume.find(:all).find_all { |r|
+    resumes = Resume.all.find_all { |r|
       r.created_at >= @sdate && r.created_at <= @edate
     }
     @recruiter_summary_table = {}

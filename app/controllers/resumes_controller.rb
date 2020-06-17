@@ -995,7 +995,7 @@ class ResumesController < ApplicationController
     start_time = Time.at(params['start'].to_i).to_formatted_s(:db)
     end_time   = Time.at(params['end'].to_i).to_formatted_s(:db)
     if is_HR? || is_ADMIN?
-      @events    = Interview.find(:all, :conditions => [ "interview_date >= '#{start_time}' and interview_date <= '#{end_time}'"])
+      @events    = Interview.where("interview_date >= ? and interview_date <= ?",start_time ,end_time)
     else
       @events    = Interview.where("interview_date >= ? and interview_date <= ? and employee_id = ?", start_time, end_time,get_current_employee.id)
     end

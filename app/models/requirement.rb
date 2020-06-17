@@ -117,7 +117,7 @@ class Requirement < ActiveRecord::Base
   end
 
   def Requirement.open_requirements
-    Requirement.find(:all).find_all { |r|
+    Requirement.all.find_all { |r|
       r.status == "OPEN"
     }
   end

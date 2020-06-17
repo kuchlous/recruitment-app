@@ -6,7 +6,7 @@ class EmployeesController < ApplicationController
 
     if params[:page]
       character_name = params[:character_name]
-      @employees     = Employee.find(:all, :conditions => ["name like ?", character_name + "%"], :order => :eid)
+      @employees     = Employee.where("name like ?", character_name + "%").order(:eid)
     end
   end
 
