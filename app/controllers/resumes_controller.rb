@@ -39,7 +39,7 @@ class ResumesController < ApplicationController
       @messages       = @resume.messages
     else
       flash[:notice]  = "No details available for this resume"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -60,11 +60,11 @@ class ResumesController < ApplicationController
 	redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
       else
         flash[:notice]  = "No details available for this resume"
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
     else
       flash[:notice]  = "No details available for this resume"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -109,6 +109,7 @@ class ResumesController < ApplicationController
         email_for_upload(@resume)
 
         # If reqs are selected
+        # TODO fix this part for rails 5
         if (params[:requirement_name])
           Resume.create_reqs(@resume, params[:requirement_name], get_logged_employee, get_current_employee)
           flash_mesg = "You have successfully uploaded the resume and it has been forwarded to the owners of the requirements that you selected"
@@ -171,7 +172,7 @@ class ResumesController < ApplicationController
   def process_xls_and_zipped_resumes
     if params[:resume].nil?
       flash[:notice] = "Please provide both excel file and zipped file for resumes."
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     else
       status_file, message = Resume.upload_xls(params[:resume][:upload_xls], params[:resume][:upload_zipped_resume],
                              get_logged_employee, get_current_employee)
@@ -179,16 +180,16 @@ class ResumesController < ApplicationController
         send_file(status_file)
       elsif (/missing/.match(message))
         flash[:notice] = "Please provide both excel file and zipped file for resumes."
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       elsif (/excel/.match(message))
         flash[:notice] = "Please provide only excel file"
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       elsif (/zip/.match(message))
         flash[:notice] = "Please provide only zip file"
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       elsif (/No data/.match(message))
         flash[:notice] = "Excel file does not have any data inside it. Please try uploading correct excel file."
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
     end
   end
@@ -517,7 +518,7 @@ class ResumesController < ApplicationController
 
     flash[:notice] = "You have successfully moved #{resume.name} into future list"
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   ####################################################################################################
@@ -606,7 +607,7 @@ class ResumesController < ApplicationController
     # Adding Comments
     resume.add_resume_comment("MARK ACTIVE: Setting resume status as empty for further processing", "INTERNAL", get_current_employee)
     flash[:notice] = "You have successfully activated #{resume.name} for processing"
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def send_for_eng_decision
@@ -614,18 +615,18 @@ class ResumesController < ApplicationController
     requirement = resume.req_for_decision
     if !requirement
       flash[:notice] = "No matching requirement found for #{resume.name}"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
     if !requirement.ta_lead
       flash[:notice] = "No TA lead found for requirement #{requirement.name}"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
     email_for_decision(resume, requirement, true, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for engineering decision", "INTERNAL", get_current_employee)
     flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} for engineering decision, req: #{requirement.name}"
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def send_for_decision
@@ -633,14 +634,14 @@ class ResumesController < ApplicationController
     requirement = resume.req_for_decision
     if !requirement
       flash[:notice] = "No matching requirement found for #{resume.name}"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
     email_for_decision(resume, requirement, false, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for decision", "INTERNAL", get_current_employee)
     flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} for decision, req: #{requirement.name}"
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def reject_all_forwards_req_matches
@@ -656,7 +657,7 @@ class ResumesController < ApplicationController
     resume.add_resume_comment("REJECT ALL: Rejecting all forward/requirement matches.", "INTERNAL", get_current_employee)
 
     flash[:notice] = "You have successfully rejected all forwards/req matches associated to this resume"
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def mark_not_accepted
@@ -742,7 +743,7 @@ class ResumesController < ApplicationController
     # Flashing messages
     logger.info(mesg)
     flash[:notice] = mesg
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   ####################################################################################################
@@ -996,12 +997,12 @@ class ResumesController < ApplicationController
     if is_HR? || is_ADMIN?
       @events    = Interview.find(:all, :conditions => [ "interview_date >= '#{start_time}' and interview_date <= '#{end_time}'"])
     else
-      @events    = Interview.find(:all, :conditions => [ "interview_date >= '#{start_time}' and interview_date <= '#{end_time}' and employee_id = '#{get_current_employee.id}'"])
+      @events    = Interview.where("interview_date >= ? and interview_date <= ? and employee_id = ?", start_time, end_time,get_current_employee.id)
     end
     events     = []
     @events.each do |event|
       idate    = event.interview_date
-      iso8601_format_time = event.interview_time.iso8601
+      iso8601_format_time = event.interview_time.iso8601.dup
       iso8601_format_time.sub!("2000-01-01", idate.to_s)
       resume   = event.req_match.resume
 
@@ -1018,7 +1019,7 @@ class ResumesController < ApplicationController
 
       events << { :id => event.id, :title => "#{title}", :description => "#{description}", :start => "#{iso8601_format_time}", :end => "", :allDay => 0, :recurring => false, :resume_uniqid => resume.uniqid.name, :interviewer_id => event.employee.id }
     end
-    render :text => events.to_json
+    render plain: events.to_json
   end
 
   def interviews_status
@@ -1265,7 +1266,7 @@ class ResumesController < ApplicationController
      send_file_to_download(book, output)
    else
      flash[:notice] = "You are not authorised to access this page"
-     redirect_to :back
+     redirect_back(fallback_location: root_path)
    end
   end
 
@@ -1407,7 +1408,7 @@ class ResumesController < ApplicationController
     req      = Requirement.find_by_name(params[:requirement_name])
 
     unless params[:feedback][:rating] == "Select"
-      feedback = Feedback.new(params[:feedback])
+      feedback = Feedback.new(params[:feedback].permit!)
       if params[:resume][:comment] =~ /Enter your comment/ ||
          params[:resume][:comment] == ""
         feedback.feedback = "Only rating added"
@@ -1427,7 +1428,7 @@ class ResumesController < ApplicationController
       flash[:notice] = "Please select rating also"
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   ####################################################################################################
@@ -1490,7 +1491,7 @@ class ResumesController < ApplicationController
     end
 
     flash[:notice] = "You have successfully deleted the selected messages"
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def reply_message
@@ -1511,7 +1512,7 @@ class ResumesController < ApplicationController
     email_for_add_message(m)
 
     flash[:notice] = "Your message has been sent."
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   # Function to set is_read
@@ -1530,25 +1531,28 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def add_interviews
     emp_added_for_interviews = []
-    row_index = params[:row_index].to_i
+    row_index = params[:row_index].to_i 
     int_stage = params[:interview_stage]
     int_type  = params[:interview_type]
     match     = ReqMatch.find(params[:req_match_id])
 
-    for i in row_index..4
+    for i in row_index..row_index
       emp_id    = params["interview_employee_name#{i}".to_sym]
       int_time  = params["time_slot#{i}".to_sym]
-      int_date  = params["interview_date#{i}".to_sym]
+      int_date  = params["interview_date#{i}"]
       int_focus = params["interview_focus#{i}".to_sym]
-
+      i_time = Time.parse (int_date)
       if emp_id
         interview = Interview.new(:employee_id    => emp_id,
                                   :interview_date => int_date,
-                                  :interview_time => int_time,
+                                  :interview_time => i_time,
                                   :stage          => int_stage,
                                   :itype          => int_type,
                                   :focus          => int_focus,
                                   :req_match_id   => match.id)
+        p i_time
+        p interview
+        p "+++++++++++++++++++++++++++++"
         is_save = interview.save
         if is_save
           # Making an .ics file. Not sure this is an good idea to create ics file here.
@@ -1613,7 +1617,7 @@ class ResumesController < ApplicationController
       match.resume.add_resume_comment("ADDING INTERVIEWS FOR: #{emp_added_for_interviews.join(", ")} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
 
       flash[:notice] = "You have successfully added interview panel"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     elsif interview.errors
       error_catching_and_flashing(interview)
 
@@ -1654,7 +1658,7 @@ class ResumesController < ApplicationController
 
       # Flashing message
       flash[:notice] = "You have successfully updated the interview details"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     elsif interview.errors
       error_catching_and_flashing(interview)
     end
@@ -1710,7 +1714,7 @@ class ResumesController < ApplicationController
 
     req_match.resume.add_resume_comment("INTERVIEW DELETED: " + comment, "INTERNAL", get_current_employee)
     flash[:notice] = flash_mesg
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   ####################################################################################################
@@ -1850,21 +1854,21 @@ class ResumesController < ApplicationController
          ( req_ids && req_ids.size > 0 )             &&
          ( status != "COMMENTED" ) )
       logger.error("Got non empty req_match_ids and req_ids in resume_action")
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
     if ( ( req_match_ids.nil? || req_match_ids.size == 0 ) &&
          ( req_ids.nil? || req_ids.size == 0 )             &&
          ( status != "COMMENTED" ) )
       logger.error("Got both empty req_match_ids and req_ids in resume_action")
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
     if status != "SHORTLISTED" && status != "REJECTED"
       if (req_match_ids && req_match_ids.size > 1 &&
           req_ids && req_ids.size > 1) 
         logger.error("more than one req's allowed only for SHORTLISTED and REJECTED, got for #{status}")
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
     end
   end
@@ -2261,14 +2265,14 @@ class ResumesController < ApplicationController
   end
 
   def email_for_feedback(resume, feedback, req)
-    Emailer.deliver_feedback(get_current_employee,
+    Emailer.feedback(get_current_employee,
                              resume,
                              req,
                              feedback)
   end
 
   def notify_manager_for_panel(req, resume, emp_array)
-    Emailer.deliver_notify_manager_for_panel(get_current_employee,
+    Emailer.notify_manager_for_panel(get_current_employee,
                                              req,
                                              resume,
                                              req.employee,
@@ -2276,7 +2280,7 @@ class ResumesController < ApplicationController
   end
 
   def email_for_add_message(mesg)
-    Emailer.deliver_add_message(mesg,
+    Emailer.add_message(mesg,
                                 get_logged_employee)
   end
 
@@ -2290,7 +2294,7 @@ class ResumesController < ApplicationController
     attachment, filetype = resume.preferred_file
     if !attachment
       flash[:notice] = "No resume to attach for #{resume.name}"
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
     attachment = Rails.root + attachment
     recipients = [gm_for_decision, ta]

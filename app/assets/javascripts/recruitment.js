@@ -1713,6 +1713,7 @@ function HideContent(d)
 
 function viewCommentsFeedback(event, resume_id, action, cols)
 {
+  event.preventDefault();
   // TODO: We can removed this event(line) from this and next function as well as we do not need them anymore.
 
   // Finding element where mouse(which td/tr) is clicked
@@ -1735,6 +1736,7 @@ function viewCommentsFeedback(event, resume_id, action, cols)
 // Basically we use this function to create/send feedback
 function createFeedbackBox(event, resumeId, req_name)
 {
+  event.preventDefault();
   setFormAction("feedback");
 
   // Finding element where mouse(which td/tr) is clicked

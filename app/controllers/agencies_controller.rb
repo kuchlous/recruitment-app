@@ -52,7 +52,7 @@ class AgenciesController < ApplicationController
                if you really want to delete it then please ask your administrator"
     logger.info(message)
     flash[:notice] = message
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def error_catching_and_flashing(object)

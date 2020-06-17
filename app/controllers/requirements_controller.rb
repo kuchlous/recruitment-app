@@ -206,7 +206,7 @@ class RequirementsController < ApplicationController
                then please ask your administrator"
     logger.info(message)
     flash[:notice] = message
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def close_requirement
@@ -223,7 +223,7 @@ class RequirementsController < ApplicationController
     else
       flash[:notice] = "Please select checkbox to INACTIVE requirements."
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
 private
