@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
-  resources :employees
   # resources :resumes
   match 'login', to: 'employees#login'                                        , via: :post
   match 'logout', to: 'employees#logout'                                      , via: :get
@@ -59,6 +58,7 @@ Rails.application.routes.draw do
   match 'resumes/rejected',to: 'resumes#rejected'            , via: :get
   match 'resumes/future',to: 'resumes#future'                , via: :get
   match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
+  match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get
   match 'resumes/manager_joined',to: 'resumes#manager_joined'               , via: :get
   match 'resumes/manager_offered',to: 'resumes#manager_offered'             , via: :get
@@ -90,6 +90,7 @@ Rails.application.routes.draw do
   match 'resumes/add_interviews',to: 'resumes#add_interviews'                                       , via: :post
 
 
+ resources :employees
  resources :resumes
  resources :portals
  resources :agencies
