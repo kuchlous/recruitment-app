@@ -1094,6 +1094,7 @@ function showEditJoiningBox(event, resume_id, req_match_id)
 
 function declineInterviewBox(event, interview_id)
 {
+  event.preventDefault();
   // Finding element where mouse(which td/tr) is clicked
   cur_element = Event.element(event);
   

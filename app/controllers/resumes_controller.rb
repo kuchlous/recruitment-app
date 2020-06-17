@@ -2216,13 +2216,13 @@ class ResumesController < ApplicationController
   end
 
   def email_for_adding_panel(employee, interview, resume)
-    Emailer.deliver_panel(employee,
+    Emailer.panel(employee,
                           interview,
                           resume)
   end
 
   def email_after_deleting_interview(interview, resume)
-    Emailer.deliver_removed_panel(interview, resume)
+    Emailer.removed_panel(interview, resume)
   end
 
   def email_for_upload(resume)
@@ -2230,23 +2230,23 @@ class ResumesController < ApplicationController
     p "++++++++++++++++++++++"
     if (resume.referral_type == "EMPLOYEE")
       referer = Employee.find(resume.referral_id)
-      Emailer.deliver_upload(resume, referer)
+      Emailer.upload(resume, referer)
     end
   end
 
   def email_for_joined(resume, status = "")
-    Emailer.deliver_joined(resume, get_current_employee, status)
+    Emailer.joined(resume, get_current_employee, status)
     if (resume.referral_type == "EMPLOYEE")
       referer = Employee.find(resume.referral_id)
       if (referer.employee_status == "ACTIVE")
-        Emailer.deliver_joined(resume, referer, status)
+        Emailer.joined(resume, referer, status)
       end
-      Emailer.deliver_joined(resume, get_finance_employee, status)
-      Emailer.deliver_joined(resume, get_sysadmin_employee, status)
+      Emailer.joined(resume, get_finance_employee, status)
+      Emailer.joined(resume, get_sysadmin_employee, status)
     end
     if (resume.referral_type == "AGENCY")
-      Emailer.deliver_joined(resume, get_finance_employee, status)
-      Emailer.deliver_joined(resume, get_sysadmin_employee, status)
+      Emailer.joined(resume, get_finance_employee, status)
+      Emailer.joined(resume, get_sysadmin_employee, status)
     end
   end
 
@@ -2306,12 +2306,12 @@ class ResumesController < ApplicationController
       to = gm_for_decision
     end
     recipients << ta_head if ta_head
-    Emailer.deliver_send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action)
+    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action)
   end
 
   def send_email_for_declining(interview)
     for emp in [ interview.employee, interview.req_match.requirement.employee, interview.req_match.resume.employee ]
-      Emailer.deliver_decline(get_current_employee,
+      Emailer.decline(get_current_employee,
                               emp,
                               interview)
     end

@@ -39,7 +39,7 @@
           </td>
           <td>
             <%= link_to "Add Feedback", "", onclick:"createFeedbackBox(event, '#{resume.id}', '#{req.name_for_js}');" %> |
-            <%= link_to "Decline", "#", onclick: "declineInterviewBox(event, #{i.id})" %>
+            <%= link_to "Decline", "", onclick: "declineInterviewBox(event, #{i.id})" %>
             <span class="float_right_with_10_padding" style="padding-bottom: 0px;">
               <%= get_view_feedback_icon(resume, 6) %>
             </span>

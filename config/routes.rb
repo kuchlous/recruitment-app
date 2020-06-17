@@ -90,6 +90,8 @@ Rails.application.routes.draw do
   match 'resumes/add_interviews',to: 'resumes#add_interviews'                                       , via: :post
   match 'resumes/feedback',to: 'resumes#feedback'      ,via: :post
   match 'resumes/show_resume_feedback',to: 'resumes#show_resume_feedback'      ,via: :post
+  match 'resumes/decline_interview',to: 'resumes#decline_interview'      ,via: :post
+  
 
 
 
