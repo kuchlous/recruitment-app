@@ -48,6 +48,7 @@ class RequirementsController < ApplicationController
   def create
     @requirement  = Requirement.new(params.require(:requirement).permit!)
     @requirement.posted_by = get_current_employee
+    @requirement.scheduling_employee_id = get_current_employee.id
     @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]
     @requirement.exp = params[:req][:min_exp] + "-" + params[:req][:max_exp]
     respond_to do |format|
