@@ -186,7 +186,6 @@ class RequirementsController < ApplicationController
     Group.all.each do |group|
       @req_analysis[group] = get_analysis_data(@smonth, @emonth, @year, group.name)
     end
-    render :partial => "requirements/req_analysis"#, :layout => !@partial
   end
 
   def get_analysis_data(start_month, end_month, year, group)
