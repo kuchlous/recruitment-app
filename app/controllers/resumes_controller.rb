@@ -465,7 +465,7 @@ class ResumesController < ApplicationController
   def find_offered_resumes
     offered_comments = Comment.all.find_all {|c| c.comment.include?("OFFERED") }
     sorted_offered_comments = offered_comments.sort_by { |c| [c.created_at] }
-    sorted_offered_comments.uniq_by { |c| c.resume }
+    sorted_offered_comments.uniq { |c| c.resume }
   end
 
   def joined
@@ -1060,7 +1060,7 @@ class ResumesController < ApplicationController
       next if interviews.nil? || interviews.size == 0
 
       # Sorted interviews by respective requirement
-      interviews.uniq_by { |r| r.req_match.requirement_id }
+      interviews.uniq { |r| r.req_match.requirement_id }
       interviews = interviews.sort { |x, y| x.req_match.requirement_id <=> y.req_match.requirement_id }
 
       # Creates the sheet with the date_month
@@ -1364,7 +1364,7 @@ class ResumesController < ApplicationController
                                                   c.created_at.month <= @emonth &&
                                                   c.created_at.year  == @year }
     @offered_comments = offered_comments.sort_by { |c| [c.created_at] }
-    @offered_comments.uniq_by { |c| c.resume }
+    @offered_comments.uniq { |c| c.resume }
 
     render "resumes/_show_quarterly_offered", :layout => false
   end
@@ -1386,7 +1386,7 @@ class ResumesController < ApplicationController
     @status           = params[:status]
     offered_comments  = Comment.all.find_all {|c| c.comment.include?(@status) }
     @offered_comments = offered_comments.sort_by { |c| [c.created_at] }
-    @offered_comments.uniq_by { |c| c.resume }
+    @offered_comments.uniq { |c| c.resume }
 
     render "resumes/_show_quarterly_offered", :layout => false
   end
