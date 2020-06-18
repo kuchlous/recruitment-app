@@ -1,9 +1,17 @@
 <br /> <br />
 <%= form_for(@resume, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => (display_var == 1 ? "update" : "create")), :html => {:method => (display_var == 1 ? "put" : "post"), :multipart => true }) do |f| %>
+  <% if @resume.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@resume.errors.count, "error") %> prohibited this resume from being saved:</h2>
+
+      <ul>
+      <% @resume.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
   <table id="resume_form_table">
-   <tr>
-      <td colspan="2"> <%#= f.error_messages %> </td>
-    </tr>
     <tr>
       <td> Name </td>
       <td> <%= f.text_field :name %> </td>

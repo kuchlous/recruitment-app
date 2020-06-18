@@ -16,8 +16,6 @@
   <%else%>
   <%  min_exp  = max_exp = status = req_type = sdate = edate = nop = ""%>
   <%end%>
-<!-- depreceted -->
-  <%#=f.error_messages %>
   <% if @requirement.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@requirement.errors.count, "error") %> prohibited this requirement from being saved:</h2>

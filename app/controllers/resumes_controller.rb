@@ -109,7 +109,6 @@ class ResumesController < ApplicationController
         email_for_upload(@resume)
 
         # If reqs are selected
-        # TODO fix this part for rails 5
         if (params[:requirement_name])
           Resume.create_reqs(@resume, params[:requirement_name], get_logged_employee, get_current_employee)
           flash_mesg = "You have successfully uploaded the resume and it has been forwarded to the owners of the requirements that you selected"
