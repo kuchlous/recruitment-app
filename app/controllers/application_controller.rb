@@ -324,7 +324,6 @@ require 'will_paginate/array'
   end
 
   def get_employee_referred_resumes(employee)
-    employee = Employee.first # Remove later
     resumes = Resume.where("referral_type = ? AND referral_id = ?", "EMPLOYEE", employee.id)
     resumes
   end

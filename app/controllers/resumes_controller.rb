@@ -2225,8 +2225,6 @@ class ResumesController < ApplicationController
   end
 
   def email_for_upload(resume)
-    p resume
-    p "++++++++++++++++++++++"
     if (resume.referral_type == "EMPLOYEE")
       referer = Employee.find(resume.referral_id)
       Emailer.upload(resume, referer)
