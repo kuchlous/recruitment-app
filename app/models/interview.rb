@@ -1,13 +1,13 @@
 class Interview < ActiveRecord::Base
-
-  belongs_to :requirement
+  #uncomment later
+  # belongs_to :requirement
   belongs_to :req_match
   belongs_to :employee
 
   validates_presence_of :employee_id
   validates_presence_of :interview_date
-
-  validates :overlapping_interviews, presence: true, on: :create
+  #uncomment later
+  #validates :overlapping_interviews, presence: true, on: :create
   validate :date_should_not_be_less_than_current_date
 
   def overlapping_interviews

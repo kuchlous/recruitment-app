@@ -43,8 +43,6 @@ class EmployeesController < ApplicationController
         if ENV["RAILS_ENV"] == "production"
           employee.logout()
         end
-        p params[:login]
-        p "+++++++++++++++"
         employee = Employee.find_by_login(params[:login].to_s)
         if (!employee)
           flash[:notice] = "Your name is not in the recruitment system.

@@ -1540,7 +1540,7 @@ class ResumesController < ApplicationController
       int_time  = params["time_slot#{i}".to_sym]
       int_date  = params["interview_date#{i}"]
       int_focus = params["interview_focus#{i}".to_sym]
-      i_time = Time.parse (int_date)
+      i_time = Time.zone.parse (int_date + " " + int_time)
       if emp_id
         interview = Interview.new(:employee_id    => emp_id,
                                   :interview_date => int_date,
@@ -1549,9 +1549,6 @@ class ResumesController < ApplicationController
                                   :itype          => int_type,
                                   :focus          => int_focus,
                                   :req_match_id   => match.id)
-        p i_time
-        p interview
-        p "+++++++++++++++++++++++++++++"
         is_save = interview.save
         if is_save
           # Making an .ics file. Not sure this is an good idea to create ics file here.
@@ -1568,9 +1565,9 @@ class ResumesController < ApplicationController
             # 60*60*5 + 1800 (Not sure this is good idea)
             original_interview_time   = interview.interview_time
             iso8601_start_format_time = original_interview_time - 19800
-            iso8601_start_format_time = iso8601_start_format_time.iso8601
+            iso8601_start_format_time = iso8601_start_format_time.iso8601.dup
             iso8601_end_format_time   = original_interview_time - 19800 + 3600   # Added 3600 seconds to extend time to two hours :). Will find a better idea over this weekend probably
-            iso8601_end_format_time   = iso8601_end_format_time.iso8601
+            iso8601_end_format_time   = iso8601_end_format_time.iso8601.dup
             # Start Time
             iso8601_start_format_time.gsub!("2000-01-01", interview.interview_date.to_s)
             iso8601_start_format_time.gsub!(/[:-]/, "")
