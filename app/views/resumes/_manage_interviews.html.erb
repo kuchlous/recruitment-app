@@ -29,7 +29,7 @@
              <%= text_area_tag            "interview_focus#{index}", i.focus, :class => "focus_textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');",
                                                                                                           :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');" %>
              <%= link_to "Delete", :action => "delete_interview", :id => i.id %> |
-             <%= link_to_function "Update", "changeInterview(#{i.id}, #{index});" %>
+             <%= link_to "Update", "", :onClick=> "changeInterview(#{i.id}, #{index});" %>
            </td>
          </tr>
          <% index = index + 1 %>

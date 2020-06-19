@@ -17,7 +17,7 @@
           <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
         </td>
         <td>
-          <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+          <%= link_to print_date(resume.joining_date), "", :onClick=>"showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
         </td>
       </tr>
     <% end %>
@@ -49,7 +49,7 @@
           <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
         </td>
         <td>
-          <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+          <%= link_to print_date(resume.joining_date), "", :onClick=> "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
         </td>
       </tr>
     <% end %>

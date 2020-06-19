@@ -33,7 +33,7 @@
         </td>
         <% if join_display == 1 %>
           <td>
-            <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+            <%= link_to print_date(resume.joining_date), "", :onClick=> "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
           </td>
         <% elsif offer_display == 1 %>
           <td>
