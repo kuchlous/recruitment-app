@@ -157,7 +157,7 @@ class ResumesController < ApplicationController
       flash[:notice]  = "You have successfully updated details of #{@resume.name}"
       redirect_to :action => "show", :id => @resume.uniqid.name
     else
-      @resume.errors.each_full { |mesg|
+      @resume.errors.full_messages { |mesg|
         logger.info(mesg)
       }
       render :action => "edit"
@@ -1754,7 +1754,6 @@ class ResumesController < ApplicationController
 
     # After rendering this we do not need to create an js file for add_interview_status_to_req_matches
     # (add_interview_status_to_req_matches.js)
-    render "resume_action.js"
   end
 
   ####################################################################################################

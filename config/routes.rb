@@ -2,9 +2,9 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
   # resources :resumes
-  match 'login', to: 'employees#login'                                        , via: :post
-  match 'logout', to: 'employees#logout'                                      , via: :get
-  match 'requirements/my_requirements', to: 'requirements#my_requirements'    , via: :get
+  match 'login', to: 'employees#login'                                         , via: :post
+  match 'logout', to: 'employees#logout'                                       , via: :get
+  match 'requirements/my_requirements', to: 'requirements#my_requirements'     , via: :get
   match 'requirements/req_analysis', to: 'requirements#req_analysis'           , via: :get
   match 'requirements/all_reqs', to: 'requirements#all_reqs'                   , via: :get
   match 'requirements/search', to: 'requirements#search'                       , via: :post
@@ -28,21 +28,18 @@ Rails.application.routes.draw do
   match 'resumes/resume_action',to: 'resumes#resume_action'         , via: :post
   match 'resumes/eng_select',to: 'resumes#eng_select'               , via: :get
   match 'resumes/hac',to: 'resumes#hac'                             , via: :get
-  match 'resumes/send_for_eng_decision',to: 'resumes#send_for_eng_decision'                             , via: :post
-  match 'resumes/send_for_decision',to: 'resumes#send_for_decision'                             , via: :post
-  match 'resumes/manager_eng_select',to: 'resumes#manager_eng_select'                             , via: :get
-  match 'resumes/manager_hac',to: 'resumes#manager_hac'                             , via: :get
-
-
-
+  match 'resumes/send_for_eng_decision',to:'resumes#send_for_eng_decision'   , via: :post
+  match 'resumes/send_for_decision',to: 'resumes#send_for_decision'          , via: :post
+  match 'resumes/manager_eng_select',to: 'resumes#manager_eng_select'        , via: :get
+  match 'resumes/manager_hac',to: 'resumes#manager_hac'                      , via: :get
   match 'resumes/manage_interviews',to: 'resumes#manage_interviews'          , via: :post
   match 'resumes/show_resume_comments',to: 'resumes#show_resume_comments'    , via: :post
   match 'resumes/export_as_xls',to: 'resumes#export_as_xls'                  , via: :get
   match 'resumes/export_interviews',to: 'resumes#export_interviews'          , via: :get
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates' , via: :get
-  match 'employees/list_my_employees',to: 'employees#list_my_employees' , via: :get
-  match 'employees/change_to',to: 'employees#change_to'                 , via: :get
-  match 'resumes/export_as_xls_requirement',to: 'resumes#export_as_xls_requirement'                                                                    , via: :get
+  match 'employees/list_my_employees',to: 'employees#list_my_employees'          , via: :get
+  match 'employees/change_to',to: 'employees#change_to'                          , via: :get
+  match'resumesexport_as_xls_requirement',to:'resumes#export_as_xls_requirement' , via: :get
   match 'resumes/export_as_xls_requirement_for_shortlisted',to: 'resumes#export_as_xls_requirement_for_shortlisted', via: :get
   match 'resumes/export_as_xls_requirement_for_forwards',to: 'resumes#export_as_xls_requirement_for_forwards'      , via: :get
   match 'resumes/export_as_xls_requirement_for_offered',to: 'resumes#export_as_xls_requirement_for_offered'        , via: :get 
@@ -71,13 +68,13 @@ Rails.application.routes.draw do
   match 'resumes/manager_index',to: 'resumes#manager_index'                 , via: :get
   match 'resumes/manager_shortlisted',to: 'resumes#manager_shortlisted'     , via: :get
   match 'resumes/manager_rejected',to: 'resumes#manager_rejected'           , via: :get
-  match 'resumes/manager_interviews_status',to: 'resumes#manager_interviews_status'           , via: :get
+  match 'resumes/manager_interviews_status',to: 'resumes#manager_interviews_status'   , via: :get
   match 'resumes/interview_calendar',to: 'resumes#interview_calendar'       , via: :get
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get 
   match 'resumes/my_resumes',to: 'resumes#my_resumes'                       , via: :get
   match 'resumes/recent',to: 'resumes#recent'                               , via: :get
-  match 'resumes/find_resume_in_given_date',to: 'resumes#find_resume_in_given_date'           , via: :get
-  match 'resumes/upload_xls',to: 'resumes#upload_xls'                       , via: :get
+  match 'resumes/find_resume_in_given_date',to: 'resumes#find_resume_in_given_date'   , via: :get
+  match 'resumes/upload_xls',to: 'resumes#upload_xls'                                 , via: :get
   match 'resumes/update_resume_likely_to_join',to: 'resumes#update_resume_likely_to_join'     , via: :get
   match 'resumes/process_xls_and_zipped_resumes',to: 'resumes#process_xls_and_zipped_resumes' , via: :get
   match 'resumes/close_requirement',to: 'resumes#close_requirement'                           , via: :get
@@ -85,17 +82,14 @@ Rails.application.routes.draw do
   match 'resumes/yto',to: 'resumes#yto'                                                       , via: :get
   match 'resumes/manager_yto',to: 'resumes#manager_yto'                                       , via: :get
   match 'resumes/move_to_future',to: 'resumes#move_to_future'                                       , via: :post
-  match 'resumes/reject_all_forwards_req_matches',to: 'resumes#reject_all_forwards_req_matches'                                       , via: :post
-  match 'resumes/mark_active',to: 'resumes#mark_active'                                       , via: :post
-  match 'resumes/add_interviews',to: 'resumes#add_interviews'                                       , via: :post
-  match 'resumes/feedback',to: 'resumes#feedback'      ,via: :post
-  match 'resumes/show_resume_feedback',to: 'resumes#show_resume_feedback'      ,via: :post
-  match 'resumes/decline_interview',to: 'resumes#decline_interview'      ,via: :post
-  
-
-
-
-
+  match 'resumes/reject_all_forwards_req_matches',to:'resumes#reject_all_forwards_req_matches' , via: :post
+  match 'resumes/mark_active',to: 'resumes#mark_active'                    , via: :post
+  match 'resumes/add_interviews',to: 'resumes#add_interviews'              ,via: :post
+  match 'resumes/feedback',to: 'resumes#feedback'                          ,via: :post
+  match 'resumes/show_resume_feedback',to: 'resumes#show_resume_feedback'  ,via: :post
+  match 'resumes/decline_interview',to: 'resumes#decline_interview'        ,via: :post
+  match 'resumes/add_manual_status_to_resume',to: 'resumes#add_manual_status_to_resume'  ,via: :post
+ 
  resources :employees
  resources :resumes
  resources :portals
