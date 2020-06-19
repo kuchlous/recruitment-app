@@ -50,10 +50,10 @@
             <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
           </td>
           <td>
-            <%= link_to_function print_date(resume.joining_date), "showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+            <%= link_to print_date(resume.joining_date), "", :onClick=>"showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
           </td>
           <td id=<%= "likely-to-join-" + resume.id.to_s %> >
-            <%= link_to_function image_tag("#{get_image_name(resume)}_Image.png", :size => "20x20"), "showAllImagesForLikelyToJoin(event," + resume.id.to_s + ")" %>
+            <%= link_to image_tag("#{get_image_name(resume)}_Image.png", :size => "20x20"), "", :onClick=>"showAllImagesForLikelyToJoin(event," + resume.id.to_s + ")" %>
           </td>
           <td class="hidden_by_default">
             <% joining_date = ""
