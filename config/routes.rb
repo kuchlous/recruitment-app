@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates' , via: :get
   match 'employees/list_my_employees',to: 'employees#list_my_employees'          , via: :get
   match 'employees/change_to',to: 'employees#change_to'                          , via: :get
-  match'resumesexport_as_xls_requirement',to:'resumes#export_as_xls_requirement' , via: :get
+  match 'resumes/export_as_xls_requirement',to:'resumes#export_as_xls_requirement' , via: :get
   match 'resumes/export_as_xls_requirement_for_shortlisted',to: 'resumes#export_as_xls_requirement_for_shortlisted', via: :get
   match 'resumes/export_as_xls_requirement_for_forwards',to: 'resumes#export_as_xls_requirement_for_forwards'      , via: :get
   match 'resumes/export_as_xls_requirement_for_offered',to: 'resumes#export_as_xls_requirement_for_offered'        , via: :get 
