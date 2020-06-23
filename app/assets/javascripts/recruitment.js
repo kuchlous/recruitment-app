@@ -675,7 +675,7 @@ function hideReferrals()
 function actionBox(value, event, req_id_array, req_name_array, req_match_id, resume_id)
 {
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
   if ( value == "Add Comment" )
   {
     // Show the add comment box
@@ -748,13 +748,13 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
   }
 
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
 
   var selValue = new Array;
 
   // Finds the multiple drop down list
   // First find the table and then selects and then first select
-  table   = cur_element.up().up();
+  table   = cur_element.parent().parent();
   selects = table.getElementsByTagName('select');
   var status_selected_elem = selects[0];
 
@@ -1338,7 +1338,7 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
   var join_align_var = 0;
 
   // Creates the ajax row under the current element
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1410,7 +1410,7 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
      }
   );
   elements[0].appendChild(element);
-  containing_tr.insert({'after': elements[1]});
+  containing_tr.after(elements[1]);
 }
 
 // Close Box link
@@ -1548,21 +1548,21 @@ function replyToBox(event, message, parent_message, message_id)
 
 // Function used to create extra row after the current row.
 // Wherever the mouse is clicked, the row will be created just after it
-function createRow()
+function createRow(cur_element)
 {
-  old_tr              = $("ajax_request_tr");
+  old_tr              = document.getElementById("ajax_request_tr");
   if (old_tr)
   {
     old_tr.remove();
   }
-  containing_tr       = cur_element.up('tr');
-  num_tds             = containing_tr.childElements().length;
+  containing_tr       = cur_element.parentNode.parentNode;
+  num_tds             = containing_tr.children.length;
   var trElement       = document.createElement("tr");
   trElement.id        = "ajax_request_tr";
   var tdElement       = document.createElement("td");
   tdElement.colSpan   = num_tds;
   trElement.appendChild(tdElement);
-  containing_tr.insert({'after': trElement});
+  containing_tr.after(trElement);
 
   // Way to return the multiple values in javascript
   return [ tdElement, trElement, num_tds, containing_tr ];
