@@ -1022,7 +1022,7 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/add_interview_status_to_req_matches?resume_id=" + resume_id + "&" + req_match_id_or_req_id + "=" + req_match_id,
         { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + $F('comment_textarea'),
+          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val(),
           onSuccess: function(transport)
           {
             value = "Status";
@@ -1073,7 +1073,7 @@ function showEditJoiningBox(event, resume_id, req_match_id)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/update_joining?resume_id=" + resume_id + "&req_match_id=" + req_match_id,
         { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + encodeURIComponent($F('comment_textarea')) + '&resume[joining_date]=' + $F('joining_date') + '&resume[status]=' + $F('resume_status'),
+          parameters: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + '&resume[joining_date]=' + jQuery('#joining_date').val() + '&resume[status]=' + jQuery('#resume_status').val(),
           onSuccess: function(transport)
           {
             value = "Action Taken"
@@ -1116,7 +1116,7 @@ function declineInterviewBox(event, interview_id)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/decline_interview?interview_id=" + interview_id,
         { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + $F('comment_textarea'),
+          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val(),
           onSuccess: function(transport)
           {
             value = "Declined";
@@ -1166,7 +1166,7 @@ function showMessageBox(cur_element, resume_id)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/add_message?resume_id=" + resume_id + "&counter_value=0" + "&req_match=0",
         { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + $F('comment_textarea') + "&employee_id=" + $F('message_emp_name'),
+          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val() + "&employee_id=" + jQuery('#message_emp_name').val(),
           onSuccess: function(transport)
           {
             value = "Message";
@@ -1379,8 +1379,8 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
       // PROS: Helps in removing redundant code
       if ( value == "Joining" )
       {
-        params = '&joining_date=' + $F('joining_date');
-        if (!$F('joining_date') )
+        params = '&joining_date=' + jQuery('#joining_date').val();
+        if (!jQuery('#joining_date').val() )
         {
           alert("Please select joining date first");
           document.getElementById("loader").style.display="none";
@@ -1392,7 +1392,7 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
         params = "";
       }
       jQuery.ajax({url: prepend_with_image_path + "/resumes/resume_action?" + req_match_id_or_req_id + "=" + ids + "&status=" + value + "&resume_id=" + resume_id + url_params, 
-      data: 'resume[comment]=' + encodeURIComponent($F('comment_textarea')) + params,
+      data: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + params,
       type: 'POST',
       success: function(result){
         document.getElementById("loader").style.display="none";
@@ -1791,10 +1791,10 @@ function closeShowCommentsBox(elementId)
 
 function changeInterview(interview_id, index)
 {
-  emp_id    = $F("interview_employee_name" + index);
-  int_time  = $F("time_slot" + index);
-  int_date  = $F("interview_date" + index);
-  int_focus = encodeURIComponent($F("interview_focus" + index));
+  emp_id    = jQuery("#interview_employee_name" + index).val();
+  int_time  = jQuery("#time_slot" + index).val();
+  int_date  = jQuery("#interview_date" + index).val();
+  int_focus = encodeURIComponent(jQuery("#interview_focus" + index).val());
 
   // Creates Ajax request to update interview
   new Ajax.Request( prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus,
@@ -1871,12 +1871,12 @@ function showManualStatusBox(event, resume_id)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/add_manual_status_to_resume?resume_id=" + resume_id,
         { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + $F('comment_textarea'),
+          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val(),
           onSuccess: function(transport)
           {
             value = "Manual Status";
             value = findProperValueToBeDisplayed(value);
-            var textbox_value = $F('comment_textarea');
+            var textbox_value = jQuery('#comment_textarea').val();
             deleteAndCreateTDAfterAction(elements[2], value);
             changeCurrentRowColor(elements[3]);
             cur_element.innerHTML = textbox_value;
