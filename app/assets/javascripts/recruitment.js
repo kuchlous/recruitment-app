@@ -222,7 +222,7 @@ function showSecondaryActions(elementId)
 function textBoxContentsOnFocus(id, elementType)
 {
   var textBoxText;
-  var theElement = $(id);
+  var theElement = document.getElementById(id);
   textBoxText = elementType;
   if ( theElement.value == textBoxText )
   { 
@@ -236,7 +236,7 @@ function textBoxContentsOnFocus(id, elementType)
 function textBoxContentsOnBlur(id, elementType)
 {
   var textBoxText;
-  var theElement = $(id);
+  var theElement = document.getElementById(id);
   textBoxText = elementType;
   if (theElement.value == '') 
   { 
@@ -1383,6 +1383,7 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
         if (!$F('joining_date') )
         {
           alert("Please select joining date first");
+          document.getElementById("loader").style.display="none";
           return false;
         }
       }
