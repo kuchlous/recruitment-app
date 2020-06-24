@@ -496,7 +496,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
         if ( total_interview_num == 0)
         {
           // Delete ajax div here
-          table.up().up().remove();
+          table.parentNode.parentNode.remove();
         }
       }
     );
@@ -1481,7 +1481,7 @@ function replyToBox(event, message, parent_message, message_id)
     { asynchronous:true, evalScripts:true,
       onSuccess: function(transport)
       {
-        cur_element.up().style.fontWeight = "normal";
+        cur_element.parentNode.style.fontWeight = "normal";
       },
       onFailure: function(transport)
       {
