@@ -18,7 +18,7 @@ function loadInitialContext()
      prepend_with_image_path = "/new-recruit";
      //prepend_with_image_path = "";
   }
-  element = $("login");
+  element = document.getElementById("login");
   if ( element )
   {
     element.focus();
@@ -81,7 +81,7 @@ function deleteAndCreateTDAfterAction(num_tds, value)
   cell.className = "cell_after_changing_status";
 
   // Removing the row.
-  $("ajax_request_tr").remove();
+  document.getElementById("ajax_request_tr").remove();
 }
 
 // Function used to change color of the current row(action taken row)
@@ -192,8 +192,8 @@ function showSecondaryActions(elementId)
   {
     elementIdToChange = primaryActionIds[i] + "_actions";
     linkElementIdToChange = primaryActionIds[i];
-    element = $(elementIdToChange);
-    linkElement = $(linkElementIdToChange);
+    element = document.getElementById(elementIdToChange);
+    linkElement = document.getElementById(linkElementIdToChange);
     if ( primaryActionIds[i] == elementId )
     {
       if (element.style.visibility != "visible")
@@ -270,7 +270,7 @@ function initAlertFunction()
   var enableFade  = "no";
   var autoHideBox = ["no", 5];
   // Get the handler for the popup element
-  var popupElement = $ ? $("alert_box") : document.all["alert_box"];
+  var popupElement = $ ? document.getElementById("alert_box") : document.all["alert_box"];
   var positionVar  = 0;
   setTimeout(function(){displayFadeinBox(enableFade, autoHideBox, popupElement, positionVar)}, 100);
 }
@@ -303,7 +303,7 @@ function displayFadeinBox(mFade, mAutohide, mElement, positionVar)
     mElement.filters[0].Play();
   }
   mElement.style.visibility = "visible";
-  $("background_shader").style.visibility = "visible";
+  document.getElementById("background_shader").style.visibility = "visible";
   if (mElement.style.MozOpacity)
   {
     if (mFade == "yes")
@@ -369,7 +369,7 @@ function FadeEffect(element)
 // Normally using it for closing the div opened by flash[:notice]
 function closeBox(elementId)
 {
-  var mElement = $(elementId);
+  var mElement = document.getElementById(elementId);
   hideBox(mElement);
 }
 
@@ -377,13 +377,13 @@ function closeBox(elementId)
 function hideBox(mElement)
 {
   mElement.style.visibility = "hidden";
-  $("background_shader").style.visibility = "hidden";
+  document.getElementById("background_shader").style.visibility = "hidden";
 }
 
 // Show the div
 function showDiv(id)
 {
-  $(id).style.display = 'block';
+  document.getElementById(id).style.display = 'block';
 }
 
 // Adding interview schedule rows
@@ -399,10 +399,10 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     total_interview_num = existing_interview_num;
     total_interview_num_bkup = total_interview_num;
   }
-  var error_message_div = $("error_messages_div");
+  var error_message_div = document.getElementById("error_messages_div");
   if ( total_interview_num < 5 )
   {
-    var table          = $("manage_interviews_table");
+    var table          = document.getElementById("manage_interviews_table");
     var row            = table.insertRow(total_interview_num + 2);
     row.className      = "float_right";
     var cell           = row.insertCell(0);
@@ -428,7 +428,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     jQuery(element3).bind( "click",
       function(element3)
       {
-        new CalendarDateSelect( $(this).previous(), {year_range:[2018, 2020]} );
+        new CalendarDateSelect( document.getElementById(this).previous(), {year_range:[2018, 2020]} );
       }
     );
     cell.appendChild(element3);
@@ -482,7 +482,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
         {
           for ( j = 0; j < elements_ids.length; j++)
           {
-            var element = $(elements_ids[j] + i);
+            var element = document.getElementById(elements_ids[j] + i);
             if ( element )
             {
               new_row_number = i - 1;
@@ -492,7 +492,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
           }
         }
         // Hides the error message div if already displayed
-        $("error_messages_div").style.visibility = "hidden";
+        document.getElementById("error_messages_div").style.visibility = "hidden";
         if ( total_interview_num == 0)
         {
           // Delete ajax div here
@@ -594,7 +594,7 @@ function showGroupRequirements(id_array, name_array)
   new_td.appendChild(element);
 
   // Deletes and replaces the innerHTML of existing multiple ddl
-  var tr_element = $("swap_ddl_with_multiples");
+  var tr_element = document.getElementById("swap_ddl_with_multiples");
   var ref_td     = tr_element.getElementsByTagName("td").item(2);
   tr_element.deleteCell(1);
   tr_element.insertBefore(new_td, ref_td);
@@ -603,7 +603,7 @@ function showGroupRequirements(id_array, name_array)
 // Select all values of drop down list if clicked on "select all reqs" ( Used on page load )
 function selectAllValuesOfDropDownListAtStart()
 {
-  select_element = $("requirement_name");
+  select_element = document.getElementById("requirement_name");
   selected_index = select_element.options[select_element.selectedIndex].value;
   if ( selected_index == "Select all reqs" )
   {
@@ -614,7 +614,7 @@ function selectAllValuesOfDropDownListAtStart()
 // Select all values of drop down list if clicked on "select all reqs" ( Used after page loading )
 function selectAllValuesOfDropDownList()
 {
-  select_element = $("requirement_name");
+  select_element = document.getElementById("requirement_name");
   for ( i = 0; i < select_element.options.length; i++ )
   {
     select_element.options[i].selected = true;
@@ -656,7 +656,7 @@ function showReferrals(id_array, name_array, add_status_var)
   link.appendChild(text_node);
   new_td.appendChild(link);
 
-  var tr_element = $("swap_td_for_referrals");
+  var tr_element = document.getElementById("swap_td_for_referrals");
   tr_element.style.visibility = "visible";
   var ref_td     = tr_element.getElementsByTagName("td").item(2);
   tr_element.deleteCell(1);
@@ -666,7 +666,7 @@ function showReferrals(id_array, name_array, add_status_var)
 // Removing links and drop down list for referrals in case we use the DIRECT referral type
 function hideReferrals()
 {
-  var tr_element = $("swap_td_for_referrals");
+  var tr_element = document.getElementById("swap_td_for_referrals");
   tr_element.style.visibility = "hidden";
 }
 
@@ -877,7 +877,7 @@ function getInterviews(cur_element, req_match_id)
 function markJoining(match_id, resume_id, event)
 {
   // Finds joining date from the input box
-  joining_date = $("resume_joining_date" + match_id).value;
+  joining_date = document.getElementById("resume_joining_date" + match_id).value;
   if ( !joining_date )
   {
     alert("Please select joining date");
@@ -946,7 +946,7 @@ function getJoiningDateBox(div_element)
   jQuery(image_element).bind("click",
     function(image_element)
     {
-      new CalendarDateSelect( $(this).previous(), {year_range:[2018, 2020]} );
+      new CalendarDateSelect( document.getElementById(this).previous(), {year_range:[2018, 2020]} );
     }
   );
   div_element.appendChild(image_element);
@@ -1439,7 +1439,7 @@ function closeBoxLink(element)
 // show comments and show feedbacks
 function deleteAjaxRequestTr(element)
 {
-  $(element).remove();
+  document.getElementById(element).remove();
   total_interview_num = total_interview_num_bkup;
   index = 0;
 }
@@ -1707,7 +1707,7 @@ function HideContent(d)
   {
     return;
   }
-  div_element = $("resume" + d);
+  div_element = document.getElementById("resume" + d);
   document.body.removeChild(div_element);
 }
 // ================Pop Up Brief Descriptions END===============
@@ -1778,7 +1778,7 @@ function createFeedbackBox(event, resumeId, req_name)
 
 function closeShowCommentsBox(elementId)
 { 
-  var elem = $(elementId);
+  var elem = document.getElementById(elementId);
   elem.hide();
   if ( elem.hasChildNodes() )
   {     
