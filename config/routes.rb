@@ -89,6 +89,7 @@ Rails.application.routes.draw do
   match 'resumes/show_resume_feedback',to: 'resumes#show_resume_feedback'  ,via: :post
   match 'resumes/decline_interview',to: 'resumes#decline_interview'        ,via: :post
   match 'resumes/add_manual_status_to_resume',to: 'resumes#add_manual_status_to_resume'  ,via: :post
+  match 'resumes/create_multiple_forwards',to: 'resumes#create_multiple_forwards'  ,via: :post
  
  resources :employees
  resources :resumes

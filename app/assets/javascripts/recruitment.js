@@ -754,7 +754,7 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
 
   // Finds the multiple drop down list
   // First find the table and then selects and then first select
-  table   = cur_element.parent().parent();
+  table   = cur_element.parentNode.parentNode;
   selects = table.getElementsByTagName('select');
   var status_selected_elem = selects[0];
 
@@ -838,7 +838,7 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
     else
     {
       // Creates the ajax row under the current element to display that you should have selected at least one requirement
-      var elements = createRow();
+      var elements = createRow(cur_element);
 
       // Close box link
       closeBoxLink(elements[0]);
@@ -860,7 +860,7 @@ function getInterviews(cur_element, req_match_id)
   setFormAction("add_interviews");
 
   // Create "ajax_reuest_tr" Row
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
@@ -1005,7 +1005,7 @@ function showAddCommentBox(cur_element, resume_id)
 function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_req_id)
 {
   // Create "ajax_request_tr" row
-  var elements = createRow();
+  var elements = createRow(cur_element);
   
   // Close box link
   closeBoxLink(elements[0]);
@@ -1044,10 +1044,10 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
 function showEditJoiningBox(event, resume_id, req_match_id)
 {
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
 
   // Create "ajax_request_tr" row
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1096,10 +1096,10 @@ function declineInterviewBox(event, interview_id)
 {
   event.preventDefault();
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
   
   // Create "ajax_request_tr" row
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1137,7 +1137,7 @@ function declineInterviewBox(event, interview_id)
 
 function showMessageBoxAtTop(event, resume_id)
 {
-  cur_element = Event.element(event);
+  cur_element = event.target;
   showMessageBox(cur_element, resume_id);
 }
 
@@ -1146,7 +1146,7 @@ function showMessageBoxAtTop(event, resume_id)
 function showMessageBox(cur_element, resume_id)
 {
   // Create "ajax_request_tr" row
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1191,7 +1191,7 @@ function showMessageBox(cur_element, resume_id)
 function AddCommentBox(event, resume_id)
 {
   event.preventDefault();
-  cur_element = Event.element(event);
+  cur_element = event.target;
   showAddCommentBox(cur_element, resume_id);
 }
 
@@ -1199,7 +1199,7 @@ function AddCommentBox(event, resume_id)
 function RejectBox(event, resume_id, action)
 {
   event.preventDefault();
-  cur_element  = Event.element(event);
+  cur_element  = event.target;
   req_match_id = 0;
   createAjaxRequest(cur_element, req_match_id, action, resume_id, "req_match_id", 0);
 }
@@ -1207,7 +1207,7 @@ function RejectBox(event, resume_id, action)
 // Function used to display the forward box under current row
 function ForwardBox(event, req_names, req_ids, resume_id)
 {
-  cur_element = Event.element(event);
+  cur_element = event.target;
   showForwardBox(cur_element, req_names, req_ids, resume_id);
 }
 // =========Functions used for new_resumes page END========
@@ -1223,7 +1223,7 @@ function showActionBoxReqMatchInternal(cur_element, req_match_id, action, req_ma
 function showForwardBox(cur_element, req_names, req_ids, resume_id)
 {
   // Creates the ajax row under the current element
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1473,7 +1473,7 @@ function createTextAreaElement(element, value)
 function replyToBox(event, message, parent_message, message_id)
 {
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
 
   // Ajax request to set is_read of message to false
   new Ajax.Request(prepend_with_image_path + "/resumes/set_is_read?" + "message_id=" + message_id,
@@ -1491,7 +1491,7 @@ function replyToBox(event, message, parent_message, message_id)
   // Setting form action
   setFormAction("reply_message");
 
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1718,10 +1718,10 @@ function viewCommentsFeedback(event, resume_id, action, cols)
   // TODO: We can removed this event(line) from this and next function as well as we do not need them anymore.
 
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
 
   // Create "ajax_reuest_tr" Row
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
@@ -1741,10 +1741,10 @@ function createFeedbackBox(event, resumeId, req_name)
   setFormAction("feedback");
 
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
 
   // Creating row (ajax_request_tr)
-  var elements = createRow();
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements[0]);
@@ -1828,7 +1828,7 @@ function showHide(elem)
 function replaceTDvalue(event, whichTD, value)
 {
   // Finding element where mouse(which td/tr) is clicked
-  cur_element   = Event.element(event);
+  cur_element   = event.target;
   containing_tr = cur_element.up('tr');
   num_tds       = containing_tr.childElements().length;
   // Replacing the last TD after finding the num_tds
@@ -1850,10 +1850,10 @@ function showManualStatusBox(event, resume_id)
   event.preventDefault();
 
   // Finding element where mouse(which td/tr) is clicked
-  cur_element = Event.element(event);
+  cur_element = event.target;
 
   // Create "ajax_request_tr" row
-  var elements = createRow();
+  var elements = createRow(cur_element);
   
   // Close box link
   closeBoxLink(elements[0]);

@@ -666,7 +666,7 @@ class ResumesController < ApplicationController
     # Adding Comments 
     resume.add_resume_comment("NOT ACCEPTED: Candidate did not accept our offer.", "INTERNAL", get_current_employee)
     flash[:notice] = "You have succesfully marked #{resume.name} as not accepted"
-    render :nothing => true
+    render body: nil
   end
 
   ###################################################################################################
@@ -697,7 +697,7 @@ class ResumesController < ApplicationController
 
     email_for_joined(resume, status)
 
-    render :nothing => true
+    render body: nil
   end
 
   ####################################################################################################
@@ -861,7 +861,7 @@ class ResumesController < ApplicationController
     # Sending mail
     send_email_for_declining(interview)
 
-    render :nothing => true
+    render body: nil
   end
 
   ####################################################################################################
@@ -890,7 +890,7 @@ class ResumesController < ApplicationController
     # Adding Comments 
     resume.add_resume_comment(comment, "INTERNAL", get_current_employee)
     flash[:notice] = mesg
-    render :nothing => true
+    render body: nil
   end
 
   ####################################################################################################
@@ -909,7 +909,7 @@ class ResumesController < ApplicationController
       mesg = Resume.create_reqs(resume, req_ids, get_logged_employee, get_current_employee)
       flash[:notice] = mesg
     end
-    render :nothing => true
+    render body: nil
   end
 
   ####################################################################################################
@@ -1809,7 +1809,7 @@ class ResumesController < ApplicationController
     # respond_to do |format|
     #   format.json { :json => resume.likely_to_join }
     # end
-    render :nothing => true
+    render body: nil
   end
 
   private
