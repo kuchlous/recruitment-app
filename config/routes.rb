@@ -90,6 +90,7 @@ Rails.application.routes.draw do
   match 'resumes/decline_interview',to: 'resumes#decline_interview'        ,via: :post
   match 'resumes/add_manual_status_to_resume',to: 'resumes#add_manual_status_to_resume'  ,via: :post
   match 'resumes/create_multiple_forwards',to: 'resumes#create_multiple_forwards'  ,via: :post
+  match 'resumes/add_message',to: 'resumes#add_message'  ,via: :post
  
  resources :employees
  resources :resumes
