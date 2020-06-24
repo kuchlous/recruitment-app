@@ -425,7 +425,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     element3.style.paddingLeft = "5px";
 
     // Onclick event for image.(Poping up calendar)
-    Event.observe(element3, "click",
+    jQuery(element3).bind( "click",
       function(element3)
       {
         new CalendarDateSelect( $(this).previous(), {year_range:[2018, 2020]} );
@@ -448,14 +448,14 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     textarea.style.paddingBottom = "4px";
 
     // On focus prototype function
-    Event.observe(textarea, "focus",
+    jQuery(textarea).bind("focus",
       function(textarea)
       {
         textBoxContentsOnFocus(this.id, 'Enter focus');
       }
     );
     // On blur prototype function
-    Event.observe(textarea, "blur",
+    jQuery(textarea).bind("blur",
       function(textarea)
       {
         textBoxContentsOnBlur(this.id, 'Enter focus');
@@ -469,7 +469,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     link_element.style.cursor = "pointer";
 
     // Onclick event for link. Removing the row here.
-    Event.observe(link_element, "click",
+    jQuery(link_element).bind("click",
       function(link_element)
       {
         total_interview_num = total_interview_num - 1;
@@ -583,7 +583,7 @@ function showGroupRequirements(id_array, name_array)
     // Select all requirements if clicked on "select all reqs"
     if ( i == 0)
     {
-      Event.observe(optElement, "click",
+      jQuery(optElement).bind("click",
         function(optElement)
         {
           selectAllValuesOfDropDownList();
@@ -943,7 +943,7 @@ function getJoiningDateBox(div_element)
   image_element.src  = prepend_with_image_path + "/images/calendar_date_select/calendar.gif";
   image_element.className    = "joining_date_image";
   image_element.style.cursor = "pointer";
-  Event.observe(image_element, "click",
+  jQuery(image_element).bind("click",
     function(image_element)
     {
       new CalendarDateSelect( $(this).previous(), {year_range:[2018, 2020]} );
@@ -967,7 +967,7 @@ function getAutoCompleteTextBox(tdElement)
   txtElement.setAttribute("autocomplete", "off");
 
   // Change color on Onfocus of autocomplete input box
-  Event.observe(txtElement, "focus",
+  jQuery(txtElement).bind("focus",
     function(txtElement)
     {
       textBoxContentsOnFocus(this.id, 'Enter employee name');
@@ -975,7 +975,7 @@ function getAutoCompleteTextBox(tdElement)
   );
 
   // Change color on Onblur of autocomplete input box
-  Event.observe(txtElement, "blur",
+   jQuery(txtElement).bind("blur",
     function(txtElement)
     {
       textBoxContentsOnBlur(this.id, 'Enter employee name');
@@ -1017,7 +1017,7 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
   var element   = imageForGoIcon(-22, 70);
 
   // Onclick ajax request to add status to req_matches
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/add_interview_status_to_req_matches?resume_id=" + resume_id + "&" + req_match_id_or_req_id + "=" + req_match_id,
@@ -1068,7 +1068,7 @@ function showEditJoiningBox(event, resume_id, req_match_id)
   var element   = imageForGoIcon(10, 70);
 
   // Onclick ajax request to add status to req_matches
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/update_joining?resume_id=" + resume_id + "&req_match_id=" + req_match_id,
@@ -1111,7 +1111,7 @@ function declineInterviewBox(event, interview_id)
   var element   = imageForGoIcon(-22, 70);
 
   // Onclick ajax request to add status to req_matches
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/decline_interview?interview_id=" + interview_id,
@@ -1161,7 +1161,7 @@ function showMessageBox(cur_element, resume_id)
   var element   = imageForGoIcon(10, 70);
 
   // Onclick ajax request to send message
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/add_message?resume_id=" + resume_id + "&counter_value=0" + "&req_match=0",
@@ -1261,7 +1261,7 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
   img_element.style.paddingBottom = "10px";
 
   var req_details = document.getElementsByName("req_names[]");
-  Event.observe(link_element, "click",
+  jQuery(link_element).bind("click",
     function(img_element)
     {
       var selected_req_array   = new Array();
@@ -1361,7 +1361,7 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
   ids = req_match_id;
 
   // Onclick method for the image
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       document.getElementById("loader").style.display="flex";
@@ -1424,7 +1424,7 @@ function closeBoxLink(element)
   var img_element   = imageforCrossIcon();
 
   // Onclick event for img_element
-  Event.observe(img_element, "click",
+  jQuery(img_element).bind("click",
     function(img_element)
     {
       element.remove();
@@ -1455,13 +1455,13 @@ function createTextAreaElement(element, value)
 //  textarea.style.clear = "both";
 //  textarea.style.cssFloat = "left";
   textarea.rows           = "6";
-  Event.observe(textarea, "focus",
+  jQuery(textarea).bind("focus",
     function(textarea)
     {
       textBoxContentsOnFocus(this.id, 'Enter your comment and click on arrow to ' + value.toLowerCase());
     }
   );
-  Event.observe(textarea, "blur",
+  jQuery(textarea).bind("blur",
     function(textarea_element)
     {
       textBoxContentsOnBlur(this.id, 'Enter your comment and click on arrow to ' + value.toLowerCase());
@@ -1534,7 +1534,7 @@ function replyToBox(event, message, parent_message, message_id)
   // Creating an image inside show resumes comments div.
   var img_element   = imageForGoIcon(10, 70);
   img_element.style.marginBottom = "10px";
-  Event.observe(img_element, "click",
+  jQuery(img_element).bind("click",
     function(img_element)
     {
       document.form.submit();
@@ -1762,7 +1762,7 @@ function createFeedbackBox(event, resumeId, req_name)
   var element   = imageForGoIcon(10, 64);
 
   // Onclick event for image element
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       document.form.submit();
@@ -1865,7 +1865,7 @@ function showManualStatusBox(event, resume_id)
   var element   = imageForGoIcon(-22, 70);
 
   // Onclick ajax request to add status to req_matches
-  Event.observe(element, "click",
+  jQuery(element).bind("click",
     function(element)
     {
       new Ajax.Request(prepend_with_image_path + "/resumes/add_manual_status_to_resume?resume_id=" + resume_id,
