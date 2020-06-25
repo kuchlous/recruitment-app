@@ -91,6 +91,7 @@ Rails.application.routes.draw do
   match 'resumes/add_manual_status_to_resume',to: 'resumes#add_manual_status_to_resume'  ,via: :post
   match 'resumes/create_multiple_forwards',to: 'resumes#create_multiple_forwards'  ,via: :post
   match 'resumes/add_message',to: 'resumes#add_message'  ,via: :post
+  match 'resumes/add_interview_status_to_req_matches',to: 'resumes#add_interview_status_to_req_matches'  ,via: :post
  
  resources :employees
  resources :resumes

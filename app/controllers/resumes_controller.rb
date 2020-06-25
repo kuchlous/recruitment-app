@@ -1735,7 +1735,6 @@ class ResumesController < ApplicationController
 
     # After rendering this we do not need to create an js file for add_interview_status_to_req_matches
     # (add_interview_status_to_req_matches.js)
-    render "resume_action.js"
   end
 
   def add_manual_status_to_resume
