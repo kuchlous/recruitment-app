@@ -864,9 +864,9 @@ function getInterviews(cur_element, req_match_id)
 
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
-  new Ajax.Request(prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
-  { asynchronous:true, evalScripts:true,
-    onFailure: function(transport)
+  jQuery.ajax({url: prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
+  type: 'POST',
+    error: function(err)
     {
       alert("Server was down while performing this action. Please contact administrators.");
     }
@@ -884,43 +884,37 @@ function markJoining(match_id, resume_id, event)
     return false;
   }
   // Creates Ajax request to mark req_match as joining
-  new Ajax.Request( 
-        prepend_with_image_path + '/resumes/mark_joining',
-        { method: 'post', 
-          parameters: 'match=' + match_id + '&resume_id=' + resume_id + '&joining_date=' + joining_date,
-          asynchronous:true, 
-          evalScripts:true,
-          onSuccess: function(transport)
-          {
-            replaceTDvalue(event, 2, "Joining date added");
-          },
-          onFailure: function(transport)
-          {
-            alert("Server was down while performing this action. Please contact administrators.");
-          }
-        }
-      );
+  jQuery.ajax(
+    {
+      url: prepend_with_image_path + '/resumes/mark_joining',
+      data: 'match=' + match_id + '&resume_id=' + resume_id + '&joining_date=' + joining_date,
+      type: 'POST',
+      success: function (result) {
+        replaceTDvalue(event, 2, "Joining date added");
+      },
+      error: function (err) {
+        alert("Server was down while performing this action. Please contact administrators.");
+      }
+    }
+  );
 }
 
 // Used to mark resume as not accepted
 function markNotAccepted(resume_id, event)
 {
-  new Ajax.Request( 
-        prepend_with_image_path + '/resumes/mark_not_accepted',
-        { method: 'post',
-          parameters: 'resume_id=' + resume_id,
-          asynchronous:true, 
-          evalScripts:true,
-          onSuccess: function(transport)
-          {
-            replaceTDvalue(event, 1, "Not accepted");
-          },
-          onFailure: function(transport)
-          {
-            alert("Server was down while performing this action. Please contact administrators.");
-          }
-        }
-      );
+  jQuery.ajax({
+    url:
+      prepend_with_image_path + '/resumes/mark_not_accepted',
+    data: 'resume_id=' + resume_id,
+    type: 'POST',
+    success: function (result) {
+      replaceTDvalue(event, 1, "Not accepted");
+    },
+    error: function (err) {
+      alert("Server was down while performing this action. Please contact administrators.");
+    }
+  }
+  );
 }
 
 function showShortlistBox(cur_element, forward_id, resume_id, selValue)
@@ -1020,21 +1014,20 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
   jQuery(element).bind("click",
     function(element)
     {
-      new Ajax.Request(prepend_with_image_path + "/resumes/add_interview_status_to_req_matches?resume_id=" + resume_id + "&" + req_match_id_or_req_id + "=" + req_match_id,
-        { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val(),
-          onSuccess: function(transport)
-          {
-            value = "Status";
-            value = findProperValueToBeDisplayed(value);
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-          },
-          onFailure: function(transport)
-          {
-            alert("There was some error while performing this action. Please check the name or try again later");
-          }
-        });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/add_interview_status_to_req_matches?resume_id=" + resume_id + "&" + req_match_id_or_req_id + "=" + req_match_id,
+        data: 'resume[comment]=' + jQuery('#comment_textarea').val(),
+        type: 'POST',
+        success: function (result) {
+          value = "Status";
+          value = findProperValueToBeDisplayed(value);
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+        },
+        error: function (err) {
+          alert("There was some error while performing this action. Please check the name or try again later");
+        }
+      });
       return false;
     }
   );
@@ -1071,21 +1064,20 @@ function showEditJoiningBox(event, resume_id, req_match_id)
   jQuery(element).bind("click",
     function(element)
     {
-      new Ajax.Request(prepend_with_image_path + "/resumes/update_joining?resume_id=" + resume_id + "&req_match_id=" + req_match_id,
-        { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + '&resume[joining_date]=' + jQuery('#joining_date').val() + '&resume[status]=' + jQuery('#resume_status').val(),
-          onSuccess: function(transport)
-          {
-            value = "Action Taken"
-            value = findProperValueToBeDisplayed(value);
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-          },
-          onFailure: function(transport)
-          {
-            alert("There was some error while performing this action. Please check the name or try again later");
-          }
-        });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/update_joining?resume_id=" + resume_id + "&req_match_id=" + req_match_id,
+        data: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + '&resume[joining_date]=' + jQuery('#joining_date').val() + '&resume[status]=' + jQuery('#resume_status').val(),
+        type: 'POST',
+        success: function (result) {
+          value = "Action Taken"
+          value = findProperValueToBeDisplayed(value);
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+        },
+        error: function (err) {
+          alert("There was some error while performing this action. Please check the name or try again later");
+        }
+      });
       return false;
     }
   );
@@ -1114,21 +1106,20 @@ function declineInterviewBox(event, interview_id)
   jQuery(element).bind("click",
     function(element)
     {
-      new Ajax.Request(prepend_with_image_path + "/resumes/decline_interview?interview_id=" + interview_id,
-        { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val(),
-          onSuccess: function(transport)
-          {
-            value = "Declined";
-            value = findProperValueToBeDisplayed(value);
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-          },
-          onFailure: function(transport)
-          {
-            alert("There was some error while performing this action. Please check the name or try again later");
-          }
-        });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/decline_interview?interview_id=" + interview_id,
+        data: 'resume[comment]=' + jQuery('#comment_textarea').val(),
+        type: 'POST',
+        success: function (result) {
+          value = "Declined";
+          value = findProperValueToBeDisplayed(value);
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+        },
+        error: function (err) {
+          alert("There was some error while performing this action. Please check the name or try again later");
+        }
+      });
       return false;
     }
   );
@@ -1164,21 +1155,20 @@ function showMessageBox(cur_element, resume_id)
   jQuery(element).bind("click",
     function(element)
     {
-      new Ajax.Request(prepend_with_image_path + "/resumes/add_message?resume_id=" + resume_id + "&counter_value=0" + "&req_match=0",
-        { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val() + "&employee_id=" + jQuery('#message_emp_name').val(),
-          onSuccess: function(transport)
-          {
-            value = "Message";
-            value = findProperValueToBeDisplayed(value);
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-          },
-          onFailure: function(transport)
-          {
-            alert("There was some error while performing this action. Please check the name or try again later");
-          }
-        });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/add_message?resume_id=" + resume_id + "&counter_value=0" + "&req_match=0",
+        data: 'resume[comment]=' + jQuery('#comment_textarea').val() + "&employee_id=" + jQuery('#message_emp_name').val(),
+        type: 'POST',
+        success: function (result) {
+          value = "Message";
+          value = findProperValueToBeDisplayed(value);
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+        },
+        error: function (err) {
+          alert("There was some error while performing this action. Please check the name or try again later");
+        }
+      });
       return false;
      }
   );
@@ -1391,22 +1381,22 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
       {
         params = "";
       }
-      jQuery.ajax({url: prepend_with_image_path + "/resumes/resume_action?" + req_match_id_or_req_id + "=" + ids + "&status=" + value + "&resume_id=" + resume_id + url_params, 
-      data: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + params,
-      type: 'POST',
-      success: function(result){
-        document.getElementById("loader").style.display="none";
-            value = findProperValueToBeDisplayed(value);
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-      },
-      error: function(err)
-      {
-        document.getElementById("loader").style.display="none";
-        console.log("from jquery");
-        alert("Server was down while performing this action. Please contact administrators.");
-      }
-    });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/resume_action?" + req_match_id_or_req_id + "=" + ids + "&status=" + value + "&resume_id=" + resume_id + url_params,
+        data: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + params,
+        type: 'POST',
+        success: function (result) {
+          document.getElementById("loader").style.display = "none";
+          value = findProperValueToBeDisplayed(value);
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+        },
+        error: function (err) {
+          document.getElementById("loader").style.display = "none";
+          console.log("from jquery");
+          alert("Server was down while performing this action. Please contact administrators.");
+        }
+      });
       return false;
      }
   );
@@ -1477,17 +1467,16 @@ function replyToBox(event, message, parent_message, message_id)
   cur_element = event.target;
 
   // Ajax request to set is_read of message to false
-  new Ajax.Request(prepend_with_image_path + "/resumes/set_is_read?" + "message_id=" + message_id,
-    { asynchronous:true, evalScripts:true,
-      onSuccess: function(transport)
-      {
-        cur_element.parentNode.style.fontWeight = "normal";
-      },
-      onFailure: function(transport)
-      {
-        alert("Server was down while performing this action. Please contact administrators.");
-      }
-    });
+  jQuery.ajax({
+    url: prepend_with_image_path + "/resumes/set_is_read?" + "message_id=" + message_id,
+    type: 'POST',
+    success: function (result) {
+      cur_element.parentNode.style.fontWeight = "normal";
+    },
+    error: function (err) {
+      alert("Server was down while performing this action. Please contact administrators.");
+    }
+  });
 
   // Setting form action
   setFormAction("reply_message");
@@ -1726,10 +1715,10 @@ function viewCommentsFeedback(event, resume_id, action, cols)
 
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
-  new Ajax.Request(prepend_with_image_path + "/resumes/" + action + "?resume_id=" + resume_id + "&columns=" + cols,
-  { asynchronous:true, evalScripts:true,
-    onFailure: function(transport)
-    {
+  jQuery.ajax({
+    url: prepend_with_image_path + "/resumes/" + action + "?resume_id=" + resume_id + "&columns=" + cols,
+    type: 'POST',
+    error: function (err) {
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
@@ -1797,10 +1786,10 @@ function changeInterview(interview_id, index)
   int_focus = encodeURIComponent(jQuery("#interview_focus" + index).val());
 
   // Creates Ajax request to update interview
-  new Ajax.Request( prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus,
-  { asynchronous:true, evalScripts:true,
-    onFailure: function(transport)
-    {
+  jQuery.ajax({
+    url: prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus,
+    type: 'POST',
+    error: function (err) {
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
@@ -1869,23 +1858,22 @@ function showManualStatusBox(event, resume_id)
   jQuery(element).bind("click",
     function(element)
     {
-      new Ajax.Request(prepend_with_image_path + "/resumes/add_manual_status_to_resume?resume_id=" + resume_id,
-        { asynchronous:true, evalScripts:true,
-          parameters: 'resume[comment]=' + jQuery('#comment_textarea').val(),
-          onSuccess: function(transport)
-          {
-            value = "Manual Status";
-            value = findProperValueToBeDisplayed(value);
-            var textbox_value = jQuery('#comment_textarea').val();
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-            cur_element.innerHTML = textbox_value;
-          },
-          onFailure: function(transport)
-          {
-            alert("There was some error while performing this action. Please check the name or try again later");
-          }
-        });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/add_manual_status_to_resume?resume_id=" + resume_id,
+        data: 'resume[comment]=' + jQuery('#comment_textarea').val(),
+        type: 'POST',
+        success: function (result) {
+          value = "Manual Status";
+          value = findProperValueToBeDisplayed(value);
+          var textbox_value = jQuery('#comment_textarea').val();
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+          cur_element.innerHTML = textbox_value;
+        },
+        error: function (err) {
+          alert("There was some error while performing this action. Please check the name or try again later");
+        }
+      });
       return false;
     }
   );
