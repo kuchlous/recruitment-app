@@ -4,16 +4,12 @@
 //= require jquery-ui
 //= require rails-ujs
 //= require turbolinks
-//= require scriptaculous
-//= require effects
-//= require controls
-//= require dragdrop
 //= require_tree .
 
-$(jQuery).ready(function() {
-   $jq = jQuery.noConflict();
-   $jq('.hidden_by_default').hide();
-});
+// $(jQuery).ready(function() {
+//    $jq = jQuery.noConflict();
+//    $jq('.hidden_by_default').hide();
+// });
 
 // for employees available in our database
 function fillInputBoxWithContents()

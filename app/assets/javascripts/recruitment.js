@@ -1269,19 +1269,18 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
       if ( selected_req_array.length == 0 ) {
         display_value = "Not Forwarded";
       }
-      new Ajax.Request(prepend_with_image_path + "/resumes/create_multiple_forwards?" + "resume_id=" + resume_id + "&req_names=" + selected_req_array,
-        { asynchronous:true, evalScripts:true,
-          onSuccess: function(transport)
-          {
-            value = findProperValueToBeDisplayed(display_value);
-            deleteAndCreateTDAfterAction(elements[2], value);
-            changeCurrentRowColor(elements[3]);
-          },
-          onFailure: function(transport)
-          {
-            alert("Server was down while performing this action. Please contact administrators.");
-          }
-        });
+      jQuery.ajax({
+        url: prepend_with_image_path + "/resumes/create_multiple_forwards?" + "resume_id=" + resume_id + "&req_names=" + selected_req_array,
+        type: 'POST',
+        success: function (result) {
+          value = findProperValueToBeDisplayed(display_value);
+          deleteAndCreateTDAfterAction(elements[2], value);
+          changeCurrentRowColor(elements[3]);
+        },
+        error: function (err) {
+          alert("Server was down while performing this action. Please contact administrators.");
+        }
+      });
       return false;
     }
   );
