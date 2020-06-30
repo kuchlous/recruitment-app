@@ -4,13 +4,12 @@
 //= require jquery-ui
 //= require rails-ujs
 //= require turbolinks
+//= require moment 
+//= require fullcalendar
+//= require fullcalendar/gcal
 //= require_tree .
 
-// $(jQuery).ready(function() {
-//    $jq = jQuery.noConflict();
-//    $jq('.hidden_by_default').hide();
-// });
-
+$('#calendar').fullCalendar({});
 // for employees available in our database
 function fillInputBoxWithContents()
 {

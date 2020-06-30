@@ -991,8 +991,9 @@ class ResumesController < ApplicationController
   def get_interviews
     require 'time'
 
-    start_time = Time.at(params['start'].to_i).to_formatted_s(:db)
-    end_time   = Time.at(params['end'].to_i).to_formatted_s(:db)
+    start_time = params['start']
+    end_time   = params['end']
+  
     if is_HR? || is_ADMIN?
       @events    = Interview.where("interview_date >= ? and interview_date <= ?",start_time ,end_time)
     else
