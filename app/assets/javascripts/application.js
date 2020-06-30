@@ -8,8 +8,6 @@
 //= require fullcalendar
 //= require fullcalendar/gcal
 //= require_tree .
-
-$('#calendar').fullCalendar({});
 // for employees available in our database
 function fillInputBoxWithContents()
 {

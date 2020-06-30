@@ -10,8 +10,8 @@
     {
       path = "/recruit";
     }
-    jQuery.noConflict();
-    jQuery(document).ready(function() {
+   
+  jQuery(document).ready(function() {
       jQuery("#calendar").fullCalendar(
       {
         header:
@@ -20,11 +20,11 @@
           center: 'title',
           right:  'month,agendaWeek,agendaDay'
         },
+
         defaultView: 'month',
-        height:      1200,
         slotMinutes: 15,
         events:      path + "/resumes/get_interviews",
-        timeFormat:  'h:mm tt{ - h:mm tt} ',
+        timeFormat:  'h(:mm)t',
         eventClick: function(event)
         {
           redirectToResumeDetails(path, event);
