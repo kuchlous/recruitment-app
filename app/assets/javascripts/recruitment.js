@@ -1286,7 +1286,7 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
   );
   link_element.appendChild(img_element);
   elements[0].appendChild(link_element);
-  containing_tr.insert({'after': elements[1]});
+  containing_tr.after( elements[1]);
 }
 
 // This chunk of code will be used to display the req_names
