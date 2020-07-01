@@ -418,20 +418,16 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     element2.id   = "interview_date" + total_interview_num;
     cell.appendChild(element2);
 
-    // Third element for image to pop up calendar
-    var element3  = document.createElement("img");
-    element3.src  = prepend_with_image_path + "/images/calendar_date_select/calendar.gif";
-    element3.style.cursor = "pointer";
-    element3.style.paddingLeft = "5px";
-
     // Onclick event for image.(Poping up calendar)
-    jQuery(element3).bind( "click",
-      function(element3)
-      {
-        new CalendarDateSelect( document.getElementById(this).previous(), {year_range:[2018, 2020]} );
-      }
-    );
-    cell.appendChild(element3);
+    $(function () {
+      $(element2).datepicker({
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
+    });
+    
     createSpan(cell, 8);
 
     // Fourth element for ddl of time slots
