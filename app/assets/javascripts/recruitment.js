@@ -421,6 +421,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     // Onclick event for image.(Poping up calendar)
     $(function () {
       $(element2).datepicker({
+        dateFormat: 'dd-mm-yy',
         showOn: "button",
         buttonImage: "/assets/calendar.gif",
         buttonImageOnly: true,
