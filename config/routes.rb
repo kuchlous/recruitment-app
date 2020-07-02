@@ -92,6 +92,8 @@ Rails.application.routes.draw do
   match 'resumes/create_multiple_forwards',to: 'resumes#create_multiple_forwards'  ,via: :post
   match 'resumes/add_message',to: 'resumes#add_message'  ,via: :post
   match 'resumes/add_interview_status_to_req_matches',to: 'resumes#add_interview_status_to_req_matches'  ,via: :post
+  match 'resumes/mark_joining',to: 'resumes#mark_joining'  ,via: :post
+  match 'resumes/mark_not_accepted',to: 'resumes#mark_not_accepted'  ,via: :post
  
  resources :employees
  resources :resumes

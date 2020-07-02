@@ -58,10 +58,11 @@
     </tr>
     <tr>
       <td> Start Date </td>
-      <td><%= f.text_field :sdate, :id => "datepicker" %></td>
+      <td><%= f.text_field :sdate, :class => "datepicker" %></td>
     </tr>
     <tr>
       <td> End Date </td>
+      <td><%= f.text_field :edate, :class => "datepicker" %></td>
   </tr>
     <tr>
       <td> Required Experience </td>
@@ -155,6 +156,12 @@
 <%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %>
 <script>
   $(function() {
-  $('.datepicker').datepicker();
+  $('.datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
 });
 </script>

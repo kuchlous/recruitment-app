@@ -40,12 +40,12 @@
             <%= resume.location %>
           </td>
           <td>
-            <%= calendar_date_select "resume", "joining_date#{f.id}", :year_range => 1.years.ago..1.years.since, :class => "joining_date_input" %>
-            <%= button_to_function "Go", "markJoining(#{f.id}, #{resume.id}, event)", :id => "button#{f.id}" %>
+            <input type="text" class="datepicker" id="resume_joining_date<%= f.id %>">
+            <%= link_to "Go", "", :onClick=>"markJoining(#{f.id}, #{resume.id}, event)"%>
           </td>
           <td>
             <% unless resume.status == "N_ACCEPTED" %>
-              <%= button_to_function "Not Accepted", "markNotAccepted(#{resume.id}, event)", :id => "button#{f.id}" %>
+              <%= link_to "Not Accepted", "",:onClick=> "markNotAccepted(#{resume.id}, event)" %>
             <% else %>
               Not accepted
             <% end %>
@@ -58,3 +58,14 @@
   <br />
   No <%= @status.titleize %> resumes.
 <% end %>
+<script>
+  $(function() {
+  $('.datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
+});
+</script>
