@@ -1,9 +1,13 @@
 <div id="recent_resume_div" class="common_class">
   <span class="span_with_13"> Recently updated resumes (<%= @resumes.size %>) </span>
-  <%= form_for(@resumes,:host => APP_CONFIG['host_name'],:controller=>"resumes_controller", :action => 'find_resume_within_given_dates' ) do |f| %>
+ 
+  <%= form_tag :controller => "resumes", :action => "find_resume_within_given_dates", :host => APP_CONFIG['host_name'], :method => 'post' do %>
     <span class="float_right">
-      From: <%= f.calendar_date_select :recent, :sdate, :year_range => 5.years.ago..5.years.since, :value => @start_date %>
-      To:   <%= f.calendar_date_select :recent, :edate, :year_range => 5.years.ago..5.years.since, :value => @end_date   %>
+      From: 
+      <%= text_field_tag "recent[sdate]","", class: "datepicker" %>
+      To:   
+      <%= text_field_tag "recent[edate]","", class: "datepicker" %>
+          
       <%= submit_tag 'GO' %>
     </span>
   <% end %> <br /> <br />
@@ -46,3 +50,14 @@
     <span class="span_with_13_with_padding_0"> <br /> Sorry there are no resumes found. </span>
   <% end %>
 </div>
+<script>
+  $(function() {
+  $('.datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
+});
+</script>

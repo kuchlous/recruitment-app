@@ -94,6 +94,7 @@ Rails.application.routes.draw do
   match 'resumes/add_interview_status_to_req_matches',to: 'resumes#add_interview_status_to_req_matches'  ,via: :post
   match 'resumes/mark_joining',to: 'resumes#mark_joining'  ,via: :post
   match 'resumes/mark_not_accepted',to: 'resumes#mark_not_accepted'  ,via: :post
+  match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates'  ,via: :post
  
  resources :employees
  resources :resumes
