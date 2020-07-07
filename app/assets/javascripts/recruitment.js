@@ -930,18 +930,17 @@ function getJoiningDateBox(div_element)
   input_element.id   = "joining_date";
   div_element.appendChild(input_element);
 
-  var image_element  = document.createElement("img");
-  image_element.src  = prepend_with_image_path + "/images/calendar_date_select/calendar.gif";
-  image_element.className    = "joining_date_image";
-  image_element.style.cursor = "pointer";
-  jQuery(image_element).bind("click",
-    function(image_element)
-    {
-      new CalendarDateSelect( document.getElementById(this).previous(), {year_range:[2018, 2020]} );
-    }
-  );
-  div_element.appendChild(image_element);
+  $(function () {
+    $(input_element).datepicker({
+      dateFormat: 'dd-mm-yy',
+      showOn: "button",
+      buttonImage: "/assets/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select date",
+    }).next(".ui-datepicker-trigger").addClass("joining_date_image");
+  });
 }
+
 
 // Get the autocomplete input text box which will be used for 
 // autocompletion for the names of employees
