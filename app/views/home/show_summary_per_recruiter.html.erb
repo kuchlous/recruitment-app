@@ -15,8 +15,8 @@
         <td> </td>
       </tr>
       <tr>
-        <td> <%= calendar_date_select :sdate, :sdate, :year_range => 1.years.ago..1.years.since, :value => date_in_calendar_format(@sdate)%> </td>
-        <td> <%= calendar_date_select :edate, :edate, :year_range => 1.years.ago..1.years.since, :value => date_in_calendar_format(@edate)%> </td>
+        <td> <%= text_field_tag "sdate[sdate]","", class: "datepicker" %> </td>
+        <td> <%= text_field_tag "edate[edate]","", class: "datepicker" %> </td>
         <td class="summaries_recruiter_submit_button"> <%= submit_tag "Change Dates" %> </td>
       </tr>
     </table>
@@ -50,3 +50,14 @@
     No recruiter summary.
   <% end %>
 </div>
+<script>
+  $(function() {
+  $('.datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
+});
+</script> 
