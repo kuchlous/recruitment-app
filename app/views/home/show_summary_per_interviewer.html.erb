@@ -10,8 +10,8 @@
         <td> </td>
       </tr>
       <tr>
-        <td> <%= calendar_date_select :interviews, :sdate, :year_range => 1.years.ago..1.years.since, :value => @sdate %> </td>
-        <td> <%= calendar_date_select :interviews, :edate, :year_range => 1.years.ago..1.years.since, :value => @edate %> </td>
+        <td> <%= text_field_tag "interviews[sdate]","", class: "datepicker" %> </td>
+        <td> <%= text_field_tag "interviews[edate]","", class: "datepicker" %> </td>
         <td class="summaries_recruiter_submit_button"> <%= submit_tag "Change Dates", :style => "width:200px" %> </td>
       </tr>
     </table>
@@ -46,3 +46,14 @@
     No summary for interviewer.
   <% end %>
 </div>
+<script>
+  $(function() {
+  $('.datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
+});
+</script> 

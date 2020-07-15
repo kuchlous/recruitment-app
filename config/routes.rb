@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   resources :requirements
   match 'home/search', to: 'home#search'                                       , via: :post
+  match 'home/show_summary_per_interviewer', to:'home#show_summary_per_interviewer'                                       , via: :get
+  match 'home/show_summary_per_recruiter', to: 'home#show_summary_per_recruiter'                                     , via: :get
+
+  match 'home/show_summary_per_manager', to: 'home#show_summary_per_manager'                                     , via: :get
   match 'home/actions', to: 'home#actions'                                     , via: :get
   match 'home/advanced_search_results', to: 'home#advanced_search_results'     , via: :get
   match 'home/advanced_search', to: 'home#advanced_search'          , via: :get
