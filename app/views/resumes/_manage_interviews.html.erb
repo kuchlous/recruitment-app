@@ -22,7 +22,7 @@
              </span>
              <%= select_tag               "interview_employee_name#{index}",  options_for_select(Employee.get_employee_array_for_select, i.employee.id),
                                                                                                           :class   => "select_box_with_full_width" %> - 
-              <input type="text" class="datepicker" value=<%= (i.interview_date).strftime("%d-%m-%Y") %>>- 
+              <input type="text" class="datepicker" id=<%="interview_date#{index}"%> value=<%= (i.interview_date).strftime("%d-%m-%Y") %>>- 
              <%= select_tag               "time_slot#{index}",                options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]),
                                                                                                           :class   => "select_box_with_low_width" %> - 
              <%= text_area_tag            "interview_focus#{index}", i.focus, :class => "focus_textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');",
