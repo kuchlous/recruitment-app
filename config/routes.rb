@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   match 'resumes/export_interviews_per_date',to: 'resumes#export_interviews_per_date'         , via: :get
   match 'resumes/yto',to: 'resumes#yto'                                                       , via: :get
   match 'resumes/manager_yto',to: 'resumes#manager_yto'                                       , via: :get
-  match 'resumes/delete_interview',to: 'resumes#delete_interview'                                       , via: :post
+  match 'resumes/delete_interview',to: 'resumes#delete_interview'                                       , via: :get
 
   match 'resumes/update_interview',to: 'resumes#update_interview'                                       , via: :post
 
