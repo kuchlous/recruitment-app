@@ -1533,7 +1533,7 @@ function replyToBox(event, message, parent_message, message_id)
 
 // Function used to create extra row after the current row.
 // Wherever the mouse is clicked, the row will be created just after it
-function createRow(cur_element)
+function createRow(cur_element,num_tds)
 {
   old_tr              = document.getElementById("ajax_request_tr");
   if (old_tr)
@@ -1706,7 +1706,7 @@ function viewCommentsFeedback(event, resume_id, action, cols)
   cur_element = event.target;
 
   // Create "ajax_reuest_tr" Row
-  var elements = createRow(cur_element);
+  var elements = createRow(cur_element.parentNode.parentNode,cols);
 
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
