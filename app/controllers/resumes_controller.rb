@@ -1017,7 +1017,7 @@ class ResumesController < ApplicationController
       title       += resume.name
       description += event.req_match.requirement.name + "<br />" + resume.phone.to_s + "<br />" + (event.itype ? event.itype.titleize : "")
 
-      events << { :id => event.id, :title => "#{title}", :description => "#{description}", :start => "#{iso8601_format_time}", :end => "", :allDay => 0, :recurring => false, :resume_uniqid => resume.uniqid.name, :interviewer_id => event.employee.id }
+      events << { :id => event.id, :title => "#{title}", :description => "#{description}", :start => "#{iso8601_format_time}", :end => "", :allDay => 0, :recurring => false, :resume_uniqid => resume.uniqid.name, :interviewer_id => event.employee.id, color:"#"+("%06x" % (rand * 0xffffff))}
     end
     render plain: events.to_json
   end
