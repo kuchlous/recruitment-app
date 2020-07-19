@@ -1,4 +1,4 @@
-<td colspan="7" class="align_right">
+<td colspan="10" class="align_right">
   <table id="manage_interviews_table">
     <tr class="float_right_with_10_padding">
       <td style="border: none;">
@@ -22,13 +22,12 @@
              </span>
              <%= select_tag               "interview_employee_name#{index}",  options_for_select(Employee.get_employee_array_for_select, i.employee.id),
                                                                                                           :class   => "select_box_with_full_width" %> - 
-             <%= calendar_date_select_tag "interview_date#{index}",           "date#{index}", :year_range => 1.years.ago..1.years.since,
-                                                                                                          :value   => date_in_calendar_format(i.interview_date) %> - 
+              <input type="text" class="datepicker" id=<%="interview_date#{index}"%> value=<%= (i.interview_date).strftime("%d-%m-%Y") %>>- 
              <%= select_tag               "time_slot#{index}",                options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]),
                                                                                                           :class   => "select_box_with_low_width" %> - 
              <%= text_area_tag            "interview_focus#{index}", i.focus, :class => "focus_textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');",
                                                                                                           :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');" %>
-             <%= link_to "Delete", :action => "delete_interview", :id => i.id %> |
+             <%= link_to "Delete", controller: "resumes",:action => "delete_interview", :id => i.id %> |
              <%= link_to "Update", "", :onClick=> "changeInterview(#{i.id}, #{index});" %>
            </td>
          </tr>
@@ -43,3 +42,14 @@
        <% end %>
   </table>
 </td>
+<script>
+  $(function() {
+  $('.datepicker').datepicker({
+        dateFormat: 'dd-mm-yy',
+        showOn: "button",
+        buttonImage: "/assets/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
+});
+</script> 
