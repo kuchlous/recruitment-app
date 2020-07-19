@@ -1000,6 +1000,11 @@ class ResumesController < ApplicationController
       @events    = Interview.where("interview_date >= ? and interview_date <= ? and employee_id = ?", start_time, end_time,get_current_employee.id)
     end
     events     = []
+    eids = @events.map{|e| e.employee.id}.uniq
+    colors = {}
+    eids.each do |eid|
+      colors[eid] = "#"+("%06x" % (rand * 0xffffff))
+    end
     @events.each do |event|
       idate    = event.interview_date
       iso8601_format_time = event.interview_time.iso8601.dup
@@ -1017,7 +1022,7 @@ class ResumesController < ApplicationController
       title       += resume.name
       description += event.req_match.requirement.name + "<br />" + resume.phone.to_s + "<br />" + (event.itype ? event.itype.titleize : "")
 
-      events << { :id => event.id, :title => "#{title}", :description => "#{description}", :start => "#{iso8601_format_time}", :end => "", :allDay => 0, :recurring => false, :resume_uniqid => resume.uniqid.name, :interviewer_id => event.employee.id, color:"#"+("%06x" % (rand * 0xffffff))}
+      events << { :id => event.id, :title => "#{title}", :description => "#{description}", :start => "#{iso8601_format_time}", :end => "", :allDay => 0, :recurring => false, :resume_uniqid => resume.uniqid.name, :interviewer_id => event.employee.id, color: colors[event.employee.id]}
     end
     render plain: events.to_json
   end
