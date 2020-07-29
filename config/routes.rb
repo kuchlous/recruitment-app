@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
   # resources :resumes
+  get 'resumes/phone_autocomplete', to: 'resumes#phone_autocomplete', as: :resumes_phone_autocomplete
+  get 'resumes/email_autocomplete', to: 'resumes#email_autocomplete', as: :resumes_email_autocomplete
+
   match 'login', to: 'employees#login'                                         , via: :post
   match 'logout', to: 'employees#logout'                                       , via: :get
   match 'requirements/my_requirements', to: 'requirements#my_requirements'     , via: :get
@@ -103,6 +106,8 @@ Rails.application.routes.draw do
   match 'resumes/mark_joining',to: 'resumes#mark_joining'  ,via: :post
   match 'resumes/mark_not_accepted',to: 'resumes#mark_not_accepted'  ,via: :post
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates'  ,via: :post
+
+
  
  resources :employees
  resources :resumes

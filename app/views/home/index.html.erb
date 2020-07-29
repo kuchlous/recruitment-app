@@ -2,7 +2,6 @@
   <div id="login_form">
     <span class="login_desc_line"> Login to your recruitment account </span>
     <% url = url_for :action => "login", :controller => "employees", :only_path => false, :port => false%>
-    <%= url %>
     <%= form_with url:url do |form| %>
       <table>
         <tr>

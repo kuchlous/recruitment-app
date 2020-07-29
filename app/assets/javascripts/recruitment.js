@@ -423,7 +423,7 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
       $(element2).datepicker({
         dateFormat: 'dd-mm-yy',
         showOn: "button",
-        buttonImage: "/assets/calendar.gif",
+        buttonImage: prepend_with_image_path + "/assets/calendar.gif",
         buttonImageOnly: true,
         buttonText: "Select date"
       });
@@ -934,7 +934,7 @@ function getJoiningDateBox(div_element)
     $(input_element).datepicker({
       dateFormat: 'dd-mm-yy',
       showOn: "button",
-      buttonImage: "/assets/calendar.gif",
+      buttonImage: prepend_with_image_path + "/assets/calendar.gif",
       buttonImageOnly: true,
       buttonText: "Select date",
     }).next(".ui-datepicker-trigger").addClass("joining_date_image");
