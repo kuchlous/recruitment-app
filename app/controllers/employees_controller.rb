@@ -34,7 +34,8 @@ class EmployeesController < ApplicationController
     if request.post?
       if RAILS_ENV == "production"
 # employee = Net::IMAP.new('apps.mirafra.com')
-        employee = Net::IMAP.new('192.168.1.2')
+        # employee = Net::IMAP.new('192.168.1.2')
+        employee = Net::IMAP.new('182.75.92.100', 993, true, nil, false)
         employee.login(params[:login], params[:password])
       else
         employee = Employee.find_by_login(params[:login].to_s)

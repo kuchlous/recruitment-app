@@ -1457,9 +1457,7 @@ class ResumesController < ApplicationController
   def add_message
     resume_id         = params[:resume_id]
     message           = params[:resume][:comment]
-    counter_value     = params[:counter_value]
     employee          = params[:employee_id]
-    req_match         = params[:req_match]
 
     # Creating message
     message           = "No Message" if message.nil? || message.empty? ||
@@ -2087,27 +2085,42 @@ class ResumesController < ApplicationController
   end
 
   def fill_interview_data(sheet, matches)
-
-    sheet.column(0).width = 30
-    sheet.column(1).width = 30
-    sheet.column(2).width = 15
-    sheet.column(3).width = 10
-    sheet.column(4).width = 50
-    sheet.column(5).width = 30
-    sheet.column(6).width = 30
-    sheet.column(7).width = 30
-
-    sheet.row(0).concat %w{Name Req Date Rating Status Email Phone Referral}
     blue = Spreadsheet::Format.new :weight => :bold,
                                    :size   => 12
     sheet.row(0).default_format = blue
+
+    column_props = []
+    column_props << {width: 30, name: "Name"}
+    column_props << {width: 30, name: "Req"}
+    column_props << {width: 15, name: "Notice"}
+    column_props << {width: 15, name: "Exp"}
+    column_props << {width: 15, name: "ECTC"}
+    column_props << {width: 15, name: "Rating"}
+    column_props << {width: 15, name: "Interviewers"}
+    column_props << {width: 30, name: "Ratings"}
+    column_props << {width: 30, name: "Date"}
+    column_props << {width: 30, name: "Status"}
+    column_props << {width: 30, name: "Email"}
+    column_props << {width: 30, name: "Phone"}
+    column_props << {width: 30, name: "Referral"}
+
+    column_props.each_with_index do |c_prop, i|
+      sheet.column(i).width = c_prop[:width]
+      sheet.row(0).push(c_prop[:name])
+    end
+
     row = 1
     matches.each do |m|
       sheet.row(row).height = 20
       sheet.row(row).push Spreadsheet::Link.new get_resume_url(m.resume.uniqid), m.resume.name
       sheet.row(row).push m.requirement.name
-      sheet.row(row).push m.get_display_interview_date
+      sheet.row(row).push m.resume.notice
+      sheet.row(row).push m.resume.experience
+      sheet.row(row).push m.resume.expected_ctc
       sheet.row(row).push m.resume.rating
+      sheet.row(row).push m.resume.feedbacks.map{|f| f.employee.name}.join(', ')
+      sheet.row(row).push m.resume.feedbacks.map{|f| f.rating}.join(', ')
+      sheet.row(row).push m.get_display_interview_date
       if m.resume.manual_status
         sheet.row(row).push m.resume.manual_status[0..25]
       else
@@ -2117,6 +2130,13 @@ class ResumesController < ApplicationController
       sheet.row(row).push m.resume.phone
       sheet.row(row).push m.resume.referral_name
       row += 1
+      m.resume.feedbacks.each do |f|
+        sheet.row(row).push " "
+        sheet.row(row).push f.employee.name 
+        sheet.row(row).push f.rating
+        sheet.row(row).push f.feedback
+        row += 1
+      end
     end
   end
 
@@ -2277,7 +2297,6 @@ class ResumesController < ApplicationController
     attachment, filetype = resume.preferred_file
     req_owner = requirement.employee
     gm_for_decision = requirement.employee.gm
-    ta_head = requirement.employee.ta_head
     # gm_for_decision = Employee.find_by_login('alokk')
     ta = get_current_employee
     attachment, filetype = resume.preferred_file
@@ -2294,6 +2313,7 @@ class ResumesController < ApplicationController
     else
       to = gm_for_decision
     end
+    ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
     Emailer.deliver_send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action)
   end
