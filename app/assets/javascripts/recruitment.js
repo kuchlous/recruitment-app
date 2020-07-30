@@ -942,8 +942,8 @@ function getJoiningDateBox(div_element)
   input_element.id   = "joining_date";
   div_element.appendChild(input_element);
 
-  $(function () {
-    $(input_element).datepicker({
+  jQuery(function () {
+    jQuery(input_element).datepicker({
       dateFormat: 'dd-mm-yy',
       showOn: "button",
       buttonImage: prepend_with_image_path + "/assets/calendar.gif",
@@ -1047,6 +1047,8 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
 
 function showEditJoiningBox(event, resume_id, req_match_id)
 {
+  event.preventDefault();
+
   // Finding element where mouse(which td/tr) is clicked
   cur_element = event.target;
 
