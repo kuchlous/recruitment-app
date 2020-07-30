@@ -1219,6 +1219,7 @@ function RejectBox(event, resume_id, action)
 // Function used to display the forward box under current row
 function ForwardBox(event, req_names, req_ids, resume_id)
 {
+  event.preventDefault();
   cur_element = event.target;
   showForwardBox(cur_element, req_names, req_ids, resume_id);
 }
