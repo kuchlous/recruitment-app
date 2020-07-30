@@ -853,6 +853,7 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
 // Replace the row with interviews
 function getInterviews(cur_element, req_match_id)
 {
+  document.getElementById("loader").style.display="flex";
   // Setting form action
   setFormAction("add_interviews");
 
@@ -863,8 +864,13 @@ function getInterviews(cur_element, req_match_id)
   // The interviews will replace innerHTML of the row created by addRow()
   jQuery.ajax({url: prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
   type: 'POST',
+  success: function(transport)
+          {
+            document.getElementById("loader").style.display="none";
+          },
     error: function(err)
     {
+      document.getElementById("loader").style.display="none";
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
@@ -873,6 +879,7 @@ function getInterviews(cur_element, req_match_id)
 // Used to mark any reqmatch status as joining
 function markJoining(match_id, resume_id, event)
 {
+  document.getElementById("loader").style.display="flex";
   // Finds joining date from the input box
   joining_date = document.getElementById("resume_joining_date" + match_id).value;
   if ( !joining_date )
@@ -887,9 +894,11 @@ function markJoining(match_id, resume_id, event)
       data: 'match=' + match_id + '&resume_id=' + resume_id + '&joining_date=' + joining_date,
       type: 'POST',
       success: function (result) {
+        document.getElementById("loader").style.display="none";
         replaceTDvalue(event, 2, "Joining date added");
       },
       error: function (err) {
+        document.getElementById("loader").style.display="none";
         alert("Server was down while performing this action. Please contact administrators.");
       }
     }
@@ -899,15 +908,18 @@ function markJoining(match_id, resume_id, event)
 // Used to mark resume as not accepted
 function markNotAccepted(resume_id, event)
 {
+  document.getElementById("loader").style.display="flex";
   jQuery.ajax({
     url:
       prepend_with_image_path + '/resumes/mark_not_accepted',
     data: 'resume_id=' + resume_id,
     type: 'POST',
     success: function (result) {
+      document.getElementById("loader").style.display="none";
       replaceTDvalue(event, 1, "Not accepted");
     },
     error: function (err) {
+      document.getElementById("loader").style.display="none";
       alert("Server was down while performing this action. Please contact administrators.");
     }
   }
@@ -1010,17 +1022,20 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
   jQuery(element).bind("click",
     function(element)
     {
+      document.getElementById("loader").style.display="flex";
       jQuery.ajax({
         url: prepend_with_image_path + "/resumes/add_interview_status_to_req_matches?resume_id=" + resume_id + "&" + req_match_id_or_req_id + "=" + req_match_id,
         data: 'resume[comment]=' + jQuery('#comment_textarea').val(),
         type: 'POST',
         success: function (result) {
+          document.getElementById("loader").style.display="none";
           value = "Status";
           value = findProperValueToBeDisplayed(value);
           deleteAndCreateTDAfterAction(elements[2], value);
           changeCurrentRowColor(elements[3]);
         },
         error: function (err) {
+          document.getElementById("loader").style.display="none";
           alert("There was some error while performing this action. Please check the name or try again later");
         }
       });
@@ -1060,17 +1075,20 @@ function showEditJoiningBox(event, resume_id, req_match_id)
   jQuery(element).bind("click",
     function(element)
     {
+      document.getElementById("loader").style.display="flex";
       jQuery.ajax({
         url: prepend_with_image_path + "/resumes/update_joining?resume_id=" + resume_id + "&req_match_id=" + req_match_id,
         data: 'resume[comment]=' + encodeURIComponent(jQuery('#comment_textarea').val()) + '&resume[joining_date]=' + jQuery('#joining_date').val() + '&resume[status]=' + jQuery('#resume_status').val(),
         type: 'POST',
         success: function (result) {
+          document.getElementById("loader").style.display="none";
           value = "Action Taken"
           value = findProperValueToBeDisplayed(value);
           deleteAndCreateTDAfterAction(elements[2], value);
           changeCurrentRowColor(elements[3]);
         },
         error: function (err) {
+          document.getElementById("loader").style.display="none";
           alert("There was some error while performing this action. Please check the name or try again later");
         }
       });
@@ -1102,17 +1120,20 @@ function declineInterviewBox(event, interview_id)
   jQuery(element).bind("click",
     function(element)
     {
+      document.getElementById("loader").style.display="flex";
       jQuery.ajax({
         url: prepend_with_image_path + "/resumes/decline_interview?interview_id=" + interview_id,
         data: 'resume[comment]=' + jQuery('#comment_textarea').val(),
         type: 'POST',
         success: function (result) {
+          document.getElementById("loader").style.display="none";
           value = "Declined";
           value = findProperValueToBeDisplayed(value);
           deleteAndCreateTDAfterAction(elements[2], value);
           changeCurrentRowColor(elements[3]);
         },
         error: function (err) {
+          document.getElementById("loader").style.display="none";
           alert("There was some error while performing this action. Please check the name or try again later");
         }
       });
@@ -1151,17 +1172,20 @@ function showMessageBox(cur_element, resume_id)
   jQuery(element).bind("click",
     function(element)
     {
+      document.getElementById("loader").style.display="flex";
       jQuery.ajax({
         url: prepend_with_image_path + "/resumes/add_message?resume_id=" + resume_id + "&counter_value=0" + "&req_match=0",
         data: 'resume[comment]=' + jQuery('#comment_textarea').val() + "&employee_id=" + jQuery('#message_emp_name').val(),
         type: 'POST',
         success: function (result) {
+          document.getElementById("loader").style.display="none";
           value = "Message";
           value = findProperValueToBeDisplayed(value);
           deleteAndCreateTDAfterAction(elements[2], value);
           changeCurrentRowColor(elements[3]);
         },
         error: function (err) {
+          document.getElementById("loader").style.display="none";
           alert("There was some error while performing this action. Please check the name or try again later");
         }
       });
@@ -1250,6 +1274,7 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
   jQuery(link_element).bind("click",
     function(img_element)
     {
+      document.getElementById("loader").style.display="flex";
       var selected_req_array   = new Array();
       var index                = 0;
       var display_value        = "Forwarded";
@@ -1269,11 +1294,13 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
         url: prepend_with_image_path + "/resumes/create_multiple_forwards?" + "resume_id=" + resume_id + "&req_names=" + selected_req_array,
         type: 'POST',
         success: function (result) {
+          document.getElementById("loader").style.display="none";
           value = findProperValueToBeDisplayed(display_value);
           deleteAndCreateTDAfterAction(elements[2], value);
           changeCurrentRowColor(elements[3]);
         },
         error: function (err) {
+          document.getElementById("loader").style.display="none";
           alert("Server was down while performing this action. Please contact administrators.");
         }
       });
@@ -1458,6 +1485,7 @@ function createTextAreaElement(element, value)
 
 function replyToBox(event, message, parent_message, message_id)
 {
+  document.getElementById("loader").style.display="flex";
   // Finding element where mouse(which td/tr) is clicked
   cur_element = event.target;
 
@@ -1466,9 +1494,11 @@ function replyToBox(event, message, parent_message, message_id)
     url: prepend_with_image_path + "/resumes/set_is_read?" + "message_id=" + message_id,
     type: 'POST',
     success: function (result) {
+      document.getElementById("loader").style.display="none";
       cur_element.parentNode.style.fontWeight = "normal";
     },
     error: function (err) {
+      document.getElementById("loader").style.display="none";
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
@@ -1699,6 +1729,7 @@ function HideContent(d)
 
 function viewCommentsFeedback(event, resume_id, action, cols)
 {
+  document.getElementById("loader").style.display="flex";
   event.preventDefault();
   // TODO: We can removed this event(line) from this and next function as well as we do not need them anymore.
 
@@ -1707,13 +1738,16 @@ function viewCommentsFeedback(event, resume_id, action, cols)
 
   // Create "ajax_reuest_tr" Row
   var elements = createRow(cur_element.parentNode.parentNode,cols);
-
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
   jQuery.ajax({
     url: prepend_with_image_path + "/resumes/" + action + "?resume_id=" + resume_id + "&columns=" + cols,
     type: 'POST',
+    success: function (result) {
+      document.getElementById("loader").style.display = "none";
+    },
     error: function (err) {
+      document.getElementById("loader").style.display="none";
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
@@ -1775,6 +1809,7 @@ function closeShowCommentsBox(elementId)
 
 function changeInterview(interview_id, index)
 {
+  document.getElementById("loader").style.display="flex";
   emp_id    = jQuery("#interview_employee_name" + index).val();
   int_time  = jQuery("#time_slot" + index).val();
   int_date  = jQuery("#interview_date" + index).val();
@@ -1784,7 +1819,12 @@ function changeInterview(interview_id, index)
   jQuery.ajax({
     url: prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus,
     type: 'POST',
+    success: function(transport)
+    {
+      document.getElementById("loader").style.display="none";
+    },
     error: function (err) {
+      document.getElementById("loader").style.display="none";
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
@@ -1853,11 +1893,13 @@ function showManualStatusBox(event, resume_id)
   jQuery(element).bind("click",
     function(element)
     {
+      document.getElementById("loader").style.display="flex";
       jQuery.ajax({
         url: prepend_with_image_path + "/resumes/add_manual_status_to_resume?resume_id=" + resume_id,
         data: 'resume[comment]=' + jQuery('#comment_textarea').val(),
         type: 'POST',
         success: function (result) {
+          document.getElementById("loader").style.display="none";
           value = "Manual Status";
           value = findProperValueToBeDisplayed(value);
           var textbox_value = jQuery('#comment_textarea').val();
@@ -1866,6 +1908,7 @@ function showManualStatusBox(event, resume_id)
           cur_element.innerHTML = textbox_value;
         },
         error: function (err) {
+          document.getElementById("loader").style.display="none";
           alert("There was some error while performing this action. Please check the name or try again later");
         }
       });
