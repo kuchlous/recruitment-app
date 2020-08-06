@@ -94,6 +94,8 @@ Rails.application.routes.draw do
   match 'resumes/update_interview',to: 'resumes#update_interview'                                       , via: :post
 
   match 'resumes/move_to_future',to: 'resumes#move_to_future'                                       , via: :post
+  match 'resumes/update_joining',to: 'resumes#update_joining'                                       , via: :post
+
   match 'resumes/reject_all_forwards_req_matches',to:'resumes#reject_all_forwards_req_matches' , via: :post
   match 'resumes/mark_active',to: 'resumes#mark_active'                    , via: :post
   match 'resumes/add_interviews',to: 'resumes#add_interviews'              ,via: :post

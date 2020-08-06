@@ -1,8 +1,8 @@
 <% req_match     = 0
    row_id_prefix = get_row_id_prefix("NEW") %>
 <script> 
-  var req_names_string = <%= "['#{all_reqs_names(1).join("','")}']" %>;
-  var req_ids_string = <%= "['#{all_reqs_ids(1).join("','")}']" %>;
+  var req_names_string = <%= raw "['#{all_reqs_names(1).join("','")}']" %>;
+  var req_ids_string = <%= raw "['#{all_reqs_ids(1).join("','")}']" %>;
 </script>
 
 <div id="new_resumes_div" class="common_class">
