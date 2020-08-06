@@ -3,21 +3,8 @@
 
 
 // Focus on login text box when page loads
-// Appending the path variable(prepend_with_image_path) with every manual url given based upon the
-// environment.
-var prepend_with_image_path;
 function loadInitialContext()
 {
-  if ( server_type == 0 )
-  {
-    prepend_with_image_path = "";
-  }
-  else
-  {
-    // ALOK: TBD
-     prepend_with_image_path = "/new-recruit";
-     //prepend_with_image_path = "";
-  }
   element = document.getElementById("login");
   if ( element )
   {
@@ -729,6 +716,16 @@ function actionBox(value, event, req_id_array, req_name_array, req_match_id, res
     // Show yet to offer box
     showActionBoxReqMatchInternal(cur_element, req_match_id, "YTO", "req_match_id", 0);
   }
+  else if (value == "Engg Select" )
+  {
+    // Show yet to offer box
+    showActionBoxReqMatchInternal(cur_element, req_match_id, "ENG_SELECT", "req_match_id", 0);
+  }
+  else if (value == "HAC" )
+  {
+    // Show yet to offer box
+    showActionBoxReqMatchInternal(cur_element, req_match_id, "HAC", "req_match_id", 0);
+  }
 }
 
 // Create the appropriate forms for actions based upon the value of drop down list
@@ -830,6 +827,14 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
       {
         // Show the YTO box
         showActionBoxReqMatchInternal(cur_element, selValue, "YTO", req_match_id_or_req_id, req_match_id);
+      }
+      else if ( value == "ENG_SELECT" )
+      {
+        showActionBoxReqMatchInternal(cur_element, selValue, "ENG_SELECT", req_match_id_or_req_id, req_match_id);
+      }
+      else if ( value == "HAC" )
+      {
+        showActionBoxReqMatchInternal(cur_element, selValue, "HAC", req_match_id_or_req_id, req_match_id);
       }
     }
     else

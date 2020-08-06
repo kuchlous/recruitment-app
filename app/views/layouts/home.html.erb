@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title> Mirafra - Recruitment Drive </title>
+    <%= javascript_tag "prepend_with_image_path = '#{APP_CONFIG['subdomain']}'" %>
     <% if ENV["RAILS_ENV"] == "development" || ENV["RAILS_ENV"] == "test" %>
       <%= javascript_tag "server_type = 0" %>
     <% else %>
