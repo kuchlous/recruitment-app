@@ -4,11 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title> Mirafra - Recruitment Drive </title>
     <%= javascript_tag "prepend_with_image_path = '#{APP_CONFIG['subdomain']}'" %>
-    <% if ENV["RAILS_ENV"] == "development" || ENV["RAILS_ENV"] == "test" %>
-      <%= javascript_tag "server_type = 0" %>
-    <% else %>
-      <%= javascript_tag "server_type = 1" %>
-    <% end %>
     <%#= load_google_api_or_internal_files_based_upon_ip_address %>
     <%= yield :head %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>

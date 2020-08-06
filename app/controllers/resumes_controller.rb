@@ -85,12 +85,12 @@ class ResumesController < ApplicationController
 
   def phone_autocomplete
     resumes = Resume.order(:phone).where("phone like ?", "%#{params[:query]}%").limit(5)
-    render json: resumes.map{|r| r.name + " - " + r.phone}
+    render json: resumes.map{|r| r.name + " - " + r.phone + " - " + r.email + " - " + r.id.to_s}
   end
 
   def email_autocomplete
     resumes = Resume.order(:email).where("email like ?", "%#{params[:query]}%").limit(5)
-    render json: resumes.map{|r| r.name + " - " + r.email}
+    render json: resumes.map{|r| r.name + " - " + r.phone + " - " + r.email + " - " + r.id.to_s}
   end
 
   def edit
