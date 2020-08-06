@@ -9,6 +9,7 @@ development:
   temp_resumes:     tmp_resumes
   status_file:      status
   host_name:        localhost:3000
+  subdomain: 
 
 test:
   upload_directory: resumes/test
@@ -21,10 +22,11 @@ test:
   temp_resumes:     tmp_resumes
   status_file:      status
   host_name:        localhost:3010
+  subdomain: 
 
 production:
-  upload_directory: resumes
-  temp_directory:   resumes
+  upload_directory: /apps/shared/resumes
+  temp_directory:   /apps/shared/resumes
   temp_file:        temp_file
   file_size:        1048576
   number_positions: 15
@@ -32,4 +34,5 @@ production:
   zip_temp_file:    zip_tmp
   temp_resumes:     tmp_resumes
   status_file:      status
-  host_name:        apps.mirafra.com/recruit
+  host_name:        apps.mirafra.com/new-recruit
+  subdomain:        /new-recruit
