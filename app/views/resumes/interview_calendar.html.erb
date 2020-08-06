@@ -1,17 +1,7 @@
 <div id="interview_calendar_div" class="half_common_class">
   <span class="span_with_13_with_padding_0"> Interviews Calendar </span> <br /> <br />
   <script>
-    var path;
-    if ( server_type == 0 )
-    {
-      path = "";
-    }
-    else
-    {
-      path = "/new-recruit";
-    }
-   
-  jQuery(document).ready(function() {
+    jQuery(document).ready(function() {
       jQuery("#calendar").fullCalendar(
       {
         header:
@@ -23,11 +13,11 @@
 
         defaultView: 'month',
         slotMinutes: 15,
-        events:      path + "/resumes/get_interviews",
+        events:      prepend_with_image_path + "/resumes/get_interviews",
         timeFormat:  'h(:mm)t',
         eventClick: function(event)
         {
-          redirectToResumeDetails(path, event);
+          redirectToResumeDetails(prepend_with_image_path, event);
         },
         eventMouseover: function(event)
         {
