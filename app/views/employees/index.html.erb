@@ -9,7 +9,7 @@
   <table id="employee_details_table">
     <% @employees.each do |e| %>
       <tr>
-        <td style="font-weight: bold;"> <%= link_to h(e.name), :controller => "employees", :action => "change_to", :id => e.id %> </td>
+        <td style="font-weight: bold;"> <%= link_to h(e.name), :host => APP_CONFIG['host_name'], :controller => "employees", :action => "change_to", :id => e.id %> </td>
       </tr>
     <% end %>
   </table>

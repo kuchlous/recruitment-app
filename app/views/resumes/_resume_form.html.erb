@@ -83,7 +83,7 @@
     <tr>
       <td> Requirement name </td>
       <td class="radio_buttons_one_liner ddl_with_multiples">
-        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), :multiple => true, :onclick => "selectAllValuesOfDropDownListAtStart();" %>
+        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), :multiple => true %>
       </td>
     </tr>
     <tr id="swap_ddl_with_multiples">

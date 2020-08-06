@@ -328,36 +328,11 @@ function controlledHideBox(mFade, mAutohide, mElement)
 }
 // ================POP UP Functions End===============
 
-
-// Fading function
-// Used to fade the row completely in a while
-function FadeEffect(element)
-{
-  new Effect.Fade(element, 
-  {
-    duration : 1
-  });
-}
-
-// For closing the already open div.
-// Normally using it for closing the div opened by flash[:notice]
-function closeBox(elementId)
-{
-  var mElement = document.getElementById(elementId);
-  hideBox(mElement);
-}
-
 // Hides the background shader div
 function hideBox(mElement)
 {
   mElement.style.visibility = "hidden";
   document.getElementById("background_shader").style.visibility = "hidden";
-}
-
-// Show the div
-function showDiv(id)
-{
-  document.getElementById(id).style.display = 'block';
 }
 
 // Adding interview schedule rows
@@ -525,72 +500,6 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     error_message_div.style.visibility = "visible";
     return false;
   }
-}
-
-// Shows requirements corresponding to their groups.
-// Clicking on any group will open requirements for that respective group
-// resumes/_resume_form
-function showGroupRequirements(id_array, name_array)
-{
-  var optElement;
-  var new_td     = document.createElement("td");
-  new_td.className = "ddl_with_multiples";
-  new_td.style.fontSize = "8pt";
-
-  // Multiple drop down list
-  var element  = document.createElement("select");
-  element.name = "requirement_name[]";
-  element.id = "requirement_name";
-  element.setAttribute("multiple", "multiple");
-
-  // Element for creating ddl for requirements
-  for ( i = 0; i < name_array.length; i++ )
-  {
-    optElement           = document.createElement("option");
-    optElement.value     = id_array[i];
-    optElement.innerHTML = name_array[i];
-    element.appendChild(optElement);
-
-    // Select all requirements if clicked on "select all reqs"
-    if ( i == 0)
-    {
-      jQuery(optElement).bind("click",
-        function(optElement)
-        {
-          selectAllValuesOfDropDownList();
-        }
-      );
-    }
-  }
-  new_td.appendChild(element);
-
-  // Deletes and replaces the innerHTML of existing multiple ddl
-  var tr_element = document.getElementById("swap_ddl_with_multiples");
-  var ref_td     = tr_element.getElementsByTagName("td").item(2);
-  tr_element.deleteCell(1);
-  tr_element.insertBefore(new_td, ref_td);
-}
-
-// Select all values of drop down list if clicked on "select all reqs" ( Used on page load )
-function selectAllValuesOfDropDownListAtStart()
-{
-  select_element = document.getElementById("requirement_name");
-  selected_index = select_element.options[select_element.selectedIndex].value;
-  if ( selected_index == "Select all reqs" )
-  {
-    selectAllValuesOfDropDownList();
-  }
-}
-
-// Select all values of drop down list if clicked on "select all reqs" ( Used after page loading )
-function selectAllValuesOfDropDownList()
-{
-  select_element = document.getElementById("requirement_name");
-  for ( i = 0; i < select_element.options.length; i++ )
-  {
-    select_element.options[i].selected = true;
-  }
-  select_element.options[0].selected   = false;
 }
 
 // Provide links to create portal/agencies if they are not present in current database
