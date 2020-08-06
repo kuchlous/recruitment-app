@@ -1,5 +1,5 @@
 class EmployeesController < ApplicationController
-  before_filter :check_for_login, :except => [ "login" ]
+  before_action :check_for_login, :except => [ "login" ]
 
   def index
     @employees = Employee.where(employee_status:"ACTIVE").order(:name)

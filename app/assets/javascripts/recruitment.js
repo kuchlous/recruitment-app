@@ -1,17 +1,4 @@
-// Shortlist Javascript file for recruitment database
-// recruitment.js
-
-
 // Focus on login text box when page loads
-function loadInitialContext()
-{
-  element = document.getElementById("login");
-  if ( element )
-  {
-    element.focus();
-  }
-}
-
 // Function used to find what status should be sent to the controllers
 function findProperValueToBeDisplayed(value)
 {
