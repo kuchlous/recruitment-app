@@ -5,7 +5,7 @@
   </head>
   <body>
   <% link = "<a href=#{url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name)}>#{@resume.name}</a>" %>
-  <p> Hi <%= @to.name %>, </p>
+  <p> Hi <%= @ta ? @to.name : "TA Person" %>, </p>
   <% if @hire_action %>
     <p> <%= link %> has been selected by engineering (@hire_action) and is waiting for a decision. </p>
   <% else %>

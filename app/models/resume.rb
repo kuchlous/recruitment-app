@@ -36,6 +36,7 @@ class Resume < ActiveRecord::Base
 
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
+  
   # validate_on_create       :check_for_valid_attributes
 
   # Appending date-time to file names
@@ -82,6 +83,28 @@ class Resume < ActiveRecord::Base
       return self.status.titleize
     end
 
+    self.overall_status
+  end
+
+  @@STATUS_MAP = {
+    "JOINING" => "Joining Date Given",
+    "OFFERED" => "Offered",
+    "YTO" => "Yet To Offer",
+    "HAC" => "HAC",
+    "ENG_SELECT" => "Engg. Select",
+    "HOLD" => "On Hold",
+    "SCHEDULED" => "Interview Scheduled",
+    "SHORTLISTED" => "Shortlisted",
+    "FORWARDED" => "Forwarded",
+    "REJECTED" => "Rejected",
+    "NEW" => "New"
+  }
+
+  def self.req_match_status_to_resume_status(req_match_status)
+    @@STATUS_MAP[req_match_status]
+  end
+
+  def calculate_overall_status
     status_array = []
 
     self.req_matches.each do |match|
@@ -576,9 +599,9 @@ class Resume < ActiveRecord::Base
   end
 
   def update_overall_status
-    new_overall_status = self.resume_overall_status
+    new_overall_status = self.calculate_overall_status
     if new_overall_status != self.overall_status
-      self.overall_status = self.resume_overall_status
+      self.overall_status = new_overall_status
       self.save
     end
   end

@@ -8,6 +8,13 @@ class Forward < ActiveRecord::Base
   belongs_to :resume
   has_and_belongs_to_many :requirements
   after_create :incr_resume_req_match_count
+  after_save :update_resume
+
+  def update_resume
+    if self.status_changed?
+      self.resume.update_overall_status
+    end
+  end
 
   def incr_resume_req_match_count
     self.resume.nforwards += 1

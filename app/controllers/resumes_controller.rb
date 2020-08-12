@@ -1,7 +1,7 @@
 class ResumesController < ApplicationController
   require 'spreadsheet'
 
-  # before_filter :check_for_login, :except => [ :get_summary_by_id ]
+  before_action :check_for_login, :except => [ :get_summary_by_id ]
   before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD,    :only => [ :hold,           :offered,
                                                                           :edit,           :recent,
                                                                           :joined,         :rejected,
@@ -13,7 +13,7 @@ class ResumesController < ApplicationController
                                                                           :manager_interviews_status ]
 
 
-  # caches_action :joined, :layout => false
+  caches_action :joined, layout: false, cache_path: 'joined'
   # cache_sweeper :resumes_sweeper
 
   ####################################################################################################
@@ -303,10 +303,7 @@ class ResumesController < ApplicationController
     @status        = "FORWARDED"
     @is_req_match  = 0
     @after_shortlist_page = false
-    @forwards = get_hr_matches(@status)    
-    if params[:mine]
-      @forwards = @forwards.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
-    end
+    @forwards = get_hr_matches(@status, params[:mine] ? get_current_employee : nil)    
     render "manager_index"
   end
 
@@ -314,11 +311,7 @@ class ResumesController < ApplicationController
     @status        = "SHORTLISTED"
     @is_req_match  = 1
     @after_shortlist_page = true
-    @forwards = get_hr_matches(@status)
-    if params[:mine]
-      @forwards = @forwards.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
-    end
-               
+    @forwards = get_hr_matches(@status, params[:mine] ? get_current_employee : nil)
     render "manager_index"
   end
 
@@ -327,10 +320,7 @@ class ResumesController < ApplicationController
     @row_id_prefix  = "rejected_resume_row"
     @is_req_match   = 1
     @after_shortlist_page = true
-    @forwards = get_hr_matches_cached(@status)
-    if params[:mine]
-      @forwards = @forwards.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
-    end
+    @forwards = get_hr_matches(@status, params[:mine] ? get_current_employee : nil)
     @forwards = @forwards.paginate(:page => params[:page], :per_page => 100)
     render "manager_index"
   end
@@ -338,10 +328,7 @@ class ResumesController < ApplicationController
   def hold
     @status           = "HOLD"
     @join_on_req_page = @offer_on_req_page = 0
-    @matches          = get_all_req_matches_of_status(@status)
-    if params[:mine]
-      @matches = @matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
-    end
+    @matches = get_hr_matches(@status, params[:mine] ? get_current_employee : nil)
   end
 
   def eng_select
@@ -625,10 +612,12 @@ class ResumesController < ApplicationController
     if !requirement
       flash[:notice] = "No matching requirement found for #{resume.name}"
       redirect_back(fallback_location: root_path)
+      return
     end
     if !requirement.ta_lead
       flash[:notice] = "No TA lead found for requirement #{requirement.name}"
       redirect_back(fallback_location: root_path)
+      return
     end
 
     email_for_decision(resume, requirement, true, nil)
@@ -1491,7 +1480,7 @@ class ResumesController < ApplicationController
 
     # After rendering this we do not need to create an js file for add_message
     # (add_message.js)
-    render "resume_action.js"
+    render body: nil
   end
 
   def delete_selected_message
@@ -1948,16 +1937,19 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Function to be used by HR/ADMIN when we need to show all requirement's status.     #
   #               Resumes corresponding to all requirements.                                         #
   ####################################################################################################
-  def get_hr_matches(status)
+  def get_hr_matches(status, employee = nil)
     @row_id_prefix = get_row_id_prefix(status)
-    forwards       = Forward.where(status:status) { |f|
-      f.resume.resume_overall_status == status.capitalize
-    }
-    forwards      += ReqMatch.where(status:status) { |r|
-      r.resume.resume_overall_status == status.capitalize &&
-      r.requirement.isOPEN?
-    }
-
+    forwards = []
+    resume_status = Resume.req_match_status_to_resume_status(status)
+    if employee
+      resumes = get_employee_referred_resumes(employee, resume_status)
+    else
+      resumes = Resume.where(overall_status: resume_status)
+    end
+    resumes.each do |r|
+      forwards += r.forwards.where(status: status)
+      forwards += r.req_matches.where(status: status)
+    end
     uniq_forwards = uniqify_forwards(forwards)
     uniq_forwards
   end
@@ -2238,43 +2230,37 @@ class ResumesController < ApplicationController
   #               For adding message                                                                 #
   ####################################################################################################
   def email_for_forward_resume(mail_to, resume, uniqid)
-    Emailer.forward(get_current_employee,
-                            mail_to,
-                            resume,
-                            uniqid)
-    
+    Emailer.forward(get_current_employee, mail_to, resume, uniqid).deliver_now
   end
 
   def email_for_adding_panel(employee, interview, resume)
-    Emailer.panel(employee,
-                          interview,
-                          resume)
+    Emailer.panel(employee, interview, resume).deliver_now
   end
 
   def email_after_deleting_interview(interview, resume)
-    Emailer.removed_panel(interview, resume)
+    Emailer.removed_panel(interview, resume).deliver_now
   end
 
   def email_for_upload(resume)
     if (resume.referral_type == "EMPLOYEE")
       referer = Employee.find(resume.referral_id)
-      Emailer.upload(resume, referer)
+      Emailer.upload(resume, referer).deliver_now
     end
   end
 
   def email_for_joined(resume, status = "")
-    Emailer.joined(resume, get_current_employee, status)
+    Emailer.joined(resume, get_current_employee, status).deliver_now
     if (resume.referral_type == "EMPLOYEE")
       referer = Employee.find(resume.referral_id)
       if (referer.employee_status == "ACTIVE")
-        Emailer.joined(resume, referer, status)
+        Emailer.joined(resume, referer, status).deliver_now
       end
-      Emailer.joined(resume, get_finance_employee, status)
-      Emailer.joined(resume, get_sysadmin_employee, status)
+      Emailer.joined(resume, get_finance_employee, status).deliver_now
+      Emailer.joined(resume, get_sysadmin_employee, status).deliver_now
     end
     if (resume.referral_type == "AGENCY")
-      Emailer.joined(resume, get_finance_employee, status)
-      Emailer.joined(resume, get_sysadmin_employee, status)
+      Emailer.joined(resume, get_finance_employee, status).deliver_now
+      Emailer.joined(resume, get_sysadmin_employee, status).deliver_now
     end
   end
 
@@ -2285,31 +2271,19 @@ class ResumesController < ApplicationController
     else
       req_name = "No Requirement Specified"
     end
-    Emailer.action(get_current_employee,
-                                  resume,
-                                  req_name,
-                                  status,
-                                  comment)
+    Emailer.action(get_current_employee, resume, req_name, status, comment).deliver_now
   end
 
   def email_for_feedback(resume, feedback, req)
-    Emailer.feedback(get_current_employee,
-                             resume,
-                             req,
-                             feedback)
+    Emailer.feedback(get_current_employee, resume, req, feedback).deliver_now
   end
 
   def notify_manager_for_panel(req, resume, emp_array)
-    Emailer.notify_manager_for_panel(get_current_employee,
-                                             req,
-                                             resume,
-                                             req.employee,
-                                             emp_array)
+    Emailer.notify_manager_for_panel(get_current_employee, req, resume, req.employee, emp_array).deliver_now
   end
 
   def email_for_add_message(mesg)
-    Emailer.add_message(mesg,
-                                get_logged_employee)
+    Emailer.add_message(mesg, get_logged_employee).deliver_now
   end
 
   def email_for_decision(resume, requirement, eng_decision, hire_action)
@@ -2334,14 +2308,12 @@ class ResumesController < ApplicationController
     end
     ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
-    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action)
+    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action).deliver_now
   end
 
   def send_email_for_declining(interview)
     for emp in [ interview.employee, interview.req_match.requirement.employee, interview.req_match.resume.employee ]
-      Emailer.decline(get_current_employee,
-                              emp,
-                              interview)
+      Emailer.decline(get_current_employee, emp, interview).deliver_now
     end
   end
 

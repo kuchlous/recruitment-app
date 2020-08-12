@@ -42,5 +42,7 @@ function redirectToResumeDetails(path, event)
 
 function show_column_for_date_when_resume_moved_to_joining()
 {
-  $jq('.hidden_by_default').toggle();
+  $('.hidden_by_default').toggle();
 }
+
+$(document).ready(() => { $('.hidden_by_default').hide() });

@@ -323,9 +323,12 @@ require 'will_paginate/array'
     nreqs
   end
 
-  def get_employee_referred_resumes(employee)
-    resumes = Resume.where("referral_type = ? AND referral_id = ?", "EMPLOYEE", employee.id)
-    resumes
+  def get_employee_referred_resumes(employee, overall_status = "")
+    if overall_status == ""
+      Resume.where("referral_type = ? AND referral_id = ?", "EMPLOYEE", employee.id)
+    else
+      Resume.where("referral_type = ? AND referral_id = ? && overall_status = ?", "EMPLOYEE", employee.id, overall_status)
+    end
   end
 
   def sort_resumes_by_date(resumes)

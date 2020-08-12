@@ -6,6 +6,13 @@ class ReqMatch < ActiveRecord::Base
              :class_name  => "Employee",
              :foreign_key => "forwarded_to"
   after_create :incr_resume_req_match_count
+  after_save :update_resume
+
+  def update_resume
+    if self.status_changed?
+      self.resume.update_overall_status
+    end
+  end
 
   def ReqMatch.find_employee_requirements_req_matches(employee, open_reqs_only)
     req_match_array  = []

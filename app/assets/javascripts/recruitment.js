@@ -1,4 +1,108 @@
-// Focus on login text box when page loads
+// Next 4 functions are for event listeners.
+// For popping up window(flash[:notice])
+// ================POP UP Functions Start===============
+if (window.addEventListener)
+{
+  window.addEventListener("load", initAlertFunction, false);
+}
+else if (window.attachEvent)
+{
+  window.attachEvent("onload", initAlertFunction);
+}
+else if ($)
+{
+  window.onload = initAlertFunction;
+}
+
+function initAlertFunction()
+{
+  var enableFade  = "no";
+  var autoHideBox = ["no", 5];
+  // Get the handler for the popup element
+  var popupElement = $ ? document.getElementById("alert_box") : document.all["alert_box"];
+  var positionVar  = 0;
+  setTimeout(function(){displayFadeinBox(enableFade, autoHideBox, popupElement, positionVar)}, 100);
+}
+
+function displayFadeinBox(mFade, mAutohide, mElement, positionVar)
+{
+  var ie = document.all && !window.opera;
+  var iebody = (document.compatMode == "CSS1Compat") ? document.documentElement : document.body;
+
+  var scrollTop = (ie) ? iebody.scrollTop : window.pageYOffset;
+  var docWidth  = (ie) ? iebody.clientWidth : window.innerWidth;
+  var docHeight = (ie) ? iebody.clientHeight: window.innerHeight;
+  var objWidth  = mElement.offsetWidth;
+  var objHeight = mElement.offsetHeight;
+  var top = 0;
+  var left = 0;
+  if ( positionVar == 1 )
+  {
+    top  = 100;
+  }
+  mElement.style.left = docWidth/2 - objWidth/2 - left + "px";
+  mElement.style.top  = scrollTop + docHeight/2 - objHeight/2 - top + "px";
+  
+  setTimeout(function(){staticFadeBox(mElement, positionVar)}, 50);
+
+  if (mFade == "yes" && mElement.filters)
+  {
+    mElement.filters[0].duration = 1;
+    mElement.filters[0].Apply();
+    mElement.filters[0].Play();
+  }
+  mElement.style.visibility = "visible";
+  document.getElementById("background_shader").style.visibility = "visible";
+  if (mElement.style.MozOpacity)
+  {
+    if (mFade == "yes")
+      mozFadeFunction(mFade, mAutohide, mElement);
+    else
+    {
+      mElement.style.MozOpacity = 1;
+      controlledHideBox(mFade, mAutohide, mElement);
+    }
+  }
+  else
+    controlledHideBox(mFade, mAutohide, mElement);
+}
+
+function mozFadeFunction(mFade, mAutohide, mElement)
+{
+  if (parseFloat(mElement.style.MozOpacity) < 1)
+    mElement.style.MozOpacity = parseFloat(mElement.style.MozOpacity) + 0.05;
+  else
+  {
+    controlledHideBox(mFade, mAutohide, mElement);
+  }
+  setTimeout(function(){mozFadeFunction(mFade, mAutohide, mElement)}, 90);
+}
+
+function staticFadeBox(mElement, positionVar)
+{
+  var ie = document.all && !window.opera;
+  var iebody = (document.compatMode == "CSS1Compat") ? document.documentElement : document.body;
+  var scrollTop = (ie) ? iebody.scrollTop : window.pageYOffset;
+  var docHeight     = (ie) ? iebody.clientHeight: window.innerHeight;
+  var objHeight     = mElement.offsetHeight;
+  var top = 0;
+  if ( positionVar == 1 )
+  {
+    top  = 100;
+  }
+  mElement.style.top = scrollTop + docHeight / 2 - objHeight / 2 - top + "px";
+}
+
+function controlledHideBox(mFade, mAutohide, mElement)
+{
+  if (mAutohide[0] == "yes")
+  {
+    var delayVar = (mFade == "yes" && mElement.filters) ? (mAutohide[1] + mElement.filters[0].duration) * 1000 : mAutohide[1] * 1000;
+    setTimeout(function(){hideBox(mElement)}, delayVar);
+  }
+}
+// ================POP UP Functions End===============
+
 // Function used to find what status should be sent to the controllers
 function findProperValueToBeDisplayed(value)
 {
@@ -221,118 +325,6 @@ function textBoxContentsOnBlur(id, elementType)
   { 
     theElement.style.color = 'black'; 
   }
-}
-
-// Next 4 functions are for event listeners.
-// For popping up window(flash[:notice])
-// ================POP UP Functions Start===============
-if (window.addEventListener)
-{
-  window.addEventListener("load", initAlertFunction, false);
-}
-else if (window.attachEvent)
-{
-  window.attachEvent("onload", initAlertFunction);
-}
-else if ($)
-{
-  window.onload = initAlertFunction;
-}
-
-function initAlertFunction()
-{
-  var enableFade  = "no";
-  var autoHideBox = ["no", 5];
-  // Get the handler for the popup element
-  var popupElement = $ ? document.getElementById("alert_box") : document.all["alert_box"];
-  var positionVar  = 0;
-  setTimeout(function(){displayFadeinBox(enableFade, autoHideBox, popupElement, positionVar)}, 100);
-}
-
-function displayFadeinBox(mFade, mAutohide, mElement, positionVar)
-{
-  var ie = document.all && !window.opera;
-  var iebody = (document.compatMode == "CSS1Compat") ? document.documentElement : document.body;
-
-  var scrollTop = (ie) ? iebody.scrollTop : window.pageYOffset;
-  var docWidth  = (ie) ? iebody.clientWidth : window.innerWidth;
-  var docHeight = (ie) ? iebody.clientHeight: window.innerHeight;
-  var objWidth  = mElement.offsetWidth;
-  var objHeight = mElement.offsetHeight;
-  var top = 0;
-  var left = 0;
-  if ( positionVar == 1 )
-  {
-    top  = 100;
-  }
-  mElement.style.left = docWidth/2 - objWidth/2 - left + "px";
-  mElement.style.top  = scrollTop + docHeight/2 - objHeight/2 - top + "px";
-  
-  setTimeout(function(){staticFadeBox(mElement, positionVar)}, 50);
-
-  if (mFade == "yes" && mElement.filters)
-  {
-    mElement.filters[0].duration = 1;
-    mElement.filters[0].Apply();
-    mElement.filters[0].Play();
-  }
-  mElement.style.visibility = "visible";
-  document.getElementById("background_shader").style.visibility = "visible";
-  if (mElement.style.MozOpacity)
-  {
-    if (mFade == "yes")
-      mozFadeFunction(mFade, mAutohide, mElement);
-    else
-    {
-      mElement.style.MozOpacity = 1;
-      controlledHideBox(mFade, mAutohide, mElement);
-    }
-  }
-  else
-    controlledHideBox(mFade, mAutohide, mElement);
-}
-
-function mozFadeFunction(mFade, mAutohide, mElement)
-{
-  if (parseFloat(mElement.style.MozOpacity) < 1)
-    mElement.style.MozOpacity = parseFloat(mElement.style.MozOpacity) + 0.05;
-  else
-  {
-    controlledHideBox(mFade, mAutohide, mElement);
-  }
-  setTimeout(function(){mozFadeFunction(mFade, mAutohide, mElement)}, 90);
-}
-
-function staticFadeBox(mElement, positionVar)
-{
-  var ie = document.all && !window.opera;
-  var iebody = (document.compatMode == "CSS1Compat") ? document.documentElement : document.body;
-  var scrollTop = (ie) ? iebody.scrollTop : window.pageYOffset;
-  var docHeight     = (ie) ? iebody.clientHeight: window.innerHeight;
-  var objHeight     = mElement.offsetHeight;
-  var top = 0;
-  if ( positionVar == 1 )
-  {
-    top  = 100;
-  }
-  mElement.style.top = scrollTop + docHeight / 2 - objHeight / 2 - top + "px";
-}
-
-function controlledHideBox(mFade, mAutohide, mElement)
-{
-  if (mAutohide[0] == "yes")
-  {
-    var delayVar = (mFade == "yes" && mElement.filters) ? (mAutohide[1] + mElement.filters[0].duration) * 1000 : mAutohide[1] * 1000;
-    setTimeout(function(){hideBox(mElement)}, delayVar);
-  }
-}
-// ================POP UP Functions End===============
-
-// Hides the background shader div
-function hideBox(mElement)
-{
-  mElement.style.visibility = "hidden";
-  document.getElementById("background_shader").style.visibility = "hidden";
 }
 
 // Adding interview schedule rows
@@ -1329,6 +1321,25 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
   elements[0].appendChild(element);
   containing_tr.after(elements[1]);
 }
+
+function closeBox(elementId)
+{
+  hideBox($('#'+elementId));
+}
+
+// Hides the background shader div
+function hideBox(mElement)
+{
+  $(mElement).hide();
+  $("#background_shader").hide();
+}
+
+// Show the div
+function showDiv(id)
+{
+  $('#'+id).show();
+}
+
 
 // Close Box link
 // Will close the opened div when clicked on it.

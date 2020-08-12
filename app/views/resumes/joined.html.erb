@@ -29,7 +29,7 @@
 
   <br /> <br />
   <span class="span_with_13_with_padding_0"> <%= @status.titleize + "(" + @matches.size.to_s + ")" %> </span>
-  <%= link_to "(Expand)", :id => "expand_joining_table_link", :onclick => "show_column_for_date_when_resume_moved_to_joining(); return false;" %>
+  <%= link_to "(Expand)", '#', :onclick => "show_column_for_date_when_resume_moved_to_joining(); return false;" %>
   <br />
   <% if @matches && @matches.size > 0 %>
     <table id="joining_resumes_table" class="sortable">
