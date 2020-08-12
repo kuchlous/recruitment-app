@@ -11,9 +11,7 @@ class Forward < ActiveRecord::Base
   after_save :update_resume
 
   def update_resume
-    if self.status_changed?
-      self.resume.update_overall_status
-    end
+    self.resume.update_overall_status
   end
 
   def incr_resume_req_match_count

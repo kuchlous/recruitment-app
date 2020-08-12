@@ -1,10 +1,10 @@
 <%
   filenames     = resume.resume_path
   filenames.each do |filename|
-    resume_tag = url_for(:action => 'download_resume', :name => filename)
+    resume_tag = url_for(:host => APP_CONFIG['host_name'], :action => 'download_resume', :name => filename)
 %>
   <% if /(.pdf)$/.match(filename)
-       image_path = "/images/PdfIcon.png"
+       image_path = "PdfIcon.png"
        title_var  = "Download this resume as a PDF file"
      elsif /(.doc)$/.match(filename) || /(.docx)$/.match(filename) || /(.rtf)$/.match(filename)
        image_path = "DocIcon.png"

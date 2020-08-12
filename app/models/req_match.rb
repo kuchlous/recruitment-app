@@ -9,9 +9,7 @@ class ReqMatch < ActiveRecord::Base
   after_save :update_resume
 
   def update_resume
-    if self.status_changed?
-      self.resume.update_overall_status
-    end
+    self.resume.update_overall_status
   end
 
   def ReqMatch.find_employee_requirements_req_matches(employee, open_reqs_only)
