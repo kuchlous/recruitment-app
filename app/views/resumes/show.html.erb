@@ -163,86 +163,86 @@
    </div>
  </div>
 </div>
-
-
 <div id="resume_details_div" class="common_class">
   <form name="form" method="post">
     <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
-    <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
-      <br />
-      <div id="comment">
-        <span class="span_with_13"> Comments: </span>
-      </div>
-      <br/>
-      <table id="resume_details_comments_table">
-        <% unless @comments.nil? ||
-                  @comments.empty? %>
-          <% @comments.each do |comment| %>
-            <% class_name = cycle('color_line_odd', 'color_line_even') %>
-            <tr class="<%= class_name %>">
-              <td>
-                <span class="span_no_bold"> <%= comment.employee.name + " - " + print_date_and_time_and_year(comment.created_at) %> </span> <br />
-                <span class="span_no_bold left_padding"> <%= simple_format comment.comment %> </span>
-              </td>
-            </tr>
-          <% end %>
-        <% else %>
-          <span class="span_with_8"> No comments available. </span>
+      <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
+        
+        <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+          <br />
+          <div id="feedback">
+            <span class="span_with_13"> Feedback: </span>
+          </div>
+          <span class="span_with_8"> Summary : <%= get_feedback_rating_average(@feedbacks) %> </span>
+          <br/>
+          <table id="resume_details_feedback_table">
+            <% unless @feedbacks.nil? ||
+                      @feedbacks.empty? %>
+              <% @feedbacks.each do |feedback| %>
+                <% class_name = cycle('color_line_odd', 'color_line_even') %>
+                <tr class="<%= class_name %>">
+                  <td>
+                    <span class="span_no_bold"> By <%= feedback.employee.name + " (" + print_date(feedback.created_at) + ")" %> :: 
+                      <%= get_rating(feedback) %>
+                    </span> <br />
+                    <span class="span_no_bold left_padding"> <%= simple_format feedback.feedback %> </span>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <span class="span_with_8"> No feedback available. </span>
+            <% end %>
+          </table> <br />
         <% end %>
-      </table>
-    
-      <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+      
         <br />
-        <div id="feedback">
-          <span class="span_with_13"> Feedback: </span>
+        <div id="messages">
+          <span class="span_with_13"> Messages: </span>
         </div>
-        <span class="span_with_8"> Summary : <%= get_feedback_rating_average(@feedbacks) %> </span>
         <br/>
-        <table id="resume_details_feedback_table">
-          <% unless @feedbacks.nil? ||
-                    @feedbacks.empty? %>
-            <% @feedbacks.each do |feedback| %>
+        <table id="resume_details_messages_table">
+          <% unless @messages.nil? ||
+                    @messages.empty? %>
+            <% @messages.each do |message| %>
               <% class_name = cycle('color_line_odd', 'color_line_even') %>
               <tr class="<%= class_name %>">
                 <td>
-                  <span class="span_no_bold"> By <%= feedback.employee.name + " (" + print_date(feedback.created_at) + ")" %> :: 
-                    <%= get_rating(feedback) %>
+                  <span class="span_no_bold">
+                    By - <%= message.sent_by.name %> <br />
+                    To - <%= message.sent_to.name + " (" + print_date(message.created_at) + ")" %>
                   </span> <br />
-                  <span class="span_no_bold left_padding"> <%= simple_format feedback.feedback %> </span>
+                  <span class="span_no_bold left_padding"> <%= message.message %> </span>
                 </td>
               </tr>
             <% end %>
           <% else %>
-            <span class="span_with_8"> No feedback available. </span>
+            <span class="span_with_8"> No messages available. </span>
           <% end %>
-        </table> <br />
+        </table> 
+        <br />
+        <br />
+        <div id="comment">
+          <span class="span_with_13"> Comments: </span>
+        </div>
+        <br/>
+        <table id="resume_details_comments_table">
+          <% unless @comments.nil? ||
+                    @comments.empty? %>
+            <% @comments.each do |comment| %>
+              <% class_name = cycle('color_line_odd', 'color_line_even') %>
+              <tr class="<%= class_name %>">
+                <td>
+                  <span class="span_no_bold"> <%= comment.employee.name + " - " + print_date_and_time_and_year(comment.created_at) %> </span> <br />
+                  <span class="span_no_bold left_padding"> <%= simple_format comment.comment %> </span>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <span class="span_with_8"> No comments available. </span>
+          <% end %>
+        </table>
+      
       <% end %>
-    
-      <br />
-      <div id="messages">
-        <span class="span_with_13"> Messages: </span>
-      </div>
-      <br/>
-      <table id="resume_details_messages_table">
-        <% unless @messages.nil? ||
-                  @messages.empty? %>
-          <% @messages.each do |message| %>
-            <% class_name = cycle('color_line_odd', 'color_line_even') %>
-            <tr class="<%= class_name %>">
-              <td>
-                <span class="span_no_bold">
-                  By - <%= message.sent_by.name %> <br />
-                  To - <%= message.sent_to.name + " (" + print_date(message.created_at) + ")" %>
-                 </span> <br />
-                 <span class="span_no_bold left_padding"> <%= message.message %> </span>
-              </td>
-            </tr>
-          <% end %>
-        <% else %>
-          <span class="span_with_8"> No messages available. </span>
-        <% end %>
-      </table> <br />
-    <% end %>
     <% end %>
 
     <div id="error_messages_div" class="error_messages_div"> </div>
