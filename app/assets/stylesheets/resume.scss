@@ -1,0 +1,76 @@
+.resume {
+  display: flex;
+  line-height: normal;
+  padding: 20px;
+  border: 1px solid grey;
+  background-color: rgb(227, 228, 250);
+}
+.resume__info {
+  flex: 3;
+  padding-right: 20px;
+  //border: 1px solid grey;
+}
+.resume__actions {
+  flex: 1;
+  border-left: 3px solid grey;
+  padding: 15px;
+}
+.resume__name {
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+}
+.resume__status {
+  font-size: 20px; 
+  text-align: center;
+  padding: 10px 0px;
+}
+.resume__communication {
+  display: flex;
+  text-align: center;
+  font-size: 16px;
+}
+.resume__communication-1 {
+  border-top: 3px solid grey;
+  flex: 1;
+  padding: 10px;
+}
+.resume__communication-2 {
+  border-top: 3px solid grey;
+  flex: 1;
+  padding: 10px;
+  border-left: 3px solid grey;
+}
+.resume__summary {
+    border-top: 3px solid grey;
+    border-bottom: 3px solid grey;
+    padding: 5px;
+    text-align: center;
+    font-size: 16px;
+}
+.resume__summary-heading {
+  font-weight: bold;
+  padding-bottom: 5px;
+}
+.resume__summary-content  {
+    font-style: italic;
+}
+.resume__other-info {
+  padding: 10px 5px;
+  font-size: 15px;
+}
+.item  {
+    padding-bottom: 10px;
+}
+.item--center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.item__value  {
+    font-weight: bold;
+    padding-left: 12px;
+}
+.item__value--normal  {
+    font-weight: normal;
+}

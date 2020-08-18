@@ -1,163 +1,172 @@
-<div id="resume_details_div" class="common_class">
-  <span class="span_with_13"> 
-    <%= @resume.name %> 
-    <% if is_HR_ADMIN? || is_MANAGER? %> 
-      (Status : <%= @overall_status %>) 
-    <% end %>
-  </span>
-  <div class="span_with_8">
-     <h2> Go To:
-       <a href="#comment">Comment</a>
-       <a href="#feedback">Feedback</a>
-       <a href="#messages">Messages</a>
-     </h2>
-  </div>
-  <div id="resume_actions_div">
-    <% if is_HR_ADMIN? || is_MANAGER? %>
-      <div class="float_right_with_no_padding">
-        <%= link_to "Edit Details", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id,:class => "green_color_link", :style => "color: green;" %>
-        <br />
+<div class="resume">
+ <div class="resume__info">
+   <div class="resume__name">
+    <%= @resume.name.capitalize %>
+   </div>
+   <div class="resume__status">
+     <% if is_HR_ADMIN? || is_MANAGER? %> 
+        (Status : <%= @overall_status %>) 
+     <% end %>
+   </div>
+   <div class="resume__communication">
+     <div class="resume__communication-1">
+       <div class="item item--center"><%= image_tag("phone.svg",  :size => "25x25")  %> <span  class="item__value item__value--normal"><%= @resume.phone %></span></div>
+       <div  class="item item--center"><%= image_tag("location.svg",  :size => "25x25")  %> <span  class="item__value item__value--normal"><%= @resume.location %></div>
+     </div>
+      <div class="resume__communication-2">
+        <div class="item item--center"><%= image_tag("mail.svg",  :size => "25x25")  %> <span  class="item__value item__value--normal"><%= mail_to "#{@resume.email}" %></div>
+        <% if  @resume.skype_id.present? %>
+        <div class="item item--center">
+          <%= image_tag("skype.svg",  :size => "25x25")  %> 
+          <span  class="item__value item__value--normal"><%= @resume.skype_id %>
+        </div>
+        <% end %>
       </div>
-    <% end %>
-    <table id="send_message_table">
-      <tr>
-        <td id="message_and_download_image">
-          <%= render "download_box", :resume => @resume %>
-          <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
-        </td>
-      </tr>
-    </table>
-    <% if is_HR_ADMIN? %>
-      <% unless @resume.status == "JOINED" %>
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_eng_decision" ) do %>
-          <div>
-            <%= submit_tag "Send for Engg. Decision", :class => "resume_actions_button" %>
-            <%= hidden_field_tag "resume_id", @resume.id %>
-          </div>
-          <br /> <br />
-        <% end %>
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_decision" ) do %>
-          <div>
-            <%= submit_tag "Send for Mgmt. Decision", :class => "resume_actions_button" %>
-            <%= hidden_field_tag "resume_id", @resume.id %>
-          </div>
-          <br /> <br />
-        <% end %>
-      <% end %>
-    <% end %>
-    <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
-        <% unless @resume.status == "FUTURE" %>
-          <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
-            <div>
-              <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
-              <%= hidden_field_tag "resume_id", @resume.id %>
-            </div>
-          <% end %>
-        <br /> <br />
-        <% end %>
-        <% if @resume.status == "REJECTED" ||
-              @resume.status == "FUTURE"   ||
-              @resume.status == "NOT JOINED" ||
-              @resume.status == "N_ACCEPTED" ||
-              @resume.status == "JOINED" %>
-          <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
-            <div>
-              <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
-              <%= hidden_field_tag "resume_id", @resume.id %>
-            </div>
-          <% end %>
-          <br /> <br />
-        <% end %>
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
-          <div>
-            <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
-            <%= hidden_field_tag "resume_id", @resume.id %>
-          </div>
-        <% end %>
-    <% end %>
-  </div>
-  <form name="form" method="post">
-    <table id="resume_details_table">
+    </div>
+   <div class="resume__summary">
+     <div class= "resume__summary-heading">Summary</div>
+     <div class="resume__summary-content"> <%= @resume.summary %></div>
+   </div>
+   <div class= "resume__other-info">
       <% if is_HR_ADMIN? || is_BD? %>
-        <tr>
-          <td> Resume Id </td>
-          <td> <%= @resume.id %> </td>
-        </tr>
+        <div class="item">
+          <span  class="item__label"> Resume Id: </span>
+          <span  class="item__value"> <%= @resume.id %> </span>
+        </div>
       <% end %>
-      <tr>
-        <td> Phone Number </td>
-        <td> <%= @resume.phone %> </td>
-      </tr>
-      <tr>
-        <td> Email </td>
-        <td> <%= mail_to "#{@resume.email}" %> </td>
-      </tr>
-      <tr>
-        <td> Skype id </td>
-        <td> <%= @resume.skype_id %> </td>
-      </tr>
-      <tr>
-        <td> Qualification </td>
-        <td> <%= @resume.qualification %> </td>
-      </tr>
-      <tr>
-         <td> Experience </td>
-         <td> <%= get_current_experience_string(@resume) %> </td>
-      </tr>
-      <tr>
-        <td> Current Company </td>
-        <td> <%= @resume.current_company %> </td>
-      </tr>
-      <tr>
-        <td> Location </td>
-        <td> <%= @resume.location %> </td>
-      </tr>
+      <div class="item">
+        <span> Qualification: </span>
+        <span class="item__value"> <%= @resume.qualification %> </span>
+      </div>
+      <div class="item">
+         <span> Experience: </span>
+         <span class="item__value"> <%= get_current_experience_string(@resume) %> </span>
+      </div>
+      <div class="item">
+        <span> Current Company: </span>
+        <span class="item__value"> <%= @resume.current_company %> </span>
+      </div>
+      
       <% if is_HR_ADMIN? || is_GM? %>
-        <tr>
-          <td> Current CTC </td>
-          <td>
+        <div class="item">
+          <span> Current CTC: </span>
+          <span class="item__value">
               <%= @resume.ctc %> Lakhs
-          </td>
-        </tr>
-        <tr>
-          <td> Expected CTC </td>
-          <td>
+          </span>
+        </div>
+        <div class="item">
+          <span> Expected CTC: </span>
+          <span class="item__value">
               <%= @resume.expected_ctc %> Lakhs
-          </td>
-        </tr>
+          </span>
+        </div>
       <% end %>
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
-        <tr>
-          <td> Notice Period </td>
-          <td> <%= @resume.notice %> days </td>
-        </tr>
-        <tr>
-          <td> Referral Type </td>
-          <td> <%= @resume.referral_type.titleize %> </td>
-        </tr>
-        <tr>
-          <td> Referral Name </td>
-          <td>
+        <div class="item">
+          <span> Notice Period: </span>
+          <span class="item__value"> <%= @resume.notice %> days </span>
+        </div>
+        <div class="item">
+          <span> Referral Type: </span>
+          <span class="item__value"> <%= @resume.referral_type.titleize %> </span>
+        </div>
+        <div class="item">
+          <span> Referral Name: </span>
+          <span class="item__value">
             <% unless @resume.referral_type == "DIRECT" || @resume.referral_id == 0 %>
               <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %>
             <% end %>
-          </td>
-        </tr>
+          </span>
+        </div>
         <% if @resume.joining_date %>
-          <tr>
-            <td> Joining date  </td>
-            <td> <%= print_date(@resume.joining_date) %> </td>
-          </tr>
+          <div class="item">
+            <span> Joining date:  </span>
+            <span class="item__value"> <%= print_date(@resume.joining_date) %> </span>
+          </div>
         <% end %>
-        <tr>
-          <td> Resume Summary </td>
-          <td> <%= simple_format @resume.summary %> </td>
-        </tr>
       <% end %>
-      <tr>
-        <td> Uploaded at </td>
-        <td> <%= print_date_and_time(@resume.created_at) %> </td>
-    </table>
+      <div class="item">
+        <span> Uploaded at: </span>
+        <span class="item__value"> <%= print_date_and_time(@resume.created_at) %> </span>
+      </div>
+   </div>
+ </div>
+ <div class="resume__actions">
+    <h2> Go To:
+        <div><a  href="#feedback">Feedback</a></div>
+        <div><a href="#messages">Messages</a></div>
+        <div><a href="#comment">Comment</a></div>
+     </h2>
+     <div id="resume_actions_div">
+     <% if is_HR_ADMIN? || is_MANAGER? %>
+       <div class="float_right_with_no_padding">
+         <%= link_to "Edit Details", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id,:class => "green_color_link", :style => "color: green;" %>
+         <br />
+       </div>
+     <% end %>
+     <table id="send_message_table">
+       <tr>
+         <td id="message_and_download_image">
+           <%= render "download_box", :resume => @resume %>
+           <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
+         </td>
+       </tr>
+     </table>
+     <% if is_HR_ADMIN? %>
+       <% unless @resume.status == "JOINED" %>
+         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_eng_decision" ) do %>
+           <div>
+             <%= submit_tag "Send for Engg. Decision", :class => "resume_actions_button" %>
+             <%= hidden_field_tag "resume_id", @resume.id %>
+           </div>
+           <br /> <br />
+         <% end %>
+         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_decision" ) do %>
+           <div>
+             <%= submit_tag "Send for Mgmt. Decision", :class => "resume_actions_button" %>
+             <%= hidden_field_tag "resume_id", @resume.id %>
+           </div>
+           <br /> <br />
+         <% end %>
+       <% end %>
+     <% end %>
+     <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+         <% unless @resume.status == "FUTURE" %>
+           <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
+             <div>
+               <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
+               <%= hidden_field_tag "resume_id", @resume.id %>
+             </div>
+           <% end %>
+         <br /> <br />
+         <% end %>
+         <% if @resume.status == "REJECTED" ||
+               @resume.status == "FUTURE"   ||
+               @resume.status == "NOT JOINED" ||
+               @resume.status == "N_ACCEPTED" ||
+               @resume.status == "JOINED" %>
+           <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
+             <div>
+               <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
+               <%= hidden_field_tag "resume_id", @resume.id %>
+             </div>
+           <% end %>
+           <br /> <br />
+         <% end %>
+         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
+           <div>
+             <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
+             <%= hidden_field_tag "resume_id", @resume.id %>
+           </div>
+         <% end %>
+     <% end %>
+   </div>
+ </div>
+</div>
+
+
+<div id="resume_details_div" class="common_class">
+  <form name="form" method="post">
     <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
     <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
       <br />
