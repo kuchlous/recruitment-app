@@ -1,5 +1,10 @@
 <div class="resume">
  <div class="resume__info">
+  <div class="resume__edit">
+    <% if is_HR_ADMIN? || is_MANAGER? %>
+      <%= link_to image_tag("edit.svg", :size => "25x25"), :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id %>
+    <% end %>
+  </div>
    <div class="resume__name">
     <%= @resume.name.capitalize %>
    </div>
@@ -98,12 +103,7 @@
         <div><a href="#comment">Comment</a></div>
      </h2>
      <div id="resume_actions_div">
-     <% if is_HR_ADMIN? || is_MANAGER? %>
-       <div class="float_right_with_no_padding">
-         <%= link_to "Edit Details", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id,:class => "green_color_link", :style => "color: green;" %>
-         <br />
-       </div>
-     <% end %>
+     
      <table id="send_message_table">
        <tr>
          <td id="message_and_download_image">
@@ -234,6 +234,7 @@
                 <td>
                   <span class="span_no_bold"> <%= comment.employee.name + " - " + print_date_and_time_and_year(comment.created_at) %> </span> <br />
                   <span class="span_no_bold left_padding"> <%= simple_format comment.comment %> </span>
+                  <span><%= comment.ctype %></span>
                 </td>
               </tr>
             <% end %>
