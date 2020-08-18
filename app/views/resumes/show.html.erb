@@ -221,28 +221,28 @@
         </table> 
         <br />
         <br />
-        <div id="comment">
-          <span class="span_with_13"> Comments: </span>
-        </div>
-        <br/>
-        <table id="resume_details_comments_table">
-          <% unless @comments.nil? ||
-                    @comments.empty? %>
-            <% @comments.each do |comment| %>
-              <% class_name = cycle('color_line_odd', 'color_line_even') %>
-              <tr class="<%= class_name %>">
-                <td>
-                  <span class="span_no_bold"> <%= comment.employee.name + " - " + print_date_and_time_and_year(comment.created_at) %> </span> <br />
-                  <span class="span_no_bold left_padding"> <%= simple_format comment.comment %> </span>
-                  <span><%= comment.ctype %></span>
-                </td>
-              </tr>
+        <div class= "section">
+          <div class="section__title">
+            Comments (<%=@comments.size %>):
+          </div>
+          <div class="section__body">
+            <% unless @comments.nil? || @comments.empty? %>
+              <% @comments.each do |comment| %>
+              <div class="comment">
+                <div class="comment__author"><%= comment.employee.name %></div>
+                <div class="comment__date">
+                  <%= print_date_and_time_and_year(comment.created_at)%>
+                </div>
+                <div class="comment__body">
+                  <%= simple_format comment.comment %> 
+                </div>
+              </div>
+              <% end %>
+            <% else %>
+              <div> No comments available. </div>
             <% end %>
-          <% else %>
-            <span class="span_with_8"> No comments available. </span>
-          <% end %>
-        </table>
-      
+          </div>
+        </div>
       <% end %>
     <% end %>
 
