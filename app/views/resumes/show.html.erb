@@ -169,30 +169,38 @@
       <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
         
         <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
-          <br />
-          <div id="feedback">
-            <span class="span_with_13"> Feedback: </span>
-          </div>
-          <span class="span_with_8"> Summary : <%= get_feedback_rating_average(@feedbacks) %> </span>
-          <br/>
-          <table id="resume_details_feedback_table">
-            <% unless @feedbacks.nil? ||
-                      @feedbacks.empty? %>
-              <% @feedbacks.each do |feedback| %>
-                <% class_name = cycle('color_line_odd', 'color_line_even') %>
-                <tr class="<%= class_name %>">
-                  <td>
-                    <span class="span_no_bold"> By <%= feedback.employee.name + " (" + print_date(feedback.created_at) + ")" %> :: 
-                      <%= get_rating(feedback) %>
-                    </span> <br />
-                    <span class="span_no_bold left_padding"> <%= simple_format feedback.feedback %> </span>
-                  </td>
-                </tr>
-              <% end %>
-            <% else %>
-              <span class="span_with_8"> No feedback available. </span>
-            <% end %>
-          </table> <br />
+          <div class="section" id="feedback">
+              <div class="section__title">
+                Feedbacks (<%= @feedbacks.size %>):
+              </div>
+              <div class="section__subtitle">
+                 Summary : <%= get_feedback_rating_average(@feedbacks) %>
+                </div>
+              <div class="section__body">
+                <div>
+                  <% unless @feedbacks.nil? ||
+                            @feedbacks.empty? %>
+                    <% @feedbacks.each do |feedback| %>
+                      <div class="comment">
+                          <div class="comment__author"> 
+                            By <%= feedback.employee.name %> :: 
+                            <%= get_rating(feedback) %>
+                          </div>
+                          <div class="comment__date">
+                            <%= print_date(feedback.created_at) %>
+                          </div>
+                          <div class="comment__body"> <%= simple_format feedback.feedback %> </div>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <span class="span_with_8"> No feedback available. </span>
+                  <% end %>
+                </div> 
+              </div>
+          </div>          
+          
+        
+
         <% end %>
       
         <br />
@@ -221,7 +229,7 @@
         </table> 
         <br />
         <br />
-        <div class= "section">
+        <div class= "section" id="comment">
           <div class="section__title">
             Comments (<%=@comments.size %>):
           </div>
@@ -245,7 +253,6 @@
         </div>
       <% end %>
     <% end %>
-
     <div id="error_messages_div" class="error_messages_div"> </div>
     <script>
       var all_req_ids = [ <%=raw all_reqs_ids().join(",") %>];

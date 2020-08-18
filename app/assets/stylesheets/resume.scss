@@ -2,13 +2,11 @@
   display: flex;
   line-height: normal;
   padding: 20px;
-  border: 1px solid grey;
   background-color: rgb(227, 228, 250);
 }
 .resume__info {
   flex: 3;
   padding-right: 20px;
-  //border: 1px solid grey;
 }
 .resume__edit {
   float: right;
@@ -78,7 +76,6 @@
     font-weight: normal;
 }
 .section {
-  border: 3px solid gray;
   padding: 10px;
 }
 .section__title {
@@ -86,6 +83,12 @@
   font-weight: bold;
   border-bottom: 3px solid gray;
   padding: 10px 0px;
+  margin-bottom: 10px;
+}
+.section__subtitle {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
 }
 .comment {
   border-bottom: 1px solid gray;
