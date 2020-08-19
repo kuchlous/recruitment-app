@@ -13,7 +13,7 @@
 }
 .resume__actions {
   flex: 1;
-  border-left: 3px solid grey;
+  border-left: 1px solid grey;
   padding: 15px;
 }
 .resume__name {
@@ -89,6 +89,7 @@
     font-weight: bold;
     font-size: 15px;
     margin-bottom: 10px;
+    color: #393535;
 }
 .comment {
   border-bottom: 1px solid gray;
