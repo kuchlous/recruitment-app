@@ -13,8 +13,21 @@
 }
 .resume__actions {
   flex: 1;
-  border-left: 1px solid grey;
+  border-left: 1px solid #80808038;
   padding: 15px;
+}
+.resume__actions-goto {
+    float: right;
+    margin-bottom: 16px;
+}
+.actions {
+    text-align: center;
+    margin-top: 16px;
+}
+.action__field {
+   width: 90%;
+   padding: 10px 0;
+   font-size: 16px;
 }
 .resume__name {
   font-size: 40px;

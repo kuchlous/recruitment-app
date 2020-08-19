@@ -97,13 +97,12 @@
    </div>
  </div>
  <div class="resume__actions">
-    <h2> Go To:
-        <div><a  href="#feedback">Feedback</a></div>
-        <div><a href="#messages">Messages</a></div>
-        <div><a href="#comment">Comment</a></div>
+    <h2 class="resume__actions-goto"> Go To:
+        <div><a  href="#feedback">Feedbacks</a></div>
+        <div><a href="#message">Messages</a></div>
+        <div><a href="#comment">Comments</a></div>
      </h2>
      <div id="resume_actions_div">
-     
      <table id="send_message_table">
        <tr>
          <td id="message_and_download_image">
@@ -112,56 +111,58 @@
          </td>
        </tr>
      </table>
-     <% if is_HR_ADMIN? %>
-       <% unless @resume.status == "JOINED" %>
-         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_eng_decision" ) do %>
-           <div>
-             <%= submit_tag "Send for Engg. Decision", :class => "resume_actions_button" %>
-             <%= hidden_field_tag "resume_id", @resume.id %>
-           </div>
-           <br /> <br />
-         <% end %>
-         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_decision" ) do %>
-           <div>
-             <%= submit_tag "Send for Mgmt. Decision", :class => "resume_actions_button" %>
-             <%= hidden_field_tag "resume_id", @resume.id %>
-           </div>
-           <br /> <br />
-         <% end %>
-       <% end %>
-     <% end %>
-     <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
-         <% unless @resume.status == "FUTURE" %>
-           <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
-             <div>
-               <%= submit_tag "Move to Future", :class => "resume_actions_button" %>
-               <%= hidden_field_tag "resume_id", @resume.id %>
-             </div>
-           <% end %>
-         <br /> <br />
-         <% end %>
-         <% if @resume.status == "REJECTED" ||
-               @resume.status == "FUTURE"   ||
-               @resume.status == "NOT JOINED" ||
-               @resume.status == "N_ACCEPTED" ||
-               @resume.status == "JOINED" %>
-           <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
-             <div>
-               <%= submit_tag "Mark Active", :class => "resume_actions_button" %>
-               <%= hidden_field_tag "resume_id", @resume.id %>
-             </div>
-           <% end %>
-           <br /> <br />
-         <% end %>
-         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
-           <div>
-             <%= submit_tag "Reject all Forwards/Req matches", :class => "resume_actions_button" %>
-             <%= hidden_field_tag "resume_id", @resume.id %>
-           </div>
-         <% end %>
-     <% end %>
-   </div>
- </div>
+     <div class="actions">
+        <% if is_HR_ADMIN? %>
+          <% unless @resume.status == "JOINED" %>
+            <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_eng_decision" ) do %>
+              <div>
+                <%= submit_tag "Send for Engg. Decision", :class => "action__field" %>
+                <%= hidden_field_tag "resume_id", @resume.id %>
+              </div>
+              <br /> <br />
+            <% end %>
+            <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_decision" ) do %>
+              <div>
+                <%= submit_tag "Send for Mgmt. Decision", :class => "action__field" %>
+                <%= hidden_field_tag "resume_id", @resume.id %>
+              </div>
+              <br /> <br />
+            <% end %>
+          <% end %>
+        <% end %>
+        <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+            <% unless @resume.status == "FUTURE" %>
+              <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
+                <div>
+                  <%= submit_tag "Move to Future", :class => "action__field" %>
+                  <%= hidden_field_tag "resume_id", @resume.id %>
+                </div>
+              <% end %>
+            <br /> <br />
+            <% end %>
+            <% if @resume.status == "REJECTED" ||
+                  @resume.status == "FUTURE"   ||
+                  @resume.status == "NOT JOINED" ||
+                  @resume.status == "N_ACCEPTED" ||
+                  @resume.status == "JOINED" %>
+              <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
+                <div>
+                  <%= submit_tag "Mark Active", :class => "action__field" %>
+                  <%= hidden_field_tag "resume_id", @resume.id %>
+                </div>
+              <% end %>
+              <br /> <br />
+            <% end %>
+            <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
+              <div>
+                <%= submit_tag "Reject all Forwards/Req matches", :class => "action__field" %>
+                <%= hidden_field_tag "resume_id", @resume.id %>
+              </div>
+            <% end %>
+        <% end %>
+          </div>
+      </div>
+    </div>
 </div>
 <div id="resume_details_div" class="common_class">
   <form name="form" method="post">
@@ -199,7 +200,7 @@
               </div>
           </div>          
         <% end %>
-        <div class="section" id="messages">
+        <div class="section" id="message">
           <div class="section__title"> 
             Messages (<%= @messages.size %>): 
           </div>
