@@ -17,8 +17,14 @@
   padding: 15px;
 }
 .resume__actions-goto {
-    float: right;
-    margin-bottom: 16px;
+  text-align: center;
+  font-size: 15px;
+}
+.goto-links {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
+  font-size: 15px;
 }
 .actions {
     text-align: center;
@@ -72,6 +78,9 @@
 .resume__other-info {
   padding: 10px 5px;
   font-size: 15px;
+}
+.resume__mail {
+  text-align: center;
 }
 .item  {
     padding-bottom: 10px;

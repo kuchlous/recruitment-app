@@ -2,7 +2,7 @@
  <div class="resume__info">
   <div class="resume__edit">
     <% if is_HR_ADMIN? || is_MANAGER? %>
-      <%= link_to image_tag("edit.svg", :size => "25x25"), :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id %>
+      <%= link_to image_tag("edit.svg", :size => "20x20"), :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id %>
     <% end %>
   </div>
    <div class="resume__name">
@@ -94,23 +94,21 @@
         <span> Uploaded at: </span>
         <span class="item__value"> <%= print_date_and_time(@resume.created_at) %> </span>
       </div>
+      <div class="resume__mail">
+        <%= render "download_box", :resume => @resume %>
+        <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
+      </div>
    </div>
  </div>
  <div class="resume__actions">
-    <h2 class="resume__actions-goto"> Go To:
-        <div><a  href="#feedback">Feedbacks</a></div>
-        <div><a href="#message">Messages</a></div>
-        <div><a href="#comment">Comments</a></div>
-     </h2>
+    <h2 class="resume__actions-goto"> Go To: </h2>
+        <div class="goto-links">
+          <a  href="#feedback">Feedbacks</a>
+          <a href="#message">Messages</a>
+          <a href="#comment">Comments</a>
+        </div>
+      
      <div id="resume_actions_div">
-     <table id="send_message_table">
-       <tr>
-         <td id="message_and_download_image">
-           <%= render "download_box", :resume => @resume %>
-           <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
-         </td>
-       </tr>
-     </table>
      <div class="actions">
         <% if is_HR_ADMIN? %>
           <% unless @resume.status == "JOINED" %>
