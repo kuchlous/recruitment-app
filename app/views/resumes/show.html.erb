@@ -107,7 +107,6 @@
           <a href="#message">Messages</a>
           <a href="#comment">Comments</a>
         </div>
-      
      <div id="resume_actions_div">
      <div class="actions">
         <% if is_HR_ADMIN? %>
@@ -230,11 +229,16 @@
             <% unless @comments.nil? || @comments.empty? %>
               <% @comments.each do |comment| %>
               <div class="comment">
-                <div class="comment__author"><%= comment.employee.name %></div>
+                <div class="comment__author" >
+                  <% icon = comment.ctype == "INTERNAL"? "add.svg":"minus.svg" %>
+                  <%= link_to image_tag(icon, :size => "12x12" ,id:"icon_#{comment.id}"), "" ,onClick: "toggleComment(comment_#{comment.id}, icon_#{comment.id}, event)"%>
+                  <%= comment.employee.name %>
+                </div>
                 <div class="comment__date">
                   <%= print_date_and_time_and_year(comment.created_at)%>
                 </div>
-                <div class="comment__body">
+                <% display_property = comment.ctype == "INTERNAL"? "display:none;":"display:block;" %>
+                <div class="comment__body" style=<%= display_property %> id="comment_<%=comment.id %>">
                   <%= simple_format comment.comment %> 
                 </div>
               </div>
@@ -327,3 +331,15 @@
     <% end %>
   </form>
 </div>
+<script>
+  function toggleComment(commentDiv,iconDiv,event) {
+    event.preventDefault();
+    if (commentDiv.style.display === "none") {
+      commentDiv.style.display = "block";
+      iconDiv.src = "/assets/minus.svg"
+    } else {
+      commentDiv.style.display = "none";
+      iconDiv.src = "/assets/add.svg"
+    }
+}
+</script>
