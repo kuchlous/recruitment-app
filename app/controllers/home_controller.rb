@@ -23,7 +23,7 @@ class HomeController < ApplicationController
   end
 
   def actions_page
-    if true
+    if is_HR?
       redirect_to :controller => "home", :action => "dashboard"
     elsif is_ADMIN? || is_REQ_MANAGER?
       redirect_to :controller => "resumes", :action => "manager_index"
@@ -42,6 +42,7 @@ class HomeController < ApplicationController
     end
 
     query = @search_text
+    query = query.gsub('@', '\@')
 
     @results = Resume.search(query, :field_weights => {:name => 10}, :page => params[:page], :per_page => get_per_page)
     puts @results
