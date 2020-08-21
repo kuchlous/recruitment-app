@@ -27,7 +27,7 @@
                                                                                                           :class   => "select_box_with_low_width" %> - 
              <%= text_area_tag            "interview_focus#{index}", i.focus, :class => "focus_textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');",
                                                                                                           :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');" %>
-             <%= link_to "Delete", controller: "resumes",:action => "delete_interview", :id => i.id %> |
+             <%= link_to "Delete", host: APP_CONFIG['host_name'], controller: "resumes",:action => "delete_interview", :id => i.id %> |
              <%= link_to "Update", "", :onClick=> "changeInterview(#{i.id}, #{index});" %>
            </td>
          </tr>
