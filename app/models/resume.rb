@@ -153,11 +153,15 @@ class Resume < ActiveRecord::Base
   # in the params list.
   def upload_resume=(upload_field)
     unless upload_field.nil?
+      tempfile = Tempfile.new("resume_tmp", :encoding => 'ascii-8bit')
+      tempfile.write(upload_field.read)
+      tempfile.close
       ext            = File.extname(upload_field.original_filename)
       # Create the directory to hold the resumes
       FileUtils.mkdir_p($tmp_directory)
       fullpathname      = File.join($tmp_directory, $tmp_file) + ext
-      file_type = Resume.read_upload_write_tmp_file(fullpathname, upload_field)
+      tempfile = File.open(tempfile.path)
+      file_type = Resume.read_upload_write_tmp_file(fullpathname, tempfile)
       logger.info("Uploaded file of type #{file_type}")
       add_html_txt_and_search(ext, file_type)
       @file_type = file_type
@@ -167,13 +171,6 @@ class Resume < ActiveRecord::Base
   end
 
   def move_temp_file_to_upload_directory
-    if (!self.uniqid)
-      self.uniqid  = Uniqid.generate_unique_id(self.name, self)
-      logger.info("resume uniqid name: #{self.uniqid.name}")
-      self.file_name = self.uniqid.name.downcase
-      logger.info("resume file name: #{self.file_name}")
-      self.save
-    end
     filenames = `ls #{$tmp_directory}/#{$tmp_file}.*`.split("\n")
     filenames.each do |filename|
       ext = File.extname(filename)
@@ -194,8 +191,10 @@ class Resume < ActiveRecord::Base
 
   def cleanup_update_resume_data(upload_field)
     resume_file_name  = self.file_name
-    # Deleting already existing resume files from upload directory
-    `rm -rf #{$upload_dir}/#{resume_file_name}.*`
+    if resume_file_name && resume_file_name != ""
+      # Deleting already existing resume files from upload directory
+      `rm -rf #{$upload_dir}/#{resume_file_name}.*`
+    end
 
     # Uploading resume file to upload directory
     ext               = File.extname(upload_field['upload_resume'].original_filename)
@@ -550,9 +549,10 @@ class Resume < ActiveRecord::Base
             fwd = Forward.new(:forwarded_to => req_owner,
                         :forwarded_by => logged_employee,
                         :resume       => resume,
-                        :status       => "FORWARDED",
-                        :requirements => new_reqs)
+                        :status       => "FORWARDED")
             fwd.save!
+            fwd.requirements = new_reqs
+            fwd.save
           end
           uniqid = resume.uniqid
           # Sending email

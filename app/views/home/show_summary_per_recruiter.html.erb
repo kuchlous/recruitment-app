@@ -1,12 +1,7 @@
 <div id="reqowner_summary_div" class="common_class">
   <span class="span_with_13_with_padding_0"> Recruiter Summary </span>
   <br/>
-  <% if ENV["RAILS_ENV"] == "production"
-       path = "/new-recruit/home/show_summary_per_recruiter"
-     else 
-       path = "/home/show_summary_per_recruiter" 
-     end
-  %>
+  <% path = APP_CONFIG['host_name'] + "/home/show_summary_per_recruiter" %>
   <%= form_tag path, :method => 'get' do %>
     <table id="summaries_recruiter_table">
       <tr>
