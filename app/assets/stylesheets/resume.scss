@@ -85,10 +85,14 @@
 .item  {
     padding-bottom: 10px;
 }
+
 .item--center {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.item__label--center, .item__value--center {
+    flex: 1;
 }
 .item__value  {
     font-weight: bold;
