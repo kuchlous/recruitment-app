@@ -250,7 +250,6 @@
                 <% display_property = comment.ctype == "INTERNAL"? "display:none;":"display:block;" %>
                 <div class="comment__body" style=<%= display_property %> id="comment_<%=comment.id %>">
                   <%= simple_format comment.comment %> 
-                  <%= comment.ctype%>
                 </div>
               </div>
               <% end %>
@@ -347,10 +346,10 @@
     event.preventDefault();
     if (commentDiv.style.display === "none") {
       commentDiv.style.display = "block";
-      iconDiv.src = "/assets/minus.svg"
+      iconDiv.src = "<%= image_path("minus.svg")%>";
     } else {
       commentDiv.style.display = "none";
-      iconDiv.src = "/assets/add.svg"
+      iconDiv.src = "<%= image_path("add.svg")%>" ;
     }
 }
 </script>
