@@ -13,12 +13,15 @@ class Requirement < ActiveRecord::Base
                           :foreign_key => "posting_emp_id"
 
   belongs_to              :scheduling_emp,
+                          :optional => true,
                           :class_name => "Employee",
                           :foreign_key => "scheduling_employee_id"
   belongs_to              :ta_lead,
+                          :optional => true,
                           :class_name => "Employee",
                           :foreign_key => "ta_lead_id"
   belongs_to              :eng_lead,
+                          :optional => true,
                           :class_name => "Employee",
                           :foreign_key => "eng_lead_id"
 

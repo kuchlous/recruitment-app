@@ -13,7 +13,7 @@ class ResumesController < ApplicationController
                                                                           :manager_interviews_status ]
 
 
-  caches_action :joined, layout: false, cache_path: 'joined'
+  caches_action :joined, layout: false, cache_path: 'joined', expires_in: 30.minutes
   # cache_sweeper :resumes_sweeper
 
   ####################################################################################################
@@ -780,7 +780,7 @@ class ResumesController < ApplicationController
       elsif req_ids
         req_ids.split(",").each do |req_id|
           req = Requirement.find(req_id)
-          r   = ReqMatch.create(:forwarded_to   => req.employee,
+          r   = ReqMatch.create(:emp_forwarded_to   => req.employee,
                                 :resume         => resume,
                                 :status         => "SHORTLISTED",
                                 :requirement_id => req_id)
@@ -806,7 +806,7 @@ class ResumesController < ApplicationController
 
     # ADDING: Comment
     if resume_comment.nil?   || resume_comment.empty? || resume_comment == "Add Comment" ||
-       resume_comment =~ /Enter your comment/
+      resume_comment =~ /Enter your comment/
       comment = "Resume " + status.titleize + " with no comments"
       ctype   = "INTERNAL"
     else
@@ -1462,6 +1462,7 @@ class ResumesController < ApplicationController
   end
 
   def add_message
+    expire_action action: "joined", cache_path: 'joined'
     resume_id         = params[:resume_id]
     message           = params[:resume][:comment]
     employee          = params[:employee_id]
@@ -1973,13 +1974,10 @@ class ResumesController < ApplicationController
     end
 
     req_matches.sort {|x, y| x.requirement_id <=> y.requirement_id}
-    # req_matches += get_current_employee.forwards.find(:all) {
-    #   |fwd| fwd.status == status
-    # }
-    # TODO: Above code is throwing this error
-    # irb(main):006:0> get_current_employee.forwards
-    # Traceback (most recent call last):
-    # SystemStackError (stack level too deep)
+    req_matches += get_current_employee.forwards.find_all {
+      |fwd| fwd.status == status
+    }
+
     return req_matches
   end
 
@@ -2309,7 +2307,7 @@ class ResumesController < ApplicationController
     end
     ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
-    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, recipients, hire_action).deliver_now
+    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, recipients, eng_decision, hire_action).deliver_now
   end
 
   def send_email_for_declining(interview)

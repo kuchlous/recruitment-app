@@ -1,7 +1,7 @@
 <div id="reqowner_summary_div" class="common_class">
   <span class="span_with_13_with_padding_0"> Interviewer Summary </span>
   <br />
-  <% path = url_for :controller => "home", :action => "show_summary_per_interviewer" %>
+  <% path = url_for :host => APP_CONFIG['host_name'], :controller => "home", :action => "show_summary_per_interviewer" %>
   <%= form_tag path, :method => 'get' do %>
     <table id="summaries_recruiter_table">
       <tr>
@@ -51,7 +51,7 @@
   $('.datepicker').datepicker({
         dateFormat: 'dd-mm-yy',
         showOn: "button",
-        buttonImage: "/assets/calendar.gif",
+        buttonImage: prepend_with_image_path + "/assets/calendar.gif",
         buttonImageOnly: true,
         buttonText: "Select date"
       });

@@ -1,8 +1,8 @@
-  Hi <%= @to.name %>, 
+  Hi, 
   <% if @hire_action %>
-    <p> <%= @resume.name %> has been selected by engineering (@hire_action) and is waiting for a decision. </p>
+    <p> <%= @resume.name %> has been selected by engineering as <%= @hire_action %> and is waiting for a decision. </p>
   <% else %>
-    <%= @resume.name %> is waiting for a decision. <%= "\r\n" %>
+    <%= @resume.name %> is waiting for a <%= @eng_decision ? "engineering" : "management" %> decision. <%= "\r\n" %>
   <% end %>
   Requirement: <%= @requirement.name %> <%= "\r\n" %>
   ============================================================== <%= "\r\n" %>

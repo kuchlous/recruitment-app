@@ -2,7 +2,7 @@ class ReqMatch < ActiveRecord::Base
   belongs_to :resume
   has_many   :interviews
   belongs_to :requirement
-  belongs_to :forwarded_to,
+  belongs_to :emp_forwarded_to,
              :class_name  => "Employee",
              :foreign_key => "forwarded_to"
   after_create :incr_resume_req_match_count

@@ -6,7 +6,7 @@
     <% end %>
   </div>
    <div class="resume__name">
-    <%= @resume.name.capitalize %>
+    <%= @resume.name.split(' ').map{|part| part.capitalize}.join(' ') %>
    </div>
    <div class="resume__status">
      <% if is_HR_ADMIN? || is_MANAGER? %> 
@@ -29,8 +29,14 @@
       </div>
     </div>
    <div class="resume__summary">
-     <div class= "resume__summary-heading">Summary</div>
-     <div class="resume__summary-content"> <%= @resume.summary %></div>
+     <% if @resume.summary && @resume.summary != "" %>
+       <div class= "resume__summary-heading">Summary</div>
+       <div class="resume__summary-content"> <%= @resume.summary %></div>
+     <% end %>
+     <div class="resume__mail">
+       <%= render "download_box", :resume => @resume %>
+       <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
+     </div>
    </div>
    <div class= "resume__other-info">
       <% if is_HR_ADMIN? || is_BD? %>
@@ -52,7 +58,7 @@
         <span class="item__value"> <%= @resume.current_company %> </span>
       </div>
       
-      <% if is_HR_ADMIN? || is_GM? %>
+      <% if is_HR_ADMIN? || is_GM? || get_current_employee.is_GROUP_HEAD? %>
         <div class="item">
           <span> Current CTC: </span>
           <span class="item__value">
@@ -93,10 +99,6 @@
       <div class="item">
         <span> Uploaded at: </span>
         <span class="item__value"> <%= print_date_and_time(@resume.created_at) %> </span>
-      </div>
-      <div class="resume__mail">
-        <%= render "download_box", :resume => @resume %>
-        <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
       </div>
    </div>
  </div>
@@ -223,22 +225,19 @@
         </div>
         <div class= "section" id="comment">
           <div class="section__title">
-            Comments (<%=@comments.size %>):
+            Comments (<%=@comments.size %>) 
           </div>
           <div class="section__body">
             <% unless @comments.nil? || @comments.empty? %>
               <% @comments.each do |comment| %>
               <div class="comment">
                 <div class="comment__author" >
-                  <% icon = comment.ctype == "INTERNAL"? "add.svg":"minus.svg" %>
-                  <%= link_to image_tag(icon, :size => "12x12" ,id:"icon_#{comment.id}"), "" ,onClick: "toggleComment(comment_#{comment.id}, icon_#{comment.id}, event)"%>
                   <%= comment.employee.name %>
                 </div>
                 <div class="comment__date">
                   <%= print_date_and_time_and_year(comment.created_at)%>
                 </div>
-                <% display_property = comment.ctype == "INTERNAL"? "display:none;":"display:block;" %>
-                <div class="comment__body" style=<%= display_property %> id="comment_<%=comment.id %>">
+                <div class="comment__body" id="comment_<%=comment.id %>">
                   <%= simple_format comment.comment %> 
                 </div>
               </div>
@@ -277,7 +276,7 @@
                   <%= get_requirement_link_with_mouse_over_and_mouseout(m.requirement) %>
                   <% status = "REQMATCH" %>
                 <% else %>
-                  <%= m.forwarded_to.name %> <br />
+                  <%= m.emp_forwarded_to.name %> <br />
                   ( <%  m.requirements.each do |r| %>
                     <%= r.name %>,
                   <% end %> )

@@ -85,7 +85,7 @@ module ApplicationHelper
     }
     req_matches += resume.forwards.find_all { |r|
       r.status       == status &&
-      (is_HR_ADMIN? || is_GM? || r.forwarded_to == get_current_employee)
+      (is_HR_ADMIN? || is_GM? || r.emp_forwarded_to == get_current_employee)
     }
   end
 

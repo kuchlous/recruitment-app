@@ -134,14 +134,16 @@ class Emailer < ApplicationMailer
     mail(to: recipients, subject: subject)
   end
 
-  def send_for_decision(resume, requirement, to, rattachment, filetype, recipients, hire_action)
-    subject = "Need Decision for #{resume.name}"
+  def send_for_decision(resume, requirement, to, rattachment, filetype, recipients, eng_decision, hire_action)
+    decision_string = eng_decision ? "Eng" : "Management"
+    subject = decision_string +  " decision for #{resume.name}, " + "Requirement: " + requirement.name
     recipients = recipients.map{|r| r.email }
     attachments[resume.uniqid.name] = File.read(rattachment)
     @resume = resume
     @to = to
     @requirement = requirement
     @hire_action = hire_action
+    @eng_decision = eng_decision
     mail(to: recipients, subject: subject)
   end
 

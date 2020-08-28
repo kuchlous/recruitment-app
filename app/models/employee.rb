@@ -92,6 +92,10 @@ class Employee < ActiveRecord::Base
     /TA_HEAD/.match(employee_type)
   end
 
+  def is_GROUP_HEAD?
+    /GROUP_HEAD/.match(employee_type)
+  end
+
   @@remote_access_disallowed = ["sruthinambiar@mirafra.com",
                                 "sivajyothi@mirafra.com",
                                 "sachinmirashe@mirafra.com",

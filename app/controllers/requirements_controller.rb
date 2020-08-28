@@ -235,14 +235,11 @@ private
   end
 
   def email_for_adding_requirement(req)
-    Emailer.requirement(get_current_employee,
-                                req)
+    Emailer.requirement(get_current_employee, req).deliver_now
   end
 
   def email_for_updating_requirement(req)
-    Emailer.requirement(get_current_employee,
-                                req,
-                                0)
+    Emailer.requirement(get_current_employee, req, 0).deliver_now
   end
 
   # This fn. is called when we change owner of a requirement. We need to change/
@@ -273,8 +270,8 @@ private
         f = resume_to_forward_hash[r]
         f.requirements << req unless f.requirements.include?(req) 
       else
-        f = Forward.new(:forwarded_to => new_owner,
-                        :forwarded_by => of.forwarded_by,
+        f = Forward.new(:emp_forwarded_to => new_owner,
+                        :emp_forwarded_by => of.emp_forwarded_by,
                         :resume       => r,
                         :status       => "FORWARDED",
                         :requirements => [req])

@@ -530,7 +530,7 @@ class Resume < ActiveRecord::Base
         # not been taken, else it will not show up on
         # the forwarded page.
         old_forwards = resume.forwards.find_all { |f|
-          (f.forwarded_to == req_owner) &&
+          (f.emp_forwarded_to == req_owner) &&
           (f.status == "FORWARDED")
         }
         old_reqs = []
@@ -546,8 +546,8 @@ class Resume < ActiveRecord::Base
             old_forwards[0].requirements += new_reqs
             old_forwards[0].save
           else
-            fwd = Forward.new(:forwarded_to => req_owner,
-                        :forwarded_by => logged_employee,
+            fwd = Forward.new(:emp_forwarded_to => req_owner,
+                        :emp_forwarded_by => logged_employee,
                         :resume       => resume,
                         :status       => "FORWARDED")
             fwd.save!
@@ -556,7 +556,7 @@ class Resume < ActiveRecord::Base
           end
           uniqid = resume.uniqid
           # Sending email
-          Emailer.forward(current_employee, req_owner, resume, uniqid)
+          Emailer.forward(current_employee, req_owner, resume, uniqid).deliver_now
           forwarded_employees << req_owner
           forwarded_reqs += new_reqs
         else
@@ -612,6 +612,8 @@ class Resume < ActiveRecord::Base
     }
     reqs += self.req_matches.map { |r| r.requirement.id.to_s }
     reqs.uniq!
+    # There is only so much space for the reqs string in the db
+    reqs = reqs[0..5]
     new_related_requirements = reqs.join(' ')
     if self.related_requirements != new_related_requirements
       self.related_requirements = new_related_requirements

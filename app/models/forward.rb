@@ -1,8 +1,8 @@
 class Forward < ActiveRecord::Base
-  belongs_to :forwarded_to,
+  belongs_to :emp_forwarded_to,
              :class_name  => "Employee",
              :foreign_key => "forwarded_to"
-  belongs_to :forwarded_by,
+  belongs_to :emp_forwarded_by,
              :class_name  => "Employee",
              :foreign_key => "forwarded_by"
   belongs_to :resume
@@ -29,7 +29,7 @@ class Forward < ActiveRecord::Base
       req_array.push([r.name, r.id])
     end
     if req_array.nil? || req_array.empty?
-      req_array = self.forwarded_to.get_reqs_to_forward
+      req_array = self.emp_forwarded_to.get_reqs_to_forward
     end
     req_array
   end
