@@ -147,9 +147,10 @@ class Emailer < ApplicationMailer
 
   def send_for_probation_decision (employee)
     @employee_name=employee.name
-    @joining_date=employee.joining_date
-    @probation_period_end=employee.joining_date+180
-      mail(to: employee.manager.email, subject: "Probation Decision")
+    @employee_eid=employee.eid
+    @employee_email=employee.email
+    subject="For your action: Probation closure of your team member - #{employee.name}" 
+    mail(to: employee.manager.email, subject: subject)
   end  
 end
 
