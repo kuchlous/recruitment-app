@@ -150,7 +150,8 @@ class Emailer < ApplicationMailer
     @employee_eid=employee.eid
     @employee_email=employee.email
     subject="For your action: Probation closure of your team member - #{employee.name}" 
-    attachments["Probationer's Performance Evaluation.doc"] = File.read("Probationer's Performance Evaluation.doc")
+    attachments["Probationer's Performance Evaluation.doc"] = File.read
+    (Rails.root + "/lib/tasks/Probationer's Performance Evaluation.doc")
     mail(to: employee.manager.email, subject: subject)
   end  
 end
