@@ -5,13 +5,9 @@
   </head>
   <body>
   <p> Hi, </p>
-  <% if @hire_action %>
-    <p> <%= link_to @resume.name, {:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> has been selected by engineering as <%= @hire_action %> and is waiting for a decision. </p>
-  <% else %>
-    <p> <%= link_to @resume.name, {:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> is waiting for a <%= @eng_decision ? "engineering" : "management" %> decision. </p>
-  <% end %>
+    <p> This is for your information. <%= link_to @resume.name, {:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> has been marked by engineering as <%= @hire_action %>. </p>
   <p> Requirement: <%= @requirement.name %> </p>
-  <p>
+  <p> Comment: <%= @comment %> </p>
   ============================================================== 
   </br>
   The feedbacks are:- 

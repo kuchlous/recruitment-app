@@ -134,16 +134,26 @@ class Emailer < ApplicationMailer
     mail(to: recipients, subject: subject)
   end
 
-  def send_for_decision(resume, requirement, to, rattachment, filetype, recipients, eng_decision, hire_action)
+  def send_for_decision(resume, requirement, to, rattachment, filetype, ext, recipients, eng_decision, hire_action)
     decision_string = eng_decision ? "Eng" : "Management"
     subject = decision_string +  " decision for #{resume.name}, " + "Requirement: " + requirement.name
     recipients = recipients.map{|r| r.email }
-    attachments[resume.uniqid.name] = File.read(rattachment)
+    attachments[resume.uniqid.name + "." + ext] = File.read(rattachment)
     @resume = resume
     @to = to
     @requirement = requirement
     @hire_action = hire_action
     @eng_decision = eng_decision
+    mail(to: recipients, subject: subject)
+  end
+
+  def send_for_status_change(resume, requirement, recipients, status, comment)
+    subject = "FYI: " + status +  ", #{resume.name}, " + "Requirement: " + requirement.name
+    recipients = recipients.map{|r| r.email }
+    @resume = resume
+    @requirement = requirement
+    @status = status
+    @comment = comment
     mail(to: recipients, subject: subject)
   end
 

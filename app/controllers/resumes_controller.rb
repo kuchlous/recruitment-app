@@ -662,6 +662,7 @@ class ResumesController < ApplicationController
   def mark_not_accepted
     resume       = Resume.find(params[:resume_id])
     resume.update_attributes!(:status => "N_ACCEPTED")
+    expire_fragment('joined')
 
     # Adding Comments 
     resume.add_resume_comment("NOT ACCEPTED: Candidate did not accept our offer.", "INTERNAL", get_current_employee)
@@ -696,7 +697,8 @@ class ResumesController < ApplicationController
     resume.add_resume_comment("#{status}: " + comment, "INTERNAL", get_current_employee)
 
     email_for_joined(resume, status)
-
+    expire_fragment('joined')
+  
     render body: nil
   end
 
@@ -799,6 +801,10 @@ class ResumesController < ApplicationController
       email_for_joined(resume, "JOINING")
     end
 
+    if status == "JOINING" || status == "OFFERED" || status == "NOT ACCEPTED"
+      expire_fragment('joined')
+    end
+
     # In case the whole resume is rejected the req_match will be empty.
     if status == "REJECTED" && req_matches.size == 0
       resume.update_attributes!(:status => status) 
@@ -834,7 +840,7 @@ class ResumesController < ApplicationController
 
     if status == "ENG_SELECT" || status == "HAC" || status == "HOLD" || status == "YTO"
       if match
-        email_for_decision(resume, match.requirement, false, status)
+        email_for_status_change(resume, match.requirement, status, comment)
       end
     end
 
@@ -886,6 +892,8 @@ class ResumesController < ApplicationController
       comment = "JOINING: Marked Joining with no comments"
       email_for_joined(resume, "JOINING")
     end
+
+    expire_fragment('joined')
 
     # Adding Comments 
     resume.add_resume_comment(comment, "INTERNAL", get_current_employee)
@@ -1462,7 +1470,6 @@ class ResumesController < ApplicationController
   end
 
   def add_message
-    expire_action action: "joined", cache_path: 'joined'
     resume_id         = params[:resume_id]
     message           = params[:resume][:comment]
     employee          = params[:employee_id]
@@ -2285,13 +2292,23 @@ class ResumesController < ApplicationController
     Emailer.add_message(mesg, get_logged_employee).deliver_now
   end
 
+  def email_for_status_change(resume, requirement, status, comment)
+    req_owner = requirement.employee
+    gm_for_decision = requirement.employee.gm
+    recipients = [gm_for_decision]
+    recipients << requirement.ta_lead if requirement.ta_lead
+    ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
+    recipients << ta_head if ta_head
+    Emailer.send_for_status_change(resume, requirement, recipients, status, comment).deliver_now
+  end
+
   def email_for_decision(resume, requirement, eng_decision, hire_action)
     attachment, filetype = resume.preferred_file
     req_owner = requirement.employee
     gm_for_decision = requirement.employee.gm
     # gm_for_decision = Employee.find_by_login('alokk')
     ta = get_current_employee
-    attachment, filetype = resume.preferred_file
+    attachment, filetype, ext = resume.preferred_file
     if !attachment
       flash[:notice] = "No resume to attach for #{resume.name}"
       redirect_back(fallback_location: root_path)
@@ -2307,7 +2324,7 @@ class ResumesController < ApplicationController
     end
     ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
-    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, recipients, eng_decision, hire_action).deliver_now
+    Emailer.send_for_decision(resume, requirement, to, attachment, filetype, ext, recipients, eng_decision, hire_action).deliver_now
   end
 
   def send_email_for_declining(interview)

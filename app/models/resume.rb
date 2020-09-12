@@ -34,6 +34,8 @@ class Resume < ActiveRecord::Base
   # Stuff which should be done exactly before validation
   before_validation :remove_whitespaces
 
+  after_save :update_overall_status
+
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
   
@@ -637,12 +639,12 @@ class Resume < ActiveRecord::Base
       odt_file = filename if /(.odt)$/.match(filename)
       txt_file = filename if /(.txt)$/.match(filename)
     end
-    return pdf_file, 'application/pdf' if pdf_file
-    return docx_file,'application/vnd.openxmlformats-officedocument.wordprocessingml.document' if docx_file
-    return doc_file, 'application/msword' if doc_file 
-    return odt_file, 'application/vnd.oasis.opendocument.text' if odt_file 
-    return rtf_file, 'application/rtf' if rtf_file
-    return txt_file, 'text/html' if txt_file
+    return pdf_file, 'application/pdf', 'pdf' if pdf_file
+    return docx_file,'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'docx' if docx_file
+    return doc_file, 'application/msword', 'doc' if doc_file 
+    return odt_file, 'application/vnd.oasis.opendocument.text', 'odt' if odt_file 
+    return rtf_file, 'application/rtf', 'rtf' if rtf_file
+    return txt_file, 'text/html', 'txt' if txt_file
     return nil, nil
   end
 
