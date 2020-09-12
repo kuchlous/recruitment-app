@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title></title>
+  <style>
+    .bold {
+      font-weight:bold;
+    }
+    .bullet {
+      list-style-type: square;
+    }
+    .point {
+       list-style-type: lower-alpha;
+       margin-bottom:15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bold">Dear Manager,</div>
+
+
+  <p>Please be informed that your team member <%=@employee_eid %>, 
+     <%=@employee_name %>, <%=@employee_email %> will be completing probation period in next two weeks.</p>
+
+  <p>This email is initiated for his/her probation review (performance during probation time) and appropriate closure from your end as Reporting Manager. Refer to the following instructions/steps;</p>
+
+  <p>Step 1: Immediately make a note of this task and finish it in next 48 hours (set reminder).</p>
+
+  <p>Step 2: You must consult your Practice Head to discuss and make the final decision about the performance of this team member during his/her probation period.</p>
+
+  <p>Step 3: Action on your part (post discussion with Practice Head);
+
+    <ol>
+      <li class="point">If the performance of this team member is satisfactory and acceptable then;
+
+        <ul>
+          <li class="bullet">You need not to respond/reply to this email. Post 2 weeks of Probation completion date, system will automatically mark this team member for “Confirmation” of employment.</li>
+          <li class="bullet">You may send communication to this employee about your action if you wish to do so Cc to HR (<a href="mailto:probation@mirafra.com">probation@mirafra.com</a>).
+          </li>
+        </ul>
+      </li>
+
+      <li class="point">If the performance of this team member is not satisfactory and it is unacceptable (technical/behavioural) then;
+        <ul>
+          <li class="bullet">you need to initiate performance review process for probation duration. You will complete the attached form after review discussion with this team member and communicating the feedback to him/her (no need to share the form).</li>
+          <li class="bullet">This form has to be shared with HR (<a href="mailto:probation@mirafra.com">probation@mirafra.com</a>) for further process as per the policy.</li>
+          <li class="bullet">This action of yours must be completed in 7 days time from this email date.
+          </li>
+          <li class="bullet">Remember: You need to have sufficient and acceptable evidences and records of such unsatisfactory/unacceptable performance – assumptions and guesswork is not acceptable.</li>
+        </ul>
+      </li>
+    </ol>
+  </p>
+
+  <div class="bold">Note:</div>
+
+  <p>Employee is not part of this email communication. This communication is with Manager and HR.</p>
+  <p> No reply/response from you (Manager) to HR for 3 weeks will be treated as your acceptance for Confirmation for this team member.</p>
+  <p>For more information you may contact <a href="mailto:probation@mirafra.com">probation@mirafra.com</a></p>
+  <p> No exception or retroactive requests will be considered during this process.</p>
+
+  <div class="bold">Mirafra HR</div>
+
+</body>
+
+</html>

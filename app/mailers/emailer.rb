@@ -157,5 +157,14 @@ class Emailer < ApplicationMailer
     mail(to: recipients, subject: subject)
   end
 
+  def send_for_probation_decision (employee)
+    @employee_name=employee.name
+    @employee_eid=employee.eid
+    @employee_email=employee.email
+    subject="For your action: Probation closure of your team member - #{employee.name}" 
+    attachments["Probationer's Performance Evaluation.doc"] = File.read
+    (Rails.root + "/lib/tasks/Probationer's Performance Evaluation.doc")
+    mail(to: employee.manager.email, subject: subject)
+  end  
 end
 

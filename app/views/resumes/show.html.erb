@@ -12,93 +12,100 @@
      <% if is_HR_ADMIN? || is_MANAGER? %> 
         (Status : <%= @overall_status %>) 
      <% end %>
-   </div>
-   <div class="resume__communication">
-     <div class="resume__communication-1">
-       <div class="item item--center"><%= image_tag("phone.svg",  :size => "25x25")  %> <span  class="item__value item__value--normal"><%= @resume.phone %></span></div>
-       <div  class="item item--center"><%= image_tag("location.svg",  :size => "25x25")  %> <span  class="item__value item__value--normal"><%= @resume.location %></div>
-     </div>
-      <div class="resume__communication-2">
-        <div class="item item--center"><%= image_tag("mail.svg",  :size => "25x25")  %> <span  class="item__value item__value--normal"><%= mail_to "#{@resume.email}" %></div>
-        <% if  @resume.skype_id.present? %>
-        <div class="item item--center">
-          <%= image_tag("skype.svg",  :size => "25x25")  %> 
-          <span  class="item__value item__value--normal"><%= @resume.skype_id %>
-        </div>
-        <% end %>
-      </div>
-    </div>
-   <div class="resume__summary">
      <% if @resume.summary && @resume.summary != "" %>
        <div class= "resume__summary-heading">Summary</div>
        <div class="resume__summary-content"> <%= @resume.summary %></div>
      <% end %>
-     <div class="resume__mail">
-       <%= render "download_box", :resume => @resume %>
-       <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
+   </div>
+   <div class="resume__communication">
+     <div class="resume__communication-1">
+       <div class="item item--center"><%= image_tag("phone.svg",  :size => "25x25")  %> 
+          <span  class="item__value item__value--normal"><%= @resume.phone %></span>
+       </div>
+       <div  class="item item--center"><%= image_tag("location.svg",  :size => "25x25")  %> 
+         <span  class="item__value item__value--normal"><%= @resume.location %></span>
+        </div>
+     </div>
+     <div class="resume__communication-2">
+       <div class="item item--center"><%= image_tag("mail.svg",  :size => "25x25")  %> 
+         <span  class="item__value item__value--normal">
+           <%= mail_to "#{@resume.email}" %>
+         </span>
+       </div>
+       <div>
+         <%= render "download_box", :resume => @resume %>
+       </div>  
      </div>
    </div>
    <div class= "resume__other-info">
       <% if is_HR_ADMIN? || is_BD? %>
-        <div class="item">
-          <span  class="item__label"> Resume Id: </span>
-          <span  class="item__value"> <%= @resume.id %> </span>
+        <div class="item item--center">
+          <span  class="item__label item__label--center"> Resume Id: </span>
+          <span  class="item__value item__value--center"> <%= @resume.id %> </span>
         </div>
       <% end %>
-      <div class="item">
-        <span> Qualification: </span>
-        <span class="item__value"> <%= @resume.qualification %> </span>
+      <div class="item item--center">
+        <span class="item__label item__label--center"> Skype Id: </span>
+        <span class="item__value item__value--center"> <%= @resume.skype_id %> </span>
       </div>
-      <div class="item">
-         <span> Experience: </span>
-         <span class="item__value"> <%= get_current_experience_string(@resume) %> </span>
+      <div class="item item--center">
+        <span class="item__label item__label--center"> Qualification: </span>
+        <span class="item__value item__value--center"> <%= @resume.qualification %> </span>
       </div>
-      <div class="item">
-        <span> Current Company: </span>
-        <span class="item__value"> <%= @resume.current_company %> </span>
+      <div class="item item--center">
+         <span class="item__label item__label--center"> Experience: </span>
+         <span class="item__value item__value--center"> <%= get_current_experience_string(@resume) %> </span>
+      </div>
+      <div class="item item--center">
+        <span class="item__label item__label--center"> Current Company: </span>
+        <span class="item__value item__value--center"> <%= @resume.current_company %> </span>
       </div>
       
       <% if is_HR_ADMIN? || is_GM? || get_current_employee.is_GROUP_HEAD? %>
-        <div class="item">
-          <span> Current CTC: </span>
-          <span class="item__value">
+        <div class="item item--center">
+          <span class="item__label item__label--center"> Current CTC: </span>
+          <span class="item__value item__value--center">
               <%= @resume.ctc %> Lakhs
           </span>
         </div>
-        <div class="item">
-          <span> Expected CTC: </span>
-          <span class="item__value">
+        <div class="item item--center">
+          <span class="item__label item__label--center"> Expected CTC: </span>
+          <span class="item__value item__value--center">
               <%= @resume.expected_ctc %> Lakhs
           </span>
         </div>
       <% end %>
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
-        <div class="item">
-          <span> Notice Period: </span>
-          <span class="item__value"> <%= @resume.notice %> days </span>
+        <div class="item item--center">
+          <span class="item__label item__label--center"> Notice Period: </span>
+          <span class="item__value item__value--center"> <%= @resume.notice %> days </span>
         </div>
-        <div class="item">
-          <span> Referral Type: </span>
-          <span class="item__value"> <%= @resume.referral_type.titleize %> </span>
+        <div class="item item--center">
+          <span class="item__label item__label--center"> Referral Type: </span>
+          <span class="item__value item__value--center"> <%= @resume.referral_type.titleize %> </span>
         </div>
-        <div class="item">
-          <span> Referral Name: </span>
-          <span class="item__value">
+        <div class="item item--center">
+          <span class="item__label item__label--center"> Referral Name: </span>
+          <span class="item__value item__value--center">
             <% unless @resume.referral_type == "DIRECT" || @resume.referral_id == 0 %>
               <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %>
             <% end %>
           </span>
         </div>
         <% if @resume.joining_date %>
-          <div class="item">
-            <span> Joining date:  </span>
-            <span class="item__value"> <%= print_date(@resume.joining_date) %> </span>
+          <div class="item item--center">
+            <span class="item__label item__label--center"> Joining date:  </span>
+            <span class="item__value item__value--center"> <%= print_date(@resume.joining_date) %> </span>
           </div>
         <% end %>
       <% end %>
-      <div class="item">
-        <span> Uploaded at: </span>
-        <span class="item__value"> <%= print_date_and_time(@resume.created_at) %> </span>
+      <div class="item item--center">
+        <span class="item__label item__label--center"> Uploaded at: </span>
+        <span class="item__value item__value--center"> <%= print_date_and_time(@resume.created_at) %> </span>
+      </div>
+      <div class="resume__mail">
+        
+        <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
       </div>
    </div>
  </div>
@@ -109,6 +116,7 @@
           <a href="#message">Messages</a>
           <a href="#comment">Comments</a>
         </div>
+      
      <div id="resume_actions_div">
      <div class="actions">
         <% if is_HR_ADMIN? %>
@@ -335,10 +343,10 @@
     event.preventDefault();
     if (commentDiv.style.display === "none") {
       commentDiv.style.display = "block";
-      iconDiv.src = "/assets/minus.svg"
+      iconDiv.src = "<%= image_path("minus.svg")%>";
     } else {
       commentDiv.style.display = "none";
-      iconDiv.src = "/assets/add.svg"
+      iconDiv.src = "<%= image_path("add.svg")%>" ;
     }
 }
 </script>

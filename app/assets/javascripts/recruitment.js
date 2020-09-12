@@ -652,7 +652,10 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
       j++;
      }
   }
-
+  if(selValue.length >1 && value != "Shortlist"){
+    alert ("Please select only one requirement!");
+    return;
+  }
   // Lastly, join the selected elements using comma
   selValue = selValue.join(",");
 

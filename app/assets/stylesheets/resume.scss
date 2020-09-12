@@ -46,17 +46,17 @@
   padding: 10px 0px;
 }
 .resume__communication {
+  border-top: 3px solid grey;
   display: flex;
   text-align: center;
   font-size: 16px;
+  border-bottom: 3px solid grey;
 }
 .resume__communication-1 {
-  border-top: 3px solid grey;
   flex: 1;
   padding: 10px;
 }
 .resume__communication-2 {
-  border-top: 3px solid grey;
   flex: 1;
   padding: 10px;
   border-left: 3px solid grey;
@@ -85,10 +85,14 @@
 .item  {
     padding-bottom: 10px;
 }
+
 .item--center {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.item__label--center, .item__value--center {
+    flex: 1;
 }
 .item__value  {
     font-weight: bold;
