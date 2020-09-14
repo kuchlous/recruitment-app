@@ -6,7 +6,7 @@
           Search parameters - <%= @search_text %>
         <% end %>
       </div>
-      <%= will_paginate @results %>
+      <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
       <%= hidden_field_tag "search[box]", :value => @search_text %>
       <table>
         <tr>
@@ -42,7 +42,7 @@
           </tr>
         <% end %>
       </table>
-      <%= will_paginate @results %>
+      <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
   <% else %>
     <span class="span_with_13_with_padding_0"> Sorry there are no results found corresponding to your search parameters. </span>
   <% end %>
