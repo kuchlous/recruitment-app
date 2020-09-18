@@ -719,7 +719,7 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
         // Show the YTO box
         showActionBoxReqMatchInternal(cur_element, selValue, "YTO", req_match_id_or_req_id, req_match_id);
       }
-      else if ( value == "ENG_SELECT" )
+      else if ( value == "Engg Select" )
       {
         showActionBoxReqMatchInternal(cur_element, selValue, "ENG_SELECT", req_match_id_or_req_id, req_match_id);
       }
