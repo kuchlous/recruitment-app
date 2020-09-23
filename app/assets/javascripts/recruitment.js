@@ -1079,8 +1079,7 @@ function showMessageBox(cur_element, resume_id)
           document.getElementById("loader").style.display="none";
           value = "Message";
           value = findProperValueToBeDisplayed(value);
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          document.getElementById("ajax_request_tr").innerHTML = "Message sent successfully";
         },
         error: function (err) {
           document.getElementById("loader").style.display="none";
