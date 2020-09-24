@@ -39,12 +39,13 @@ font-size: 16px;
   top: 50%;
   left: 50%;
   z-index: 10;
-  background-color:rgb(245, 245, 220);
+  background-color:rgb(227, 228, 250);
   padding: 10px;
   border: 1px solid grey;
   border-radius: 5px;
   transform: translate(-50%, -50%);
   display: none;
   color:rgb(34, 34, 102);
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 700;
 }
