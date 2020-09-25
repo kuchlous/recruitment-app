@@ -1486,7 +1486,7 @@ class ResumesController < ApplicationController
 
     # Send mail when adding message
     email_for_add_message(m)
-
+    flash[:notice] = "Message sent successfully"
     # After rendering this we do not need to create an js file for add_message
     # (add_message.js)
     render body: nil

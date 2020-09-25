@@ -1079,10 +1079,8 @@ function showMessageBox(cur_element, resume_id)
           document.getElementById("loader").style.display="none";
           value = "Message";
           value = findProperValueToBeDisplayed(value);
-          document.getElementById("notification").innerHTML = "Message sent successfully";
-          document.getElementById("notification").style.display="block";
           document.getElementById("ajax_request_tr").innerHTML = "";
-          setTimeout(function(){ document.getElementById("notification").style.display="none"; }, 3000);
+          window.location.reload();
         },
         error: function (err) {
           document.getElementById("loader").style.display="none";
