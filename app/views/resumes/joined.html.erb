@@ -33,13 +33,16 @@
   <br />
   <% if @matches && @matches.size > 0 %>
     <table id="joining_resumes_table" class="sortable">
-      <tr>
-        <th> Name   </th>
-        <th> Requirement   </th>
-        <th> Joining Date  </th>
-        <th> Likely to join </th>
-        <th class="hidden_by_default"> Accept Date  </th>
-      </tr>
+      <thead>
+        <tr>
+          <th> Name   </th>
+          <th> Requirement   </th>
+          <th> Joining Date  </th>
+          <th> Likely to join </th>
+          <th class="hidden_by_default"> Accept Date  </th>
+        </tr>
+      </thead>
+      <tbody>
       <% @matches.each do |f|
         resume = f.resume %>
         <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
@@ -66,6 +69,7 @@
           </td>
         </tr>
       <% end %>
+      </tbody>
     </table>
   <% else %>
     No resumes given joining date.
