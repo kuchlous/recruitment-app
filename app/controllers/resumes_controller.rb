@@ -382,14 +382,14 @@ class ResumesController < ApplicationController
     matches = matches.sort_by { |m| [m.resume.joining_date ? m.resume.joining_date : Date.today, 
                                      m.requirement.name] }
 
-    joined_resumes   = Resume.find_all_by_status("JOINED")
+    joined_resumes   = Resume.where(status: "JOINED")
     joined_resumes = joined_resumes.sort_by { |r| [!r.joining_date.nil? ?
                                                       r.joining_date : 
                                                       Date.today
                                                     ] 
                                               }
 
-    not_joined_resumes = Resume.find_all_by_status("NOT JOINED")
+    not_joined_resumes = Resume.where(status: "NOT JOINED")
     not_joined_resumes = not_joined_resumes.sort_by { 
                             |r| [!r.joining_date.nil? ? 
                                     r.joining_date : Date.today 
@@ -1344,12 +1344,12 @@ class ResumesController < ApplicationController
     @year   = params[:year].to_i
     @status = params[:status]
 
-    @joined_resumes              = Resume.find_all_by_status(@status).find_all { |resume| 
+    @joined_resumes              = Resume.where(status: @status).find_all { |resume| 
                                                           resume.joining_date && 
                                                           resume.joining_date.month >= @smonth &&
                                                           resume.joining_date.month <= @emonth &&
                                                           resume.joining_date.year  == @year }
-    render "resumes/_show_quarterly_joined", :layout => false
+    render "resumes/_show_quarterly_joined"
   end
 
   ####################################################################################################
@@ -1358,9 +1358,9 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def show_all_joined_or_not_joined
     @status           = params[:status]
-    @joined_resumes   = Resume.find_all_by_status(@status)
+    @joined_resumes   = Resume.where(status: @status)
     @joined_resumes   = @joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
-    render "resumes/_show_quarterly_joined", :layout => false
+    render "resumes/_show_quarterly_joined"
   end
 
   ####################################################################################################
@@ -1380,7 +1380,7 @@ class ResumesController < ApplicationController
     @offered_comments = offered_comments.sort_by { |c| [c.created_at] }
     @offered_comments.uniq { |c| c.resume }
 
-    render "resumes/_show_quarterly_offered", :layout => false
+    render "resumes/_show_quarterly_offered"
   end
 
   def show_quarterly_not_accepted
@@ -1389,7 +1389,7 @@ class ResumesController < ApplicationController
     @year   = params[:year].to_i
     date = Date.new(@year, @smonth, 1)
     @not_accepted_comments = get_quarterly_comments_not_accepted(date)
-    render "resumes/_show_quarterly_not_accepted", :layout => false
+    render "resumes/_show_quarterly_not_accepted"
   end
 
   ####################################################################################################
@@ -1402,13 +1402,13 @@ class ResumesController < ApplicationController
     @offered_comments = offered_comments.sort_by { |c| [c.created_at] }
     @offered_comments.uniq { |c| c.resume }
 
-    render "resumes/_show_quarterly_offered", :layout => false
+    render "resumes/_show_quarterly_offered"
   end
 
   def show_all_not_accepted
     @status = "NOT ACCEPTED"
     @not_accepted_comments = get_quarterly_comments_not_accepted(nil)
-    render "resumes/_show_quarterly_not_accepted", :layout => false
+    render "resumes/_show_quarterly_not_accepted"
   end
 
   ####################################################################################################
@@ -1912,10 +1912,10 @@ class ResumesController < ApplicationController
 
   def get_hr_rejects
     @row_id_prefix = get_row_id_prefix("REJECTED")
-    forwards       = Forward.find_all_by_status("REJECTED").find_all { |f|
+    forwards       = Forward.where(status: "REJECTED").find_all { |f|
       f.resume.rejected?
     }
-    forwards      += ReqMatch.find_all_by_status("REJECTED").find_all { |r|
+    forwards      += ReqMatch.where(status: "REJECTED").find_all { |r|
       r.resume.rejected? &&
       r.requirement.isOPEN?
     }
@@ -2401,11 +2401,11 @@ class ResumesController < ApplicationController
 
 
   def get_quarterly_comments_not_accepted(date)
-    resumes  = Resume.find_all_by_status("N_ACCEPTED")
+    resumes = Resume.where(status: "N_ACCEPTED")
     not_accepted_comments = []
     resumes.each do |r|
       comments = r.comments
-      comments.reverse!
+      comments = comments.reverse
       not_accepted_comment = nil
       offered_comment = nil
       comments.each do |c|

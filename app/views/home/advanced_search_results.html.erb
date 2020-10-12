@@ -6,7 +6,7 @@
           Search parameters - <%= @search_text %>
         <% end %>
       </div>
-      <%= will_paginate @results %>
+      <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
       <%= hidden_field_tag "search", :value => @search_text %>
       <%= hidden_field_tag "ctc_min", :value => @ctc_min %>
       <%= hidden_field_tag "ctc_max", :value => @ctc_max %>
@@ -49,7 +49,7 @@
           </tr>
         <% end %>
       </table>
-      <%= will_paginate @results %>
+      <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
   <% else %>
     <span class="span_with_13_with_padding_0"> Sorry there are no results found corresponding to your search parameters. </span>
   <% end %>
