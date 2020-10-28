@@ -36,7 +36,7 @@
       <thead>
         <tr>
           <th> Name   </th>
-          <th> Requirement   </th>
+          <th class="sorttable_alpha"> Requirement   </th>
           <th> Joining Date  </th>
           <th> Likely to join </th>
           <th class="hidden_by_default"> Accept Date  </th>
@@ -49,8 +49,8 @@
           <td>
             <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
           </td>
-          <td>
-            <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
+          <td sorttable_customkey="<%= f.requirement.name %>">
+            <%= f.requirement.name %>
           </td>
           <td>
             <%= link_to print_date(resume.joining_date), "", :onClick=>"showEditJoiningBox(event, #{resume.id}, #{f.id})" %>

@@ -46,9 +46,9 @@ class ResumesController < ApplicationController
   def new_resumes
     if params[:mine]
       employee = get_current_employee
-      resumes = Resume.where("referral_type = ? AND referral_id = ? AND status = ? AND nforwards = ? AND nreq_matches = ?", "EMPLOYEE", employee.id, "", 0, 0)
+      resumes = Resume.where("referral_type = ? AND referral_id = ? AND overall_status = ?", "EMPLOYEE", employee.id, "New")
     else
-      resumes = Resume.where("status = ? AND nforwards = ? AND nreq_matches = ?", "", 0, 0)
+      resumes = Resume.where("overall_status = ?", "New")
     end
     @resumes      = resumes
   end
@@ -850,6 +850,7 @@ class ResumesController < ApplicationController
       forward.save
     end
 
+    resume.update_overall_status
     render body: nil
   end
 
