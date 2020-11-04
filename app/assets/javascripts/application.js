@@ -7,6 +7,7 @@
 //= require moment 
 //= require fullcalendar
 //= require fullcalendar/gcal
+//= require twitter/bootstrap/modal
 //= require_tree .
 // for employees available in our database
 function fillInputBoxWithContents()

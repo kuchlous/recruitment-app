@@ -3,6 +3,7 @@
   line-height: normal;
   padding: 20px;
   background-color: rgb(227, 228, 250);
+  width: 100%;
 }
 .resume__info {
   flex: 3;
@@ -134,3 +135,8 @@
 .comment__body {
     padding-top: 10px;
 }
+
+#embed_resume {
+  min-height: 75vh;
+}
+

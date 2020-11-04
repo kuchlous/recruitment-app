@@ -710,6 +710,8 @@ class ResumesController < ApplicationController
     @resume = params[:name]
     if File.extname(@resume) == "html"
       send_file(@resume, :disposition => "inline")
+    elsif File.extname(@resume) == ".pdf" 
+      send_file(@resume, :disposition => "inline", :filename => @resume, :type => "application/pdf")
     else
       send_file(@resume)
     end
