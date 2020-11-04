@@ -147,7 +147,7 @@ class Resume < ActiveRecord::Base
   end
 
   def Resume.get_resume_statuses
-    ["Any", "Joining Date Given", "Offered", "On Hold", "Selected", "Interview Scheduled", "Shortlisted", "Forwarded", "New", "Rejected", "FUTURE", "N_ACCEPTED"]
+    ["Any", "Joining Date Given", "Offered", "On Hold", "Selected", "Interview Scheduled", "Shortlisted", "Forwarded", "New", "Rejected", "FUTURE", "HAC", "N Accepted", "Not Joined"]
   end
 
   # This gets called from the constructor after the call to 

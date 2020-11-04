@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   require 'net/imap'
 
   # check_for_login redirects to index for login
-  # before_filter :check_for_login, :except => ["index"]
+  before_action :check_for_login, :except => ["index"]
 
   before_action :check_for_ADMIN_or_GM, :only => ["show_summary_per_manager", 
                                             "show_summary_per_recruiter",
