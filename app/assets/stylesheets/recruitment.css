@@ -27,6 +27,9 @@ table, caption, tbody, tfoot, thead, tr, th, td
   outline: 0;
   font-size: 100%;
   background: transparent;
+  -webkit-box-sizing: content-box !important;
+  -moz-box-sizing: content-box !important;
+  box-sizing: content-box !important;
 }
 
 body
