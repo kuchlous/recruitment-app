@@ -90,7 +90,13 @@ Rails.application.routes.draw do
   match 'resumes/export_interviews_per_date',to: 'resumes#export_interviews_per_date'         , via: :get
   match 'resumes/yto',to: 'resumes#yto'                                                       , via: :get
   match 'resumes/manager_yto',to: 'resumes#manager_yto'                                       , via: :get
-  match 'resumes/delete_interview',to: 'resumes#delete_interview'                                       , via: :get
+  match 'resumes/show_quarterly_joined',to: 'resumes#show_quarterly_joined'                   , via: :get
+  match 'resumes/show_all_joined_or_not_joined',to: 'resumes#show_all_joined_or_not_joined'   , via: :get
+  match 'resumes/show_quarterly_offered',to: 'resumes#show_quarterly_offered'                 , via: :get
+  match 'resumes/show_all_offered',to: 'resumes#show_all_offered'                             , via: :get
+  match 'resumes/show_quarterly_not_accepted',to: 'resumes#show_quarterly_not_accepted'       , via: :get
+  match 'resumes/show_all_not_accepted',to: 'resumes#show_all_not_accepted'                   , via: :get
+  match 'resumes/delete_interview',to: 'resumes#delete_interview'                             , via: :get
 
   match 'resumes/update_interview',to: 'resumes#update_interview'                                       , via: :post
 
