@@ -1366,6 +1366,14 @@ class ResumesController < ApplicationController
     render "resumes/_show_quarterly_joined"
   end
 
+  def get_resume_attachment
+    r = Resume.find(params[:id])
+    res = r.resume_path.map do |path|
+      {"file_path": url_for(:host => APP_CONFIG['host_name'], :action => 'download_resume', :name => path), "type":File.extname(path)[1..-1]}
+    end
+    render json: res   
+  end
+
   ####################################################################################################
   # FUNCTION    : show_quarterly_offered                                                             #
   # DESCRIPTION : Used to show offered resumes of that time period/quarter                           #

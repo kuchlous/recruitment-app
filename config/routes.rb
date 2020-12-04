@@ -58,6 +58,7 @@ Rails.application.routes.draw do
   match 'resumes/export_as_xls_requirement_for_joining',to: 'resumes#export_as_xls_requirement_for_joining'        , via: :get
   match 'resumes/xport_as_xls_all_uploaded_resumes',to: 'resumes#export_as_xls_all_uploaded_resumes'               , via: :get  
   match 'resumes/joined',to: 'resumes#joined'                , via: :get
+  match 'get_resume_attachment', to: 'resumes#get_resume_attachment'    , via: :get 
   match 'resumes/show/:id',to: 'resumes#show'                , via: :get
   match 'resumes/hold',to: 'resumes#hold'                    , via: :get
   match 'resumes/offered',to: 'resumes#offered'              , via: :get
