@@ -786,7 +786,7 @@ class ResumesController < ApplicationController
           req = Requirement.find(req_id)
           r   = ReqMatch.create(:emp_forwarded_to   => req.employee,
                                 :resume         => resume,
-                                :status         => "SHORTLISTED",
+                                :status         => status,
                                 :requirement_id => req_id)
           req_matches << r
         end
