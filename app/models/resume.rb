@@ -175,10 +175,9 @@ class Resume < ActiveRecord::Base
   def move_temp_file_to_upload_directory
     filenames = `ls #{$tmp_directory}/#{$tmp_file}.*`.split("\n")
     filenames.each do |filename|
-      ext = File.extname(filename)
       upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
       Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
-      `mv -f #{filename} #{upload_dir}/#{self.file_name}#{ext}`
+      `mv -f #{filename} #{upload_dir}/#{self.file_name}`
     end
     # Removing content.xml file
     delete_temp_files($tmp_directory, "customXml")
@@ -191,7 +190,7 @@ class Resume < ActiveRecord::Base
 
   def resume_path
     upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-    file_names = `ls #{upload_dir}/#{self.file_name}.*`.split("\n")
+    file_names = `ls #{upload_dir}/*`.split("\n")
   end
 
   def cleanup_update_resume_data(upload_field)

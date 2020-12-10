@@ -110,7 +110,7 @@ class ResumesController < ApplicationController
     @resume.employee   = get_current_employee
     @resume.summary    = "UPLOADED without comments." if params[:resume][:summary].nil?
     @resume.uniqid  = Uniqid.generate_unique_id(@resume.name, @resume)
-    @resume.file_name = @resume.uniqid.name.downcase
+    @resume.file_name = params[:resume][:upload_resume].original_filename
     respond_to do |format|
       if @resume.save
         # Adding comment while uploading resume
