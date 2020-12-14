@@ -169,6 +169,15 @@
         <% end %>
           </div>
       </div>
+      <div class="column-center">
+        <p class="item">Click on the "Choose File" to upload more documents:</p>
+
+        <form action="/resumes/upload_document" enctype="multipart/form-data" accept-charset="UTF-8" method="post">
+          <input class="item" type="file" id="myFile" size="31" name="resume[upload_resume]">
+          <%= hidden_field_tag "id", @resume.id %>
+          <input type="submit" value="Upload">
+        </form>
+      </div>
     </div>
 </div>
 <div id="resume_details_div" class="common_class">

@@ -139,4 +139,11 @@
 #embed_resume {
   min-height: 75vh;
 }
-
+.column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid dimgrey;
+  padding: 10px;
+  font-size: 15px;
+}

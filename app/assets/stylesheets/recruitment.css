@@ -1725,6 +1725,7 @@ div.pagination .disabled:hover
   clear:            both;
   float:            right;
   width:            100%;
+  margin-bottom: 40px;
 }
 
 #resume_details_table
