@@ -110,13 +110,14 @@ class ResumesController < ApplicationController
     @resume.employee   = get_current_employee
     @resume.summary    = "UPLOADED without comments." if params[:resume][:summary].nil?
     @resume.uniqid  = Uniqid.generate_unique_id(@resume.name, @resume)
-    @resume.file_name = @resume.uniqid.name.downcase
+    @resume.file_name = params[:resume][:upload_resume].original_filename
+    original_filename = params[:resume][:upload_resume].original_filename
     respond_to do |format|
       if @resume.save
         # Adding comment while uploading resume
         comment = "UPLOADING: #{get_logged_employee.name} uploaded resume on #{@resume.created_at.strftime('%b %d, %Y')}."
         @resume.add_resume_comment(comment, "INTERNAL", get_logged_employee)
-        @resume.move_temp_file_to_upload_directory
+        @resume.move_temp_file_to_upload_directory(original_filename)
         email_for_upload(@resume)
 
         # If reqs are selected
@@ -173,6 +174,12 @@ class ResumesController < ApplicationController
       }
       render :action => "edit"
     end
+  end
+
+  def upload_document
+    @resume = Resume.find(params[:id])
+    @resume.cleanup_update_resume_data(params[:resume])
+    redirect_back(fallback_location: root_path)
   end
 
   def upload_xls

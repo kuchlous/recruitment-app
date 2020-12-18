@@ -20,26 +20,37 @@
        title_var  = "Download this resume as an unknown format file"
      end %>
      <%if File.extname(filename)== ".pdf" %>
-       <a data-target="#myModal" data-toggle="modal">
+       <a data-target="#myModal" data-toggle="modal" onclick = "setEmbedSrc('<%= resume_tag %>')">
          <%= image_tag(image_path,  :size => "40x40")  %>       
        </a>
-        <div class="modal fade" id="myModal" role="dialog" style="display: none;">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button class="close" data-dismiss="modal" type="button">×</button>
-                <h4 class="modal-title">Resume</h4>
-              </div>
-              <div class="modal-body">
-                <embed frameborder="0" id="embed_resume" src="<%= resume_tag %>" width="100%">
-              </div>
-              <div class="modal-footer"></div>
-            </div>
-          </div>
-        </div>
       <% else %> 
         <a href="<%= resume_tag %>" target="_blank" title="<%= title_var %>">
           <%= image_tag(image_path,  :size => "40x40")  %>
         </a>
       <% end %>  
 <% end %>
+<div class="modal fade" id="myModal" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">×</button>
+        <h4 class="modal-title">Resume</h4>
+      </div>
+      <div class="modal-body">
+        <embed frameborder="0" id="embed_resume" src="" width="100%">
+      </div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+</div>
+<script>
+  function setEmbedSrc (filepath) {
+    //re-add embed tag to reflect new pdf source 
+    //ref:https://stackoverflow.com/questions/2493706/javascript-changing-src-attribute-of-a-embed-tag 
+    var parent = $('embed#embed_resume').parent();
+    var newElement = '<embed  frameborder="0" id="embed_resume" width="100%">';
+    $('embed#embed_resume').remove();
+    parent.append(newElement);
+    document.getElementById("embed_resume").src = filepath;
+  }
+</script>

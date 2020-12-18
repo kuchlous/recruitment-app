@@ -172,11 +172,12 @@ class Resume < ActiveRecord::Base
     end
   end
 
-  def move_temp_file_to_upload_directory
+  def move_temp_file_to_upload_directory(original_filename)
     filenames = `ls #{$tmp_directory}/#{$tmp_file}.*`.split("\n")
     filenames.each do |filename|
-      ext = File.extname(filename)
-      `mv -f #{filename} #{$upload_dir}/#{self.file_name}#{ext}`
+      upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+      Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
+      `mv -f #{filename} '#{upload_dir}/#{original_filename}'`
     end
     # Removing content.xml file
     delete_temp_files($tmp_directory, "customXml")
@@ -188,27 +189,22 @@ class Resume < ActiveRecord::Base
   end
 
   def resume_path
-    file_names = `ls #{$upload_dir}/#{self.file_name}.*`.split("\n")
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+    file_names = `ls #{upload_dir}/*`.split("\n")
   end
 
   def cleanup_update_resume_data(upload_field)
-    resume_file_name  = self.file_name
-    if resume_file_name && resume_file_name != ""
-      # Deleting already existing resume files from upload directory
-      `rm -rf #{$upload_dir}/#{resume_file_name}.*`
-    end
-
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
     # Uploading resume file to upload directory
+    original_filename = upload_field['upload_resume'].original_filename
     ext               = File.extname(upload_field['upload_resume'].original_filename)
-    fullpathname      = File.join("#{$upload_dir}", "#{resume_file_name}") + ext
-    file_type         = `file -ib #{fullpathname}`.gsub(/\n/,"")
-
+    fullpathname      = upload_dir.join(original_filename)
     # Writing to file in upload directory
     file_type = Resume.read_upload_write_tmp_file(fullpathname, upload_field['upload_resume'])
     add_html_txt_and_search(ext, file_type)
 
     # Move from temp directory to upload directory
-    self.move_temp_file_to_upload_directory
+    self.move_temp_file_to_upload_directory(original_filename)
   end
 
   def add_resume_comment(comment, ctype, employee)
@@ -377,8 +373,8 @@ class Resume < ActiveRecord::Base
   end
 
   def Resume.read_upload_write_tmp_file(path, file)
-    File.open(path, "w") { |f| f.write(file.read) }
-    file_type         = `file -ib #{path}`.gsub(/\n/,"")
+    File.open(path, "w") { |f| f.write(file.read.force_encoding("UTF-8")) }
+    file_type         = `file -ib '#{path}'`.gsub(/\n/,"")
     return file_type
   end
 
