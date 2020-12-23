@@ -150,10 +150,16 @@ class Resume < ActiveRecord::Base
     ["Any", "Joining Date Given", "Offered", "On Hold", "Selected", "Interview Scheduled", "Shortlisted", "Forwarded", "New", "Rejected", "FUTURE", "HAC", "N Accepted", "Not Joined"]
   end
 
+  def upload_document
+  end
+
   # This gets called from the constructor after the call to 
   # Resume.new(params[:resume])because we have a upload_resume
   # in the params list.
   def upload_resume=(upload_field)
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+    Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
+    
     unless upload_field.nil?
       tempfile = Tempfile.new("resume_tmp", :encoding => 'ascii-8bit')
       tempfile.write(upload_field.read)
@@ -173,10 +179,10 @@ class Resume < ActiveRecord::Base
   end
 
   def move_temp_file_to_upload_directory(original_filename)
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+    Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
     filenames = `ls #{$tmp_directory}/#{$tmp_file}.*`.split("\n")
     filenames.each do |filename|
-      upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-      Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
       `mv -f #{filename} '#{upload_dir}/#{original_filename}'`
     end
     # Removing content.xml file
@@ -190,11 +196,25 @@ class Resume < ActiveRecord::Base
 
   def resume_path
     upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-    file_names = `ls #{upload_dir}/*`.split("\n")
+    file_names = `ls #{$upload_dir}/#{self.file_name}.*`.split("\n")
+    file_names += `ls #{upload_dir}/*`.split("\n")
+  end
+
+  def upload_document(upload_field)
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+    Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
+    original_filename = upload_field['upload_resume'].original_filename
+    tempfile = Tempfile.new("resume_tmp", :encoding => 'ascii-8bit')
+    tempfile.write(upload_field['upload_resume'].read)
+    tempfile.close
+    fullpathname      = upload_dir.join(original_filename)
+    tempfile = File.open(tempfile.path)
+    doc = File.open(fullpathname, 'w') { |f| f.write(tempfile.read) }
   end
 
   def cleanup_update_resume_data(upload_field)
     upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+    Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
     # Uploading resume file to upload directory
     original_filename = upload_field['upload_resume'].original_filename
     ext               = File.extname(upload_field['upload_resume'].original_filename)

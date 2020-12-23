@@ -178,7 +178,7 @@ class ResumesController < ApplicationController
 
   def upload_document
     @resume = Resume.find(params[:id])
-    @resume.cleanup_update_resume_data(params[:resume])
+    @resume.upload_document(params[:resume])
     redirect_back(fallback_location: root_path)
   end
 
