@@ -1,5 +1,4 @@
 <%
-  filenames     = resume.resume_path
   filenames.each do |filename|
     resume_tag = url_for(:host => APP_CONFIG['host_name'], :action => 'download_resume', :name => filename)
 %>

@@ -33,7 +33,10 @@
          </span>
        </div>
        <div>
-         <%= render "download_box", :resume => @resume %>
+          <h2 class= "attachment_title">Resumes</h2>
+            <%= render "download_box", :filenames => @resume.resume_path %>
+          <h2 class= "attachment_title">Other Docs</h2>
+            <%= render "download_box", :filenames => @resume.other_docs_path %>
        </div>  
      </div>
    </div>

@@ -195,10 +195,13 @@ class Resume < ActiveRecord::Base
     delete_temp_files($tmp_directory, "mimetype")
   end
 
-  def resume_path
+  def other_docs_path
     upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-    file_names = `ls #{$upload_dir}/#{self.file_name}.*`.split("\n")
-    file_names += `ls #{upload_dir}/*`.split("\n")
+    file_names = `ls #{upload_dir}/*`.split("\n")
+  end
+
+  def resume_path
+    file_names = `ls #{Rails.root.join(APP_CONFIG['upload_directory'])}/#{self.file_name}.*`.split("\n")
   end
 
   def upload_document(upload_field)
