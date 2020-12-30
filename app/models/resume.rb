@@ -178,12 +178,13 @@ class Resume < ActiveRecord::Base
     end
   end
 
-  def move_temp_file_to_upload_directory(original_filename)
-    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
+  def move_temp_file_to_upload_directory
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory'])
     Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
     filenames = `ls #{$tmp_directory}/#{$tmp_file}.*`.split("\n")
     filenames.each do |filename|
-      `mv -f #{filename} '#{upload_dir}/#{original_filename}'`
+      ext = File.extname(filename)
+      `mv -f #{filename} '#{upload_dir}/#{self.file_name}'#{ext}`
     end
     # Removing content.xml file
     delete_temp_files($tmp_directory, "customXml")
@@ -213,18 +214,23 @@ class Resume < ActiveRecord::Base
   end
 
   def cleanup_update_resume_data(upload_field)
-    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-    Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
+    resume_file_name  = self.file_name
+    if resume_file_name && resume_file_name != ""	
+      # Deleting already existing resume files from upload directory	
+      `rm -rf #{$upload_dir}/#{resume_file_name}.*`	
+    end
+    
     # Uploading resume file to upload directory
-    original_filename = upload_field['upload_resume'].original_filename
     ext               = File.extname(upload_field['upload_resume'].original_filename)
-    fullpathname      = upload_dir.join(original_filename)
+    fullpathname      = File.join("#{$upload_dir}", "#{resume_file_name}") + ext	    
+    file_type         = `file -ib #{fullpathname}`.gsub(/\n/,"")	
+
     # Writing to file in upload directory
     file_type = Resume.read_upload_write_tmp_file(fullpathname, upload_field['upload_resume'])
     add_html_txt_and_search(ext, file_type)
 
     # Move from temp directory to upload directory
-    self.move_temp_file_to_upload_directory(original_filename)
+    self.move_temp_file_to_upload_directory
   end
 
   def add_resume_comment(comment, ctype, employee)
