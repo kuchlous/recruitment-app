@@ -57,7 +57,7 @@ require 'will_paginate/array'
   end
 
   def check_for_login(msg = "Please login to your account first")
-    # session[:return_to] = "/recruit" + request.request_uri
+    session[:return_to] = request.url
     # logger.info("/recruit" + request.request_uri)
     # logger.info("IP:" + request.headers["X-Real-IP"])
     @logged_employee  = get_current_employee
