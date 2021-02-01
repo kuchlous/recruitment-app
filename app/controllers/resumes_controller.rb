@@ -2144,6 +2144,9 @@ class ResumesController < ApplicationController
       sheet.row(0).push(c_prop[:name])
     end
 
+    format = Spreadsheet::Format.new :color => :blue,
+    :weight => :bold
+    sheet.column(0).default_format = format
     row = 1
     matches.each do |m|
       sheet.row(row).height = 20
