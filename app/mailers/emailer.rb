@@ -165,6 +165,19 @@ class Emailer < ApplicationMailer
     attachments["Probationer's Performance Evaluation.doc"] = 
       File.read(Rails.root.join("lib/tasks/probationer-perf-eval.doc"))
     mail(from: "hr-no-reply@mirafra.com", to: [employee.manager.email, "probation@mirafra.com"], subject: subject)
-  end  
+  end
+  
+  def send_requirement_reminder (requirement)
+    @names = []
+    @names << requirement.ta_lead.name if requirement.ta_lead.present?
+    @names << requirement.eng_lead.name if requirement.eng_lead.present?
+    @names = @names.join(", ")
+    recipients = []
+    recipients << requirement.ta_lead.email if requirement.ta_lead.present?
+    recipients << requirement.eng_lead.email if requirement.eng_lead.present?
+    # TODO: Add Sales Head to recipients
+    subject = "Gentle Reminder - Requirement open with No projection for more than 3 days"
+    mail(to: recipients, subject: subject) if recipients.length > 0
+  end
 end
 

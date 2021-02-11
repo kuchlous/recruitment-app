@@ -123,6 +123,10 @@ class ResumesController < ApplicationController
         # If reqs are selected
         if (params[:requirement_name])
           Resume.create_reqs(@resume, params[:requirement_name], get_logged_employee, get_current_employee)
+          params[:requirement_name].each do |rid|
+            r = Requirement.find(rid)
+            r.update_attributes(last_forward_recieved:Date.today)
+          end
           flash_mesg = "You have successfully uploaded the resume and it has been forwarded to the owners of the requirements that you selected"
         else
           flash_mesg = "You have successfully uploaded resume"
