@@ -179,5 +179,18 @@ class Emailer < ApplicationMailer
     subject = "Gentle Reminder - Requirement open with No projection for more than 3 days"
     mail(to: recipients, subject: subject) if recipients.length > 0
   end
+
+  def send_rejection_notification (requirement,resume)
+    @names = []
+    @names << requirement.ta_lead.name if requirement.ta_lead.present?
+    @names << requirement.eng_lead.name if requirement.eng_lead.present?
+    @names = @names.join(", ")
+    recipients = []
+    recipients << requirement.ta_lead.email if requirement.ta_lead.present?
+    recipients << requirement.eng_lead.email if requirement.eng_lead.present?
+    # TODO: Add Sales Head to recipients
+    subject = "#{resume.name} is rejected for #{requirement.name}"
+    mail(to: recipients, subject: subject) if recipients.length > 0
+  end
 end
 

@@ -787,7 +787,6 @@ class ResumesController < ApplicationController
     else
       resume = Resume.find(resume_id) unless (resume_id.nil? || resume_id == 0)
     end
-
     req_matches = []
     unless status == "COMMENTED"
       if req_match_id && req_match_id.to_i != 0
@@ -808,6 +807,13 @@ class ResumesController < ApplicationController
       end
     end
 
+    if status == "REJECTED"
+      req_matches.each do |req_match|
+        requirement = Requirement.find(req_match.requirement_id)
+        Emailer.send_rejection_notification(requirement,resume).deliver_now
+      end
+    end
+
     if status == "JOINING"
       joining_date = params[:joining_date]
       resume.update_attributes!(:joining_date => joining_date)
@@ -818,9 +824,11 @@ class ResumesController < ApplicationController
       expire_fragment('joined')
     end
 
+
     # In case the whole resume is rejected the req_match will be empty.
     if status == "REJECTED" && req_matches.size == 0
       resume.update_attributes!(:status => status) 
+      
     end
 
     # ADDING: Comment

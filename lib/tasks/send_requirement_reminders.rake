@@ -3,7 +3,7 @@ namespace :eta_based_mail do
     task :send_requirement_reminders => :environment do
         Requirement.all.each do |requirement|
            no_of_business_days = business_days_between( requirement.last_forward_recieved, Date.today)
-           if !no_of_business_days.nil? && no_of_business_days  > 3
+           if !no_of_business_days.nil? && no_of_business_days  > 3 && requirement.open_forwards.count < 1
               # Send mail to Engineering/TA head 
               Emailer.send_requirement_reminder(requirement).deliver_now
            end
