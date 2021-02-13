@@ -2059,6 +2059,7 @@ class ResumesController < ApplicationController
                                    :size   => 12
     sheet.row(0).default_format = blue
     sheet.row(1).default_format = blue
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row = 2
     joining_matches.each do |m|
       sheet.row(row).height = 20
@@ -2074,6 +2075,7 @@ class ResumesController < ApplicationController
     row +=4
     sheet.row(row).push "Joined"
     sheet.row(row).default_format = blue
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row += 1
 
     joined_resumes.each do |r|
@@ -2090,6 +2092,7 @@ class ResumesController < ApplicationController
     row += 4
     sheet.row(row).push "Not Joined"
     sheet.row(row).default_format = blue
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row += 1
     not_joined_resumes.each do |r|
       sheet.row(row).height = 20
@@ -2117,6 +2120,7 @@ class ResumesController < ApplicationController
     blue = Spreadsheet::Format.new :weight => :bold,
                                    :size   => 12
     sheet.row(0).default_format = blue
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row = 1
     matches.each do |m|
       sheet.row(row).height = 20
@@ -2155,10 +2159,8 @@ class ResumesController < ApplicationController
       sheet.column(i).width = c_prop[:width]
       sheet.row(0).push(c_prop[:name])
     end
-
-    format = Spreadsheet::Format.new :color => :blue,
-    :weight => :bold
-    sheet.column(0).default_format = format
+    
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row = 1
     matches.each do |m|
       sheet.row(row).height = 20
@@ -2207,6 +2209,7 @@ class ResumesController < ApplicationController
     sheet.column(5).width = 30
 
     sheet.row(0).default_format = blue
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row = 1
     resume.each do |r|
       sheet.row(row).height = 20
@@ -2234,6 +2237,7 @@ class ResumesController < ApplicationController
     sheet.column(6).width = 30
 
     sheet.row(0).default_format = blue
+    sheet.column(0).default_format =Spreadsheet::Format.new :color => :blue, :weight => :bold
     row = 1
     forwards.each do |fwd|
       sheet.row(row).height = 20
