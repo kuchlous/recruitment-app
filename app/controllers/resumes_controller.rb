@@ -807,13 +807,6 @@ class ResumesController < ApplicationController
       end
     end
 
-    if status == "REJECTED"
-      req_matches.each do |req_match|
-        requirement = Requirement.find(req_match.requirement_id)
-        Emailer.send_rejection_notification(requirement,resume).deliver_now
-      end
-    end
-
     if status == "JOINING"
       joining_date = params[:joining_date]
       resume.update_attributes!(:joining_date => joining_date)
