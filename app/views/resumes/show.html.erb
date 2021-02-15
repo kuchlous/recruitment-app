@@ -107,7 +107,7 @@
         <span class="item__value item__value--center"> <%= print_date_and_time(@resume.created_at) %> </span>
       </div>
 
-      <% if is_GM? %> 
+      <% if is_GM? && @resume.practice_head_rating.present? %> 
       <div class="item item--center">
         <span class="item__label item__label--center"> Practice Head Rating: </span>
         <span class="item__value item__value--center"> <%= @resume.practice_head_rating %>
