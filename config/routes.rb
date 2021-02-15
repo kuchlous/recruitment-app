@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   match 'resumes/offered',to: 'resumes#offered'              , via: :get
   match 'resumes/rejected',to: 'resumes#rejected'            , via: :get
   match 'resumes/future',to: 'resumes#future'                , via: :get
+  match 'resumes/submit_ph_rating',to: 'resumes#submit_ph_rating'                , via: :post
   match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get

@@ -1853,6 +1853,12 @@ class ResumesController < ApplicationController
     render body: nil
   end
 
+  def submit_ph_rating
+    resume = Resume.find(params[:id])
+    resume.update_attributes!(:practice_head_rating => params[:rating])
+    redirect_back(fallback_location: root_path)
+  end
+
   private
 
   # PRIVATE FUNCTIONS

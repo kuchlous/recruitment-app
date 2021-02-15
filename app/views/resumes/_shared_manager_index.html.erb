@@ -25,7 +25,7 @@
            reqs = resume.get_resume_req_matches(get_current_employee)
          end %>
          <tr id="<%= @row_id_prefix %><%= counter_value %>" class="<%= cycle('color_line_odd', 'color_line_even') %>">
-           <td> <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>  </td>
+           <td class="rating rating--<%= resume.practice_head_rating%>"> <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>  </td>
            <td title="<%= resume.qualification %>"> <%= snippet(resume.qualification, 5) %> </td>
            <% year, month = resume.get_current_experience %>
            <td> <%= "#{year}-#{month}" %> </td>

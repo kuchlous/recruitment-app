@@ -106,6 +106,12 @@
         <span class="item__label item__label--center"> Uploaded at: </span>
         <span class="item__value item__value--center"> <%= print_date_and_time(@resume.created_at) %> </span>
       </div>
+
+      <div class="item item--center">
+        <span class="item__label item__label--center"> Practice Head Rating: </span>
+        <span class="item__value item__value--center"> <%= @resume.practice_head_rating %>
+        </span>
+      </div>
       <div class="resume__mail">
         
         <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
@@ -178,6 +184,19 @@
           <input class="item" type="file" id="myFile" size="31" name="resume[upload_resume]">
           <%= hidden_field_tag "id", @resume.id %>
           <input type="submit" value="Upload">
+        <% end %>
+      </div>
+      <div class="column-center">
+        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "submit_ph_rating"), :method => 'POST' do %>
+         <label for="ratings">Practice Head Rating:</label>
+         <select name="rating" id="rating">
+            <option value="red">Red</option>
+            <option value="orange">Orange</option>
+            <option value="yellow">Yellow</option>
+            <option value="green">Green</option>
+         </select>
+         <%= hidden_field_tag "id", @resume.id %>
+         <input type="submit" value="Submit">
         <% end %>
       </div>
     </div>
