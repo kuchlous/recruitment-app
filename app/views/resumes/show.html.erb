@@ -107,11 +107,13 @@
         <span class="item__value item__value--center"> <%= print_date_and_time(@resume.created_at) %> </span>
       </div>
 
+      <% if is_GM? %> 
       <div class="item item--center">
         <span class="item__label item__label--center"> Practice Head Rating: </span>
         <span class="item__value item__value--center"> <%= @resume.practice_head_rating %>
         </span>
       </div>
+      <% end %>
       <div class="resume__mail">
         
         <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
@@ -186,6 +188,7 @@
           <input type="submit" value="Upload">
         <% end %>
       </div>
+      <% if is_GM? %> 
       <div class="column-center">
         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "submit_ph_rating"), :method => 'POST' do %>
          <label for="ratings">Practice Head Rating:</label>
@@ -199,6 +202,7 @@
          <input type="submit" value="Submit">
         <% end %>
       </div>
+      <% end %> 
     </div>
 </div>
 <div id="resume_details_div" class="common_class">
