@@ -2329,10 +2329,10 @@ class ResumesController < ApplicationController
   end
 
   def email_for_status_change(resume, requirement, status, comment)
-    req_owner = requirement.employee
     gm_for_decision = requirement.employee.gm
     recipients = [gm_for_decision]
     recipients << requirement.ta_lead if requirement.ta_lead
+    recipients << requirement.eng_lead if requirement.eng_lead
     ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
     Emailer.send_for_status_change(resume, requirement, recipients, status, comment).deliver_now
@@ -2340,7 +2340,6 @@ class ResumesController < ApplicationController
 
   def email_for_decision(resume, requirement, eng_decision, hire_action)
     attachment, filetype = resume.preferred_file
-    req_owner = requirement.employee
     gm_for_decision = requirement.employee.gm
     # gm_for_decision = Employee.find_by_login('alokk')
     ta = get_current_employee
