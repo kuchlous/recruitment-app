@@ -23,7 +23,7 @@
       <% row_class = cycle("yellow", "white") %>
       <% resume = match.resume %>
       <tr id="all_interviews_table<%= counter_value.to_s %>" class="<%= row_class %>">
-        <td> <%= get_resume_link_with_mouse_over_and_mouseout(resume) %> </td>
+        <td class="rating rating--<%= resume.practice_head_rating%>"><%= get_resume_link_with_mouse_over_and_mouseout(resume) %> </td>
         <td> <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %> </td> 
         <td> <%= print_date_no_year(match.get_display_interview_date) %> </td> 
         <td> <%= get_current_experience_string(resume) %> </td>
