@@ -22,6 +22,11 @@ class HomeController < ApplicationController
   def summaries
   end
 
+  
+  def interview_panels
+    
+  end
+
   def actions_page
     if is_HR?
       redirect_to :controller => "home", :action => "dashboard"

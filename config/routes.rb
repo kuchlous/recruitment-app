@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   resources :requirements
+
+  match 'home/interview-panels', to: 'home#interview_panels'                                       , via: :get
   match 'home/search', to: 'home#search'                                       , via: :post
   match 'home/search', to: 'home#search'                                       , via: :get
   match 'home/show_summary_per_interviewer', to:'home#show_summary_per_interviewer'                                       , via: :get
