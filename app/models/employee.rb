@@ -3,6 +3,7 @@ class Employee < ActiveRecord::Base
   has_many    :comments
   has_many    :interviews
   has_many    :feedbacks
+  has_and_belongs_to_many   :interview_skills
   has_many    :requirements,
               :class_name  => "Requirement",
               :foreign_key => "employee_id"
