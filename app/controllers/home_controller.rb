@@ -24,7 +24,7 @@ class HomeController < ApplicationController
 
   
   def interview_panels
-    
+    @skills= InterviewSkill.all
   end
 
   def actions_page

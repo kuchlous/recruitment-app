@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get 'resumes/email_autocomplete', to: 'resumes#email_autocomplete', as: :resumes_email_autocomplete
   get 'resumes/get_summary_by_id', to: 'resumes#get_summary_by_id', as: :resumes_get_summary_by_id
 
+  get 'employees/autocomplete', to: 'employees#employees_autocomplete', as: :employees_autocomplete
   match 'login', to: 'employees#login'                                         , via: :post
   match 'logout', to: 'employees#logout'                                       , via: :get
   match 'requirements/my_requirements', to: 'requirements#my_requirements'     , via: :get
@@ -14,7 +15,8 @@ Rails.application.routes.draw do
   match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   resources :requirements
-  match 'add_skill', to: 'interview_skills#create'                                       , via: :post
+  match 'add_interviewer', to: 'interview_skills#add_interviewer'              ,via: :post
+  match 'add_skill', to: 'interview_skills#create'                             ,via: :post
   match 'interview_skills/:id', to: 'interview_skills#destroy'                                       , via: :delete
   match 'home/interview-panels', to: 'home#interview_panels'                                       , via: :get
   match 'home/search', to: 'home#search'                                       , via: :post

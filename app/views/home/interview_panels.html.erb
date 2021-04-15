@@ -1,5 +1,5 @@
 <div class="interview-panel">
-<h1>Interview Panels</h1>
+<h1 class="interview-panel__title">Interview Panels</h1>
 <br>
 <div>
   <form action= "/add_skill" method= "post">
@@ -10,11 +10,18 @@
 </div>
 <br>
 
-<%InterviewSkill.all.each do |skill|  %>
-  <span><%= skill.name %></span>
-  <span>
-    <h2 class="add-interviewer">Add new interviewer to the skill set:  <button type="button" onclick="">Add</button></h2>
-  </span>
+<%@skills.each do |skill|  %>
+  <div class="skill">
+    <span class= "skill-name"><%= skill.name %></span>
+    <span>
+      <form action= "/add_interviewer" method= "post">
+        <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
+        <%= hidden_field_tag "skill_id", skill.id %>
+        <input type="submit" value="Add"> 
+      </form>  
+    </span>
+  </div>  
+    
   <table style="width:100%">
   <tr>
     <th>Interviewer Name</th>
@@ -23,8 +30,8 @@
   </tr>
   <% skill.interviewers.each do |interviewer|%>
     <tr>
-      <td><%=interviewer.name %></td>
-      <td>3</td>
+      <td class="t-data"><%=interviewer.name %></td>
+      <td class="t-data" >3</td>
       <td><span class="close_box_link">
         <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
       </span> <br /></td>
@@ -35,4 +42,20 @@
 <br>
 <% end %>
 </div>
+<script>
+  $('.new-interviewer').autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: '<%="#{employees_autocomplete_path}"%>',
+        dataType: "json",
+        data: {
+          query: request.term
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    }
+  });
+</script>
 

@@ -10,6 +10,11 @@ class EmployeesController < ApplicationController
     end
   end
 
+  def employees_autocomplete
+    employees = Employee.order(:name).where("name like ?", "%#{params[:query]}%")
+    render json: employees.map{|e| e.name + " - " + e.eid.to_s}
+  end
+
   def list_my_employees
     @employees = Employee.where(employee_status:"ACTIVE").order(:name).find_all { 
                         |e| e.provides_visibility_to?(get_current_employee) 
