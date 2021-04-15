@@ -1,0 +1,36 @@
+<div class="interview-panel">
+<h1>Interview Panels</h1>
+<div>
+  <form action= "/add_skill" method= "post">
+    <label for="skill"> Add new skill:</label>
+    <input type="text" id="skill" name="skill" value="">
+    <input type="submit" value="Add">
+  </form>
+</div>
+<br>
+<div>
+<h2 class="add-interviewer">Add new interviewer to the skill set:  <button type="button" onclick="">Add</button></h2>
+</div>
+<br>
+
+<%InterviewSkill.all.each do |skill|  %>
+  <h2><%= skill.name %></h2>
+  <table style="width:100%">
+  <tr>
+    <th>Interviewer Name</th>
+    <th>No of Interview schedule</th> 
+    <th>Action</th>
+  </tr>
+  <% skill.interviewers.each do |interviewer|%>
+    <tr>
+      <td><%=interviewer.name %></td>
+      <td>3</td>
+      <td></td>
+    </tr>
+  <% end %>
+</table>
+<br>
+<br>
+<% end %>
+</div>
+

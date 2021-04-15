@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   resources :requirements
-
+  match 'add_skill', to: 'interview_skills#create'                                       , via: :post
   match 'home/interview-panels', to: 'home#interview_panels'                                       , via: :get
   match 'home/search', to: 'home#search'                                       , via: :post
   match 'home/search', to: 'home#search'                                       , via: :get
