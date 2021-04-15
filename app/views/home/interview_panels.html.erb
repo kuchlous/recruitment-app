@@ -1,20 +1,20 @@
 <div class="interview-panel">
 <h1>Interview Panels</h1>
+<br>
 <div>
   <form action= "/add_skill" method= "post">
     <label for="skill"> Add new skill:</label>
-    <input type="text" id="skill" name="skill" value="">
+    <input type="text" id="skill" name="skill" value="" required="required">
     <input type="submit" value="Add">
   </form>
 </div>
 <br>
-<div>
-<h2 class="add-interviewer">Add new interviewer to the skill set:  <button type="button" onclick="">Add</button></h2>
-</div>
-<br>
 
 <%InterviewSkill.all.each do |skill|  %>
-  <h2><%= skill.name %></h2>
+  <span><%= skill.name %></span>
+  <span>
+    <h2 class="add-interviewer">Add new interviewer to the skill set:  <button type="button" onclick="">Add</button></h2>
+  </span>
   <table style="width:100%">
   <tr>
     <th>Interviewer Name</th>
@@ -25,7 +25,9 @@
     <tr>
       <td><%=interviewer.name %></td>
       <td>3</td>
-      <td></td>
+      <td><span class="close_box_link">
+        <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
+      </span> <br /></td>
     </tr>
   <% end %>
 </table>

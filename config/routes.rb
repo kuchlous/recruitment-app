@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   resources :requirements
   match 'add_skill', to: 'interview_skills#create'                                       , via: :post
+  match 'interview_skills/:id', to: 'interview_skills#destroy'                                       , via: :delete
   match 'home/interview-panels', to: 'home#interview_panels'                                       , via: :get
   match 'home/search', to: 'home#search'                                       , via: :post
   match 'home/search', to: 'home#search'                                       , via: :get
