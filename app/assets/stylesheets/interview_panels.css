@@ -1,7 +1,28 @@
-.interview-panel{
-  background-color:#e3e4fa;   
+.interview-panel {
+  background-color: #e3e4fa;
   padding: 25px;
 }
-.add-interviewer{
-    float: right;
+
+.interview-panel__title{
+  font-size: 20px;
+}
+ .skill {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+ }
+
+.skill-name {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.add-interviewer {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.t-data {
+  font-size: 15px;
 }
