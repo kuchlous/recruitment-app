@@ -9,7 +9,7 @@ class Interview < ActiveRecord::Base
   #uncomment later
   #validates :overlapping_interviews, presence: true, on: :create
   validate :date_should_not_be_less_than_current_date
-
+  scope :next_week, -> { where("interview_date >= ? AND interview_date <= ?", Date.today,Date.today+1.week).count }
   def overlapping_interviews
     if self.employee
       interviews = self.employee.interviews
