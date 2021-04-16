@@ -3,14 +3,14 @@
   padding: 25px;
 }
 
-.interview-panel__title{
+.interview-panel__title {
   font-size: 20px;
 }
- .skill {
+.skill {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
- }
+}
 
 .skill-name {
   font-size: 15px;
@@ -23,6 +23,13 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+.int-table {
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgb(189, 181, 181);
+}
+
 .t-data {
   font-size: 15px;
+  padding: 8px;
 }

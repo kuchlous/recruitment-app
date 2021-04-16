@@ -12,7 +12,7 @@
 
 <%@skills.each do |skill|  %>
   <div class="skill">
-    <span class= "skill-name"><%= skill.name %></span>
+    <span class= "skill-name">skill - <%= skill.name.capitalize %></span>
     <span>
       <form action= "/add_interviewer" method= "post">
         <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
@@ -22,7 +22,7 @@
     </span>
   </div>  
     
-  <table style="width:100%">
+  <table class= "int-table" style="width:100%">
   <tr>
     <th>Interviewer Name</th>
     <th>No of Interview schedule</th> 
