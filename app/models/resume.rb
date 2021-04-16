@@ -222,6 +222,9 @@ class Resume < ActiveRecord::Base
       # Deleting already existing resume files from upload directory	
       `rm -rf #{$upload_dir}/#{resume_file_name}.*`	
     end
+
+    self.file_name = self.uniqid.name.downcase
+    self.save
     
     # Uploading resume file to upload directory
     ext               = File.extname(upload_field['upload_resume'].original_filename)
