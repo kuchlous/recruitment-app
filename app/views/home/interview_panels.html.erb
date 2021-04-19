@@ -2,10 +2,20 @@
 <h1 class="interview-panel__title">Interview Panels</h1>
 <br>
 <div>
+
   <form action= "/add_skill" method= "post">
     <label for="skill"> Add new skill:</label>
     <input type="text" id="skill" name="skill" value="" required="required">
     <input type="submit" value="Add">
+  </form>
+</div>
+<br>
+
+<div>
+  <form action= "/home/interview-panels" method= "get">
+    <label for="Search"> Search Skill</label>
+    <input type="text" id="search_skill" name="skill" value="">
+    <input type="submit" value="Search">
   </form>
 </div>
 <br>
