@@ -11,47 +11,49 @@
 <br>
 
 <div>
-  <form action= "/home/interview-panels" method= "get">
-    <label for="Search"> Search Skill</label>
-    <input type="text" id="search_skill" name="skill" value="">
-    <input type="submit" value="Search">
-  </form>
+  <label for="Search"> Search Skill</label>
+  <input type="text" id="search_skill" name="skill" value="">
+  <input type="submit" value="Search" id="search_skill_submit" onclick="search()">
 </div>
 <br>
 
 <%@skills.each do |skill|  %>
-  <div class="skill">
-    <span class= "skill-name"><%= skill.name %></span>
-    <span>
-      <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "add_interviewer"), :method => "post") do %>
-        <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
-        <%= hidden_field_tag "skill_id", skill.id %>
-        <%= submit_tag "Add" %> 
-      <% end %>
-    </span>
-  </div>  
+  <div data-skill-name= "<%= skill.name %>">
+    <div class="skill">
+      <span class= "skill-name"><%= skill.name %></span>
+      <span>
+        <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "add_interviewer"), :method => "post") do %>
+          <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
+          <%= hidden_field_tag "skill_id", skill.id %>
+          <%= submit_tag "Add" %> 
+        <% end %>
+      </span>
+    </div>  
     
-  <table class= "int-table" style="width:100%">
-  <tr>
-    <th class="int-th">Interviewer Name</th>
-    <th class="int-th">No of Interview schedule</th> 
-    <th class="int-th">Action</th>
-  </tr>
-  <% skill.interviewers.each do |interviewer|%>
-    <tr>
-      <td class="t-data"><%=interviewer.name %></td>
-      <td class="t-data" ><%= interviewer.interviews.next_week %></td>
-      <td><span class="close_box_link">
-        <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
-      </span> <br /></td>
-    </tr>
-  <% end %>
-</table>
-<br>
-<br>
+    <table class= "int-table" style="width:100%">
+      <tr>
+        <th class="int-th">Interviewer Name</th>
+        <th class="int-th">No of Interview schedule</th> 
+        <th class="int-th">Action</th>
+      </tr>
+      <% skill.interviewers.each do |interviewer|%>
+        <tr>
+          <td class="t-data"><%=interviewer.name %></td>
+          <td class="t-data" ><%= interviewer.interviews.next_week %></td>
+          <td><span class="close_box_link">
+            <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
+          </span> <br /></td>
+        </tr>
+      <% end %>
+    </table>
+    <br>
+    <hr size="20" color="blue" border="1px">
+    <br>
+  </div>
+
 <% end %>
 </div>
-<% url = "https://" + APP_CONFIG['host_name'] + employees_autocomplete_path %>
+<% url = "http://" + APP_CONFIG['host_name'] + employees_autocomplete_path %>
 <script>
   $('.new-interviewer').autocomplete({
     source: function(request, response) {
@@ -67,5 +69,20 @@
       });
     }
   });
+
+  function search (){
+    var skills = document.querySelectorAll('[data-skill-name]');
+    var i = 0;
+    var searchTerm =document.getElementById("search_skill").value.toLowerCase();
+    while (i < skills.length) {
+      var skillName= skills[i].getAttribute('data-skill-name').toLowerCase();
+      if (skillName.includes(searchTerm)) {
+        skills[i].style.display="block"
+      } else {
+          skills[i].style.display="none"
+      }
+      i+=1;
+    }
+  }
 </script>
 

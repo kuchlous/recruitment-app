@@ -24,12 +24,7 @@ class HomeController < ApplicationController
 
   
   def interview_panels
-    if params[:skill]
-      @skills= InterviewSkill.where("name LIKE ?", "%#{params[:skill]}%")
-    else
       @skills= InterviewSkill.all
-    end
-   
   end
 
   def actions_page
