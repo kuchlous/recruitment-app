@@ -23,11 +23,11 @@
   <div class="skill">
     <span class= "skill-name"><%= skill.name %></span>
     <span>
-      <form action= "/add_interviewer" method= "post">
+      <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "add_interviewer"), :method => "post") do %>
         <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
         <%= hidden_field_tag "skill_id", skill.id %>
-        <input type="submit" value="Add"> 
-      </form>  
+        <%= submit_tag "Add" %> 
+      <% end %>
     </span>
   </div>  
     
@@ -51,11 +51,12 @@
 <br>
 <% end %>
 </div>
+<% url = "https://" + APP_CONFIG['host_name'] + employees_autocomplete_path %>
 <script>
   $('.new-interviewer').autocomplete({
     source: function(request, response) {
       $.ajax({
-        url: '<%="#{employees_autocomplete_path}"%>',
+        url: '<%=url%>',
         dataType: "json",
         data: {
           query: request.term
