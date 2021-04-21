@@ -10,6 +10,15 @@
 </div>
 <br>
 
+<div>
+  <form action= "/home/interview-panels" method= "get">
+    <label for="Search"> Search Skill</label>
+    <input type="text" id="search_skill" name="skill" value="">
+    <input type="submit" value="Search">
+  </form>
+</div>
+<br>
+
 <%@skills.each do |skill|  %>
   <div class="skill">
     <span class= "skill-name"><%= skill.name %></span>
