@@ -2,17 +2,17 @@
 <h1 class="interview-panel__title">Interview Panels</h1>
 <br>
 <div>
-  <form action= "/add_skill" method= "post">
+  <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "create"), :method => "post") do %>
     <label for="skill"> Add new skill:</label>
-    <input type="text" id="skill" name="skill" value="" required="required">
-    <input type="submit" value="Add">
-  </form>
+    <%= text_field_tag :skill %> <br />
+    <%= submit_tag "Submit" %> 
+  <% end %>
 </div>
 <br>
 
 <%@skills.each do |skill|  %>
   <div class="skill">
-    <span class= "skill-name">skill - <%= skill.name.capitalize %></span>
+    <span class= "skill-name"><%= skill.name %></span>
     <span>
       <form action= "/add_interviewer" method= "post">
         <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
