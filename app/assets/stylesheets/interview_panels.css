@@ -12,6 +12,11 @@
   margin-bottom: 10px;
 }
 
+.skill_container {
+  margin-bottom: 35px;
+  border-bottom: 2px solid rgb(189, 181, 181);
+}
+
 .skill-name {
   font-size: 15px;
   font-weight: bold;
@@ -26,7 +31,6 @@
 
 .int-table {
   margin-bottom: 20px;
-  border-bottom: 1px solid rgb(189, 181, 181);
 }
 
 .t-data {

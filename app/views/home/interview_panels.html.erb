@@ -4,7 +4,7 @@
 <div>
   <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "create"), :method => "post") do %>
     <label for="skill"> Add new skill:</label>
-    <%= text_field_tag :skill %> <br />
+    <%= text_field_tag :skill %> 
     <%= submit_tag "Submit" %> 
   <% end %>
 </div>
@@ -18,7 +18,7 @@
 <br>
 
 <%@skills.each do |skill|  %>
-  <div data-skill-name= "<%= skill.name %>">
+  <div class="skill_container" data-skill-name= "<%= skill.name %>">
     <div class="skill">
       <span class= "skill-name"><%= skill.name %></span>
       <span>
@@ -46,9 +46,6 @@
         </tr>
       <% end %>
     </table>
-    <br>
-    <hr size="20" color="blue" border="1px">
-    <br>
   </div>
 
 <% end %>
