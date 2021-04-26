@@ -34,12 +34,23 @@
       <tr>
         <th class="int-th">Interviewer Name</th>
         <th class="int-th">No of Interview schedule</th> 
+        <th class="int-th">slots available/week</th> 
+        <th class="int-th">Email</th> 
+        <th class="int-th">Phone</th> 
+        <th class="int-th">Days on Bench</th>
+        <th class="int-th">Customer</th> 
         <th class="int-th">Action</th>
       </tr>
       <% skill.interviewers.each do |interviewer|%>
         <tr>
           <td class="t-data"><%=interviewer.name %></td>
           <td class="t-data" ><%= interviewer.interviews.next_week %></td>
+          <td class="t-data" >tba</td>
+          <td class="t-data email-<%=interviewer.eid%>" >Not Found</td>
+          <td class="t-data phone-<%=interviewer.eid%>">Not Found</td>
+          <td class="t-data bench-<%=interviewer.eid%>" >Not Found</td>
+          <td class="t-data customer-<%=interviewer.eid%>" >Not Found</td>
+            
           <td><span class="close_box_link">
             <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
           </span> <br /></td>
@@ -47,9 +58,8 @@
       <% end %>
     </table>
   </div>
-
 <% end %>
-</div>
+
 <% url = "http://" + APP_CONFIG['host_name'] + employees_autocomplete_path %>
 <script>
   $('.new-interviewer').autocomplete({
@@ -64,6 +74,34 @@
           response(data);
         }
       });
+    }
+  });
+
+  $.ajax({
+    url: '/dashboard/bench',
+    type: 'GET',
+    success: function (response) {
+        $.each(response, function (i, item) {
+          var i = 0;
+          var htmlElements = document.querySelectorAll(".email-"+item.eid);
+          while(i < htmlElements.length) {
+            htmlElements[i].innerHTML = item.email;
+            i+=1;
+          }
+          i = 0;
+          htmlElements = document.querySelectorAll(".phone-"+item.eid);
+          while(i < htmlElements.length) {
+            htmlElements[i].innerHTML = item.phone;
+            i+=1;
+          }
+          i = 0;
+          htmlElements = document.querySelectorAll(".bench-"+item.eid);
+          while(i < htmlElements.length) {
+            htmlElements[i].innerHTML = item.bench;
+            i+=1;
+          }
+        });
+      
     }
   });
 
