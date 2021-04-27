@@ -73,7 +73,7 @@ class Resume < ActiveRecord::Base
     # Go over req_matches in latest updated to previous
     req_matches = req_matches.sort_by {|r| r.updated_at}.reverse
     req_matches.each do |req_match|
-      if req_match.status == "SELECTED" || req_match.status == "SCHEDULED"
+      if req_match.status == "ENG_SELECT" || req_match.status == "SELECTED" || req_match.status == "SCHEDULED"
         return req_match.requirement
       end
     end
