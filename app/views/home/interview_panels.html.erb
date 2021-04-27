@@ -37,7 +37,6 @@
         <th class="int-th">slots available/week</th> 
         <th class="int-th">Email</th> 
         <th class="int-th">Phone</th> 
-        <th class="int-th">Days on Bench</th>
         <th class="int-th">Customer</th> 
         <th class="int-th">Action</th>
       </tr>
@@ -54,7 +53,6 @@
           </td>
           <td class="t-data email-<%=interviewer.eid%>" >Not Found</td>
           <td class="t-data phone-<%=interviewer.eid%>">Not Found</td>
-          <td class="t-data bench-<%=interviewer.eid%>" >Not Found</td>
           <td class="t-data customer-<%=interviewer.eid%>" >Not Found</td>
             
           <td><span class="close_box_link">
@@ -84,8 +82,9 @@
   });
 
   $.ajax({
-    url: '/dashboard/bench',
+    url: '/customer_data',
     type: 'GET',
+    data:{employee_id:<%= @eids %>},
     success: function (response) {
         $.each(response, function (i, item) {
           var i = 0;
@@ -98,12 +97,6 @@
           htmlElements = document.querySelectorAll(".phone-"+item.eid);
           while(i < htmlElements.length) {
             htmlElements[i].innerHTML = item.phone;
-            i+=1;
-          }
-          i = 0;
-          htmlElements = document.querySelectorAll(".bench-"+item.eid);
-          while(i < htmlElements.length) {
-            htmlElements[i].innerHTML = item.bench;
             i+=1;
           }
           i = 0;
