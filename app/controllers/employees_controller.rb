@@ -35,6 +35,14 @@ class EmployeesController < ApplicationController
     # !/192.168.*/.match(ip)
   end
 
+  def edit_slot
+    e=Employee.find(params[:interviewer_id])
+    e.n_interviews_per_week=params[:n_interviews_per_week]
+    e.save
+    flash[:notice] = "Interview slot successfully updated for #{e.name}"
+    redirect_back(fallback_location: root_path)
+  end
+
   def login
     if request.post?
       if ENV["RAILS_ENV"] == "production"

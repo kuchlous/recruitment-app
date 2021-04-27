@@ -45,7 +45,13 @@
         <tr>
           <td class="t-data"><%=interviewer.name %></td>
           <td class="t-data" ><%= interviewer.interviews.next_week %></td>
-          <td class="t-data" ><%= interviewer.n_interviews_per_week %></td>
+          <td class="t-data" >
+            <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post") do %>
+              <input type="number" class="edit_slot" name="n_interviews_per_week" value=<%= interviewer.n_interviews_per_week %>>
+          <%= hidden_field_tag "interviewer_id", interviewer.id %>
+          <%= submit_tag "update" %> 
+        <% end %>
+          </td>
           <td class="t-data email-<%=interviewer.eid%>" >Not Found</td>
           <td class="t-data phone-<%=interviewer.eid%>">Not Found</td>
           <td class="t-data bench-<%=interviewer.eid%>" >Not Found</td>
@@ -98,6 +104,12 @@
           htmlElements = document.querySelectorAll(".bench-"+item.eid);
           while(i < htmlElements.length) {
             htmlElements[i].innerHTML = item.bench;
+            i+=1;
+          }
+          i = 0;
+          htmlElements = document.querySelectorAll(".customer-"+item.eid);
+          while(i < htmlElements.length) {
+            htmlElements[i].innerHTML = item.customer;
             i+=1;
           }
         });
