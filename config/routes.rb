@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   get 'resumes/get_summary_by_id', to: 'resumes#get_summary_by_id', as: :resumes_get_summary_by_id
 
   get 'employees/autocomplete', to: 'employees#employees_autocomplete', as: :employees_autocomplete
+
+  post 'employees/edit_slot', to: 'employees#edit_slot'
   match 'login', to: 'employees#login'                                         , via: :post
   match 'logout', to: 'employees#logout'                                       , via: :get
   match 'requirements/my_requirements', to: 'requirements#my_requirements'     , via: :get
