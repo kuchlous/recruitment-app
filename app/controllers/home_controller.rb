@@ -25,6 +25,13 @@ class HomeController < ApplicationController
   
   def interview_panels
       @skills= InterviewSkill.all
+      @eids= []
+      @skills.each do |skill|
+        skill.interviewers.each do |interviewer|
+          @eids<<interviewer.eid
+        end
+      end
+      @eids= @eids.uniq
   end
 
   def actions_page
