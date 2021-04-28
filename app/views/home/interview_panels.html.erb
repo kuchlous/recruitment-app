@@ -45,13 +45,14 @@
           <td class="t-data"><%=interviewer.name %></td>
           <td class="t-data" ><%= interviewer.interviews.next_week %></td>
           <td class="t-data" >
-            <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post") do %>
+            <span id=<%= "#{skill.id}-#{interviewer.eid}"%>> <%= interviewer.n_interviews_per_week %> <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}')", title:"Edit" %></span>
+            <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-form",style: "display:none;") do %>
               <input type="number" class="edit_slot" name="n_interviews_per_week" value=<%= interviewer.n_interviews_per_week %>>
           <%= hidden_field_tag "interviewer_id", interviewer.id %>
           <%= submit_tag "update" %> 
         <% end %>
           </td>
-          <td class="t-data email-<%=interviewer.eid%>" >Not Found</td>
+          <td class="t-data"><%=interviewer.email %></td>
           <td class="t-data phone-<%=interviewer.eid%>">Not Found</td>
           <td class="t-data customer-<%=interviewer.eid%>" >Not Found</td>
             
@@ -87,12 +88,6 @@
     data:{employee_id:<%= @eids %>},
     success: function (response) {
         $.each(response, function (i, item) {
-          var i = 0;
-          var htmlElements = document.querySelectorAll(".email-"+item.eid);
-          while(i < htmlElements.length) {
-            htmlElements[i].innerHTML = item.email;
-            i+=1;
-          }
           i = 0;
           htmlElements = document.querySelectorAll(".phone-"+item.eid);
           while(i < htmlElements.length) {
@@ -123,6 +118,12 @@
       }
       i+=1;
     }
+  }
+
+  function toggleElement(e, element){
+    e.preventDefault();
+    $(element).toggle();
+    $(element+"-form").toggle();
   }
 </script>
 
