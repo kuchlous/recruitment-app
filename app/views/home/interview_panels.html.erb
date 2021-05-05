@@ -36,7 +36,8 @@
         <th class="int-th">Interviews</th> 
         <th class="int-th">Slots/week</th> 
         <th class="int-th">Email</th> 
-        <th class="int-th">Phone</th> 
+        <th class="int-th">Phone</th>
+        <th class="int-th">Customer</th> 
         <th class="int-th">Action</th>
       </tr>
       <% skill.interviewers.each do |interviewer|%>
@@ -53,7 +54,7 @@
           </td>
           <td class="t-data" > <%= interviewer.email %></td>
           <td class="t-data"> <%= interviewer.phone %> </td>
-            
+          <td class="t-data customer-<%=interviewer.eid%>" >Not Found</td>
           <td><span class="close_box_link">
             <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(:host => APP_CONFIG['host_name'], controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
           </span> <br /></td>
@@ -77,6 +78,23 @@
           response(data);
         }
       });
+    }
+  });
+
+  $.ajax({
+    url: '/customer_data', //TODO: RMS URL
+    type: 'GET',
+    data:{employee_id:<%= @eids %>},
+    success: function (response) {
+        $.each(response, function (i, item) {
+          let k = 0;
+          htmlElements = document.querySelectorAll(".customer-"+item.eid);
+          while(k < htmlElements.length) {
+            htmlElements[k].innerHTML = item.customer;
+            k+=1;
+          }
+        });
+      
     }
   });
 
