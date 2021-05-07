@@ -64,6 +64,8 @@
         <div id="misc_home_actions">
           <%= link_to "All Requirements",         {  :host=> APP_CONFIG['host_name'], :controller => "requirements" },  :class => "secondary_action" %>
           <%= link_to "My Requirements",          {  :host=> APP_CONFIG['host_name'], :controller => "requirements",    :action => "my_requirements" }, :class => "secondary_action" %>
+          <%= link_to "Interview Panels",         {  :host=> APP_CONFIG['host_name'], :controller => "home", :action => "interview_panels" }, :class => "secondary_action" %>
+
           <% if is_HR_ADMIN? %>
             <%= link_to "Designations",           {  :host=> APP_CONFIG['host_name'], :controller => "designations" },  :class => "secondary_action" %>
             <%= link_to "Groups",                 {  :host=> APP_CONFIG['host_name'], :controller => "groups"       },  :class => "secondary_action" %>
