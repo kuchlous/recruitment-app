@@ -36,6 +36,7 @@
 .t-data {
   font-size: 15px;
   padding: 8px;
+  max-width: 200px;
 }
 
 .int-th {

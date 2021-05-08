@@ -37,7 +37,8 @@ class EmployeesController < ApplicationController
 
   def edit_slot
     e=Employee.find(params[:interviewer_id])
-    e.n_interviews_per_week=params[:n_interviews_per_week]
+    e.n_interviews_per_week = params[:n_interviews_per_week] if params[:n_interviews_per_week]
+    e.preferred_day_and_time = params[:preferred_day_and_time] if params[:preferred_day_and_time]
     e.save
     flash[:notice] = "Interview slot successfully updated for #{e.name}"
     redirect_back(fallback_location: root_path)

@@ -30,11 +30,12 @@
       </span>
     </div>  
     
-    <table class= "int-table" style="width:100%">
+    <table class= "int-table table" style="width:100%">
       <tr>
         <th class="int-th">Name</th>
         <th class="int-th">Interviews</th> 
-        <th class="int-th">Slots/week</th> 
+        <th class="int-th">Slots/week</th>
+        <th class="int-th">Preferred Day/time</th> 
         <th class="int-th">Email</th> 
         <th class="int-th">Phone</th>
         <th class="int-th">Customer</th> 
@@ -48,9 +49,21 @@
             <span id=<%= "#{skill.id}-#{interviewer.eid}"%>> <%= interviewer.n_interviews_per_week %> <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}')", title:"Edit" %></span>
             <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-form",style: "display:none;") do %>
               <input type="number" class="edit_slot" name="n_interviews_per_week" value=<%= interviewer.n_interviews_per_week %>>
-          <%= hidden_field_tag "interviewer_id", interviewer.id %>
-          <%= submit_tag "update" %> 
-        <% end %>
+              <%= hidden_field_tag "interviewer_id", interviewer.id %>
+              <%= submit_tag "update" %> 
+            <% end %>
+          </td>
+          <td class="t-data" > 
+            <span id=<%= "#{skill.id}-#{interviewer.eid}-pref-date"%>> <%= interviewer.preferred_day_and_time %> 
+            <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}-pref-date')", title:"Edit" %>
+            </span>
+            <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-pref-date-form",style: "display:none;") do %>
+              <textarea rows="3" class="" name="preferred_day_and_time">
+                <%= interviewer.preferred_day_and_time %>
+              </textarea>
+              <%= hidden_field_tag "interviewer_id", interviewer.id %>
+              <%= submit_tag "update" %> 
+            <% end %>
           </td>
           <td class="t-data" > <%= interviewer.email %></td>
           <td class="t-data"> <%= interviewer.phone %> </td>
