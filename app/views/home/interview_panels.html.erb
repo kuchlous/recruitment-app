@@ -78,6 +78,8 @@
 <% end %>
 </div>
 <% url = "https://" + APP_CONFIG['host_name'] + employees_autocomplete_path %>
+<% rms_base_url = "https://" + APP_CONFIG['rms_host_name'] %>
+
 <script>
   $('.new-interviewer').autocomplete({
     source: function(request, response) {
@@ -95,7 +97,7 @@
   });
 
   $.ajax({
-    url: '/customer_data', //TODO: RMS URL
+    url: '<%= rms_base_url + "/customer_data" %>', //TODO: RMS URL
     type: 'GET',
     data:{employee_id:<%= @eids %>},
     success: function (response) {
