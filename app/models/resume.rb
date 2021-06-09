@@ -4,6 +4,9 @@ class Resume < ActiveRecord::Base
 
   belongs_to               :uniqid
   belongs_to               :employee
+  belongs_to               :ta_owner,
+                           :class_name => "Employee",
+                           :foreign_key => "ta_owner_id"
   has_many                 :feedbacks
   has_many                 :messages
   has_many                 :forwards,
