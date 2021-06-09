@@ -25,6 +25,8 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def new
     @resume = Resume.new
+    @employees    = get_all_employees
+    @ta_employees = @employees.find_all{|e| e.is_HR?}
   end
 
   def show
@@ -95,6 +97,8 @@ class ResumesController < ApplicationController
 
   def edit
     @resume = Resume.find(params[:id])
+    @employees    = get_all_employees
+    @ta_employees = @employees.find_all{|e| e.is_HR?}
   end
 
   def create

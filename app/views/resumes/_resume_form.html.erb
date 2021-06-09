@@ -69,6 +69,11 @@
       <td> Candidate's Qualification </td>
       <td> <%= f.text_area :qualification %> </td>
     </tr>
+
+    <tr>
+      <td> TA Owner </td>
+      <td> <%= collection_select(:resume, :ta_owner_id, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
+    </tr>
     <tr>
       <td> Summary about this resume </td>
       <td> <%= f.text_area :summary %> </td>
