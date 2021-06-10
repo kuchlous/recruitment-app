@@ -55,7 +55,9 @@
           </td>
           <td class="t-data" > 
             <span id=<%= "#{skill.id}-#{interviewer.eid}-pref-date"%>> <%= interviewer.preferred_day_and_time %> 
-            <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}-pref-date')", title:"Edit" %>
+            <% if is_HR? %>
+              <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}-pref-date')", title:"Edit" %>
+            <% end %>
             </span>
             <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-pref-date-form",style: "display:none;") do %>
               <textarea rows="3" class="" name="preferred_day_and_time">
