@@ -5,6 +5,7 @@ class Resume < ActiveRecord::Base
   belongs_to               :uniqid
   belongs_to               :employee
   belongs_to               :ta_owner,
+                           :optional => true,
                            :class_name => "Employee",
                            :foreign_key => "ta_owner_id"
   has_many                 :feedbacks
@@ -664,7 +665,9 @@ class Resume < ActiveRecord::Base
     txt_file = nil
     filenames.each do |filename|
       pdf_file = filename if /(.pdf)$/.match(filename)
+      pdf_file = filename if /(.PDF)$/.match(filename)
       docx_file = filename if /(.docx)$/.match(filename)
+      docx_file = filename if /(.DOCX)$/.match(filename)
       doc_file = filename if /(.doc)$/.match(filename) 
       rtf_file = filename if /(.rtf)$/.match(filename) 
       odt_file = filename if /(.odt)$/.match(filename)
