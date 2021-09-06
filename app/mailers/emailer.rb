@@ -45,20 +45,22 @@ class Emailer < ApplicationMailer
     subject = 'Added to interview panel'
     recipients = [ mail_to.email ]
     fname = resume.uniqid.name
-    create_ics_file(fname,interview)
+    ics_file =  Tempfile.new(fname)
+    create_ics_file(ics_file,interview)
     @to_employee  = mail_to
     @resume       = resume
     @uniqid       = resume.uniqid
     @requirement  = interview.req_match.requirement
     @interview    = interview
     # Sending .ics file as an attachment
-    attachments[fname   + ".ics"] = File.read(Rails.root + "/tmp/" + "#{fname}")
+    ics_file.open
+    attachments[fname   + ".ics"] = ics_file.read
     mail(to: recipients, subject: subject)
-    delete_ics_file(fname)
+    ics_file.unlink
   end
 
-  def create_ics_file(fname, interview)
-    ics_file = File.new(Rails.root + '/tmp/' + fname.to_s, 'w')
+  def create_ics_file(ics_file, interview)
+    # ics_file = File.new(Rails.root + '/tmp/' + fname.to_s, 'w')
     ics_file.puts 'BEGIN:VCALENDAR'
     ics_file.puts 'VERSION:1.0'
     ics_file.puts 'BEGIN:VEVENT'
@@ -94,11 +96,6 @@ class Emailer < ApplicationMailer
     ics_file.puts 'END:VCALENDAR'
     ics_file.close
   end
-
-  def delete_ics_file(fname)
-    File.delete(Rails.root + "/tmp/" + "#{fname}") 
-  end
- 
 
   def action(logged_emp, resume, req_name, status, comment)
     subject =        'Resume ' + status.downcase
