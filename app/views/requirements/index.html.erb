@@ -34,7 +34,7 @@
   <br>
   <br /> <br />
 
-  <%= form_tag(:controller => "requirements", :action => "close_requirement") do %>      
+  <%= form_tag(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "close_requirement") do %>      
     <table>
       <tr class="header_row">
         <td> Name             </td>

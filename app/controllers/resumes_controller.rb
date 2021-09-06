@@ -138,6 +138,7 @@ class ResumesController < ApplicationController
         flash[:notice] = flash_mesg
         format.html { redirect_to :action => "new" }
       else
+        @employees    = get_all_employees
         @ta_employees = @employees.find_all{|e| e.is_HR?}
         @resume.errors.each { |mesg|
            logger.info(mesg)
@@ -181,6 +182,7 @@ class ResumesController < ApplicationController
       @resume.errors.full_messages { |mesg|
         logger.info(mesg)
       }
+      @employees    = get_all_employees
       @ta_employees = @employees.find_all{|e| e.is_HR?}
       render :action => "edit"
     end
