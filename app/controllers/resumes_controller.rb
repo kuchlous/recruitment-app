@@ -1594,44 +1594,7 @@ class ResumesController < ApplicationController
                                   :req_match_id   => match.id)
         is_save = interview.save
         if is_save
-          # Making an .ics file. Not sure this is an good idea to create ics file here.
-          # Will change it asap.
-          ics_file = File.new(Rails.root + "/tmp/" + "#{match.resume.uniqid.name}", "w")
-            ics_file.puts "BEGIN:VCALENDAR"
-            ics_file.puts "VERSION:1.0"
-            ics_file.puts "BEGIN:VEVENT"
-            ics_file.puts "CATEGORIES:MEETING"
-            ics_file.puts "STATUS:#{interview.status}"
-
-            # Finding start and end times
-            # Decreasing 5 and half hours to make it compatible with indian time
-            # 60*60*5 + 1800 (Not sure this is good idea)
-            original_interview_time   = interview.interview_time
-            iso8601_start_format_time = original_interview_time - 19800
-            iso8601_start_format_time = iso8601_start_format_time.iso8601.dup
-            iso8601_end_format_time   = original_interview_time - 19800 + 3600   # Added 3600 seconds to extend time to two hours :). Will find a better idea over this weekend probably
-            iso8601_end_format_time   = iso8601_end_format_time.iso8601.dup
-            # Start Time
-            iso8601_start_format_time.gsub!("2000-01-01", interview.interview_date.to_s)
-            iso8601_start_format_time.gsub!(/[:-]/, "")
-            # End Time
-            iso8601_end_format_time.gsub!("2000-01-01", interview.interview_date.to_s)
-            iso8601_end_format_time.gsub!(/[:-]/, "")
-
-            ics_file.puts "DTSTART:#{iso8601_start_format_time}"
-            ics_file.puts "DTEND:#{iso8601_end_format_time}"
-            ics_file.puts "SUMMARY: STAGE- #{interview.stage}, INTERVIEW TYPE- #{interview.itype}"
-            ics_file.puts "DESCRIPTION: FOCUS- #{interview.focus}"
-            ics_file.puts "CLASS:PRIVATE"
-            ics_file.puts "BEGIN:VALARM"
-            ics_file.puts "TRIGGER:-PT15M"
-            ics_file.puts "ACTION:DISPLAY"
-            ics_file.puts "DESCRIPTION: Reminder"
-            ics_file.puts "END:VALARM"
-            ics_file.puts "END:VEVENT"
-            ics_file.puts "END:VCALENDAR"
-          ics_file.close
-
+          
           # Scheduled only when interview get saved
           match.update_attributes!(:status => "SCHEDULED")
 
@@ -1642,8 +1605,6 @@ class ResumesController < ApplicationController
           # Sending emails to added panels
           email_for_adding_panel(employee, interview, match.resume)
 
-          # Removing file from tmp
-          File.delete(Rails.root + "/tmp/" + "#{match.resume.uniqid.name}")
         end
       end
     end

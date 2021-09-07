@@ -43,18 +43,59 @@ class Emailer < ApplicationMailer
   end
 
   def panel(mail_to, interview, resume)
-    subject =        'Added to interview panel'
+    subject = 'Added to interview panel'
     recipients = [ mail_to.email ]
     recipients << resume.ta_owner.email if resume.ta_owner.present?
-
+    fname = resume.uniqid.name
     @to_employee  = mail_to
     @resume       = resume
     @uniqid       = resume.uniqid
     @requirement  = interview.req_match.requirement
     @interview    = interview
     # Sending .ics file as an attachment
-    attachments[resume.uniqid.name   + ".ics"] = File.read(Rails.root + "/tmp/" + "#{resume.uniqid.name}")
+    ics_file = create_ics_file(fname, interview)
+    attachments[fname   + ".ics"] = File.read(ics_file)
     mail(to: recipients, subject: subject)
+    ics_file.unlink
+  end
+
+  def create_ics_file(fname, interview)
+    ics_file =  Tempfile.new(fname)
+    ics_file.puts 'BEGIN:VCALENDAR'
+    ics_file.puts 'VERSION:1.0'
+    ics_file.puts 'BEGIN:VEVENT'
+    ics_file.puts 'CATEGORIES:MEETING'
+    ics_file.puts "STATUS:#{interview.status}"
+
+    # Finding start and end times
+    # Decreasing 5 and half hours to make it compatible with indian time
+    # 60*60*5 + 1800 (Not sure this is good idea)
+    original_interview_time   = interview.interview_time
+    iso8601_start_format_time = original_interview_time - 19_800
+    iso8601_start_format_time = iso8601_start_format_time.iso8601.dup
+    iso8601_end_format_time   = original_interview_time - 19_800 + 3600 # Added 3600 seconds to extend time to two hours :). Will find a better idea over this weekend probably
+    iso8601_end_format_time   = iso8601_end_format_time.iso8601.dup
+    # Start Time
+    iso8601_start_format_time.gsub!('2000-01-01', interview.interview_date.to_s)
+    iso8601_start_format_time.gsub!(/[:-]/, '')
+    # End Time
+    iso8601_end_format_time.gsub!('2000-01-01', interview.interview_date.to_s)
+    iso8601_end_format_time.gsub!(/[:-]/, '')
+
+    ics_file.puts "DTSTART:#{iso8601_start_format_time}"
+    ics_file.puts "DTEND:#{iso8601_end_format_time}"
+    ics_file.puts "SUMMARY: STAGE- #{interview.stage}, INTERVIEW TYPE- #{interview.itype}"
+    ics_file.puts "DESCRIPTION: FOCUS- #{interview.focus}"
+    ics_file.puts 'CLASS:PRIVATE'
+    ics_file.puts 'BEGIN:VALARM'
+    ics_file.puts 'TRIGGER:-PT15M'
+    ics_file.puts 'ACTION:DISPLAY'
+    ics_file.puts 'DESCRIPTION: Reminder'
+    ics_file.puts 'END:VALARM'
+    ics_file.puts 'END:VEVENT'
+    ics_file.puts 'END:VCALENDAR'
+    ics_file.close
+    return ics_file
   end
 
   def action(logged_emp, resume, req_name, status, comment)
