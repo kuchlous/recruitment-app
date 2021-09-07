@@ -99,7 +99,7 @@ class RequirementsController < ApplicationController
     # Finding matches/forwards/interviews based upon the parameter coming from the url
     get_forwards_matches_to_reqs(@requirement) unless @status.nil?
 
-    if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee)
+    if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_lead == get_current_employee
       @accounts    = @requirement.accounts
       @req_forwards= @requirement.open_forwards
       @shortlists  = @requirement.shortlists

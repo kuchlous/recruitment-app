@@ -2343,6 +2343,8 @@ class ResumesController < ApplicationController
     recipients << requirement.eng_lead if requirement.eng_lead
     ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
+    ta_owner = resume.ta_owner
+    recipients << ta_owner if ta_owner
     Emailer.send_for_status_change(resume, requirement, recipients, status, comment).deliver_now
   end
 
@@ -2358,6 +2360,8 @@ class ResumesController < ApplicationController
     end
     attachment = Rails.root + attachment
     recipients = [gm_for_decision, ta]
+    ta_owner = resume.ta_owner
+    recipients << ta_owner if ta_owner
     recipients << requirement.ta_lead if requirement.ta_lead
     if eng_decision
       recipients << requirement.eng_lead if requirement.eng_lead

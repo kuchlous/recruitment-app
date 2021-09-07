@@ -23,6 +23,7 @@ class Emailer < ApplicationMailer
   def joined(resume, mail_to, status)
     subject = 'Referral ' + status
     recipients = [ mail_to.email ]
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
 
     @to_employee    = mail_to
     @resume         = resume
@@ -44,6 +45,7 @@ class Emailer < ApplicationMailer
   def panel(mail_to, interview, resume)
     subject =        'Added to interview panel'
     recipients = [ mail_to.email ]
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
 
     @to_employee  = mail_to
     @resume       = resume
@@ -58,6 +60,7 @@ class Emailer < ApplicationMailer
   def action(logged_emp, resume, req_name, status, comment)
     subject =        'Resume ' + status.downcase
     recipients = [ resume.employee.current_email ]
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
     @from_employee = logged_emp
     @resume        = resume
     @req_name      = req_name
@@ -69,6 +72,7 @@ class Emailer < ApplicationMailer
   def feedback(logged_emp, resume, req, feedback)
     subject =        'Feedback received'
     recipients = [ resume.employee.current_email, req.employee.current_email ] 
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
     @from_employee = logged_emp
     @feedback      = feedback
     @resume        = resume
@@ -126,6 +130,7 @@ class Emailer < ApplicationMailer
   def removed_panel(interview, resume)
     subject = "Interview cancelled"
     recipients = [ interview.employee.email ]
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
     @emp_to = interview.employee
     @interview = interview
     @uniqid = resume.uniqid
@@ -138,6 +143,7 @@ class Emailer < ApplicationMailer
     decision_string = eng_decision ? "Eng" : "Management"
     subject = decision_string +  " decision for #{resume.name}, " + "Requirement: " + requirement.name
     recipients = recipients.map{|r| r.email }
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
     attachments[resume.uniqid.name + "." + ext] = File.read(rattachment)
     @resume = resume
     @to = to
@@ -150,6 +156,7 @@ class Emailer < ApplicationMailer
   def send_for_status_change(resume, requirement, recipients, status, comment)
     subject = "FYI: " + status +  ", #{resume.name}, " + "Requirement: " + requirement.name
     recipients = recipients.map{|r| r.email }
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
     @resume = resume
     @requirement = requirement
     @status = status
@@ -188,6 +195,7 @@ class Emailer < ApplicationMailer
     recipients = []
     recipients << requirement.ta_lead.email if requirement.ta_lead.present?
     recipients << requirement.eng_lead.email if requirement.eng_lead.present?
+    recipients << resume.ta_owner.email if resume.ta_owner.present?
     # TODO: Add Sales Head to recipients
     subject = "#{resume.name} is rejected for #{requirement.name}"
     mail(to: recipients, subject: subject) if recipients.length > 0

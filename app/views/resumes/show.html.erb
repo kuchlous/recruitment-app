@@ -9,7 +9,7 @@
     <%= @resume.name.split(' ').map{|part| part.capitalize}.join(' ') %>
    </div>
    <div class="resume__status">
-     <% if is_HR_ADMIN? || is_MANAGER? %> 
+     <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? %> 
         (Status : <%= @overall_status %>) 
      <% end %>
      <% if @resume.summary && @resume.summary != "" %>
@@ -153,7 +153,7 @@
             <% end %>
           <% end %>
         <% end %>
-        <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+        <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
             <% unless @resume.status == "FUTURE" %>
               <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
                 <div>
@@ -213,39 +213,38 @@
 <div id="resume_details_div" class="common_class">
   <form name="form" method="post">
     <% if (@resume.resume_overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
-      <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_BD? %>
-        
-        <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
-          <div class="section" id="feedback">
-              <div class="section__title">
-                Feedbacks (<%= @feedbacks.size %>):
-              </div>
-              <div class="section__subtitle">
-                 Summary : <%= get_feedback_rating_average(@feedbacks) %>
-                </div>
-              <div class="section__body">
-                <div>
-                  <% unless @feedbacks.nil? ||
-                            @feedbacks.empty? %>
-                    <% @feedbacks.each do |feedback| %>
-                      <div class="comment">
-                          <div class="comment__author"> 
-                            By <%= feedback.employee.name %> :: 
-                            <%= get_rating(feedback) %>
-                          </div>
-                          <div class="comment__date">
-                            <%= print_date(feedback.created_at) %>
-                          </div>
-                          <div class="comment__body"> <%= simple_format feedback.feedback %> </div>
-                      </div>
-                    <% end %>
-                  <% else %>
-                    <div> No feedback available. </div>
-                  <% end %>
-                </div> 
-              </div>
-          </div>          
-        <% end %>
+      <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
+        <div class="section" id="feedback">
+          <div class="section__title">
+            Feedbacks (<%= @feedbacks.size %>):
+          </div>
+          <div class="section__subtitle">
+             Summary : <%= get_feedback_rating_average(@feedbacks) %>
+          </div>
+          <div class="section__body">
+            <div>
+              <% unless @feedbacks.nil? ||
+                        @feedbacks.empty? %>
+                <% @feedbacks.each do |feedback| %>
+                  <div class="comment">
+                    <div class="comment__author"> 
+                      By <%= feedback.employee.name %> :: 
+                      <%= get_rating(feedback) %>
+                    </div>
+                    <div class="comment__date">
+                      <%= print_date(feedback.created_at) %>
+                    </div>
+                    <div class="comment__body"> <%= simple_format feedback.feedback %> </div>
+                  </div>
+                <% end %>
+              <% else %>
+                <div> No feedback available. </div>
+              <% end %>
+            </div> 
+          </div>
+        </div>          
+      <% end %>
+      <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_BD? || is_GM? %>
         <div class="section" id="message">
           <div class="section__title"> 
             Messages (<%= @messages.size %>): 
@@ -301,7 +300,7 @@
       var all_req_ids = [ <%=raw all_reqs_ids().join(",") %>];
       var all_req_names = [ <%=raw all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
     </script>
-    <% if is_HR_ADMIN? || is_REQ_MANAGER? || is_GM? %>
+    <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
       <% matches = @resume.req_matches.find_all { |m| 
            m.status != "SHORTLISTED" && m.status != "SCHEDULED"
          }
