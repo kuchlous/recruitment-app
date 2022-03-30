@@ -87,7 +87,11 @@
         <td> <%= link_to @req_forwards.size, :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"    %>   </td>
         <td> <%= link_to @shortlists.size,   :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted" %>   </td>
         <td> <%= link_to @scheduled.size,    :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"   %>   </td>
-        <td> <%= @rejected.size %> </td>
+        <% if get_current_employee.is_ADMIN? %>
+          <td> <%= link_to @rejected.size, :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected" %> </td>
+        <% else %>
+          <td> <%= @rejected.size %> </td>
+        <% end %>
         <td> <%= link_to @hold.size,         :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"        %>   </td>
         <td> <%= link_to @offered.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"     %>   </td>
         <td> <%= link_to @joining.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"     %>   </td>

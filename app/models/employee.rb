@@ -132,14 +132,7 @@ class Employee < ActiveRecord::Base
   end
 
   def is_REQ_MANAGER?
-    emp_open_reqs = self.requirements.find_all { |r|
-      r.status == "OPEN"
-    }
-    unless emp_open_reqs.nil? || emp_open_reqs.empty?
-      return true
-    else
-      return false
-    end
+    self.requirements.where(status: "OPEN").count > 0
   end
 
   def provides_visibility_to?(other)

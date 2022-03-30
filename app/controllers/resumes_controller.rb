@@ -2,7 +2,7 @@ class ResumesController < ApplicationController
   require 'spreadsheet'
 
   before_action :check_for_login, :except => [ :get_summary_by_id, :get_resume_attachment ]
-  before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD,    :only => [ :hold,           :offered,
+  before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM,    :only => [ :hold,           :offered,
                                                                           :edit,           :recent,
                                                                           :joined,         :rejected,
                                                                           :shortlisted,    :forwarded,

@@ -1164,8 +1164,12 @@ th
   width:            500px;
 }
 
-#resume_list_table .resume_list_header_download_box,
 #resume_list_table .resume_list_header_experience,
+{
+  width:            100px;
+}
+
+#resume_list_table .resume_list_header_download_box,
 #resume_list_table .resume_list_header_notice_period,
 #resume_list_table .resume_list_header_status,
 #resume_list_table .resume_list_date_uploaded

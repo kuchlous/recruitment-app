@@ -12,19 +12,24 @@
      <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? %> 
         (Status : <%= @overall_status %>) 
      <% end %>
-     <% if @resume.summary && @resume.summary != "" %>
-       <div class= "resume__summary-heading">Summary</div>
-       <div class="resume__summary-content"> <%= @resume.summary %></div>
+     <% if is_HR_ADMIN? || is_GM? %>
+       <% if @resume.summary && @resume.summary != "" %>
+         <div class= "resume__summary-heading">Summary</div>
+         <div class="resume__summary-content"> <%= @resume.summary %></div>
+       <% end %>
      <% end %>
    </div>
    <div class="resume__communication">
      <div class="resume__communication-1">
-       <div class="item item--center"><%= image_tag("phone.svg",  :size => "25x25")  %> 
-          <span  class="item__value item__value--normal"><%= @resume.phone %></span>
+       <div class="item item--center"><%= image_tag("phone.svg", :size => "25x25")  %> 
+          <span class="item__value item__value--normal"><%= @resume.phone %></span>
        </div>
-       <div  class="item item--center"><%= image_tag("location.svg",  :size => "25x25")  %> 
-         <span  class="item__value item__value--normal"><%= @resume.location %></span>
-        </div>
+       <div class="item item--center"><%= image_tag("location.svg", :size => "25x25")  %> 
+         <span class="item__value item__value--normal"><%= @resume.location %></span>
+       </div>
+       <div class="item item--center"><%= image_tag("location.svg", :size => "25x25")  %> 
+         <span class="item__value item__value--normal"><%= @resume.preferred_location %></span>
+       </div>
      </div>
      <div class="resume__communication-2">
        <div class="item item--center"><%= image_tag("mail.svg",  :size => "25x25")  %> 

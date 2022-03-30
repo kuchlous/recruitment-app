@@ -11,6 +11,8 @@
       <td class="resume_list_header_experience">        Exp    </td>
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
         <td class="resume_list_header_notice_period"> Notice </td>
+      <% end %>
+      <% if is_HR_ADMIN? || is_GM? %>
         <td class="resume_list_header_notice_period"> ECTC </td>
       <% end %>
       <td class="interview_rating_class">      Rating  </td>
@@ -29,6 +31,8 @@
         <td> <%= get_current_experience_string(resume) %> </td>
         <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
           <td> <%= resume.notice %> </td>
+        <% end %>
+        <% if is_HR_ADMIN? || is_GM? %>
           <td> <%= resume.expected_ctc %> </td>
         <% end %>
         <td title="<%= get_all_ratings(match) %>">

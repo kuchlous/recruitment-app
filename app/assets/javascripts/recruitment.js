@@ -1849,21 +1849,21 @@ function get_image_name(likely_to_join) {
 }
 
 function get_image_tag(likely_to_join, resume_id) {
-  var $img = $jq('<img/>').attr('src', get_image_name(likely_to_join)).click({resume_id : resume_id, likely_to_join: likely_to_join}, update_joining_status);
+  var $img = jQuery('<img/>').attr('src', get_image_name(likely_to_join)).click({resume_id : resume_id, likely_to_join: likely_to_join}, update_joining_status);
   return $img;
 }
 
 function show_current_joining_status(resume_id, likely_to_join) {
-  var $cell = $jq('#likely-to-join-' + resume_id);
+  var $cell = jQuery('#likely-to-join-' + resume_id);
   $cell.html("");
-  var $img = $jq('<img/>').attr('src', get_image_name(likely_to_join)).click({resume_id : resume_id}, show_all_images_for_likely_to_join);
+  var $img = jQuery('<img/>').attr('src', get_image_name(likely_to_join)).click({resume_id : resume_id}, show_all_images_for_likely_to_join);
   $cell.append($img);
 }
 
 function update_joining_status(event) {
   var resume_id = event.data.resume_id;
   var likely_to_join = event.data.likely_to_join;
-  $jq.ajax({
+  jQuery.ajax({
       url : prepend_with_image_path + "/resumes/update_resume_likely_to_join",
       data : {
         resume_id : resume_id,
@@ -1877,6 +1877,7 @@ function update_joining_status(event) {
         alert("Server was down while performing this action. Please contact administrators.");
       }
     });
+  return false;
 }
 
 // JQuery presents a different interface to callbacks, hence this wrapper.
@@ -1886,7 +1887,7 @@ function show_all_images_for_likely_to_join(event) {
 }
 
 function showAllImagesForLikelyToJoin(event, resume_id) {
-  var $cell = $jq('#likely-to-join-' + resume_id);
+  var $cell = jQuery('#likely-to-join-' + resume_id);
   $cell.html("");
 
   var imageTags = [ "R", "G", "O" ];
@@ -1895,4 +1896,5 @@ function showAllImagesForLikelyToJoin(event, resume_id) {
     var $img = get_image_tag(imageTags[i], resume_id);
     $cell.append($img);
   }
+  return false;
 }

@@ -66,10 +66,13 @@
       <td> <%= f.text_field :location %> </td>
     </tr>
     <tr>
+      <td> Preferred Location of candidate   </td>
+      <td> <%= f.text_field :preferred_location %> </td>
+    </tr>
+    <tr>
       <td> Candidate's Qualification </td>
       <td> <%= f.text_area :qualification %> </td>
     </tr>
-
     <tr>
       <td> TA Owner </td>
       <td> <%= collection_select(:resume, :ta_owner_id, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>

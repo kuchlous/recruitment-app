@@ -13,7 +13,7 @@
       <td class="resume_list_header_status">                    Status        </td>
       <td class="resume_list_date_uploaded sorttable_nosort">   Upload Date   </td>
       <td class="resume_list_header_reqs sorttable_nosort">     Requirements  </td>
-      <td class="resume_list_header_location">                  Location      </td>
+      <td class="resume_list_header_location">                  Preferred Location </td>
       <td class="resume_list_header_actions sorttable_nosort">  Actions       </td>
     </tr>
     <% counter_value = 0
@@ -36,7 +36,7 @@
            </td>
            <td> <%= print_date_no_year (fwd.created_at) %> </td>
            <td> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>
-           <td> <%= resume.location %> </td>
+           <td> <%= resume.preferred_location %> </td>
            <td>
              <%= get_manager_actions_dropdownlist(resume, fwd, counter_value, @after_shortlist_page) %>
            </td>
