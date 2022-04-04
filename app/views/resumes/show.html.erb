@@ -24,12 +24,12 @@
        <div class="item item--center"><%= image_tag("phone.svg", :size => "25x25")  %> 
           <span class="item__value item__value--normal"><%= @resume.phone %></span>
        </div>
-       <div class="item item--center"><%= image_tag("location.svg", :size => "25x25", :alt => "Current Location")  %> 
+       <div class="item item--center"><%= image_tag("location.svg", title:"Current Location", :size => "25x25", :alt => "Current Location")  %> 
          <span class="item__value item__value--normal"><%= @resume.location %></span>
        </div>
        <% if @resume.preferred_location %>
-         <div class="item item--center"><%= image_tag("location.svg", :size => "25x25", :alt => "Preferred Location")  %> 
-           <span class="item__value item__value--normal"><%= @resume.preferred_location %></span>
+         <div class="item item--center"><%= image_tag("location_preferred.svg", title:"Preferred Location", :size => "25x25", :alt => "Preferred Location")  %> 
+           <span class="item__value item__value--normal"><%= @resume.preferred_location  %></span>
          </div>
        <% end %>
      </div>
