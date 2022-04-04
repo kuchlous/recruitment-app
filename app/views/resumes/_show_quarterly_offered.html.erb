@@ -1,27 +1,31 @@
 <% if params[:action] == "show_quarterly_offered"
      month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @year.to_s
    end %>
+<% if params[:action] == "show_quarterly_offered" %>
+  <td colspan="3"> <b> <%= month_year_str %> (<%= @offered_comments.size %>) </b> </td>
+<% elsif params[:action] == "show_all_offered" %>
+  <td colspan="3"> <b> ALL <%= @status.titleize %> Resumes (<%= @offered_comments.size %>) </b> </td>
+<% else %>
+  <td colspan="3"> <b> <%= @status.titleize %> resumes for current quarter (<%= @offered_comments.size %>) </b> </td>
+<% end %>
+</br>
+
 <table id="offered_resumes_table" class="sortable">
-  <tr id="no_border">
-    <% if params[:action] == "show_quarterly_offered" %>
-      <td colspan="3"> <b> <%= month_year_str %> (<%= @offered_comments.size %>) </b> </td>
-    <% elsif params[:action] == "show_all_offered" %>
-      <td colspan="3"> <b> ALL <%= @status.titleize %> Resumes (<%= @offered_comments.size %>) </b> </td>
-    <% else %>
-      <td colspan="3"> <b> <%= @status.titleize %> resumes for current quarter (<%= @offered_comments.size %>) </b> </td>
-    <% end %>
-  </tr>
-  <tr>
-    <th> Resume Name </th>
-    <th> Requirement </th>
-    <th> Offer date </th>
-  </tr>
-  <% @offered_comments.each do |c| %>
-    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-      <% req = get_requirement_from_comment(c, "OFFERED") %>
-      <td class="offered_resumes_label"> <%= get_resume_link_with_mouse_over_and_mouseout(c.resume) %> </td>
-      <td class="offered_resumes_label"> <%= (req ? get_requirement_link_with_mouse_over_and_mouseout(req) : "") %> </td>
-      <td class="offered_resumes_label"> <%= print_date(c.created_at) %> </td>
+  <thead>
+    <tr>
+      <th> Resume Name </th>
+      <th class="sorttable_alpha"> Requirement </th>
+      <th> Offer date </th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% @offered_comments.each do |c| %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <% req = get_requirement_from_comment(c, "OFFERED") %>
+        <td class="offered_resumes_label"> <%= get_resume_link_with_mouse_over_and_mouseout(c.resume) %> </td>
+        <td class="offered_resumes_label"> <%= (req ? get_requirement_link_with_mouse_over_and_mouseout(req) : "") %> </td>
+        <td class="offered_resumes_label"> <%= print_date(c.created_at) %> </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>

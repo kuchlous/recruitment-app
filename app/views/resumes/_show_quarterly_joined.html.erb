@@ -1,26 +1,29 @@
 <% if params[:action] == "show_quarterly_joined"
      month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @year.to_s
    end %>
+<% if params[:action] == "show_quarterly_joined" %>
+  <b> <%= month_year_str %> (<%= @joined_resumes.size %>) </b> 
+<% elsif params[:action] == "show_all_joined_or_not_joined" || params[:action] == "show_all_offered" %>
+  <b> ALL <%= @status.titleize %> Resumes (<%= @joined_resumes.size %>) </b>
+<% else %>
+  <b> <%= @status.titleize %> resumes for current quarter (<%= @joined_resumes.size %>) </b>
+<% end %>
+</br>
 <table id="joined_resumes_table" class="sortable">
-  <tr id="no_border">
-    <% if params[:action] == "show_quarterly_joined" %>
-      <td colspan="3"> <b> <%= month_year_str %> (<%= @joined_resumes.size %>) </b> </td>
-    <% elsif params[:action] == "show_all_joined_or_not_joined" || params[:action] == "show_all_offered" %>
-      <td colspan="3"> <b> ALL <%= @status.titleize %> Resumes (<%= @joined_resumes.size %>) </b> </td>
-    <% else %>
-      <td colspan="3"> <b> <%= @status.titleize %> resumes for current quarter (<%= @joined_resumes.size %>) </b> </td>
-    <% end %>
-  </tr>
-  <tr>
-    <th> Resume Name </th>
-    <th> Requirement </th>
-    <th> Joined date </th>
-  </tr>
-  <% @joined_resumes.each do |r| %>
-    <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-      <td class="joined_resumes_label"> <%= get_resume_link_with_mouse_over_and_mouseout(r) %> </td>
-      <td class="joined_resumes_label"> <%= get_resume_requirement(r, @status) %> </td>
-      <td class="joined_resumes_label"> <%= print_date(r.joining_date) %> </td>
+  <thead>
+    <tr>
+      <th> Resume Name </th>
+      <th class="sorttable_alpha"> Requirement </th>
+      <th> Joined date </th>
     </tr>
-  <% end %>
+  </thead>
+  <tbody>
+    <% @joined_resumes.each do |r| %>
+      <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
+        <td class="joined_resumes_label"> <%= get_resume_link_with_mouse_over_and_mouseout(r) %> </td>
+        <td class="joined_resumes_label"> <%= get_resume_requirement(r, @status) %> </td>
+        <td class="joined_resumes_label"> <%= print_date(r.joining_date) %> </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
