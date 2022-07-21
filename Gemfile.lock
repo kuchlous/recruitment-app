@@ -45,7 +45,7 @@ GEM
       activerecord (>= 1.15.6, < 3.0.0)
       after_commit (>= 1.0.7)
       riddle (>= 1.5.3)
-    tzinfo (0.3.51)
+    tzinfo (0.3.61)
     will_paginate (2.3.16)
 
 PLATFORMS
@@ -59,7 +59,7 @@ DEPENDENCIES
   sanitize
   spreadsheet
   thinking-sphinx (~> 1.4.14)
-  tzinfo (~> 0.3.31)
+  tzinfo (~> 0.3.61)
   will_paginate (~> 2.3.16)
 
 BUNDLED WITH
