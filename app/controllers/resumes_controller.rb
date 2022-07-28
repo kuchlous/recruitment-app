@@ -30,7 +30,7 @@ class ResumesController < ApplicationController
   end
 
   def show
-    unless params[:id].nil?
+    unless params[:id].nil? || Uniqid.find_by_name(params[:id]).nil?
       @resume         = Uniqid.find_by_name(params[:id]).resume
       @overall_status = @resume.resume_overall_status
       if @overall_status == "N_ACCEPTED"
