@@ -76,6 +76,7 @@ Rails.application.routes.draw do
   match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get
+  match 'resumes/delete_resume',to: 'resumes#delete_resume'                 , via: :delete, as: :delete_resume
   match 'resumes/manager_joined',to: 'resumes#manager_joined'               , via: :get
   match 'resumes/manager_offered',to: 'resumes#manager_offered'             , via: :get
   match 'resumes/manager_hold',to: 'resumes#manager_hold'                   , via: :get

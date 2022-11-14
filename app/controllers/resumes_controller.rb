@@ -1821,6 +1821,13 @@ class ResumesController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
+  def delete_resume
+    filepath = params[:name]
+    logger.warn("Trying to delete file #{filepath}")
+    `rm "#{filepath}"`
+    render body: nil
+  end
+
   private
 
   # PRIVATE FUNCTIONS

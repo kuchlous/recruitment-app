@@ -19,14 +19,20 @@
        title_var  = "Download this resume as an unknown format file"
      end %>
      <%if File.extname(filename)== ".pdf" %>
-       <a data-target="#myModal" data-toggle="modal" onclick = "setEmbedSrc('<%= resume_tag %>')">
+       <a data-target="#myModal" data-toggle="modal" onclick = "setEmbedSrc('<%= resume_tag %>')" style="position:relative">
          <%= image_tag(image_path,  :size => "40x40")  %>       
+         <% if is_HR_ADMIN? || is_GM? %>
+           <span class="glyphicon glyphicon-remove" onclick="deleteResume(event,'<%= filename %>')" style="position: absolute;top: -10px; right: -5px;"></span>
+         <% end %>
        </a>
-      <% else %> 
-        <a href="<%= resume_tag %>" target="_blank" title="<%= title_var %>">
-          <%= image_tag(image_path,  :size => "40x40")  %>
-        </a>
-      <% end %>  
+     <% else %> 
+       <a href="<%= resume_tag %>" target="_blank" title="<%= title_var %>" style="position:relative">
+         <%= image_tag(image_path,  :size => "40x40")  %>
+         <% if is_HR_ADMIN? || is_GM? %>
+           <span class="glyphicon glyphicon-remove" onclick="deleteResume(event,'<%= filename %>')" style="position: absolute;top: -10px; right: -5px;"></span>
+         <% end %>
+       </a>
+     <% end %>  
 <% end %>
 <div class="modal fade" id="myModal" role="dialog" style="display: none;">
   <div class="modal-dialog modal-lg">
@@ -42,7 +48,30 @@
     </div>
   </div>
 </div>
+<% url = "https://" + APP_CONFIG['host_name'] + delete_resume_path %>
 <script>
+  function deleteResume (e, filepath) {
+    e.preventDefault();
+    e.stopPropagation();
+    var confirmation =confirm("Are you sure you want to delete document!");
+    if (confirmation){
+      $.ajax({
+        url: '<%=url%>',
+        dataType: "json",
+        type: 'DELETE',
+        data: {
+          name: filepath
+        },
+        success: function(data) {
+          e.target.parentNode.remove();
+        },
+        failure: function(error) {
+          alert(error);
+        }
+      });
+    }     
+  }
+ 
   function setEmbedSrc (filepath) {
     //re-add embed tag to reflect new pdf source 
     //ref:https://stackoverflow.com/questions/2493706/javascript-changing-src-attribute-of-a-embed-tag 
