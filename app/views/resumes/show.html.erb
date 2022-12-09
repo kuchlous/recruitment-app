@@ -158,6 +158,10 @@
               </div>
               <br /> <br />
             <% end %>
+            <% if is_HR_ADMIN? %>
+            <button class="action__field hr_comment_button" data-target="#hr-comment-modal" data-toggle="modal" > Add HR Comment </button>
+            <br /> <br />
+            <% end %>
           <% end %>
         <% end %>
         <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
@@ -382,7 +386,28 @@
       <% end %>
     <% end %>
   </form>
+
+<div class="modal fade" id="hr-comment-modal" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">×</button>
+        <div class="modal-title">Add HR Comment for <%= @resume.name %> </div>
+      </div>
+      <div class="modal-body">
+        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "add_hr_comment") do %>
+          <%= text_area_tag "comment", nil, :id => "hr_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
+          <%= hidden_field_tag "id", @resume.id %>
+          <%= submit_tag "Submit", :class => "btn btn-primary" %>
+        <% end %>  
+      </div>
+    </div>
+  </div>
 </div>
+
+
+</div>
+
 <script>
   function toggleComment(commentDiv,iconDiv,event) {
     event.preventDefault();

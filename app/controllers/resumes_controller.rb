@@ -36,7 +36,7 @@ class ResumesController < ApplicationController
       if @overall_status == "N_ACCEPTED"
         @overall_status  = "Not Accepted"
       end
-      @comments       = @resume.comments
+      @comments       = get_resume_comments(@resume, get_current_employee)
       @feedbacks      = @resume.feedbacks
       @messages       = @resume.messages
     else
@@ -876,6 +876,19 @@ class ResumesController < ApplicationController
     render body: nil
   end
 
+  def add_hr_comment
+    resume = Resume.find(params[:id])
+    comment = params[:comment]
+    employee = get_current_employee
+    Comment.create(:comment     => comment,
+                :resume      => resume,
+                :leave_id    => 0,
+                :ctype       => "HR",
+                :employee    => employee)
+    flash[:notice] = "We have added an HR comment"
+    redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
+  end
+
   ####################################################################################################
   # FUNCTION    : Decling interviews                                                                 #
   # DESCRIPTION : Function to be used when employee do not want to take interview on specified       #
@@ -952,19 +965,22 @@ class ResumesController < ApplicationController
   def show_resume_comments
     @resume           = Resume.find(params[:resume_id])
     @cols             = params[:columns]
-    if is_ADMIN? || is_HR? || is_MANAGER?
-      @resume_comments      = @resume.comments
-    else
-      @resume_comments      = @resume.comments.find_all { |c|
-        c.employee          == get_current_employee &&
-        c.ctype             == "USER"
-      }
-    end
-    @resume_comments        = sort_by_created_at_date(@resume_comments)
-
+    @resume_comments = get_resume_comments(@resume, get_current_employee)
     respond_to do |format|
       format.js
     end
+  end
+
+  def get_resume_comments(resume, employee)
+    comments = []
+    if employee.is_ADMIN? || employee.is_HR? || employee.is_GM?  || employee.is_GROUP_HEAD?
+      comments      = @resume.comments
+    elsif is_MANAGER?
+      comments      = @resume.comments.where(ctype: ["INTERNAL", "USER"])
+    else
+      comments      = @resume.comments.where(employee: get_current_employee, ctype: "USER")
+    end
+    comments        = sort_by_created_at_date(comments)
   end
 
   ####################################################################################################

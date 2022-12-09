@@ -177,6 +177,10 @@ require 'will_paginate/array'
     end
   end
 
+  def is_GM?
+    @logged_employee.is_GM? ? @logged_employee : false
+  end
+
   def is_REQ_MANAGER?
     is_req = Requirement.all.find_all {
       |req| req.status   == "OPEN" &&
