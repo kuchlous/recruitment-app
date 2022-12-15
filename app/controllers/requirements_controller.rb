@@ -108,6 +108,7 @@ class RequirementsController < ApplicationController
       @offered     = @requirement.offered
       @joining     = @requirement.joining
       @hold        = @requirement.hold
+      @yto         = @requirement.yto
 
       respond_to do |format|
         format.html
@@ -158,6 +159,11 @@ class RequirementsController < ApplicationController
       @matches       = req.offered
       @render        = "joining_offered_hold_form"
       @offer_on_req_page = 1
+      @is_req_match  = 1
+    elsif @status    == "Yto"
+      @matches       = req.yto
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
       @is_req_match  = 1
     elsif @status    == "Joining"
       @matches       = req.joining

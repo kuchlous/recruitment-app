@@ -1261,6 +1261,12 @@ class ResumesController < ApplicationController
     send_file_to_download(book, output)
   end
 
+  def export_as_xls_requirement_for_yto
+    sheet, book, output, yto_matches   = create_xls_sheet_and_get_matches("YTO")
+    fill_offered_data(sheet, yto_matches)
+    send_file_to_download(book, output)
+  end
+
   def export_as_xls_requirement_for_scheduled
     sheet, book, output, scheduled_matches   = create_xls_sheet_and_get_matches("SCHEDULED")
     fill_interview_data(sheet, scheduled_matches)

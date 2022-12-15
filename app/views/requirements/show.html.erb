@@ -80,6 +80,7 @@
         <td> Scheduled   </td>
         <td> Rejected    </td>
         <td> Holds       </td>
+        <td> YTO         </td>
         <td> Offered     </td>
         <td> Joining     </td>
       </tr>
@@ -93,6 +94,7 @@
           <td> <%= @rejected.size %> </td>
         <% end %>
         <td> <%= link_to @hold.size,         :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"        %>   </td>
+        <td> <%= link_to @yto.size,          :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Yto"         %>   </td>
         <td> <%= link_to @offered.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"     %>   </td>
         <td> <%= link_to @joining.size,      :host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"     %>   </td>
       </tr>

@@ -99,6 +99,10 @@ class Requirement < ActiveRecord::Base
     }
   end
 
+  def yto
+    self.req_matches.where(status: "YTO")
+  end
+
   def hold
     self.req_matches.find_all { |r|
       r.status == "HOLD"

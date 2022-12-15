@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   match 'resumes/outbox',to: 'resumes#outbox'                       , via: :get
   match 'resumes/trash',to: 'resumes#trash'                         , via: :get
   match 'resumes/resume_action',to: 'resumes#resume_action'         , via: :post
+  match 'resumes/add_hr_comment',to: 'resumes#add_hr_comment'       , via: :post
   match 'resumes/eng_select',to: 'resumes#eng_select'               , via: :get
   match 'resumes/hac',to: 'resumes#hac'                             , via: :get
   match 'resumes/send_for_eng_decision',to:'resumes#send_for_eng_decision'   , via: :post
@@ -59,6 +60,7 @@ Rails.application.routes.draw do
   match 'resumes/export_as_xls_requirement_for_shortlisted',to: 'resumes#export_as_xls_requirement_for_shortlisted', via: :get
   match 'resumes/export_as_xls_requirement_for_forwards',to: 'resumes#export_as_xls_requirement_for_forwards'      , via: :get
   match 'resumes/export_as_xls_requirement_for_offered',to: 'resumes#export_as_xls_requirement_for_offered'        , via: :get 
+  match 'resumes/export_as_xls_requirement_for_yto',to: 'resumes#export_as_xls_requirement_for_yto'                , via: :get 
   match 'resumes/export_as_xls_requirement_for_scheduled',to: 'resumes#export_as_xls_requirement_for_scheduled'    , via: :get
   match 'resumes/export_as_xls_requirement_for_rejected',to: 'resumes#export_as_xls_requirement_for_rejected'      , via: :get
   match 'resumes/export_as_xls_requirement_for_hold',to: 'resumes#export_as_xls_requirement_for_hold'              , via: :get
