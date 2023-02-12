@@ -1599,6 +1599,7 @@ class ResumesController < ApplicationController
       int_time  = params["time_slot#{i}".to_sym]
       int_date  = params["interview_date#{i}"]
       int_focus = params["interview_focus#{i}".to_sym]
+      interview_level = params["interview_level_#{i}"]
       i_time = Time.zone.parse (int_date + " " + int_time)
       if emp_id
         interview = Interview.new(:employee_id    => emp_id,
@@ -1607,7 +1608,8 @@ class ResumesController < ApplicationController
                                   :stage          => int_stage,
                                   :itype          => int_type,
                                   :focus          => int_focus,
-                                  :req_match_id   => match.id)
+                                  :req_match_id   => match.id,
+                                  :interview_level => interview_level)
         is_save = interview.save
         if is_save
           
@@ -1652,12 +1654,15 @@ class ResumesController < ApplicationController
     int_time  = params[:interview_time]
     int_date  = params[:interview_date]
     int_focus = params[:interview_focus]
+    interview_level = params[:interview_level]
 
     interview = Interview.find(int_id)
     is_save = interview.update_attributes(:employee_id    => emp_id,
                                 :interview_date => int_date,
                                 :interview_time => int_time,
-                                :focus          => int_focus)
+                                :focus          => int_focus,
+                                :interview_level => interview_level
+                              )
 
     match     = interview.req_match
     resume    = match.resume

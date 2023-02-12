@@ -860,7 +860,7 @@ table
 
 #ajax_request_tr .focus_textarea
 {
-  height:           12px;
+  /* height:           12px; */
   width:            130px;
   color:            #A4A4A4;
   vertical-align:   bottom;

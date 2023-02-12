@@ -253,6 +253,7 @@ function createLineBreakElement(element, num)
   element.appendChild(line_break_element);
 }
 
+// hypen (-) separator between fields.
 function createSpan(cell, isize)
 {
   var span1         = document.createElement('span');
@@ -353,12 +354,19 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     var select         = createDropDownList(cell, "interview_employee_name" + total_interview_num, "interview_employee_name" + total_interview_num, emp_ids, emp_names, "select_box_with_full_width");
     createSpan(cell, 8);
 
-    // Second element for date input
+    createLabel(cell, "", "Interview Level");
+    createSpan(cell, 8);
+
+    // Interview level L1, L2, L3
+    var select = createDropDownList(cell, "interview_level_" + total_interview_num, "interview_level_" + total_interview_num, [1, 2, 3], ['L1', 'L2', 'L3'], '');
+    createSpan(cell, 8);
+
+    // Element for date input
     var element2  = document.createElement("input");
     element2.name = "interview_date" + total_interview_num;
     element2.id   = "interview_date" + total_interview_num;
     cell.appendChild(element2);
-
+    
     // Onclick event for image.(Poping up calendar)
     $(function () {
       $(element2).datepicker({
@@ -381,10 +389,6 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
     textarea.name          = "interview_focus" + total_interview_num;
     textarea.id            = "interview_focus" + total_interview_num;
     textarea.className     = "focus_textarea";
-    textarea.style.marginRight  = "3px";
-    textarea.style.marginTop    = "0px";
-    textarea.style.paddingBottom = "4px";
-
     // On focus prototype function
     jQuery(textarea).bind("focus",
       function(textarea)
@@ -1732,10 +1736,11 @@ function changeInterview(interview_id, index)
   int_time  = jQuery("#time_slot" + index).val();
   int_date  = jQuery("#interview_date" + index).val();
   int_focus = encodeURIComponent(jQuery("#interview_focus" + index).val());
+  interview_level = jQuery("#interview_level_" + index).val();
 
   // Creates Ajax request to update interview
   jQuery.ajax({
-    url: prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus,
+    url: prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus + '&interview_level=' + interview_level,
     type: 'POST',
     success: function(transport)
     {

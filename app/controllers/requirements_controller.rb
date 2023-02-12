@@ -30,7 +30,16 @@ class RequirementsController < ApplicationController
   end
 
   def my_requirements
-    @requirements        = get_current_employee.requirements.select { |req| req.status == "OPEN" }
+    status = "ANY"
+    status = "OPEN" if params[:status] == "open"
+    status = "HOLD" if params[:status] == "hold"
+
+    @requirements = if status == "ANY"
+                      get_current_employee.requirements
+                    else
+                      get_current_employee.requirements.select { |req| req.status == status }
+                    end
+        
     if @requirements.size == 0
       flash[:notice] = "You do not have any requirements on your name."
     end
