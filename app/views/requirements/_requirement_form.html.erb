@@ -140,7 +140,7 @@
     </tr>
       <tr>
       <td> Requirement status   </td>
-      <td> <%= select_tag "requirement[status]", options_for_select([["Open", "OPEN"], ["Closed - Expired", "CLOSED EXPIRED"], ["Closed - Offered", "CLOSED OFFERED"], ["Closed - Joining", "CLOSED JOINING"], ["Closed - Delete", "CLOSED DELETE"] ], status) %> </td>
+      <td> <%= select_tag "requirement[status]", options_for_select([["Open", "OPEN"], ["Hold", "HOLD"], ["Closed - Expired", "CLOSED EXPIRED"], ["Closed - Offered", "CLOSED OFFERED"], ["Closed - Joining", "CLOSED JOINING"], ["Closed - Delete", "CLOSED DELETE"] ], status) %> </td>
     </tr>
     <tr>
       <td> Requirement type     </td>
