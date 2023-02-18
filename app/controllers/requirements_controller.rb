@@ -30,8 +30,8 @@ class RequirementsController < ApplicationController
   end
 
   def my_requirements
-    status = "ANY"
-    status = "OPEN" if params[:status] == "open"
+    status = "OPEN"
+    status = "ANY" if params[:status] == "any"
     status = "HOLD" if params[:status] == "hold"
 
     @requirements = if status == "ANY"
