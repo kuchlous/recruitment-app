@@ -182,6 +182,8 @@
        alert("Please select resume file");
        return;
     }
+    document.getElementById("loader").style.display="flex";
+
     data.append('file', selectedFile );
     // ref. https://stackoverflow.com/questions/6974684/how-to-send-formdata-objects-with-ajax-requests-in-jquery
     $.ajax({
@@ -198,8 +200,11 @@
         $('#resume_git_id').val(data.hyperlinks.github[0]);
         $('#resume_linkedin_id').val(data.hyperlinks.linkedin[0]);
         $('#resume_skills').val(Object.keys(data.skills));
+        document.getElementById("loader").style.display="none";
+
       },
       failure: function(error) {
+        document.getElementById("loader").style.display="none";
         alert(error);
       }
     });   
