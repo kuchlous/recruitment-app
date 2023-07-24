@@ -101,6 +101,12 @@
       <td> <%= f.file_field("upload_resume", :size => "31")%> </td>
     </tr>
     <tr>
+      <td></td>
+      <td>
+        <button type="button" onclick="parseResume(event)">Autofill/Parse Resume</button>    
+      </td>
+    </tr>
+    <tr>
       <td> Requirement name </td>
       <td class="radio_buttons_one_liner ddl_with_multiples">
         <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), :multiple => true %>
@@ -165,3 +171,37 @@
 <% end %>
 
 <br /> <br />
+<script>
+  function parseResume (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var data;
+    data = new FormData();
+    var selectedFile = $('#resume_upload_resume')[0].files[0];
+    if (!selectedFile) {
+       alert("Please select resume file");
+       return;
+    }
+    data.append('file', selectedFile );
+    // ref. https://stackoverflow.com/questions/6974684/how-to-send-formdata-objects-with-ajax-requests-in-jquery
+    $.ajax({
+      url: '/customer_data',
+      type: 'POST',
+      data: data,
+      processData: false,
+      contentType: false, //'multipart/form-data', 
+      // mimeType: 'multipart/form-data', 
+      success: function(data) {
+        $('#resume_email').val(data.email[0]);
+        $('#resume_phone').val(data.phone[0]);
+        $('#resume_skype_id').val(data.hyperlinks.skype_id[0]);
+        $('#resume_git_id').val(data.hyperlinks.github[0]);
+        $('#resume_linkedin_id').val(data.hyperlinks.linkedin[0]);
+        $('#resume_skills').val(Object.keys(data.skills));
+      },
+      failure: function(error) {
+        alert(error);
+      }
+    });   
+  }
+ </script> 
