@@ -187,7 +187,7 @@
     data.append('file', selectedFile );
     // ref. https://stackoverflow.com/questions/6974684/how-to-send-formdata-objects-with-ajax-requests-in-jquery
     $.ajax({
-      url: '/customer_data',
+      url: 'http://192.168.1.29:5001/parse_resume',
       type: 'POST',
       data: data,
       processData: false,
