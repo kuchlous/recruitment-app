@@ -148,6 +148,27 @@ class ResumesController < ApplicationController
     end
   end
 
+  def extract_from_resume
+    # url: 'http://192.168.1.29:5001/parse_resume',
+
+    connection = Faraday.new('http://106.51.77.156:5001') do |f|
+    # connection = Faraday.new('http://localhost:4000') do |f|
+      f.request :multipart
+      f.request :url_encoded
+      f.adapter :net_http
+    end
+
+    file = Faraday::UploadIO.new(
+      params[:resume].tempfile.path,
+      params[:resume].content_type,
+      params[:resume].original_filename
+    )
+    payload = {:resume => file}
+    response = connection.post('/parse_resume', payload)
+    # response = connection.post('/customer_data', payload)
+    render json: response.body
+  end
+
   def update
     @resume = Resume.find(params[:id])
     changed_referral = params[:resume][:referral_id] != @resume.referral_id ?
