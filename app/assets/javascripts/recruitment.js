@@ -1850,7 +1850,7 @@ function get_image_name(likely_to_join) {
   } else {
     img_name = "Orange";
   }
-  return prepend_with_image_path + '/images/' + img_name + '_Image.png';
+  return 'https://apps.mirafra.com/new-recruit/assets/' + img_name + '_Image.png';
 }
 
 function get_image_tag(likely_to_join, resume_id) {

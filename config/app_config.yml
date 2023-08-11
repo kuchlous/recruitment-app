@@ -34,5 +34,6 @@ production:
   zip_temp_file:    zip_tmp
   temp_resumes:     tmp_resumes
   status_file:      status
-  host_name:        apps.mirafra.com/new-recruit
-  subdomain:        /new-recruit
+  host_name:        apps.mirafra.com/recruit
+  rms_host_name:    apps.mirafra.com/rms
+  subdomain:        /recruit

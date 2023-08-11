@@ -93,5 +93,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.active_record.observers = [:resume_sweeper]
+  config.time_zone                           = 'New Delhi'
+
+  # config.active_record.observers = [:resume_sweeper]
 end

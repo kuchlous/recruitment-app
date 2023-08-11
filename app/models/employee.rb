@@ -97,6 +97,10 @@ class Employee < ActiveRecord::Base
     /GROUP_HEAD/.match(employee_type)
   end
 
+  def is_RMS_ANALYST?
+    /RMS_ANALYST/.match(employee_type)
+  end
+
   @@remote_access_disallowed = ["sruthinambiar@mirafra.com",
                                 "sivajyothi@mirafra.com",
                                 "sachinmirashe@mirafra.com",

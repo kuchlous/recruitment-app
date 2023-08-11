@@ -9,10 +9,10 @@
     <%= @resume.name.split(' ').map{|part| part.capitalize}.join(' ') %>
    </div>
    <div class="resume__status">
-     <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? %> 
+     <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %> 
         (Status : <%= @overall_status %>) 
      <% end %>
-     <% if is_HR_ADMIN? || is_GM? %>
+     <% if is_HR_ADMIN? || is_GM? || is_GROUP_HEAD?%>
        <% if @resume.summary && @resume.summary != "" %>
          <div class= "resume__summary-heading">Summary</div>
          <div class="resume__summary-content"> <%= @resume.summary %></div>

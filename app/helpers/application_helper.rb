@@ -26,6 +26,13 @@ module ApplicationHelper
     logged_employee.is_MANAGER?
   end
     
+  def is_RMS_ANALYST?
+    get_current_employee.is_RMS_ANALYST?
+  end
+
+  def is_GROUP_HEAD?
+    get_current_employee.is_GROUP_HEAD?
+  end
 
   def is_ADMIN?
     logged_employee = get_current_employee
