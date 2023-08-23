@@ -195,13 +195,18 @@
       contentType: false, //'multipart/form-data', 
       // mimeType: 'multipart/form-data', 
       success: function(data) {
-        $('#resume_name').val(data.name);
-        $('#resume_email').val(data.email[0]);
-        $('#resume_phone').val(data.phone[0]);
-        $('#resume_skype_id').val(data.hyperlinks.skype_id[0]);
-        $('#resume_git_id').val(data.hyperlinks.github[0]);
-        $('#resume_linkedin_id').val(data.hyperlinks.linkedin[0]);
-        $('#resume_skills').val(Object.keys(data.skills));
+        if(data.ok){
+          var data = data.body;
+          $('#resume_name').val(data.name);
+          $('#resume_email').val(data.email[0]);
+          $('#resume_phone').val(data.phone[0]);
+          $('#resume_skype_id').val(data.hyperlinks.skype_id[0]);
+          $('#resume_git_id').val(data.hyperlinks.github[0]);
+          $('#resume_linkedin_id').val(data.hyperlinks.linkedin[0]);
+          $('#resume_skills').val(Object.keys(data.skills));
+        } else {
+          alert('HTTP Status: ' + data.status + '. Sorry, we are currently facing issues with Resume Extractor service!')
+        }
         document.getElementById("loader").style.display="none";
       },
       failure: function(error) {
