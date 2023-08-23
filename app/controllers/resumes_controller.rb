@@ -1,5 +1,6 @@
 class ResumesController < ApplicationController
   require 'spreadsheet'
+  require 'actionpack/action_caching'
 
   before_action :check_for_login, :except => [ :get_summary_by_id, :get_resume_attachment ]
   before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM,    :only => [ :hold,           :offered,
@@ -151,7 +152,7 @@ class ResumesController < ApplicationController
   def extract_from_resume
     # url: 'http://192.168.1.29:5001/parse_resume',
 
-    connection = Faraday.new('http://106.51.77.156:5001') do |f|
+    connection = Faraday.new('http://192.168.1.4:5001') do |f|
     # connection = Faraday.new('http://localhost:4000') do |f|
       f.request :multipart
       f.request :url_encoded
