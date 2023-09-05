@@ -165,6 +165,7 @@ class ResumesController < ApplicationController
       params[:resume].original_filename
     )
     payload = {:resume => file}
+    response = connection.post('/parse_resume', payload)
     if response.success?
       render json: {ok: true, body: JSON.parse(response.body)}
     else
