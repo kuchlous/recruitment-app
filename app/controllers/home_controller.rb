@@ -273,7 +273,7 @@ class HomeController < ApplicationController
     status = params[:status]
     if status == "New"
       @resumes = @new
-    elif status == "Forwards"
+    elsif status == "Forwards"
       @resumes = @forwards
       @render  = "manager_index"
       @forwards = []
@@ -281,7 +281,7 @@ class HomeController < ApplicationController
         @forwards += r.forwards
       end
       @is_req_match  = 0
-    elif status == "Shortlisted"
+    elsif status == "Shortlisted"
       @resumes = @shortlists
       @render  = "manager_index"
       @forwards = []
@@ -289,7 +289,7 @@ class HomeController < ApplicationController
         @forwards += r.req_matches
       end
       @is_req_match  = 1
-    elif status == "Scheduled"
+    elsif status == "Scheduled"
       @resumes = @scheduled
       @matches = []
       @resumes.each do |r|
@@ -300,26 +300,26 @@ class HomeController < ApplicationController
       end
       @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
       @is_req_match  = 1
-    elif status == "Rejected"
+    elsif status == "Rejected"
       @resumes = @rejected
       @is_req_match  = 1
       @forwards = []
-    elif status == "Hold"
+    elsif status == "Hold"
       @resumes = @holds
       @is_req_match  = 1
-    elif status == "YTO"
+    elsif status == "YTO"
       @resumes = @ytos
       @is_req_match  = 1
-    elif status == "Engg. Select"
+    elsif status == "Engg. Select"
       @resumes = @eng_selects
       @is_req_match  = 1
-    elif status == "HAC"
+    elsif status == "HAC"
       @resumes = @hacs
       @is_req_match  = 1
-    elif status == "Offered"
+    elsif status == "Offered"
       @resumes = @offered
       @is_req_match  = 1
-    elif status == "Joining"
+    elsif status == "Joining"
       @resumes = @joining
       @is_req_match  = 1
     end
