@@ -1100,12 +1100,12 @@ class ResumesController < ApplicationController
   end
 
   def interviews_status
-    resume_ids = nil
+    resumes = nil
     if params[:mine]
-      resume_ids = Resume.where(referral_type: "EMPLOYEE").where(referral_id: get_current_employee.id).map(&:id)
+      resumes = Resume.where(referral_type: "EMPLOYEE").where(referral_id: get_current_employee.id)
     end
 
-    @interviews_late, @interviews_done, @under_process = ResumesController.filter_interviews_based_upon_processing(nil, resume_ids)
+    @interviews_late, @interviews_done, @under_process = ResumesController.filter_interviews_based_upon_processing(nil, resumes)
   end
 
   ####################################################################################################
@@ -1891,12 +1891,12 @@ class ResumesController < ApplicationController
   #               Interviews which are done. Interviews which are late.                              #
   #               Interviews which are under process                                                 #
   ####################################################################################################
-  def ResumesController.filter_interviews_based_upon_processing(employee = nil, resume_ids = nil)
+  def ResumesController.filter_interviews_based_upon_processing(employee = nil, resumes = nil)
     if employee.present?
       req_matches = ReqMatch.find_employee_requirements_req_matches(employee, false)
       req_matches += ReqMatch.find_scheduling_employee_req_matches(employee, false)
-    elsif resume_ids.class == Array 
-      req_matches = ReqMatch.where("resume_id IN (?)", resume_ids)
+    elsif resumes.class.to_s == 'Resume::ActiveRecord_Relation'
+      req_matches = resumes.includes(:req_matches).map(&:req_matches).uniq.flatten
     else
       req_matches = ReqMatch.all
     end
