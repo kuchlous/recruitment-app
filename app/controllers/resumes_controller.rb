@@ -1895,7 +1895,7 @@ class ResumesController < ApplicationController
     if employee.present?
       req_matches = ReqMatch.find_employee_requirements_req_matches(employee, false)
       req_matches += ReqMatch.find_scheduling_employee_req_matches(employee, false)
-    elsif resumes.class.to_s == 'Resume::ActiveRecord_Relation'
+    elsif resumes.present?
       req_matches = resumes.includes(:req_matches).map(&:req_matches).uniq.flatten
     else
       req_matches = ReqMatch.all
