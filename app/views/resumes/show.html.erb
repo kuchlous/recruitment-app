@@ -164,6 +164,8 @@
             <% end %>
           <% end %>
         <% end %>
+        <button class="action__field add_comment_button" data-target="#add-comment-modal" data-toggle="modal" > Add Comment </button>
+            <br /> <br />
         <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
             <% unless @resume.status == "FUTURE" %>
               <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
@@ -397,6 +399,24 @@
       <div class="modal-body">
         <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "add_hr_comment") do %>
           <%= text_area_tag "comment", nil, :id => "hr_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
+          <%= hidden_field_tag "id", @resume.id %>
+          <%= submit_tag "Submit", :class => "btn btn-primary" %>
+        <% end %>  
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="add-comment-modal" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal" type="button">×</button>
+        <div class="modal-title">Add Comment for <%= @resume.name %> </div>
+      </div>
+      <div class="modal-body">
+        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "add_comment") do %>
+          <%= text_area_tag "comment", nil, :id => "add_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
           <%= hidden_field_tag "id", @resume.id %>
           <%= submit_tag "Submit", :class => "btn btn-primary" %>
         <% end %>  
