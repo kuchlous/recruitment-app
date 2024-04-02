@@ -85,22 +85,7 @@
         <% if is_HR? %>
           <td> <%= link_to "New",         :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "new_resumes"         %> </td>
         <% end %>
-        <% if is_HR_ADMIN? || is_PM? || is_BD? || is_GM? || is_REQ_MANAGER? %>
-          <% if is_REQ_MANAGER? 
-               hold       = "manager_hold"
-               offered    = "manager_offered"
-               joined     = "manager_joined"
-               interviews = "manager_interviews_status"
-               yto        = "manager_yto"
-               eng_select = "manager_eng_select"
-               hac        = "manager_hac"
-               shortlisted = "manager_shortlisted"
-               forwarded  = "manager_index"
-               rejected   = "manager_rejected"
-               future     = "future"
-             end 
-          %>
-          <% if is_HR_ADMIN? || is_BD? || is_GM?
+        <% if is_HR_ADMIN? || is_PM? || is_BD? || is_GM? 
                hold       = "hold"
                offered    = "offered"
                joined     = "joined"
@@ -112,7 +97,19 @@
                forwarded  = "forwarded"
                rejected   = "rejected"
                future     = "future"
-             end
+           elsif is_REQ_MANAGER? 
+               hold       = "manager_hold"
+               offered    = "manager_offered"
+               joined     = "manager_joined"
+               interviews = "manager_interviews_status"
+               yto        = "manager_yto"
+               eng_select = "manager_eng_select"
+               hac        = "manager_hac"
+               shortlisted = "manager_shortlisted"
+               forwarded  = "manager_index"
+               rejected   = "manager_rejected"
+               future     = "future"
+           end
           %>
           <% if is_PM?
                joined = "joined"
@@ -134,7 +131,6 @@
           <% if joined      %> <td> <%= link_to "Joining",     :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{joined}"      %>    </td> <% end %> 
           <% if future      %> <td> <%= link_to "Future",      :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{future}"      %>    </td> <% end %>
           <% if recent      %> <td> <%= link_to "Recent",      :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "#{recent}", :all => '1'     %>    </td> <% end %>
-        <% end %>
       </tr>
     </table>
   </div>

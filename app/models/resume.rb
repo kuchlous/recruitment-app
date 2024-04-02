@@ -365,6 +365,7 @@ class Resume < ActiveRecord::Base
       File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
     elsif file_type == "application/pdf"
       txt = `pdftotext -eol unix -nopgbrk #{fullpathname} 2>& 1`
+      File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
     elsif file_type == "application/x-zip"
       # Unzipping the odt file
       # with excluding all files except content.xml
