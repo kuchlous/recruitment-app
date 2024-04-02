@@ -914,6 +914,18 @@ class ResumesController < ApplicationController
     redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
   end
 
+
+  def add_comment
+    resume = Resume.find(params[:id])
+    comment = params[:comment]
+    resume.add_resume_comment(comment, "USER", get_current_employee)
+    email_for_action(resume, "COMMENTED", comment, nil)
+
+    flash[:notice] = "We have added a comment"
+    redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
+  end
+
+
   ####################################################################################################
   # FUNCTION    : Decling interviews                                                                 #
   # DESCRIPTION : Function to be used when employee do not want to take interview on specified       #

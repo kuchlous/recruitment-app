@@ -130,6 +130,7 @@ Rails.application.routes.draw do
   match 'resumes/mark_not_accepted',to: 'resumes#mark_not_accepted'  ,via: :post
   match 'resumes/find_resume_within_given_dates',to: 'resumes#find_resume_within_given_dates'  ,via: :post
   match 'resumes/add_hr_comment',to: 'resumes#add_hr_comment', via: :post
+  match 'resumes/add_comment',to: 'resumes#add_comment', via: :post
 
  
  resources :employees
