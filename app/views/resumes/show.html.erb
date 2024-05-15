@@ -67,6 +67,10 @@
          <span class="item__value item__value--center"> <%= get_current_experience_string(@resume) %> </span>
       </div>
       <div class="item item--center">
+         <span class="item__label item__label--center"> Skills: </span>
+         <span class="item__value item__value--center"> <%= @resume.skills %> </span>
+      </div>
+      <div class="item item--center">
         <span class="item__label item__label--center"> Current Company: </span>
         <span class="item__value item__value--center"> <%= @resume.current_company %> </span>
       </div>
