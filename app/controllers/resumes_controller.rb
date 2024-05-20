@@ -152,7 +152,7 @@ class ResumesController < ApplicationController
   def extract_from_resume
     # url: 'http://192.168.1.29:5001/parse_resume',
 
-    connection = Faraday.new('http://192.168.1.4:5001') do |f|
+    connection = Faraday.new(APP_CONFIG['resume_parsr_svc']) do |f|
     # connection = Faraday.new('http://localhost:4000') do |f|
       f.request :multipart
       f.request :url_encoded

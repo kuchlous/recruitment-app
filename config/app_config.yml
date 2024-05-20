@@ -10,6 +10,8 @@ development:
   status_file:      status
   host_name:        localhost:3000
   subdomain: 
+  rms_host_name:    localhost:3000
+  resume_parsr_svc: http://192.168.1.4:5001 
 
 test:
   upload_directory: resumes/test
@@ -37,3 +39,4 @@ production:
   host_name:        apps.mirafra.com/recruit
   rms_host_name:    apps.mirafra.com/rms
   subdomain:        /recruit
+  resume_parsr_svc: http://192.168.1.4:5001 
