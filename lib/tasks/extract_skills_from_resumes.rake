@@ -14,7 +14,8 @@ namespace :resumes do
             path = resume.resume_path[0] if resume.resume_path.length > 0 rescue nil
             content_type = path.split(".")[-1] rescue nil
             filename = resume.file_name rescue nil
-            if (path.present? and content_type.present? and filename.present?)
+            skillsNotPresent = (resume.skills.nil? or resume.skills == "")
+            if (path.present? and content_type.present? and filename.present?) and skillsNotPresent
               file = Faraday::UploadIO.new(
                 path,
                 content_type,
@@ -26,7 +27,7 @@ namespace :resumes do
               if response.success?
                 response_body = JSON.parse(response.body)
                 skills = response_body["skills"]
-                if skills.present? and (resume.skills.nil? or resume.skills == "")
+                if skills.present?
                     puts "Updating record with Skills: #{skills}."
                     resume.update_attributes(skills: skills) 
                 end
