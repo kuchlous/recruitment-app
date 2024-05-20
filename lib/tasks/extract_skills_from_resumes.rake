@@ -26,7 +26,7 @@ namespace :resumes do
               if response.success?
                 response_body = JSON.parse(response.body)
                 skills = response_body["skills"]
-                if skills.present?
+                if skills.present? and (resume.skills.nil? or resume.skills == "")
                     puts "Updating record with Skills: #{skills}."
                     resume.update_attributes(skills: skills) 
                 end
