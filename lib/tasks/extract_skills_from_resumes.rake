@@ -9,7 +9,8 @@ namespace :resumes do
             f.adapter :net_http
         end
         puts "Extracting skills from Resumes.."
-        Resume.all.each do |resume|
+#        Resume.all.each do |resume|
+            resume = Resume.find(2002)
             puts "Resume Name: #{resume.name}"
             path = resume.resume_path[0] if resume.resume_path.length > 0 rescue nil
             content_type = path.split(".")[-1] rescue nil
@@ -26,6 +27,8 @@ namespace :resumes do
               if response.success?
                 response_body = JSON.parse(response.body)
                 skills = response_body["skills"]
+                puts "Response: #{response.body}"
+                puts "Skills: #{skills}"
                 if skills.present? and (resume.skills.nil? or resume.skills == "")
                     puts "Updating record with Skills: #{skills}."
                     resume.update_attributes(skills: skills) 
@@ -35,5 +38,5 @@ namespace :resumes do
                 puts "Skipping as required details are not present for the resume..."
             end
         end
-    end
+#    end
 end
