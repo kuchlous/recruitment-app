@@ -4,7 +4,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gem 'jquery-ui-rails'
 # gem 'jquery-rails'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.4'
+# gem 'rails', '~> 5.2.4'
+gem 'rails', '~> 6.0.3'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use Puma as the app server
@@ -73,3 +74,6 @@ gem 'momentjs-rails'
 # gem 'tzinfo', '~> 0.3.31'
 gem 'faraday'
 gem 'faraday-multipart'
+gem 'actionpack-action_caching'
+gem 'actionpack-page_caching'
+gem 'psych', '< 4'

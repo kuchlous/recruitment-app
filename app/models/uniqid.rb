@@ -18,7 +18,7 @@ class Uniqid < ActiveRecord::Base
       suffix += 1
     end
     if object.is_a?(Resume)
-      uniqid = Uniqid.new(:name => unique_id, :resume => object, :requirement => NIL)
+      uniqid = Uniqid.new(:name => unique_id, :resume => object)
     end
     return uniqid
   end
