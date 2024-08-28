@@ -139,4 +139,11 @@ Rails.application.routes.draw do
  resources :agencies
  resources :groups
  resources :designations
+
+  # APIs for Power BI
+  namespace :api do
+    namespace :v1 do
+      match 'resumes/joined', to: 'resumes#joined', via: :get
+    end
+  end
 end
