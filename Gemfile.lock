@@ -46,7 +46,7 @@ GEM
       after_commit (>= 1.0.7)
       riddle (>= 1.5.3)
     tzinfo (0.3.51)
-    will_paginate (2.3.16)
+    will_paginate (3.0.5)
 
 PLATFORMS
   ruby
@@ -60,7 +60,7 @@ DEPENDENCIES
   spreadsheet
   thinking-sphinx (~> 1.4.14)
   tzinfo (~> 0.3.31)
-  will_paginate (~> 2.3.16)
+  will_paginate (~> 3.0.5)
 
 BUNDLED WITH
    1.12.5
