@@ -32,7 +32,7 @@ GEM
       activeresource (= 2.3.18)
       activesupport (= 2.3.18)
       rake (>= 0.8.3)
-    rake (11.2.2)
+    rake (13.0.1)
     riddle (1.5.12)
     ruby-ole (1.2.12)
     sanitize (4.1.0)
