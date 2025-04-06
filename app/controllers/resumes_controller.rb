@@ -73,15 +73,28 @@ class ResumesController < ApplicationController
 
   def get_summary_by_id
     unless params[:id].nil?
-      @resume         = Resume.find_by_id(params[:id])
-      unless @resume.nil?
-        render "summary_json", :layout => false
+      @resume = Resume.find_by_id(params[:id])
+  
+      if @resume.present?
+        respond_to do |format|
+          format.json do
+            render json: {
+              name: @resume.name,
+              uniqid: @resume.uniqid.name,
+              status: @resume.resume_overall_status,
+              summary: @resume.summary,
+              email: @resume.email,
+              phone: @resume.phone,
+              notice: @resume.notice
+            }
+          end
+        end
       else
-	render :text => "No such resume", :status => 403
+        render text: "No such resume", status: 403
         return
       end
     else
-      render :text => "Empty resume id", :status => 403
+      render text: "Empty resume id", status: 403
       return
     end
   end
