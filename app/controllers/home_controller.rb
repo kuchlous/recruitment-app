@@ -57,7 +57,6 @@ class HomeController < ApplicationController
     query = ThinkingSphinx::Query.escape(query)
 
     @results = Resume.search(query, :field_weights => {:name => 10}, :page => params[:page], :per_page => get_per_page)
-    puts @results
   end
 
   def advanced_search
