@@ -26,6 +26,7 @@ class Resume < ActiveRecord::Base
   validates_presence_of    :referral_id
   validates_presence_of    :email
   validates_presence_of    :phone
+  validates :skills, length: { maximum: 500 }
 
   # Figure out why this is used here
   # validate_on_create  :email
