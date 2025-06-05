@@ -1,7 +1,7 @@
 <div class="resume">
  <div class="resume__info">
   <div class="resume__edit">
-    <% if is_HR_ADMIN? || is_MANAGER? %>
+    <% if is_HR_ADMIN? %>
       <%= link_to image_tag("edit.svg", :size => "20x20"), :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id %>
     <% end %>
   </div>

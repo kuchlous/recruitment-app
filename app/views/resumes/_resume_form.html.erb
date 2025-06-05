@@ -40,20 +40,22 @@
       <td> Skills </td>
       <td> <%= f.text_field :skills, :placeholder => 'Enter skills' %> </td>
     </tr>
-    <tr>
-      <td> Current CTC </td>
-      <td>
-        <%= f.text_field :ctc %> <br />
-        <span class="span_with_grey_color"> Enter in lakhs </span>
-      </td>
-    </tr>
-    <tr>
-      <td> Expected CTC </td>
-      <td>
-        <%= f.text_field :expected_ctc %> <br />
-        <span class="span_with_grey_color"> Enter in lakhs </span>
-      </td>
-    </tr>
+    <% if is_HR_ADMIN? %>
+      <tr>
+        <td> Current CTC </td>
+        <td>
+          <%= f.text_field :ctc %> <br />
+          <span class="span_with_grey_color"> Enter in lakhs </span>
+        </td>
+      </tr>
+      <tr>
+        <td> Expected CTC </td>
+        <td>
+          <%= f.text_field :expected_ctc %> <br />
+          <span class="span_with_grey_color"> Enter in lakhs </span>
+        </td>
+      </tr>
+    <% end %>
     <tr>
       <td> Notice Period </td>
       <td>
