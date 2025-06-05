@@ -3,16 +3,22 @@ class ResumesController < ApplicationController
   require 'actionpack/action_caching'
 
   before_action :check_for_login, :except => [ :get_summary_by_id, :get_resume_attachment ]
-  before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM,    :only => [ :hold,           :offered,
-                                                                          :edit,           :recent,
-                                                                          :joined,         :rejected,
-                                                                          :shortlisted,    :forwarded,
-                                                                          :new_resumes,    :export_as_xls,  
-                                                                          :export_as_xls_requirement, 
-                                                                          :export_as_xls_all_uploaded_resumes, 
-                                                                          :manager_index, 
-                                                                          :manager_interviews_status ]
-
+  before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM, :only => [
+  :hold,
+  :offered,
+  :recent,
+  :joined,
+  :rejected,
+  :shortlisted,
+  :forwarded,
+  :new_resumes,
+  :export_as_xls,
+  :export_as_xls_requirement,
+  :export_as_xls_all_uploaded_resumes,
+  :manager_index,
+  :manager_interviews_status
+]
+  before_action :check_for_HR_or_ADMIN, :only => [ :edit ]
 
   caches_action :joined, layout: false, cache_path: 'joined', expires_in: 30.minutes
   # cache_sweeper :resumes_sweeper
