@@ -3,23 +3,48 @@
 
 task :export_candidates => :environment do
   require 'rubyXL' # For reading and writing existing XLSX files
-
-  # Define the filename and path for the existing Excel file.
-  # Ensure this file actually exists in your root directory before running the task.
-  filename = 'candidate migration.xlsx'
+  # REQUIRED: Add the convenience methods for styling operations like change_fill
+  require 'rubyXL/convenience_methods'
+  
+  # Define the filename for new Excel file.
+  filename = 'HW candidate migration.xlsx'
   file_path = Rails.root.join(filename)
 
-  # Check if the file exists before attempting to open it
-  unless File.exist?(file_path)
-    puts "Error: The file '#{file_path}' does not exist. Please ensure it's created first."
-    exit 
+  puts "Starting export of Requirement data to a new file: #{file_path}..."
+
+  # Create a new RubyXL workbook instance.
+  # When creating a new workbook, it automatically adds a default worksheet.
+  workbook = RubyXL::Workbook.new
+
+  # Get the first (and default) worksheet.
+  worksheet = workbook[0] 
+  
+  # Define the complete list of headers for the first row (Excel row 1 / rubyXL index 0).
+  headers = [
+    'salutation', 'first name', 'middle name', 'last name', 'email', 'job cd', 'phone', 'pan number',
+    'date', 'month', 'year', 'apply date', 'round', 'sub-round', 'joining date', 'source',
+    'subsource', 'referred by', 'candidate Id', 'application Id', 'employee Id', 'custom1',
+    'custom2', 'custom3', 'custom4', 'custom5', 'custom6', 'custom7', 'custom8', 'custom9',
+    'custom10', 'custom11', 'custom12', 'custom13', 'custom14', 'custom15', 'custom16', 'custom17',
+    'custom18', 'custom19', 'custom20', 'custom21', 'custom22', 'custom23', 'custom24', 'custom25',
+    'custom26', 'custom27', 'custom28', 'custom29', 'custom30', 'custom31', 'custom32', 'custom33',
+    'custom34', 'custom35', 'custom36', 'custom37', 'custom38', 'custom39', 'custom40', 'custom41',
+    'custom42', 'custom43', 'custom44', 'custom45'
+  ]
+
+  # Define a yellow fill color
+  YELLOW_FILL = 'FFFFFF00'
+
+  # Write the headers to the first row (row 0 in rubyXL, which is Excel row 1).
+  headers.each_with_index do |header, col_num|
+    # rubyXL's add_cell creates the cell and sets its value.
+    cell = worksheet.add_cell(0, col_num, header)
+    # Apply yellow background to specific header cells to indicate mandatory fields.
+    case col_num
+    when 1, 3, 4, 5, 6, 12, 18, 19 # Apply yellow to mandatory fields
+      cell.change_fill(YELLOW_FILL)
+    end
   end
-
-  puts "Opening existing Excel file: #{file_path}..."
-
-  workbook = RubyXL::Parser.parse(file_path)
-
-  worksheet = workbook[0] # Gets the first worksheet (index 0)
 
   # Fetch all Requirement Matches records from the database.
   req_matches = ReqMatch.all
