@@ -77,3 +77,5 @@ gem 'faraday-multipart'
 gem 'actionpack-action_caching'
 gem 'actionpack-page_caching'
 gem 'psych', '< 4'
+gem 'rubyXL'
+
