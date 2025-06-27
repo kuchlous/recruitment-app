@@ -3,23 +3,59 @@
 
 task :export_requirements => :environment do
   require 'rubyXL' # For reading and writing existing XLSX files
-
-  # Define the filename and path for the existing Excel file.
-  # Ensure this file actually exists in your root directory before running the task.
-  filename = 'job migration.xlsx'
+  # REQUIRED: Add the convenience methods for styling operations like change_fill
+  require 'rubyXL/convenience_methods'
+  
+  # Define the filename for new Excel file.
+  filename = 'HW job migration.xlsx'
   file_path = Rails.root.join(filename)
 
-  # Check if the file exists before attempting to open it
-  unless File.exist?(file_path)
-    puts "Error: The file '#{file_path}' does not exist. Please ensure it's created first."
-    exit 
+  puts "Starting export of Requirement data to a new file: #{file_path}..."
+
+  # Create a new RubyXL workbook instance.
+  # When creating a new workbook, it automatically adds a default worksheet.
+  workbook = RubyXL::Workbook.new
+
+  # Get the first (and default) worksheet.
+  worksheet = workbook[0] 
+  
+    # Define the complete list of headers for the first row (Excel row 1 / rubyXL index 0).
+  headers = [
+    'Job Code', 'Job Title', 'Job Description', 'Job Skills', 'Other Details', 'Openings', 'Location',
+    'Min Work experience in yrs', 'Max work experience in yrs', 'Min Work experience in months', 'Max work experience in months',
+    'Job Level', 'Job Sourcer', 'Recruiters', 'Requester', 'Hot Job', 'Job Status', 'Business Unit',
+    'Department', 'Client', 'Skill Type', 'Primary Skills', 'Secondary Skills', 'Request Date',
+    'Recruitment Start Date', 'Joining Deadline', 'PS update date', 'IJP', 'Career site', 'Show to Emp',
+    'EEO', 'Country', 'Job Modifictaion date', 'Management Comment', 'Employment type', 'Work Mode',
+    'Salary Details', 'Educational Details', 'Educational Details (Global Hire)', 'Custom8', 'Group',
+    'Custom10', 'Custom11', 'Custom12', 'Custom13', 'Custom14', 'Custom15', 'Custom16', 'Custom17',
+    'Custom18', 'Custom19', 'Sub Domain', 'Custom21', 'Custom22', 'Rec Custom 1', 'Rec Custom 2',
+    'Rec Custom 3', 'Rec Custom 4', 'BU Head', 'TA Head', 'Screening Panel', 'Onboarding team member',
+    'Group head', 'Hiring Manager', 'TypeCustom7', 'TypeCustom8', 'TypeCustom9', 'TypeCustom10',
+    'TypeCustom11', 'TypeCustom12', 'TypeCustom13', 'TypeCustom14', 'Practice Head', 'Job request type',
+    'Custom23', 'Office location', 'Custom25', 'Custom26', 'Designation', 'Custom28', 'Custom29',
+    'Custom30', 'Custom31', 'Custom32', 'Custom33', 'Custom34', 'Custom35', 'Custom36', 'Custom37',
+    'Custom38', 'Custom39', 'Custom40', 'Custom41', 'Custom42', 'Custom43', 'Custom44', 'Custom45',
+    'Custom46', 'Custom47', 'Custom48', 'Custom49', 'Custom50', 'Custom51', 'Custom52', 'Custom53',
+    'Custom54', 'Custom55', 'Custom56', 'Custom57', 'Custom58', 'Custom59', 'Custom60', 'Custom61',
+    'Custom62', 'Custom63', 'Custom64', 'Custom65', 'Custom66', 'Custom67', 'Custom68', 'Custom69',
+    'Custom70', 'Custom71', 'Custom72', 'Custom73', 'Custom74', 'Custom75', 'Custom76', 'Custom77',
+    'Custom78', 'Custom79', 'Custom80'
+  ]
+
+  # Define a yellow fill color
+  YELLOW_FILL = 'FFFFFF00'
+
+  # Write the headers to the first row (row 0 in rubyXL, which is Excel row 1).
+  headers.each_with_index do |header, col_num|
+    # rubyXL's add_cell creates the cell and sets its value.
+    cell = worksheet.add_cell(0, col_num, header)
+    # Apply yellow background to specific header cells to indicate mandatory fields.
+    case col_num
+    when 0, 1, 5, 6, 7, 8, 13, 16, 27, 28, 29, 31 # Apply yellow to mandatory fields
+      cell.change_fill(YELLOW_FILL)
+    end
   end
-
-  puts "Opening existing Excel file: #{file_path}..."
-
-  workbook = RubyXL::Parser.parse(file_path)
-
-  worksheet = workbook[0] # Gets the first worksheet (index 0)
 
   # Fetch all Requirement records from the database.
   requirements = Requirement.all
