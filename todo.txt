@@ -1,0 +1,8 @@
+- Improve speed
+  - Enable elastic for resume page
+  - Move expensive pages to elastic - joining, forwards
+ 
+- Features
+  - Search improvements
+    - Put skills for all resumes
+    - Move search to elastic
