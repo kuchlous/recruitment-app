@@ -58,7 +58,7 @@ class RequirementsController < ApplicationController
     @requirement  = Requirement.new(params.require(:requirement).permit!)
     @requirement.posted_by = get_current_employee
     @requirement.scheduling_employee_id = get_current_employee.id
-    @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]
+    # @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]  # Removed account assignment
     @requirement.exp = params[:req][:min_exp] + "-" + params[:req][:max_exp]
     respond_to do |format|
       if @requirement.save
@@ -82,7 +82,7 @@ class RequirementsController < ApplicationController
     # Destroying requirement accounts and then updating
 
     old_owner = @requirement.employee
-    @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]
+    # @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]  # Removed account assignment
     exp          = params[:req][:min_exp] + "-" + params[:req][:max_exp]
     respond_to do |format|
       if @requirement.update_attributes(params.require(:requirement).permit!) && @requirement.update_attributes(:exp => exp)
@@ -109,7 +109,7 @@ class RequirementsController < ApplicationController
     get_forwards_matches_to_reqs(@requirement) unless @status.nil?
 
     if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_lead == get_current_employee
-      @accounts    = @requirement.accounts
+      # @accounts    = @requirement.accounts  # Removed accounts reference
       @req_forwards= @requirement.open_forwards
       @shortlists  = @requirement.shortlists
       @scheduled   = @requirement.scheduled
@@ -309,6 +309,6 @@ private
     @designations = get_all_designations
     @employees    = get_all_employees
     @ta_employees = @employees.find_all{|e| e.is_HR?}
-    @accounts     = get_all_accounts
+    # @accounts     = get_all_accounts  # Removed accounts reference
   end
 end
