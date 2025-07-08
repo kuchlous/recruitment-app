@@ -4,7 +4,7 @@ class Requirement < ActiveRecord::Base
   has_many                :interviews
   has_many                :req_matches
   has_and_belongs_to_many :forwards
-  has_and_belongs_to_many :accounts
+  # has_and_belongs_to_many :accounts  # Removed account relationship
   belongs_to              :group,
                           :class_name  => "Group",
                           :foreign_key => "group_id"
