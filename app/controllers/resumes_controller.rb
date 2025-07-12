@@ -135,13 +135,13 @@ class ResumesController < ApplicationController
     @resume.summary    = "UPLOADED without comments." if params[:resume][:summary].nil?
     @resume.uniqid  = Uniqid.generate_unique_id(@resume.name, @resume)
     @resume.file_name = @resume.uniqid.name.downcase
-    original_filename = params[:resume][:upload_resume].original_filename
+    logger.info("resume.file_name: #{@resume.file_name}")
     respond_to do |format|
       if @resume.save
+        @resume.cleanup_update_resume_data(params[:resume][:upload_resume])
         # Adding comment while uploading resume
         comment = "UPLOADING: #{get_logged_employee.name} uploaded resume on #{@resume.created_at.strftime('%b %d, %Y')}."
         @resume.add_resume_comment(comment, "INTERNAL", get_logged_employee)
-        @resume.move_temp_file_to_upload_directory
         email_for_upload(@resume)
 
         # If reqs are selected
@@ -203,7 +203,7 @@ class ResumesController < ApplicationController
     # TODO:Change to strong parameters 
     if @resume.update_attributes(params.require(:resume).permit!)
       if params[:resume][:upload_resume]
-        @resume.cleanup_update_resume_data(params[:resume])
+        @resume.cleanup_update_resume_data(params[:resume][:upload_resume])
       end
       # Adding comments while editing resume details
       if params[:resumes][:comments].nil? ||
@@ -926,7 +926,6 @@ class ResumesController < ApplicationController
     employee = get_current_employee
     Comment.create(:comment     => comment,
                 :resume      => resume,
-                :leave_id    => 0,
                 :ctype       => "HR",
                 :employee    => employee)
     flash[:notice] = "We have added an HR comment"

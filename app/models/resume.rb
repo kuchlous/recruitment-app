@@ -2,6 +2,23 @@ class Resume < ActiveRecord::Base
   require 'rubygems'
   require 'sanitize'
 
+  searchkick word_start: [:name, :email, :phone, :qualification, :location, :summary, :resume_text_content, :skills, :current_company],
+            suggest: [:name, :email, :phone, :qualification, :location, :summary],
+            filterable: [:ctc, :expected_ctc, :exp_in_months, :overall_status, :related_requirements, :notice, :status],
+            searchable: [:name, :email, :phone, :qualification, :location, :summary, :resume_text_content, :overall_status, :related_requirements, :skills, :current_company],
+            mappings: {
+              properties: {
+                exp_in_months: { type: 'integer' },
+                ctc: { type: 'float' },
+                expected_ctc: { type: 'float' },
+                notice: { type: 'integer' },
+                practice_head_rating: { type: 'integer' },
+                created_at: { type: 'date' },
+                updated_at: { type: 'date' }
+              }
+            },
+            merge_mappings: true
+  
   belongs_to               :uniqid
   belongs_to               :employee
   belongs_to               :ta_owner,
@@ -33,22 +50,20 @@ class Resume < ActiveRecord::Base
   # validate_on_create  :phone
 
   # Uniqueness stuff
-  validates_uniqueness_of :email
-  validates_uniqueness_of :phone
+  validates_uniqueness_of :email, case_sensitive: false
+  validates_uniqueness_of :phone, case_sensitive: false
 
   # Stuff which should be done exactly before validation
   before_validation :remove_whitespaces
 
   after_save :update_overall_status
+  after_save :update_search_fields
 
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
-  
-  # validate_on_create       :check_for_valid_attributes
 
   # Appending date-time to file names
   current_time      = Time.now
-  current_date      = Time.now
   $date_time_suffix = current_time.strftime("%d-%b-%Y-%H-%M-%S")
   $tmp_status_file  = APP_CONFIG['status_file']   + "-" + $date_time_suffix + ".xls"
   $tmp_xls          = APP_CONFIG['xls_temp_file'] + "-" + $date_time_suffix 
@@ -155,34 +170,6 @@ class Resume < ActiveRecord::Base
     ["Any", "Joining Date Given", "Offered", "On Hold", "Selected", "Interview Scheduled", "Shortlisted", "Forwarded", "New", "Rejected", "FUTURE", "HAC", "N Accepted", "Not Joined"]
   end
 
-  def upload_document
-  end
-
-  # This gets called from the constructor after the call to 
-  # Resume.new(params[:resume])because we have a upload_resume
-  # in the params list.
-  def upload_resume=(upload_field)
-    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-    Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
-    
-    unless upload_field.nil?
-      tempfile = Tempfile.new("resume_tmp", :encoding => 'ascii-8bit')
-      tempfile.write(upload_field.read)
-      tempfile.close
-      ext            = File.extname(upload_field.original_filename)
-      # Create the directory to hold the resumes
-      FileUtils.mkdir_p($tmp_directory)
-      fullpathname      = File.join($tmp_directory, $tmp_file) + ext
-      tempfile = File.open(tempfile.path)
-      file_type = Resume.read_upload_write_tmp_file(fullpathname, tempfile)
-      logger.info("Uploaded file of type #{file_type}")
-      add_html_txt_and_search(ext, file_type)
-      @file_type = file_type
-    else
-      @file_type = "UNDEFINED"
-    end
-  end
-
   def move_temp_file_to_upload_directory
     upload_dir = Rails.root.join(APP_CONFIG['upload_directory'])
     Dir.mkdir(upload_dir) if not Dir.exist?(upload_dir)
@@ -191,22 +178,46 @@ class Resume < ActiveRecord::Base
       ext = File.extname(filename)
       `mv -f #{filename} '#{upload_dir}/#{self.file_name}'#{ext}`
     end
-    # Removing content.xml file
-    delete_temp_files($tmp_directory, "customXml")
-    delete_temp_files($tmp_directory, "word")
-    delete_temp_files($tmp_directory, "_rels")
-    delete_temp_files($tmp_directory, "docProps")
-    delete_temp_files($tmp_directory, "*.xml")
-    delete_temp_files($tmp_directory, "mimetype")
+  end
+
+  # This gets called from the constructor after the call to 
+  # Resume.new(params[:resume])because we have a upload_resume
+  # in the params list.
+  def upload_resume=(upload_field)
+    if self.file_name.nil?
+      return
+    end
+    unless upload_field.nil?
+      ext = File.extname(upload_field.original_filename)
+      filename = File.join($upload_dir, self.file_name + ext)
+      File.open(filename, "w") { |f| f.write(upload_field.read.force_encoding("UTF-8")) }
+      add_html_txt_and_search(filename)
+      move_temp_file_to_upload_directory
+    end
+  end
+
+  def cleanup_update_resume_data(upload_field)
+    resume_file_name  = self.file_name
+    if resume_file_name && resume_file_name != ""	
+      # Deleting already existing resume files from upload directory	
+      `rm -rf #{$upload_dir}/#{resume_file_name}.*`	
+    end
+
+    # Uploading resume file to upload directory
+    ext = File.extname(upload_field.original_filename)
+    filename = File.join($upload_dir, self.file_name + ext)
+    File.open(filename, "w") { |f| f.write(upload_field.read.force_encoding("UTF-8")) }
+    add_html_txt_and_search(filename)
+    move_temp_file_to_upload_directory
   end
 
   def other_docs_path
     upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(self.id.to_s)
-    file_names = `ls #{upload_dir}/*`.split("\n")
+    `ls #{upload_dir}/*`.split("\n")
   end
 
   def resume_path
-    file_names = `ls #{Rails.root.join(APP_CONFIG['upload_directory'])}/#{self.file_name}.*`.split("\n")
+    `ls #{Rails.root.join(APP_CONFIG['upload_directory'])}/#{self.file_name}.*`.split("\n")
   end
 
   def upload_document(upload_field)
@@ -218,36 +229,11 @@ class Resume < ActiveRecord::Base
     tempfile.close
     fullpathname      = upload_dir.join(original_filename)
     tempfile = File.open(tempfile.path)
-    doc = File.open(fullpathname, 'w') { |f| f.write(tempfile.read) }
+    File.open(fullpathname, 'w') { |f| f.write(tempfile.read) }
   end
-
-  def cleanup_update_resume_data(upload_field)
-    resume_file_name  = self.file_name
-    if resume_file_name && resume_file_name != ""	
-      # Deleting already existing resume files from upload directory	
-      `rm -rf #{$upload_dir}/#{resume_file_name}.*`	
-    end
-
-    self.file_name = self.uniqid.name.downcase
-    self.save
-    
-    # Uploading resume file to upload directory
-    ext               = File.extname(upload_field['upload_resume'].original_filename)
-    fullpathname      = File.join("#{$upload_dir}", "#{resume_file_name}") + ext	    
-    file_type         = `file -ib #{fullpathname}`.gsub(/\n/,"")	
-
-    # Writing to file in upload directory
-    file_type = Resume.read_upload_write_tmp_file(fullpathname, upload_field['upload_resume'])
-    add_html_txt_and_search(ext, file_type)
-
-    # Move from temp directory to upload directory
-    self.move_temp_file_to_upload_directory
-  end
-
   def add_resume_comment(comment, ctype, employee)
     Comment.new(:comment     => comment,
                 :resume_id   => self.id,
-                :leave_id    => 0,
                 :ctype       => ctype,
                 :employee_id => employee.id).save!
   end
@@ -348,72 +334,19 @@ class Resume < ActiveRecord::Base
     [ year, month ]
   end
 
-  def add_html_txt_and_search(ext, file_type)
-    file_fullpath_without_ext = $tmp_directory + '/' + $tmp_file
-    fullpathname              = file_fullpath_without_ext + ext
-    if file_type.match("msword")
-      txt = `antiword #{fullpathname} 2>& 1`
-      # Save as txt file
-      File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-    elsif  file_type == "text/html"
-      # This is a html hiding as a doc
-      txt = File.read(fullpathname)
-      # Save as html
-      File.open(file_fullpath_without_ext + '.html', "w") { |f| f << txt }
-    elsif file_type == "text/rtf"
-      # This is a rich text file
-      txt = convert_rtf_to_txt(fullpathname)
-      File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-    elsif file_type == "application/pdf"
-      txt = `pdftotext -eol unix -nopgbrk #{fullpathname} 2>& 1`
-      File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-    elsif file_type == "application/x-zip"
-      # Unzipping the odt file
-      # with excluding all files except content.xml
-      unzipped_files = `unzip #{fullpathname} -x meta.xml mimetype settings.xml styles.xml -d #{$tmp_directory}`
+  def add_html_txt_and_search(fullpathname)
 
-      if File.exists?("#{$tmp_directory}/Configurations2")
-        # Deleting junk files
-        delete_temp_files($tmp_directory, "Configurations2")
-        delete_temp_files($tmp_directory, "META-INF")
-        delete_temp_files($tmp_directory, "Thumbnails")
-
-        txt = Sanitize.clean(File.read("#{$tmp_directory}/content.xml"))
-        # Save as txt file
-        File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-      else
-        # Deleting junk files
-        delete_temp_files($tmp_directory, "word")
-        delete_temp_files($tmp_directory, "_rels")
-        delete_temp_files($tmp_directory, "docProps")
-        delete_temp_files($tmp_directory, "*.xml")
-        delete_temp_files($tmp_directory, "mimetype")
-        delete_temp_files($tmp_directory, "customXml")
-
-        zipout = `unzip #{fullpathname} -x -d #{$tmp_directory}`
-        logger.info("#{zipout}")
-        if File.exists?("#{$tmp_directory}/word/document.xml")
-          txt = Sanitize.clean(File.read("#{$tmp_directory}/word/document.xml"))
-          # Save as txt file
-          File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-
-          # Deleting junk files
-          delete_temp_files($tmp_directory, "word")
-          delete_temp_files($tmp_directory, "_rels")
-          delete_temp_files($tmp_directory, "docProps")
-          delete_temp_files($tmp_directory, "*.xml")
-          delete_temp_files($tmp_directory, "customXml")
-        end
-      end
+    # Use comprehensive text extraction that handles all file types
+    txt = TextExtractor.extract_text_from_any_file(fullpathname)
+    logger.info("Extracted txt: #{txt}")
+    
+    # Save extracted text to file
+    if txt && !txt.empty?
+      txt_file_name = File.join($upload_dir, self.file_name + '.txt')
+      File.open(txt_file_name, "w") { |f| f << txt }
+      create_search_data(txt)
     end
 
-    create_search_data
-  end
-
-  def Resume.read_upload_write_tmp_file(path, file)
-    File.open(path, "w") { |f| f.write(file.read.force_encoding("UTF-8")) }
-    file_type         = `file -ib '#{path}'`.gsub(/\n/,"")
-    return file_type
   end
 
   def Resume.upload_xls(exl_file, zipped_file, logged_employee, current_employee)
@@ -437,7 +370,6 @@ class Resume < ActiveRecord::Base
       Resume.read_upload_write_tmp_file(zip_temp_file_name, zipped_file)
       FileUtils.mkdir_p($tmp_resumes_directory)
       `unzip #{zip_temp_file_name} -d #{$tmp_resumes_directory}/`
-      # @file_type = `file -ib #{zip_temp_file_name}`.gsub(/\n/,"")
     else
       return nil, "No zip file"
     end
@@ -482,14 +414,14 @@ class Resume < ActiveRecord::Base
     self.summary          = row.at(13).nil? ? "No summary provided because this resume is uploaded with XLS script" : row.at(13).strip;
 
     # Find vendor id and requirement id
-    requirement = find_requirement_by_name(requirement_name)
+    requirement = Requirement.find_by_name(requirement_name)
     if requirement_name && requirement.nil?
       msg = "Requirement name #{requirement_name} not found in our database"
       errors.add(msg)
       return false
     end
 
-    vendor = find_agency_by_name(vendor_name)
+    vendor = Agency.find_by_name(vendor_name)
     if vendor.nil?
       msg = "Vendor name #{vendor_name} not found in our database"
       errors.add(msg)
@@ -505,9 +437,8 @@ class Resume < ActiveRecord::Base
     tmp_file    = File.join($tmp_directory, $tmp_file) + ext
     resume_file_name = File.join("#{$tmp_resumes_directory}/#{file_name}").gsub(/ /, "\\ ")
     `mv -f #{resume_file_name} #{tmp_file}`
-    @file_type = `file -ib #{tmp_file}`.gsub(/\n/,"")
     if self.save
-      add_html_txt_and_search(ext, @file_type)
+      add_html_txt_and_search(file_name)
       comment = "UPLOADING: #{logged_employee.name} uploaded resume on #{self.created_at.strftime('%b %d, %Y')} from XLS script."
       add_resume_comment(comment, "EXTERNAL", logged_employee)
       if (requirement)
@@ -684,76 +615,59 @@ class Resume < ActiveRecord::Base
     return nil, nil
   end
 
+  # Searchkick methods
+  def search_data
+    {
+      name: name,
+      email: email,
+      phone: phone,
+      qualification: qualification,
+      location: location,
+      summary: summary,
+      resume_text_content: resume_text_content, 
+      overall_status: overall_status,
+      related_requirements: related_requirements,
+      ctc: ctc&.to_f || 0.0,
+      expected_ctc: expected_ctc&.to_f || 0.0,
+      exp_in_months: exp_in_months&.to_i || 0,
+      skills: skills,
+      current_company: current_company,
+      experience: experience,
+      notice: notice&.to_i || 0,
+      status: status,
+      manual_status: manual_status,
+      likely_to_join: likely_to_join,
+      skype_id: skype_id,
+      practice_head_rating: practice_head_rating,
+      preferred_location: preferred_location,
+      git_id: git_id,
+      linkedin_id: linkedin_id,
+      created_at: created_at,
+      updated_at: updated_at
+    }
+  end
+
+  def should_index?
+    # Only index resumes that are not deleted
+    !destroyed?
+  end
+
 private
-  def convert_rtf_to_txt(filename)
-    txt = `unrtf -n --text -P /usr/local/lib/unrtf/ #{filename} 2>& 1`
-  end
 
-  def check_for_valid_attributes
-    file_type_simple = ""
-    file_type_simple = @file_type.gsub(/;.*/, "") if @file_type
-    if file_type_simple == "UNDEFINED"
-      errors.add("Empty Resume")
-    elsif ( ![ "application/pdf", "text/plain", "text/html", "text/rtf", "application/msword",
-               "application/msword application/msword", "application/msword", "application/x-zip", "application/zip" ].include?(file_type_simple))
-      errors.add("Unknown filetype. Please provide file types of .doc, .docx, .pdf, .rtf, .html and .txt")
-    end
-  end
+  def create_search_data(txt)
 
-  def save_as_html_text(fullpathname, file_fullpath_without_ext, file_type)
-    if (file_type == "text/html")
-      # This is a html hiding as a doc
-      txt = File.read(fullpathname)
-      # Save as html
-      File.open(file_fullpath_without_ext + '.html', "w") { |f| f << txt }
-    elsif (file_type == "text/rtf")
-      # This is a rich text file
-      txt = convert_rtf_to_txt(fullpathname)
-      File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-    else
-      txt = `antiword #{fullpathname} 2>& 1`
-      # Save as txt file
-      File.open(file_fullpath_without_ext + '.txt', "w") { |f| f << txt }
-    end
-  end
+    self.resume_text_content = txt
 
-  def create_search_data
-    filenames     = `ls #{$tmp_directory}/#{$tmp_file}.*`.split("\n")
-    txtfile       = ""
-    htmlfile      = ""
-    txt = ""
-    filenames.each do |filename|
-      if /.txt$/.match(filename)
-        txt = File.read(filename)
-        break
-      elsif /.html$/.match(filename)
-        txt = Sanitize.clean(File.read(filename))
-        break
-      end
-    end
-
-    self.search_data = txt
-
-    # Adding forwards status to ferret
     self.forwards.each do |fwd|
-      self.search_data << " " + fwd.status
+      self.resume_text_content << " " + fwd.status
     end
-    # Adding req_matches status to ferret
     self.req_matches.each do |match|
-      self.search_data << " " + match.status
+      self.resume_text_content << " " + match.status
     end
-    # Adding comments to ferret
     self.comments.each do |comment|
-      self.search_data << " " + comment.comment
+      self.resume_text_content << " " + comment.comment
     end
-  end
-
-  def delete_temp_files(dir, name)
-    `rm -rf #{dir}/#{name}`
-  end
-
-  def find_requirement_by_name(iname)
-    return Requirement.find_by_name(iname)
+    self.save
   end
 
   def find_agency_by_name(iname)

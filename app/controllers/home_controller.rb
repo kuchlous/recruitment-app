@@ -53,11 +53,17 @@ class HomeController < ApplicationController
       @search_text  = session[:search_text]
     end
 
-    query = @search_text
-    query = ThinkingSphinx::Query.escape(query)
-
-    @results = Resume.search(query, :field_weights => {:name => 10}, :page => params[:page], :per_page => get_per_page)
-    puts @results
+    # Handle empty search text - return all results
+    if @search_text.blank?
+      @results = Resume.search("*", 
+                              page: params[:page], 
+                              per_page: get_per_page)
+    else
+      @results = Resume.search(@search_text, 
+                              fields: [:name, :email, :phone, :qualification, :location, :summary, :skills, :resume_text_content, :overall_status, :related_requirements],
+                              page: params[:page], 
+                              per_page: get_per_page)
+    end
   end
 
   def advanced_search
@@ -93,12 +99,28 @@ class HomeController < ApplicationController
     conditions[:related_requirements] = @requirement if @requirement
     conditions[:overall_status] = @status if @status
     logger.info("search = " + @search_text + "ctc_min = " + @ctc_min.to_s  + "ctc_max = " + @ctc_max.to_s + "expected_ctc_min = " + @expected_ctc_min.to_s + "expected_ctc_max = " + @expected_ctc_max.to_s + "experience_months_min = " + @experience_months_min.to_s + "experience_months_max = " + @experience_months_max.to_s) 
-    @results = Resume.search(@search_text, :field_weights => {:name => 10}, :page => params[:page], :per_page => get_per_page, 
-                             :with => {:ctc => @ctc_min..@ctc_max, 
-                                       :expected_ctc => @expected_ctc_min..@expected_ctc_max,
-                                       :exp_in_months => @experience_months_min..@experience_months_max},
-                             :conditions => conditions
-                            )
+    
+    # Build where conditions for filters
+    where_conditions = {}
+    where_conditions[:ctc] = {gte: @ctc_min, lte: @ctc_max} if @ctc_min > 0 || @ctc_max < 1000
+    where_conditions[:expected_ctc] = {gte: @expected_ctc_min, lte: @expected_ctc_max} if @expected_ctc_min > 0 || @expected_ctc_max < 1000
+    where_conditions[:exp_in_months] = {gte: @experience_months_min, lte: @experience_months_max} if @experience_months_min > 0 || @experience_months_max < 1000
+    where_conditions[:overall_status] = @status if @status
+    where_conditions[:related_requirements] = @requirement if @requirement
+
+    # Handle empty search text with filters
+    if @search_text.blank?
+      @results = Resume.search("*", 
+                              where: where_conditions,
+                              page: params[:page], 
+                              per_page: get_per_page)
+    else
+      @results = Resume.search(@search_text, 
+                              fields: [:name, :email, :phone, :qualification, :location, :summary, :skills, :resume_text_content, :overall_status, :related_requirements],
+                              where: where_conditions,
+                              page: params[:page], 
+                              per_page: get_per_page)
+    end
   end
 
   def show_summary_per_recruiter
