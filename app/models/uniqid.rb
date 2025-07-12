@@ -2,7 +2,7 @@ class Uniqid < ActiveRecord::Base
   has_one :requirement
   has_one :resume
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: false
 
   def self.generate_unique_id(name, object)
     # merge multiple spaces into '1' and remove spaces at the end
