@@ -122,7 +122,9 @@ class ResumesController < ApplicationController
   end
 
   def create
-    @resume    = Resume.new(params.require(:resume).permit!)
+    resume_params_hash = params.require(:resume).permit!.to_h
+    resume_params_hash.except!(:upload_resume)
+    @resume = Resume.new(resume_params_hash)
     flash_mesg = status = ""
     if params[:resume][:referral_type] == "DIRECT"
       @resume.referral_id   = 0
