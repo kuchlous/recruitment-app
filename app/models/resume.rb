@@ -180,22 +180,6 @@ class Resume < ActiveRecord::Base
     end
   end
 
-  # This gets called from the constructor after the call to 
-  # Resume.new(params[:resume])because we have a upload_resume
-  # in the params list.
-  def upload_resume=(upload_field)
-    if self.file_name.nil?
-      return
-    end
-    unless upload_field.nil?
-      ext = File.extname(upload_field.original_filename)
-      filename = File.join($upload_dir, self.file_name + ext)
-      File.open(filename, "w") { |f| f.write(upload_field.read.force_encoding("UTF-8")) }
-      add_html_txt_and_search(filename)
-      move_temp_file_to_upload_directory
-    end
-  end
-
   def cleanup_update_resume_data(upload_field)
     resume_file_name  = self.file_name
     if resume_file_name && resume_file_name != ""	
@@ -339,7 +323,6 @@ class Resume < ActiveRecord::Base
     # Use comprehensive text extraction that handles all file types
     txt = TextExtractor.extract_text_from_any_file(fullpathname)
     logger.info("Extracted txt: #{txt}")
-    
     # Save extracted text to file
     if txt && !txt.empty?
       txt_file_name = File.join($upload_dir, self.file_name + '.txt')
