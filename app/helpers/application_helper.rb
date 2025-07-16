@@ -9,11 +9,11 @@ module ApplicationHelper
     Employee.find(session[:logged_employee_id])
   end
 
- def get_current_employee
+  def get_current_employee
     if (session[:current_employee_id] == nil)
       session[:current_employee_id] = session[:logged_employee_id]
     end
-    employee = Employee.find_by_id(session[:current_employee_id])
+    Employee.find_by_id(session[:current_employee_id])
   end
 
   def is_HR?
@@ -35,8 +35,7 @@ module ApplicationHelper
   end
 
   def is_ADMIN?
-    logged_employee = get_current_employee
-    logged_employee.is_ADMIN?
+    get_current_employee.is_ADMIN?
   end
 
   def is_HR_ADMIN?
@@ -48,23 +47,19 @@ module ApplicationHelper
   end
 
   def is_REQ_MANAGER?
-    logged_employee = get_current_employee
-    logged_employee.is_REQ_MANAGER?
+    get_current_employee.is_REQ_MANAGER?
   end
 
   def is_PM?
-    logged_employee = get_current_employee
-    logged_employee.is_PM?
+    get_current_employee.is_PM?
   end
 
   def is_GM?
-    logged_employee = get_current_employee
-    logged_employee.is_GM?
+    get_current_employee.is_GM?
   end
 
   def is_BD?
-    logged_employee = get_current_employee
-    logged_employee.is_BD?
+    get_current_employee.is_BD?
   end
 
   def get_forwards_of_status(status)
@@ -83,14 +78,14 @@ module ApplicationHelper
     }
   end
 
-  def get_resume_req_matches_of_employee(resume, status)
-    req_matches = resume.req_matches.find_all { |r|
+  def get_resume_req_matches_of_employee_by_id(resume_id, status)
+    req_matches = ReqMatch.where(resume_id: resume_id).find_all { |r|
       r.status   == status &&
       (is_HR_ADMIN? || is_GM? || 
        r.requirement.employee == get_current_employee || 
        r.requirement.eng_lead == get_current_employee)
     }
-    req_matches += resume.forwards.find_all { |r|
+    req_matches += Forward.where(resume_id: resume_id).find_all { |r|
       r.status       == status &&
       (is_HR_ADMIN? || is_GM? || r.emp_forwarded_to == get_current_employee)
     }
@@ -483,19 +478,11 @@ module ApplicationHelper
                                                :onClick     => "openResumeInNewTab(\"#{uniqid_name}\"); return false;"
   end
 
-  def get_view_comments_icon(resume, cols=4)
-    link_to image_tag("ViewComments.png", :size    => "20x20",
-                                                   :class   => "view_icon_class",
-                                                   :title   => "View all comments for this resume"),'',
-                                                   :onclick => "viewCommentsFeedback(event, #{resume.id}, 'show_resume_comments', #{cols});"
-                 
-  end
-
   def get_view_feedback_icon(resume, cols=4)
     link_to image_tag("ViewFeedback.png", :size    => "20x20",
                                                    :class   => "feedback_icon_class",
                                                    :title   => "View all feedback for this resume"),'',
-                                                   :onclick => "viewCommentsFeedback(event, #{resume.id}, 'show_resume_feedback', #{cols});"
+                                                   :onclick => "viewFeedback(event, #{resume.id}, 'show_resume_feedback', #{cols});"
   end
 
   def get_actions_ddl(resume, req_match, status)
@@ -518,10 +505,10 @@ module ApplicationHelper
 
   # To be used in manage_interviews
   def get_time_slot_array
-    time_slot_array = ["07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
-                       "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-                       "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
-                       "19:00", "19:30", "20:00", "20:30", "21:00"]
+    ["07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
+     "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+     "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
+     "19:00", "19:30", "20:00", "20:30", "21:00"]
   end
 
   def get_resume_link_with_mouse_over_and_mouseout(resume)
@@ -574,20 +561,18 @@ module ApplicationHelper
   end
 
   def get_month_str(start_month, end_month)
-    month_str = ""
     if start_month != end_month
-      month_str = Date::ABBR_MONTHNAMES[start_month] + ".." + Date::ABBR_MONTHNAMES[end_month]
+      Date::ABBR_MONTHNAMES[start_month] + ".." + Date::ABBR_MONTHNAMES[end_month]
     else
-      month_str = Date::ABBR_MONTHNAMES[start_month]
+      Date::ABBR_MONTHNAMES[start_month]
     end
   end
 
   def get_year_str(start_month, end_month)
-    year_str = ""
     if start_month != end_month
-      year_str = Date::MONTHNAMES[start_month] + ".." + Date::MONTHNAMES[end_month]
+      Date::MONTHNAMES[start_month] + ".." + Date::MONTHNAMES[end_month]
     else
-      year_str = Date::MONTHNAMES[start_month]
+      Date::MONTHNAMES[start_month]
     end
   end
 

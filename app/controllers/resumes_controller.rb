@@ -2,6 +2,8 @@ class ResumesController < ApplicationController
   require 'spreadsheet'
   require 'actionpack/action_caching'
 
+  helper_method :safe_parse_date, :safe_parse_datetime
+  
   before_action :check_for_login, :except => [ :get_summary_by_id, :get_resume_attachment ]
   before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM, :only => [
   :hold,
@@ -37,17 +39,37 @@ class ResumesController < ApplicationController
   end
 
   def show
-    unless params[:id].nil? || Uniqid.find_by_name(params[:id]).nil?
-      @resume         = Uniqid.find_by_name(params[:id]).resume
-      @overall_status = @resume.resume_overall_status
-      if @overall_status == "N_ACCEPTED"
-        @overall_status  = "Not Accepted"
+    unless params[:id].nil?
+      # Use Elasticsearch to find resume by uniqid name with load: false
+      search_results = Resume.search(where: {uniqid: params[:id]}, load: false)
+      
+      if search_results.count > 0
+        # Get the raw data from Elasticsearch
+        @resume_data = search_results.first
+        @resume_id = @resume_data['id']
+        
+        # Set overall status from Elasticsearch data
+        @overall_status = @resume_data['overall_status']
+        if @overall_status == "N_ACCEPTED"
+          @overall_status = "Not Accepted"
+        end
+        
+        # Load associations from database only when needed
+        @comments = get_resume_comments_from_db(@resume_id, get_current_employee)
+        @feedbacks = get_resume_feedbacks_from_db(@resume_id)
+        @messages = get_resume_messages_from_db(@resume_id)
+        @req_matches = get_req_matches_from_db(@resume_id)
+        @forwards = get_forwards_from_db(@resume_id)
+        
+        # Generate file paths for resume files and other docs
+        @resume_files = get_resume_files_from_es_data(@resume_data)
+        @other_docs = get_other_docs_path_from_db(@resume_id)
+      else
+        flash[:notice] = "No details available for this resume"
+        redirect_back(fallback_location: root_path)
       end
-      @comments       = get_resume_comments(@resume, get_current_employee)
-      @feedbacks      = @resume.feedbacks
-      @messages       = @resume.messages
     else
-      flash[:notice]  = "No details available for this resume"
+      flash[:notice] = "No details available for this resume"
       redirect_back(fallback_location: root_path)
     end
   end
@@ -64,34 +86,45 @@ class ResumesController < ApplicationController
 
   def show_by_id
     unless params[:id].nil?
-      resume         = Resume.find_by_id(params[:id])
-      unless resume.nil?
-	redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
+      # Use Elasticsearch to find resume by ID with load: false
+      search_results = Resume.search(where: {id: params[:id].to_i}, load: false)
+      
+      if search_results.count > 0
+        # Get the raw data from Elasticsearch
+        resume_data = search_results.first
+        
+        # Use uniqid from Elasticsearch data
+        uniqid_name = resume_data['uniqid']
+        redirect_to :controller => "resumes", :action => "show", :id => uniqid_name
       else
-        flash[:notice]  = "No details available for this resume"
+        flash[:notice] = "No details available for this resume"
         redirect_back(fallback_location: root_path)
       end
     else
-      flash[:notice]  = "No details available for this resume"
+      flash[:notice] = "No details available for this resume"
       redirect_back(fallback_location: root_path)
     end
   end
 
   def get_summary_by_id
     unless params[:id].nil?
-      @resume = Resume.find_by_id(params[:id])
+      # Use Elasticsearch to find resume by ID with load: false
+      search_results = Resume.search(where: {id: params[:id].to_i}, load: false)
   
-      if @resume.present?
+      if search_results.count > 0
+        # Get the raw data from Elasticsearch
+        resume_data = search_results.first
+        
         respond_to do |format|
           format.json do
             render json: {
-              name: @resume.name,
-              uniqid: @resume.uniqid.name,
-              status: @resume.resume_overall_status,
-              summary: @resume.summary,
-              email: @resume.email,
-              phone: @resume.phone,
-              notice: @resume.notice
+              name: resume_data['name'],
+              uniqid: resume_data['uniqid'],
+              status: resume_data['overall_status']&.titleize,
+              summary: resume_data['summary'],
+              email: resume_data['email'],
+              phone: resume_data['phone'],
+              notice: resume_data['notice']
             }
           end
         end
@@ -207,7 +240,7 @@ class ResumesController < ApplicationController
       end
       # Adding comments while editing resume details
       if params[:resumes][:comments].nil? ||
-         params[:resumes][:comments].empty?
+          params[:resumes][:comments].empty?
         comment = "No comments added while updating resume"
         ctype   = "INTERNAL"
       else
@@ -1011,21 +1044,6 @@ class ResumesController < ApplicationController
     render body: nil
   end
 
-  ####################################################################################################
-  # FUNCTION    : show_resume_comments                                                               #
-  # DESCRIPTION : Function to be used when employee wants to see the comments on resume. Also we     #
-  #               filtered comments on basis of current employee. If c_emp is HR/ADMIN then show all #
-  #               resume comments else show only employee's comments                                 #
-  ####################################################################################################
-  def show_resume_comments
-    @resume           = Resume.find(params[:resume_id])
-    @cols             = params[:columns]
-    @resume_comments = get_resume_comments(@resume, get_current_employee)
-    respond_to do |format|
-      format.js
-    end
-  end
-
   def get_resume_comments(resume, employee)
     comments = []
     if employee.is_ADMIN? || employee.is_HR? || employee.is_GM?  || employee.is_GROUP_HEAD?
@@ -1037,6 +1055,66 @@ class ResumesController < ApplicationController
     end
     comments        = sort_by_created_at_date(comments)
   end
+
+  def get_resume_comments_from_db(resume_id, employee)
+    comments = []
+    if employee.is_ADMIN? || employee.is_HR? || employee.is_GM? || employee.is_GROUP_HEAD?
+      comments = Comment.where(resume_id: resume_id)
+    elsif is_MANAGER?
+      comments = Comment.where(resume_id: resume_id, ctype: ["INTERNAL", "USER"])
+    else
+      comments = Comment.where(resume_id: resume_id, employee: get_current_employee, ctype: "USER")
+    end
+    sort_by_created_at_date(comments)
+  end
+
+  def get_resume_feedbacks_from_db(resume_id)
+    Feedback.where(resume_id: resume_id)
+  end
+
+  def get_resume_messages_from_db(resume_id)
+    Message.where(resume_id: resume_id)
+  end
+
+  def get_resume_files_from_es_data(resume_data)
+    # Get file_name from Elasticsearch data
+    file_name = resume_data['file_name']
+    return [] unless file_name
+    
+    # Use the same logic as Resume#resume_path
+    `ls #{Rails.root.join(APP_CONFIG['upload_directory'])}/#{file_name}.*`.split("\n")
+  end
+
+  def get_other_docs_path_from_db(resume_id)
+    # Use the same logic as Resume#other_docs_path
+    upload_dir = Rails.root.join(APP_CONFIG['upload_directory']).join(resume_id.to_s)
+    Dir.exist?(upload_dir) ? Dir.entries(upload_dir).select { |f| f != '.' && f != '..' } : []
+  end
+
+  def get_req_matches_from_db(resume_id)
+    ReqMatch.where(resume_id: resume_id)
+  end
+
+  def get_forwards_from_db(resume_id)
+    Forward.where(resume_id: resume_id)
+  end
+
+  def safe_parse_date(date_string)
+    return nil unless date_string.present?
+    Date.parse(date_string)
+  rescue ArgumentError
+    nil
+  end
+
+  def safe_parse_datetime(datetime_string)
+    return nil unless datetime_string.present?
+    DateTime.parse(datetime_string)
+  rescue ArgumentError
+    nil
+  end
+
+  # Helper methods for the view to access resume data
+
 
   ####################################################################################################
   # FUNCTION    : show_resume_feedback                                                               #

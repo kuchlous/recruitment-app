@@ -1649,7 +1649,7 @@ function HideContent(d)
 // ================Pop Up Brief Descriptions END===============
 
 
-function viewCommentsFeedback(event, resume_id, action, cols)
+function viewFeedback(event, resume_id, action, cols)
 {
   document.getElementById("loader").style.display="flex";
   event.preventDefault();

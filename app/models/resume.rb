@@ -4,10 +4,11 @@ class Resume < ActiveRecord::Base
 
   searchkick word_start: [:name, :email, :phone, :qualification, :location, :summary, :resume_text_content, :skills, :current_company],
             suggest: [:name, :email, :phone, :qualification, :location, :summary],
-            filterable: [:ctc, :expected_ctc, :exp_in_months, :overall_status, :related_requirements, :notice, :status],
+            filterable: [:id, :ctc, :expected_ctc, :exp_in_months, :overall_status, :related_requirements, :notice, :status, :uniqid],
             searchable: [:name, :email, :phone, :qualification, :location, :summary, :resume_text_content, :overall_status, :related_requirements, :skills, :current_company],
             mappings: {
               properties: {
+                id: { type: 'integer' },
                 exp_in_months: { type: 'integer' },
                 ctc: { type: 'float' },
                 expected_ctc: { type: 'float' },
@@ -184,16 +185,6 @@ class Resume < ActiveRecord::Base
   # Resume.new(params[:resume])because we have a upload_resume
   # in the params list.
   def upload_resume=(upload_field)
-    if self.file_name.nil?
-      return
-    end
-    unless upload_field.nil?
-      ext = File.extname(upload_field.original_filename)
-      filename = File.join($upload_dir, self.file_name + ext)
-      File.open(filename, "w") { |f| f.write(upload_field.read.force_encoding("UTF-8")) }
-      add_html_txt_and_search(filename)
-      move_temp_file_to_upload_directory
-    end
   end
 
   def cleanup_update_resume_data(upload_field)
@@ -618,6 +609,7 @@ class Resume < ActiveRecord::Base
   # Searchkick methods
   def search_data
     {
+      id: id,
       name: name,
       email: email,
       phone: phone,
@@ -642,6 +634,12 @@ class Resume < ActiveRecord::Base
       preferred_location: preferred_location,
       git_id: git_id,
       linkedin_id: linkedin_id,
+      uniqid: uniqid.name,
+      referral_type: referral_type,
+      referral_id: referral_id,
+      joining_date: joining_date,
+      file_name: file_name,
+      ta_owner_name: ta_owner&.name,
       created_at: created_at,
       updated_at: updated_at
     }
