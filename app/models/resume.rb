@@ -12,7 +12,6 @@ class Resume < ActiveRecord::Base
                 ctc: { type: 'float' },
                 expected_ctc: { type: 'float' },
                 notice: { type: 'integer' },
-                practice_head_rating: { type: 'integer' },
                 created_at: { type: 'date' },
                 updated_at: { type: 'date' }
               }
