@@ -14,6 +14,8 @@ module Recruit5
     
     # Load custom lib files
     config.autoload_paths += %W(#{config.root}/lib)
+
+    require_relative '../lib/text_extractor'
     
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

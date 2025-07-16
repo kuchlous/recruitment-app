@@ -155,7 +155,9 @@ class ResumesController < ApplicationController
   end
 
   def create
-    @resume    = Resume.new(params.require(:resume).permit!)
+    resume_params_hash = params.require(:resume).permit!.to_h
+    resume_params_hash.except!(:upload_resume)
+    @resume = Resume.new(resume_params_hash)
     flash_mesg = status = ""
     if params[:resume][:referral_type] == "DIRECT"
       @resume.referral_id   = 0
@@ -234,7 +236,9 @@ class ResumesController < ApplicationController
       @resume.experience = params[:experience_years] + "-" + params[:experience_months]
     end
     # TODO:Change to strong parameters 
-    if @resume.update_attributes(params.require(:resume).permit!)
+    resume_params_hash = params.require(:resume).permit!.to_h
+    resume_params_hash.except!(:upload_resume)
+    if @resume.update(resume_params_hash)
       if params[:resume][:upload_resume]
         @resume.cleanup_update_resume_data(params[:resume][:upload_resume])
       end

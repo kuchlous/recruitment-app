@@ -13,7 +13,6 @@ class Resume < ActiveRecord::Base
                 ctc: { type: 'float' },
                 expected_ctc: { type: 'float' },
                 notice: { type: 'integer' },
-                practice_head_rating: { type: 'integer' },
                 created_at: { type: 'date' },
                 updated_at: { type: 'date' }
               }
@@ -181,12 +180,6 @@ class Resume < ActiveRecord::Base
     end
   end
 
-  # This gets called from the constructor after the call to 
-  # Resume.new(params[:resume])because we have a upload_resume
-  # in the params list.
-  def upload_resume=(upload_field)
-  end
-
   def cleanup_update_resume_data(upload_field)
     resume_file_name  = self.file_name
     if resume_file_name && resume_file_name != ""	
@@ -330,7 +323,6 @@ class Resume < ActiveRecord::Base
     # Use comprehensive text extraction that handles all file types
     txt = TextExtractor.extract_text_from_any_file(fullpathname)
     logger.info("Extracted txt: #{txt}")
-    
     # Save extracted text to file
     if txt && !txt.empty?
       txt_file_name = File.join($upload_dir, self.file_name + '.txt')

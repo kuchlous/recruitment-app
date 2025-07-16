@@ -58,14 +58,6 @@
         <td> <%= @requirement.group.name %> </td>
       </tr>
       <tr>
-        <td> Customer - </td>
-        <% acc_arr = []
-           @accounts.each do |a|
-             acc_arr << a.name
-           end %>
-        <td> <%= acc_arr.join(", ") %> </td>
-      </tr>
-      <tr>
         <td> Type - </td>
         <td> <%= @requirement.req_type %> </td>
       </tr>
