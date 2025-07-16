@@ -68,8 +68,8 @@ end
 gem 'twitter-bootstrap-rails'
 gem 'mysql2'
 # gem 'thinking-sphinx'  # Commented out - migrating to Elasticsearch
-gem 'searchkick', '~> 5.0.0'
-gem 'elasticsearch', '~> 7.1'
+gem 'searchkick'
+gem 'elasticsearch'
 gem 'spreadsheet'
 gem 'sanitize'
 gem 'will_paginate'
