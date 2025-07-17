@@ -258,7 +258,7 @@ require 'will_paginate/array'
   end
 
   def get_per_page
-    10
+    20
   end
 
   def get_admin_forwards_of_status(status)

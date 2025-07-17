@@ -60,7 +60,18 @@ class HomeController < ApplicationController
                               per_page: get_per_page)
     else
       @results = Resume.search(@search_text, 
-                              fields: [:name, :email, :phone, :qualification, :location, :summary, :skills, :resume_text_content, :overall_status, :related_requirements],
+                              fields: [
+                                :name, 
+                                :email, 
+                                :phone, 
+                                :qualification, 
+                                :location, 
+                                :summary, 
+                                :skills, 
+                                :resume_text_content, 
+                                :overall_status, 
+                                :related_requirements
+                              ],
                               page: params[:page], 
                               per_page: get_per_page)
     end
