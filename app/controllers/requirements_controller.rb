@@ -43,7 +43,6 @@ class RequirementsController < ApplicationController
     if @requirements.size == 0
       flash[:notice] = "You do not have any requirements on your name."
     end
-    render "index"
   end 
 
   def new

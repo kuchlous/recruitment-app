@@ -144,4 +144,26 @@ class Requirement < ActiveRecord::Base
     end
   end
 
+  # Class methods for getting status and type options
+  def self.status_options_for_select
+    [
+      ["Open", "OPEN"],
+      ["Hold", "HOLD"],
+      ["Closed - Lost", "CLOSED LOST"],
+      ["Closed - Won", "CLOSED WON"],
+      ["Closed - Cancelled", "CLOSED CANCELLED"],
+      ["Closed - Expired", "CLOSED EXPIRED"],
+      ["Closed - Offered", "CLOSED OFFERED"],
+      ["Closed - Joining", "CLOSED JOINING"],
+      ["Closed - Delete", "CLOSED DELETE"]
+    ]
+  end
+
+  def self.req_type_options_for_select
+    [
+      ["Ordinary", "ORDINARY"],
+      ["Hot", "HOT"]
+    ]
+  end
+
 end

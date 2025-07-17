@@ -75,7 +75,6 @@
       <td> Group </td>
       <td> <%= collection_select(:requirement, :group_id, @groups, :id, :name, { :prompt => "Please Select" }) %> </td>
     </tr>
-    <!-- Customer section removed - no longer using accounts -->
     <tr>
       <td> Manager </td>
       <td> <%= collection_select(:requirement, :employee_id, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
@@ -98,11 +97,11 @@
     </tr>
       <tr>
       <td> Requirement status   </td>
-      <td> <%= select_tag "requirement[status]", options_for_select([["Open", "OPEN"], ["Hold", "HOLD"], ["Closed - Expired", "CLOSED EXPIRED"], ["Closed - Offered", "CLOSED OFFERED"], ["Closed - Joining", "CLOSED JOINING"], ["Closed - Delete", "CLOSED DELETE"] ], status) %> </td>
+      <td> <%= select_tag "requirement[status]", options_for_select(Requirement.status_options_for_select, status) %> </td>
     </tr>
     <tr>
       <td> Requirement type     </td>
-      <td> <%= select_tag "requirement[req_type]", options_for_select([["Ordinary", "ORDINARY"], ["Hot", "HOT"]], req_type) %> </td>
+      <td> <%= select_tag "requirement[req_type]", options_for_select(Requirement.req_type_options_for_select, req_type) %> </td>
     </tr>
     <tr>
       <td> &nbsp; </td>
