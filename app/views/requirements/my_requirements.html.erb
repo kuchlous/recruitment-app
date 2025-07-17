@@ -4,28 +4,17 @@
     <div class="background_green"> Closed Requirements </div>
     <div class="background_red"> Hot Requirements </div>
   </div>
-  <% if is_HR_ADMIN? || is_RMS_ANALYST? %>
-    <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
-      <%= link_to "Add new requirement", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "new" %>
-    </div>
-  <% end %>
-  <% if is_HR_ADMIN? %>
-    <div class="add_link" style="padding-right: 10px;">
-      <% if params[:action] == "index" %>
-        <%= link_to "All requirements", :host => APP_CONFIG['host_name'], :action => "all_reqs" %>
-      <% else %>
-        <%= link_to "All Active requirements", :host => APP_CONFIG['host_name'], :action => "index" %>
-      <% end %>
-    </div>
-  <% end %>
-  <br />
-  <br />
-  <div class="add_link float-md-right col-md-2">
-    <%= form_tag :host => APP_CONFIG['host_name'], :action => "search" do %>
-      <%= text_field_tag :search, params[:search], :onfocus => 'fillRequirementSearchBoxWithContents()', :placeholder => "Search reqs by employee name" %>
-      <%= submit_tag "Search" %>
-    <% end %>
+  <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
+    <%= link_to "ON HOLD", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" , :status => "hold" %>
   </div>
+  <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
+    <%= link_to "OPEN", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" , :status => "open" %>
+  </div>
+  <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
+    <%= link_to "ALL", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" , :status => "any" %>
+  </div>
+  <br />
+  <br />
   <br>
   <br /> <br />
 
@@ -38,10 +27,8 @@
         <td style="width:75px;"> Exp </td>
         <td> End              </td>
         <td> Positions        </td>
-        <td> Owner            </td>
-        <%if is_HR_ADMIN? %>
-          <td> <%= (@requirements.size != 0) ? submit_tag('Delete') : "Delete"  %> </td>
-        <%end%>
+        <td> Forwards     </td>
+        <td> Shortlists    </td>
       </tr>
       <% @requirements.each do |requirement| %>
         <% if requirement.status != "OPEN" %>
@@ -72,11 +59,11 @@
           <%= requirement.nop %> 
         </td>
         <td>
-          <%= get_words(requirement.employee.name, 1) %>
+          <%= get_forwards_count(requirement) %> 
         </td>
-        <%if is_HR_ADMIN? %>
-          <td> <%= check_box("req", "commands", {:multiple => true}, requirement.id, nil) %>    </td>
-        <%end%>
+        <td>
+          <%= get_shortlisted_count(requirement) %>
+        </td>
         </tr>
       <% end %>
     </table>
