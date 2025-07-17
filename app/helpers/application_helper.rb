@@ -499,13 +499,13 @@ module ApplicationHelper
                                                    :onclick => "viewFeedback(event, #{resume.id}, 'show_resume_feedback', #{cols});"
   end
 
-  def get_actions_ddl(resume_id, req_match, status)
+  def get_actions_ddl(resume, req_match, status)
     select_tag "actions_name", options_for_select(get_actions_drop_down(status)),
                                                   :class    => "actions_drop_down_list_small",
                                                   :onchange => "actionBox(this.value, event, all_req_ids,
                                                                                              all_req_names,
                                                                                                #{req_match.id},
-                                                                                               #{resume_id});"
+                                                                                               #{resume.id});"
   end
 
   def get_manager_actions_dropdownlist(resume, fwd, counter_value, is_shortlist_page = false)
