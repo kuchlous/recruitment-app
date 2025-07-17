@@ -39,37 +39,17 @@ class ResumesController < ApplicationController
   end
 
   def show
-    unless params[:id].nil?
-      # Use Elasticsearch to find resume by uniqid name with load: false
-      search_results = Resume.search(where: {uniqid: params[:id]}, load: false)
-      
-      if search_results.count > 0
-        # Get the raw data from Elasticsearch
-        @resume_data = search_results.first
-        @resume_id = @resume_data['id']
-        
-        # Set overall status from Elasticsearch data
-        @overall_status = @resume_data['overall_status']
-        if @overall_status == "N_ACCEPTED"
-          @overall_status = "Not Accepted"
-        end
-        
-        # Load associations from database only when needed
-        @comments = get_resume_comments_from_db(@resume_id, get_current_employee)
-        @feedbacks = get_resume_feedbacks_from_db(@resume_id)
-        @messages = get_resume_messages_from_db(@resume_id)
-        @req_matches = get_req_matches_from_db(@resume_id)
-        @forwards = get_forwards_from_db(@resume_id)
-        
-        # Generate file paths for resume files and other docs
-        @resume_files = get_resume_files_from_es_data(@resume_data)
-        @other_docs = get_other_docs_path_from_db(@resume_id)
-      else
-        flash[:notice] = "No details available for this resume"
-        redirect_back(fallback_location: root_path)
+    unless params[:id].nil? || Uniqid.find_by_name(params[:id]).nil?
+      @resume         = Uniqid.find_by_name(params[:id]).resume
+      @overall_status = @resume.resume_overall_status
+      if @overall_status == "N_ACCEPTED"
+        @overall_status  = "Not Accepted"
       end
+      @comments       = get_resume_comments(@resume, get_current_employee)
+      @feedbacks      = @resume.feedbacks
+      @messages       = @resume.messages
     else
-      flash[:notice] = "No details available for this resume"
+      flash[:notice]  = "No details available for this resume"
       redirect_back(fallback_location: root_path)
     end
   end

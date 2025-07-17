@@ -78,6 +78,20 @@ module ApplicationHelper
     }
   end
 
+  def get_resume_req_matches_of_employee(resume, status)
+    req_matches = resume.req_matches.find_all { |r|
+      r.status   == status &&
+      (is_HR_ADMIN? || is_GM? || 
+       r.requirement.employee == get_current_employee || 
+       r.requirement.eng_lead == get_current_employee)
+    }
+    req_matches += resume.forwards.find_all { |r|
+      r.status       == status &&
+      (is_HR_ADMIN? || is_GM? || r.emp_forwarded_to == get_current_employee)
+    }
+  end
+
+
   def get_resume_req_matches_of_employee_by_id(resume_id, status)
     req_matches = ReqMatch.where(resume_id: resume_id).find_all { |r|
       r.status   == status &&
@@ -485,13 +499,13 @@ module ApplicationHelper
                                                    :onclick => "viewFeedback(event, #{resume.id}, 'show_resume_feedback', #{cols});"
   end
 
-  def get_actions_ddl(resume, req_match, status)
+  def get_actions_ddl(resume_id, req_match, status)
     select_tag "actions_name", options_for_select(get_actions_drop_down(status)),
                                                   :class    => "actions_drop_down_list_small",
                                                   :onchange => "actionBox(this.value, event, all_req_ids,
                                                                                              all_req_names,
                                                                                                #{req_match.id},
-                                                                                               #{resume.id});"
+                                                                                               #{resume_id});"
   end
 
   def get_manager_actions_dropdownlist(resume, fwd, counter_value, is_shortlist_page = false)
