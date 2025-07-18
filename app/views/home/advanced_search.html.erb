@@ -1,69 +1,89 @@
-<br /> <br />
-<%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search_results"), :method => "get") do %>
-  <table id="resume_form_table">
-    <tr>
-      <td> Search Pattern </td>
-      <td> <%= text_field_tag :search %> </td>
-    </tr>
-    <tr>
-      <td> Min Current CTC </td>
-      <td>
-        <%= text_field_tag :ctc_min %> <br />
-        <span class="span_with_grey_color"> Enter in lakhs </span>
-      </td>
-    </tr>
-    <tr>
-      <td> Max Current CTC </td>
-      <td>
-        <%= text_field_tag :ctc_max %> <br />
-        <span class="span_with_grey_color"> Enter in lakhs </span>
-      </td>
-    </tr>
-    <tr>
-      <td> Min Expected CTC </td>
-      <td>
-        <%= text_field_tag :expected_ctc_min %> <br />
-        <span class="span_with_grey_color"> Enter in lakhs </span>
-      </td>
-    </tr>
-    <tr>
-      <td> Max Expected CTC </td>
-      <td>
-        <%= text_field_tag :expected_ctc_max %> <br />
-        <span class="span_with_grey_color"> Enter in lakhs </span>
-      </td>
-    </tr>
-    <tr>
-      <td> Min Experience </td>
-      <td>
-        <%= select_tag "experience_years_min",   options_for_select(get_experience_years),  :class => "two_tds_same_line" %> Yrs
-        <%= select_tag "experience_months_min",  options_for_select(get_experience_months), :class => "two_tds_same_line" %> Months
-      </td>
-    </tr>
-    <tr>
-      <td> Max Experience </td>
-      <td>
-        <%= select_tag "experience_years_max",   options_for_select(get_experience_years),  :class => "two_tds_same_line" %> Yrs
-        <%= select_tag "experience_months_max",  options_for_select(get_experience_months), :class => "two_tds_same_line" %> Months
-      </td>
-    </tr>
-    <tr>
-      <td> Status </td>
-      <td>
-        <%= select_tag "status",   options_for_select(Resume.get_resume_statuses),  :class => "two_tds_same_line" %>
-      </td>
-    </tr>
-    <tr>
-      <td> Requirement </td>
-      <td>
-        <%= select_tag "requirement", options_for_select(Requirement.get_all_requirement_array_for_select) %>
-      </td>
-    </tr>
-    <tr>
-      <td> &nbsp; </td>
-      <td class="add_resume_submit_button"> <%= submit_tag "Search" %> </td>
-    </tr>
-  </table>
-<% end %>
+<div class="form-container">
+  <div class="form-header">
+    <h2>Advanced Search</h2>
+    <p>Search resumes with detailed criteria</p>
+  </div>
 
-<br /> <br />
+  <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search_results"), :method => "get", class: "modern-form") do %>
+    
+    <div class="form-section">
+      <h3 class="section-title">Search Criteria</h3>
+      
+      <div class="form-group">
+        <label for="search">Search Pattern</label>
+        <%= text_field_tag :search, nil, class: "form-control", placeholder: "Enter search keywords" %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Salary Range</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ctc_min">Min Current CTC (Lakhs)</label>
+          <%= text_field_tag :ctc_min, nil, class: "form-control", placeholder: "Min CTC" %>
+        </div>
+        <div class="form-group">
+          <label for="ctc_max">Max Current CTC (Lakhs)</label>
+          <%= text_field_tag :ctc_max, nil, class: "form-control", placeholder: "Max CTC" %>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="expected_ctc_min">Min Expected CTC (Lakhs)</label>
+          <%= text_field_tag :expected_ctc_min, nil, class: "form-control", placeholder: "Min Expected CTC" %>
+        </div>
+        <div class="form-group">
+          <label for="expected_ctc_max">Max Expected CTC (Lakhs)</label>
+          <%= text_field_tag :expected_ctc_max, nil, class: "form-control", placeholder: "Max Expected CTC" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Experience</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Min Experience</label>
+          <div class="experience-inputs">
+            <%= select_tag "experience_years_min", options_for_select(get_experience_years), class: "form-control experience-select" %>
+            <span class="experience-label">Years</span>
+            <%= select_tag "experience_months_min", options_for_select(get_experience_months), class: "form-control experience-select" %>
+            <span class="experience-label">Months</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Max Experience</label>
+          <div class="experience-inputs">
+            <%= select_tag "experience_years_max", options_for_select(get_experience_years), class: "form-control experience-select" %>
+            <span class="experience-label">Years</span>
+            <%= select_tag "experience_months_max", options_for_select(get_experience_months), class: "form-control experience-select" %>
+            <span class="experience-label">Months</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Additional Filters</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="status">Status</label>
+          <%= select_tag "status", options_for_select(Resume.get_resume_statuses), class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <label for="requirement">Requirement</label>
+          <%= select_tag "requirement", options_for_select(Requirement.get_all_requirement_array_for_select), class: "form-control" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= submit_tag "Search", class: "btn btn-primary" %>
+      <%= link_to "Cancel", url_for(:host => APP_CONFIG['host_name'], :controller => "home"), class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

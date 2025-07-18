@@ -1,124 +1,167 @@
-<br /> <br />
-<%= form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post")}) do |f|%>
+<div class="form-container">
+  <div class="form-header">
+    <h2><%= button_tag == "Update" ? "Edit Requirement" : "New Requirement" %></h2>
+    <p><%= button_tag == "Update" ? "Update requirement details" : "Create a new requirement" %></p>
+  </div>
 
-  <%if @requirement%>
-  <%  if @requirement.exp%>
- <%     exp      = @requirement.exp.split("-")%>
-  <%    min_exp  = exp[0]%>
-  <%    max_exp  = exp[1]%>
-  <%  end%>
+  <%= form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post"), class: "modern-form"}) do |f|%>
 
-  <%  status   = @requirement.status%>
-  <%  req_type = @requirement.req_type%>
-  <%  nop      = @requirement.nop%>
-  <%  sdate    = date_in_calendar_format(@requirement.sdate) if @requirement.sdate%>
-  <%  edate    = date_in_calendar_format(@requirement.edate) if @requirement.edate%>
-  <%else%>
-  <%  min_exp  = max_exp = status = req_type = sdate = edate = nop = ""%>
-  <%end%>
-  <% if @requirement.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@requirement.errors.count, "error") %> prohibited this requirement from being saved:</h2>
+    <%if @requirement%>
+    <%  if @requirement.exp%>
+   <%     exp      = @requirement.exp.split("-")%>
+    <%    min_exp  = exp[0]%>
+    <%    max_exp  = exp[1]%>
+    <%  end%>
 
-      <ul>
-      <% @requirement.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    <%  status   = @requirement.status%>
+    <%  req_type = @requirement.req_type%>
+    <%  nop      = @requirement.nop%>
+    <%  sdate    = date_in_calendar_format(@requirement.sdate) if @requirement.sdate%>
+    <%  edate    = date_in_calendar_format(@requirement.edate) if @requirement.edate%>
+    <%else%>
+    <%  min_exp  = max_exp = status = req_type = sdate = edate = nop = ""%>
+    <%end%>
+
+    <% if @requirement.errors.any? %>
+      <div class="error-messages">
+        <h3><%= pluralize(@requirement.errors.count, "error") %> prohibited this requirement from being saved:</h3>
+        <ul>
+        <% @requirement.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-section">
+      <h3 class="section-title">Basic Information</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="requirement_name">Requirement Name *</label>
+          <%= f.text_field :name, class: "form-control", placeholder: "Enter requirement name" %>
+        </div>
+        <div class="form-group">
+          <label for="requirement_nop">Number of Positions</label>
+          <%= select_tag "requirement[nop]", options_for_select(get_experience_years, nop), class: "form-control" %>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="requirement_designation_id">Position Name *</label>
+          <%= collection_select(:requirement, :designation_id, @designations, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+        <div class="form-group">
+          <label for="requirement_group_id">Group *</label>
+          <%= collection_select(:requirement, :group_id, @groups, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Required Experience</label>
+        <div class="experience-inputs">
+          <%= select_tag "req[min_exp]", options_for_select(get_experience_years, min_exp.to_i), class: "form-control experience-select" %>
+          <span class="experience-label">Min</span>
+          <%= select_tag "req[max_exp]", options_for_select(get_experience_years, max_exp.to_i), class: "form-control experience-select" %>
+          <span class="experience-label">Max</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Description & Skills</h3>
+      
+      <div class="form-group">
+        <label for="requirement_skill">Requirement Skills</label>
+        <%= f.text_area :skill, class: "form-control", rows: 3, placeholder: "Enter required skills" %>
+      </div>
+      
+      <div class="form-group">
+        <label for="requirement_description">Requirement Description</label>
+        <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "Enter detailed description" %>
+      </div>
+      
+      <div class="form-group">
+        <label for="requirement_mgt_comment">Management Comment</label>
+        <%= f.text_area :mgt_comment, class: "form-control", rows: 3, placeholder: "Enter management comments" %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Timeline</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="requirement_sdate">Start Date</label>
+          <%= f.text_field :sdate, class: "form-control datepicker", placeholder: "Select start date" %>
+        </div>
+        <div class="form-group">
+          <label for="requirement_edate">End Date</label>
+          <%= f.text_field :edate, class: "form-control datepicker", placeholder: "Select end date" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Team Assignment</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="requirement_employee_id">Manager *</label>
+          <%= collection_select(:requirement, :employee_id, @employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+        <div class="form-group">
+          <label for="requirement_eng_lead_id">Eng Lead</label>
+          <%= collection_select(:requirement, :eng_lead_id, @employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="requirement_source_owner">Source Owner</label>
+          <%= collection_select(:requirement, :source_owner, @ta_employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+        <div class="form-group">
+          <label for="requirement_schedule_owner">Schedule Owner</label>
+          <%= collection_select(:requirement, :schedule_owner, @ta_employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="requirement_ta_lead_id">TA Lead</label>
+        <%= collection_select(:requirement, :ta_lead_id, @ta_employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Status & Type</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="requirement_status">Requirement Status</label>
+          <%= select_tag "requirement[status]", options_for_select(Requirement.status_options_for_select, status), class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <label for="requirement_req_type">Requirement Type</label>
+          <%= select_tag "requirement[req_type]", options_for_select(Requirement.req_type_options_for_select, req_type), class: "form-control" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit(button_tag, class: "btn btn-primary") %>
+      <%= link_to "Cancel", url_for(:host => APP_CONFIG['host_name'], :controller => "requirements"), class: "btn btn-secondary" %>
     </div>
   <% end %>
+</div>
 
-
-  <table id="req_form_table">
-    <tr>
-      <td> Requirement name </td>
-      <td> <%= f.text_field :name %> </td>
-    </tr>
-    <tr>
-      <td> Number of positions </td>
-      <td>
-        <%= select_tag "requirement[nop]", options_for_select(get_experience_years, nop) %>
-      </td>
-    </tr>
-    <tr>
-      <td> Position Name </td>
-      <td> <%= collection_select(:requirement, :designation_id, @designations, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> Requirement skills </td>
-      <td> <%= f.text_area :skill %> </td>
-    </tr>
-    <tr>
-      <td> Requirement description </td>
-      <td> <%= f.text_area :description %> </td>
-    </tr>
-    <tr>
-      <td> Management comment </td>
-      <td> <%= f.text_area :mgt_comment %> </td>
-    </tr>
-    <tr>
-      <td> Start Date </td>
-      <td><%= f.text_field :sdate, :class => "datepicker" %></td>
-    </tr>
-    <tr>
-      <td> End Date </td>
-      <td><%= f.text_field :edate, :class => "datepicker" %></td>
-  </tr>
-    <tr>
-      <td> Required Experience </td>
-      <td class="two_dropdownlist_single_td">
-        <%= select_tag "req[min_exp]", options_for_select(get_experience_years, min_exp.to_i) %> Min
-        <%= select_tag "req[max_exp]", options_for_select(get_experience_years, max_exp.to_i) %> Max
-      </td>
-    </tr>
-    <tr>
-      <td> Group </td>
-      <td> <%= collection_select(:requirement, :group_id, @groups, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> Manager </td>
-      <td> <%= collection_select(:requirement, :employee_id, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> Source owner </td>
-      <td> <%= collection_select(:requirement, :source_owner, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> Schedule owner </td>
-      <td> <%= collection_select(:requirement, :schedule_owner, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> TA Lead </td>
-      <td> <%= collection_select(:requirement, :ta_lead_id, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> Eng Lead </td>
-      <td> <%= collection_select(:requirement, :eng_lead_id, @employees, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-      <tr>
-      <td> Requirement status   </td>
-      <td> <%= select_tag "requirement[status]", options_for_select(Requirement.status_options_for_select, status) %> </td>
-    </tr>
-    <tr>
-      <td> Requirement type     </td>
-      <td> <%= select_tag "requirement[req_type]", options_for_select(Requirement.req_type_options_for_select, req_type) %> </td>
-    </tr>
-    <tr>
-      <td> &nbsp; </td>
-      <td class="requirement_submit_button"> <%= f.submit("#{button_tag}") %> </td>
-    </tr>
-  </table>
-<% end %>
-<br /> <br />
-<%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %>
 <script>
   $(function() {
-  $('.datepicker').datepicker({
-        dateFormat: 'dd-mm-yy',
-        showOn: "button",
-        buttonImage: "/assets/calendar.gif",
-        buttonImageOnly: true,
-        buttonText: "Select date"
-      });
-});
+    $('.datepicker').datepicker({
+      dateFormat: 'dd-mm-yy',
+      showOn: "focus",
+      buttonText: "Select date"
+    });
+  });
 </script>
