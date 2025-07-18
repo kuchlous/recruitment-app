@@ -1,0 +1,29 @@
+team.
+HARIKA V
+FRESHER/UI Developer/Sports Analyst
+Bangalore,Karnataka
++91 9845694016
+INTERNSHIPS
+SPORTS ANALYST | 2024
+Hudl India Pvt Ltd
+JAVA INTERN | 2024
+Pentagon Space,Bangalore
+INTERNSHIP ION FULL-STACK WEB DEVELOPEMENT | 2022
+Varcons Technologies Pvt Ltd,Bangalore,
+INTERNSHIP ON ANDROID APP DEVELOPMENT ANDEMBEDDED SYSTEM
+IN IOT | 2019
+Indian Tech-Keys, ,Bangalore, Skills
+Front-End languages(html,css,javascript)
+Intermediate knowledge on React JS ,java. MySQL :stored procedures, SQL Func
+SQL Joins, MYSQL Workbench. problem-solving ,Excellent communication and interpersonal skills. Networking concepts :OSI model,TCP/IP,Routing & switching. Network protocols : HTTP/FTP/SMTP/DNS. OS : Windows server,Linux. Cloud n/w Understanding of AWS. Projects
+Food Diet Recommendation System using Machine Learning - 2023
+Recommedends the diet plan based on the ML algorithms as k-Means
+clustering and random forest algorithms. Photographywebsite onFull-Stack webdevelopment - 2022
+Detection of Fraudulent Sellers in Online Marketplace's - 2020
+Git Hub URL : https://github.com/hariks9845
+Linked IN URL : www.linkedin.com/in/harika-v-173623286
+vharika9845@gmail.comEnthusiastic computer sciencegraduateskilled in HTML, CSS, JavaScript, andReact. Proven problem-solvingabilitiesthrough academic projects. Seekinganentry-level web developer roletoleverage technical skills andcontributeto innovative projects withinadynamicEDUCATION"2020-2023
+Bachelor of Engineeringin Computer Science andEngineeringGlobal Academy of Technology, Bangalore
+2017-2020
+Diploma
+in Computer Science andEngineeringK.S.I.T(K.S.P),BangaloreAWARDSANDHONORSPubliished paper inICAETonFoodDiet Recommendationsystemusingmachine learning-2023Secured highest marksinOperating System- 2019"
