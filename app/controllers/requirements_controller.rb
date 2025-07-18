@@ -84,10 +84,10 @@ class RequirementsController < ApplicationController
     # @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]  # Removed account assignment
     exp          = params[:req][:min_exp] + "-" + params[:req][:max_exp]
     respond_to do |format|
-      if @requirement.update_attributes(params.require(:requirement).permit!) && @requirement.update_attributes(:exp => exp)
+      if @requirement.update(params.require(:requirement).permit!) && @requirement.update(:exp => exp)
         logger.info("Updated requirement")
         email_for_updating_requirement(@requirement)
-        # Need to releoad object from database as update_attributes does not
+        # Need to releoad object from database as update does not
         # seem to change fields of @requirement
         update_forwards(old_owner, Requirement.find(params[:id]))
         flash[:notice] = "You have successfully updated requirement (#{@requirement.name})"
@@ -228,7 +228,7 @@ class RequirementsController < ApplicationController
     if reqs_to_close.length > 0
       reqs_to_close.each do |req_id|
         req = Requirement.find(req_id)
-        if(req.update_attributes!(:status => "CLOSED EXPIRED"))
+        if(req.update!(:status => "CLOSED EXPIRED"))
           req_closed_string += req.name+","
         end
       end

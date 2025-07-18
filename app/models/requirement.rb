@@ -32,7 +32,7 @@ class Requirement < ActiveRecord::Base
   validates_presence_of :group_id
 
   # Uniqueness stuff
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, :case_sensitive => false
 
   def Requirement.get_experience_array
     exp_array = []
