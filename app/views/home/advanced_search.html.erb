@@ -1,22 +1,15 @@
 <div class="form-container">
   <div class="form-header">
     <h2>Advanced Search</h2>
-    <p>Search resumes with detailed criteria</p>
   </div>
 
   <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search_results"), :method => "get", class: "modern-form") do %>
     
     <div class="form-section">
-      <h3 class="section-title">Search Criteria</h3>
-      
       <div class="form-group">
         <label for="search">Search Pattern</label>
         <%= text_field_tag :search, nil, class: "form-control", placeholder: "Enter search keywords" %>
       </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="section-title">Salary Range</h3>
       
       <div class="form-row">
         <div class="form-group">
@@ -39,10 +32,6 @@
           <%= text_field_tag :expected_ctc_max, nil, class: "form-control", placeholder: "Max Expected CTC" %>
         </div>
       </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="section-title">Experience</h3>
       
       <div class="form-row">
         <div class="form-group">
@@ -64,10 +53,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="section-title">Additional Filters</h3>
       
       <div class="form-row">
         <div class="form-group">
@@ -86,10 +71,6 @@
           <%= text_field_tag :preferred_location, nil, class: "form-control", placeholder: "e.g., Bangalore, Mumbai" %>
         </div>
       </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="section-title">Date Range</h3>
       
       <div class="form-row">
         <div class="form-group">
@@ -101,14 +82,10 @@
           <%= text_field_tag :uploaded_at_end, nil, class: "form-control datepicker", placeholder: "Select end date" %>
         </div>
       </div>
-    </div>
-
-    <div class="form-section">
-      <h3 class="section-title">Exclude Keywords</h3>
       
       <div class="form-group">
         <label for="exclude_keywords">Keywords to Exclude</label>
-        <%= text_area_tag :exclude_keywords, nil, class: "form-control", placeholder: "Enter keywords separated by commas (e.g., java, python, react)", rows: 3 %>
+        <%= text_field_tag :exclude_keywords, nil, class: "form-control", placeholder: "Enter keywords separated by commas (e.g., java, python, react)" %>
       </div>
     </div>
 
