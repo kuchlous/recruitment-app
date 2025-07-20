@@ -79,6 +79,37 @@
           <%= select_tag "requirement", options_for_select(Requirement.get_all_requirement_array_for_select), class: "form-control" %>
         </div>
       </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="preferred_location">Preferred Location</label>
+          <%= text_field_tag :preferred_location, nil, class: "form-control", placeholder: "e.g., Bangalore, Mumbai" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Date Range</h3>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="uploaded_at_start">Uploaded From</label>
+          <%= text_field_tag :uploaded_at_start, nil, class: "form-control datepicker", placeholder: "Select start date" %>
+        </div>
+        <div class="form-group">
+          <label for="uploaded_at_end">Uploaded To</label>
+          <%= text_field_tag :uploaded_at_end, nil, class: "form-control datepicker", placeholder: "Select end date" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="section-title">Exclude Keywords</h3>
+      
+      <div class="form-group">
+        <label for="exclude_keywords">Keywords to Exclude</label>
+        <%= text_area_tag :exclude_keywords, nil, class: "form-control", placeholder: "Enter keywords separated by commas (e.g., java, python, react)", rows: 3 %>
+      </div>
     </div>
 
     <div class="form-actions">
