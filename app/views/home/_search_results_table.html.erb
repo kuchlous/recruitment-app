@@ -1,0 +1,46 @@
+<% if @results.size > 0 %>
+  <div id="search_results_summary">
+    <div id="searched_results_description">
+      <% unless @search_text.nil? %>
+        Search parameters - <%= @search_text %>
+      <% end %>
+    </div>
+    <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
+    
+    <%# Hidden fields for form preservation - to be added by individual views %>
+    <%= yield :hidden_fields if content_for?(:hidden_fields) %>
+    
+    <table>
+      <tr>
+        <th class="search_resume_name">      Name                </th>
+        <th class="search_resume_qual">      Qualification       </th>
+        <th class="search_resume_skills">    Skills/Summaries    </th>
+        <th class="search_resume_status">    Overall Status      </th>
+        <th class="search_resume_activity">  Recent Activity On  </th>
+      </tr>
+      <% @results.each do |result| %>
+        <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
+          <td class="search_resume_name" title="<%= result['name'] %>">
+            <div class="search_resume_name_div">
+              <%= link_to truncate(result['name'], length: 20), url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => result['uniqid']) %>
+            </div>
+          </td>
+          <td class="search_resume_qual" title="<%= result['qualification'] %>">
+            <%= result['qualification'].to_s[0..20] %>
+          </td>
+          <td class="search_resume_skills" title="<%= result['summary'] %>">
+            <%= result['summary'].to_s[0..20] %>
+          </td>
+          <td class="search_resume_status">
+            <%= result['overall_status'] %>
+          </td>
+          <td class="search_resume_activity">
+            <%= print_date(Date.parse(result['updated_at'])) %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
+<% else %>
+  <span class="span_with_13_with_padding_0"> Sorry there are no results found corresponding to your search parameters. </span>
+<% end %> 

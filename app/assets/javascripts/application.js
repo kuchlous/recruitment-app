@@ -17,9 +17,9 @@ function fillInputBoxWithContents()
   element.autocomplete({source: empNames["listedEmployees"]});
 }
 
-// Ensure jQuery is available as $ for our main code
-jQuery(document).ready(function($) {
-  console.log('jQuery noConflict ready fired');
+// Function to initialize all components
+function initializeComponents() {
+  console.log('Initializing components...');
   
   $('.hidden_by_default').hide();
   
@@ -74,6 +74,18 @@ jQuery(document).ready(function($) {
       label.find('span').text('Choose File');
     }
   });
+}
+
+// Ensure jQuery is available as $ for our main code
+jQuery(document).ready(function($) {
+  console.log('jQuery noConflict ready fired');
+  initializeComponents();
+});
+
+// Handle Turbolinks page loads
+$(document).on('turbolinks:load', function() {
+  console.log('Turbolinks load fired');
+  initializeComponents();
 });
 
 function fillRequirementSearchBoxWithContents() {
