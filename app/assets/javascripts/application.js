@@ -55,4 +55,35 @@ $(document).ready(() => {
     showOn: "focus",
     buttonText: "Select date"
   });
+
+  // Initialize location autocomplete for both location and preferred location fields
+  $('.location-autocomplete').autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: $(this.element).data('autocomplete-url'),
+        dataType: 'json',
+        data: {
+          query: request.term
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    },
+    minLength: 1,
+    delay: 300,
+    autoFocus: true,
+    position: { my: "left top", at: "left bottom", collision: "flip" }
+  });
+
+  // File upload label update
+  $('.file-input').on('change', function() {
+    var fileName = $(this).val().split('\\').pop();
+    var label = $(this).siblings('.file-input-label');
+    if (fileName) {
+      label.find('span').text(fileName);
+    } else {
+      label.find('span').text('Choose File');
+    }
+  });
 });

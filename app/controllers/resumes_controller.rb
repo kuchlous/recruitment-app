@@ -128,6 +128,51 @@ class ResumesController < ApplicationController
     render json: resumes.map{|r| r.name + " - " + r.phone + " - " + r.email + " - " + r.id.to_s}
   end
 
+  def location_autocomplete
+    query = params[:query]
+    
+    if query.present?
+      # Search in both location and preferred_location fields using word start matching
+      search_results = Resume.search(
+        query,
+        fields: [:location, :preferred_location],
+        match: :word_start,
+        load: false,
+        limit: 1000
+      )
+    else
+      # If no query, get all unique locations
+      location_results = Resume.search(
+        where: { location: { not: nil } },
+        load: false,
+        limit: 100
+      )
+      
+      preferred_location_results = Resume.search(
+        where: { preferred_location: { not: nil } },
+        load: false,
+        limit: 100
+      )
+      
+      search_results = (location_results + preferred_location_results).uniq
+    end
+    
+    # Extract and deduplicate locations from both fields
+    locations = []
+    search_results.each do |result|
+      # Handle both hash and object access patterns
+      location = result.is_a?(Hash) ? result['location'] : result.location
+      preferred_location = result.is_a?(Hash) ? result['preferred_location'] : result.preferred_location
+      
+      locations << location if location.present?
+      locations << preferred_location if preferred_location.present?
+    end
+    
+    locations = locations.uniq.sort.first(10)
+    
+    render json: locations.map { |loc| { value: loc, label: loc } }
+  end
+
   def edit
     @resume = Resume.find(params[:id])
     @employees    = get_all_employees
