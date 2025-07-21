@@ -177,6 +177,8 @@ select.form-control.multi-select {
   height: auto;
   min-height: 120px;
   max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Fix for dropdown list display */
@@ -209,10 +211,26 @@ select.form-control::-ms-expand {
   overflow: visible;
 }
 
+/* Ensure multi-select container doesn't overflow */
+.form-group .multi-select {
+  position: relative;
+  z-index: 10;
+}
+
 /* Additional dropdown fixes */
 select.form-control {
   max-height: none;
   overflow: visible;
+}
+
+/* Multi-select specific overflow handling */
+select.form-control.multi-select {
+  position: relative;
+  z-index: 10;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 /* Ensure dropdown options are fully visible */
