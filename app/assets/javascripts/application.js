@@ -46,4 +46,13 @@ function show_column_for_date_when_resume_moved_to_joining()
   $('.hidden_by_default').toggle();
 }
 
-$(document).ready(() => { $('.hidden_by_default').hide() });
+$(document).ready(() => { 
+  $('.hidden_by_default').hide();
+  
+  // Initialize datepicker for all elements with datepicker class
+  $('.datepicker').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "focus",
+    buttonText: "Select date"
+  });
+});
