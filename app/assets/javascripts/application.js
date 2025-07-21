@@ -17,37 +17,17 @@ function fillInputBoxWithContents()
   element.autocomplete({source: empNames["listedEmployees"]});
 }
 
-function fillRequirementSearchBoxWithContents() {
-  $jq = jQuery.noConflict();
-  search_emp = jQuery("#search");
-  search_emp.autocomplete({source: empNames["listedEmployees"]});
-} 
-
-
-function showEventDetails(event)
-{
-  $jq = jQuery.noConflict();
-  $jq('#event_desc').html(event.description);
-  $jq('#desc_dialog').dialog({
-      title: event.title,
-//      modal: true,
-      width: 400,
-      close: function(event, ui) { $jq('#desc_dialog').dialog('destroy') }
-  });
-}
-
-function redirectToResumeDetails(path, event)
-{
-  window.open(path + "/resumes/show/" + event.resume_uniqid);
-}
-
-function show_column_for_date_when_resume_moved_to_joining()
-{
-  $('.hidden_by_default').toggle();
-}
-
-$(document).ready(() => { 
+// Ensure jQuery is available as $ for our main code
+jQuery(document).ready(function($) {
+  console.log('jQuery noConflict ready fired');
+  
   $('.hidden_by_default').hide();
+  
+  // Debug: Check if jQuery is loaded
+  console.log('jQuery version:', $.fn.jquery);
+  
+  // Debug: Check if jQuery UI is loaded
+  console.log('jQuery UI datepicker available:', typeof $.fn.datepicker);
   
   // Initialize datepicker for all elements with datepicker class
   $('.datepicker').datepicker({
@@ -55,7 +35,15 @@ $(document).ready(() => {
     showOn: "focus",
     buttonText: "Select date"
   });
-
+  
+  // Debug: Log datepicker elements
+  console.log('Datepicker elements found:', $('.datepicker').length);
+  
+  // Debug: Test datepicker functionality
+  $('.datepicker').on('focus', function() {
+    console.log('Datepicker focused:', $(this).attr('id') || $(this).attr('name'));
+  });
+  
   // Initialize location autocomplete for both location and preferred location fields
   $('.location-autocomplete').autocomplete({
     source: function(request, response) {
@@ -87,3 +75,36 @@ $(document).ready(() => {
     }
   });
 });
+
+function fillRequirementSearchBoxWithContents() {
+  $jq = jQuery.noConflict();
+  search_emp = jQuery("#search");
+  search_emp.autocomplete({source: empNames["listedEmployees"]});
+} 
+
+
+function showEventDetails(event)
+{
+  $jq = jQuery.noConflict();
+  $jq('#event_desc').html(event.description);
+  $jq('#desc_dialog').dialog({
+      title: event.title,
+//      modal: true,
+      width: 400,
+      close: function(event, ui) { $jq('#desc_dialog').dialog('destroy') }
+  });
+}
+
+function redirectToResumeDetails(path, event)
+{
+  window.open(path + "/resumes/show/" + event.resume_uniqid);
+}
+
+function show_column_for_date_when_resume_moved_to_joining()
+{
+  $('.hidden_by_default').toggle();
+}
+
+console.log('Application.js loaded');
+
+
