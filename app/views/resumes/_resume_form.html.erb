@@ -1,174 +1,203 @@
-<br /> <br />
-<%= form_for(@resume, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => (display_var == 1 ? "update" : "create")), :html => {:method => (display_var == 1 ? "put" : "post"), :multipart => true }) do |f| %>
-  <% if @resume.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@resume.errors.count, "error") %> prohibited this resume from being saved:</h2>
+<div class="form-container">
+  <div class="form-header">
+    <h2><%= display_var == 1 ? "Edit Resume" : "New Resume" %></h2>
+  </div>
 
-      <ul>
-      <% @resume.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+  <%= form_for(@resume, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => (display_var == 1 ? "update" : "create")), :html => {:method => (display_var == 1 ? "put" : "post"), :multipart => true, class: "modern-form"}) do |f| %>
+    
+    <% if @resume.errors.any? %>
+      <div class="error-messages">
+        <h3><%= pluralize(@resume.errors.count, "error") %> prohibited this resume from being saved:</h3>
+        <ul>
+        <% @resume.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-section">
+      <div class="form-group">
+        <label for="resume_upload_resume">
+          <% if display_var == 1 %>Update <% end %>Resume File
+        </label>
+        <%= f.file_field "upload_resume", class: "form-control" %>
+      </div>
+      
+      <div class="form-group">
+        <button type="button" onclick="parseResume(event)" class="btn btn-secondary">Autofill/Parse Resume</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="resume_name">Name *</label>
+          <%= f.text_field :name, class: "form-control", placeholder: "Enter name" %>
+        </div>
+        <div class="form-group">
+          <label for="resume_email">Email *</label>
+          <%= f.text_field :email, class: "form-control", placeholder: "Enter email" %>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="resume_phone">Phone Number</label>
+          <%= f.text_field :phone, class: "form-control", placeholder: "Enter phone" %>
+        </div>
+        <div class="form-group">
+          <label for="resume_skype_id">Skype ID</label>
+          <%= f.text_field :skype_id, class: "form-control", placeholder: "Enter Skype ID" %>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="resume_git_id">Git ID</label>
+          <%= f.text_field :git_id, class: "form-control", placeholder: "Enter Git ID" %>
+        </div>
+        <div class="form-group">
+          <label for="resume_linkedin_id">LinkedIn ID</label>
+          <%= f.text_field :linkedin_id, class: "form-control", placeholder: "Enter LinkedIn ID" %>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="resume_skills">Skills</label>
+        <%= f.text_field :skills, class: "form-control", placeholder: "Enter skills" %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="resume_current_company">Current Company</label>
+          <%= f.text_field :current_company, class: "form-control", placeholder: "Enter current company" %>
+        </div>
+        <div class="form-group">
+          <label for="resume_location">Location</label>
+          <%= f.text_field :location, class: "form-control location-autocomplete", placeholder: "Enter location", data: { autocomplete_url: url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "location_autocomplete") } %>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="resume_preferred_location">Preferred Location</label>
+          <%= f.text_field :preferred_location, class: "form-control location-autocomplete", placeholder: "Enter preferred location", data: { autocomplete_url: url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "location_autocomplete") } %>
+        </div>
+        <div class="form-group">
+          <label for="resume_ta_owner_id">TA Owner</label>
+          <%= collection_select(:resume, :ta_owner_id, @ta_employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Experience</label>
+        <div class="experience-inputs">
+          <% year, month = get_year_month_of_experience(@resume) %>
+          <%= select_tag "experience_years", options_for_select(get_experience_years, year.to_i), class: "form-control experience-select" %>
+          <span class="experience-label">Years</span>
+          <%= select_tag "experience_months", options_for_select(get_experience_months, month.to_i), class: "form-control experience-select" %>
+          <span class="experience-label">Months</span>
+        </div>
+      </div>
+      
+      <% if is_HR_ADMIN? %>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="resume_ctc">Current CTC (Lakhs)</label>
+            <%= f.text_field :ctc, class: "form-control", placeholder: "Enter current CTC" %>
+          </div>
+          <div class="form-group">
+            <label for="resume_expected_ctc">Expected CTC (Lakhs)</label>
+            <%= f.text_field :expected_ctc, class: "form-control", placeholder: "Enter expected CTC" %>
+          </div>
+        </div>
       <% end %>
-      </ul>
+      
+      <div class="form-group">
+        <label for="resume_notice">Notice Period (Days)</label>
+        <%= f.text_field :notice, class: "form-control", placeholder: "Enter notice period in days" %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-group">
+        <label for="resume_qualification">Qualification</label>
+        <%= f.text_area :qualification, class: "form-control", rows: 3, placeholder: "Enter qualification details" %>
+      </div>
+      
+      <div class="form-group">
+        <label for="resume_summary">Summary</label>
+        <%= f.text_area :summary, class: "form-control", rows: 4, placeholder: "Enter resume summary" %>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-group">
+        <label for="requirement_name">Requirements</label>
+        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), multiple: true, class: "form-control multi-select", size: 4 %>
+        <small class="form-text text-muted">Hold control key for multiple selections</small>
+      </div>
+      
+      <% if display_var == 1 %>
+        <div class="current-selection">
+          <strong>Current selection:</strong><br>
+          <% @resume.req_matches.each do |match| %>
+            &nbsp; &middot; <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %>(<%= match.requirement.group.name %>)<br>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-section">
+      <div class="form-group">
+        <label>Referral Type</label>
+        <div class="radio-group">
+          <%= f.radio_button :referral_type, "EMPLOYEE", onclick: "showReferrals([#{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], 0);", class: "form-check-input" %>
+          <%= f.label(:referral_type_employee, "Employee", class: "form-check-label") %>
+          
+          <%= f.radio_button :referral_type, "PORTAL", onclick: "showReferrals([#{all_record_ids("Portal").join(", ")}], ['#{all_record_names("Portal").join("', '")}'], 1);", class: "form-check-input" %>
+          <%= f.label(:referral_type_portal, "Portal", class: "form-check-label") %>
+          
+          <%= f.radio_button :referral_type, "AGENCY", onclick: "showReferrals([#{all_record_ids("Agency").join(", ")}], ['#{all_record_names("Agency").join("', '")}'], 2);", class: "form-check-input" %>
+          <%= f.label(:referral_type_agency, "Agency", class: "form-check-label") %>
+          
+          <%= f.radio_button :referral_type, "DIRECT", onclick: "hideReferrals();", class: "form-check-input" %>
+          <%= f.label(:referral_type_direct, "Direct", class: "form-check-label") %>
+        </div>
+      </div>
+      
+      <% if display_var == 1 %>
+        <div class="current-referral">
+          <strong>Current Referral:</strong>
+          <% if @resume.referral_type == "DIRECT" %>
+            (Direct)
+          <% else %>
+            <% if @resume.referral_id != 0 %>
+              <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %> (<%= @resume.referral_type.titleize %>)
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if display_var == 1 %>
+      <div class="form-section">
+        <div class="form-group">
+          <label for="resumes_comments">Add Resume Comments</label>
+          <%= text_area "resumes", "comments", value: "", class: "form-control", rows: 3, placeholder: "Enter comments" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="form-actions">
+      <%= f.submit button_tag, class: "btn btn-primary" %>
+      <%= link_to "Cancel", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes"), class: "btn btn-secondary" %>
     </div>
   <% end %>
-  <table id="resume_form_table">
-    <tr>
-      <td> Name </td>
-      <td> <%= f.text_field :name, :placeholder => 'Enter name' %> </td>
-    </tr>
-    <tr>
-      <td> Email </td>
-      <td> <%= f.text_field :email, :placeholder => 'Enter email' %> </td>
-    </tr>
-    <tr>
-      <td> Phone Number </td>
-      <td> <%= f.text_field :phone, :placeholder => 'Enter phone' %> </td>
-    </tr>
-    <tr>
-      <td> Skype id </td>
-      <td> <%= f.text_field :skype_id %> </td>
-    </tr>
-    <tr>
-      <td> Git id </td>
-      <td> <%= f.text_field :git_id %> </td>
-    </tr>
-    <tr>
-      <td> Linkedin id </td>
-      <td> <%= f.text_field :linkedin_id %> </td>
-    </tr>
-    <tr>
-      <td> Skills </td>
-      <td> <%= f.text_field :skills, :placeholder => 'Enter skills' %> </td>
-    </tr>
-    <% if is_HR_ADMIN? %>
-      <tr>
-        <td> Current CTC </td>
-        <td>
-          <%= f.text_field :ctc %> <br />
-          <span class="span_with_grey_color"> Enter in lakhs </span>
-        </td>
-      </tr>
-      <tr>
-        <td> Expected CTC </td>
-        <td>
-          <%= f.text_field :expected_ctc %> <br />
-          <span class="span_with_grey_color"> Enter in lakhs </span>
-        </td>
-      </tr>
-    <% end %>
-    <tr>
-      <td> Notice Period </td>
-      <td>
-        <%= f.text_field :notice %> <br />
-        <span class="span_with_grey_color"> Enter in days </span>
-      </td>
-    </tr>
-    <tr>
-      <td> Experience </td>
-      <td>
-        <% year, month = get_year_month_of_experience(@resume) %>
-        <%= select_tag "experience_years",   options_for_select(get_experience_years,  year.to_i),  :class => "two_tds_same_line" %> Yrs
-        <%= select_tag "experience_months",  options_for_select(get_experience_months, month.to_i), :class => "two_tds_same_line" %> Months
-      </td>
-    </tr>
-    <tr>
-      <td> Current Company </td>
-      <td> <%= f.text_field :current_company %> </td>
-    </tr>
-    <tr>
-      <td> Location of candidate   </td>
-      <td> <%= f.text_field :location %> </td>
-    </tr>
-    <tr>
-      <td> Preferred Location of candidate   </td>
-      <td> <%= f.text_field :preferred_location %> </td>
-    </tr>
-    <tr>
-      <td> Candidate's Qualification </td>
-      <td> <%= f.text_area :qualification %> </td>
-    </tr>
-    <tr>
-      <td> TA Owner </td>
-      <td> <%= collection_select(:resume, :ta_owner_id, @ta_employees, :id, :name, { :prompt => "Please Select" }) %> </td>
-    </tr>
-    <tr>
-      <td> Summary about this resume </td>
-      <td> <%= f.text_area :summary %> </td>
-    </tr>
-    <tr>
-      <td>
-        <% if display_var == 1 %> Update <% end %>
-        Resume path
-      </td>
-      <td> <%= f.file_field("upload_resume", :size => "31")%> </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>
-        <button type="button" onclick="parseResume(event)">Autofill/Parse Resume</button>    
-      </td>
-    </tr>
-    <tr>
-      <td> Requirement name </td>
-      <td class="radio_buttons_one_liner ddl_with_multiples">
-        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), :multiple => true %>
-      </td>
-    </tr>
-    <tr id="swap_ddl_with_multiples">
-      <td colspan="2">
-        <% if display_var == 1 %>
-          <b> Current selection: <br />
-          <% @resume.req_matches.each do |match| %>
-            &nbsp; &middot; <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %>(<%= match.requirement.group.name %>) <br /> </b>
-          <% end %>
-        <% end %>
-      </td>
-    </tr>
-    <tr>
-      <td> &nbsp; </td>
-      <td> <span class="span_with_grey_color"> (Hold control key for multiple selections) </span> </td>
-    </tr>
-    <tr>
-      <td> Referral of resume </td>
-      <td class="radio_buttons_one_liner">
-        <%= f.radio_button :referral_type, "EMPLOYEE", :onclick => "showReferrals([#{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], 0);" %> <%= f.label(:referral_type_employee, "Employee") %>
-        <%= f.radio_button :referral_type, "PORTAL",   :onclick => "showReferrals([#{all_record_ids("Portal").join(", ")}], ['#{all_record_names("Portal").join("', '")}'], 1);" %> <%= f.label(:referral_type_portal, "Portal") %>
-        <%= f.radio_button :referral_type, "AGENCY",   :onclick => "showReferrals([#{all_record_ids("Agency").join(", ")}], ['#{all_record_names("Agency").join("', '")}'], 2);" %> <%= f.label(:referral_type_agency, "Agency") %>
-        <%= f.radio_button :referral_type, "DIRECT",   :onclick => "hideReferrals();" %> <%= f.label(:referral_type_direct, "Direct") %>
-      </td>
-    </tr>
-    <tr id="swap_td_for_referrals">
-      <td>
-        <% if display_var == 1 %>
-          <b> Current Referral:
-          &nbsp;
-          <% if @resume.referral_type == "DIRECT" %>
-            ( Direct )
-          <% else %>
-            <% if @resume.referral_id != 0%>
-              <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %> (<%= @resume.referral_type.titleize %>) <br /> </b>
-	          <% end %>
-          <% end %>
-        <% end %>
-      </td>
-      <td>
-        &nbsp;
-      </td>
-    </tr>
-    <% if display_var == 1 %>
-      <tr>
-        <td> Add resume comments </td>
-        <td>
-          <%= text_area "resumes", "comments", :value => "" %> <br />
-        </td>
-      </tr>
-    <% end %>
-    <tr>
-      <td> &nbsp; </td>
-      <td class="add_resume_submit_button"> <%= f.submit "#{button_tag}" %> </td>
-    </tr>
-  </table>
-<% end %>
+</div>
 
 <br /> <br />
 <% url = "https://" + APP_CONFIG['host_name'] + "/extract_from_resume" %>

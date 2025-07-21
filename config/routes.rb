@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   # resources :resumes
   get 'resumes/phone_autocomplete', to: 'resumes#phone_autocomplete', as: :resumes_phone_autocomplete
   get 'resumes/email_autocomplete', to: 'resumes#email_autocomplete', as: :resumes_email_autocomplete
+  get 'resumes/location_autocomplete', to: 'resumes#location_autocomplete', as: :resumes_location_autocomplete
   get 'resumes/get_summary_by_id', to: 'resumes#get_summary_by_id', as: :resumes_get_summary_by_id
 
   get 'employees/autocomplete', to: 'employees#employees_autocomplete', as: :employees_autocomplete

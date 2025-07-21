@@ -160,6 +160,25 @@ select.form-control option:first-child {
   font-style: italic;
 }
 
+/* Multi-select specific styling to ensure consistent option colors */
+select.form-control.multi-select option {
+  color: #333;
+  font-style: normal;
+  background: #fff;
+}
+
+select.form-control.multi-select option:first-child {
+  color: #333;
+  font-style: normal;
+}
+
+/* Fix Chrome multi-select sizing */
+select.form-control.multi-select {
+  height: auto;
+  min-height: 120px;
+  max-height: 200px;
+}
+
 /* Fix for dropdown list display */
 select.form-control:focus {
   outline: none;
@@ -413,4 +432,58 @@ select.form-control option {
   margin-top: 4px;
   font-size: 12px;
   color: #28a745;
+}
+
+/* jQuery UI Autocomplete Styling */
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  font-size: 14px;
+  width: auto !important;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.ui-autocomplete .ui-menu-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ui-autocomplete .ui-menu-item:last-child {
+  border-bottom: none;
+}
+
+.ui-autocomplete .ui-menu-item:hover,
+.ui-autocomplete .ui-menu-item.ui-state-focus {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.ui-autocomplete .ui-menu-item div {
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+/* Remove underline from selected autocomplete options */
+.ui-autocomplete .ui-menu-item a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.ui-autocomplete .ui-menu-item a:hover {
+  text-decoration: none;
+}
+
+.ui-autocomplete .ui-menu-item a:focus {
+  text-decoration: none;
 }
