@@ -21,11 +21,16 @@
         <label for="resume_upload_resume">
           <% if display_var == 1 %>Update <% end %>Resume File
         </label>
-        <%= f.file_field "upload_resume", class: "form-control" %>
-      </div>
-      
-      <div class="form-group">
-        <button type="button" onclick="parseResume(event)" class="btn btn-secondary">Autofill/Parse Resume</button>
+        <div class="file-upload-container">
+          <div class="file-input-wrapper">
+            <%= f.file_field "upload_resume", class: "form-control file-input", id: "resume_upload_resume" %>
+            <label for="resume_upload_resume" class="file-input-label">
+              <i class="upload-icon">📄</i>
+              <span>Choose File</span>
+            </label>
+          </div>
+          <button type="button" onclick="parseResume(event)" class="btn btn-secondary parse-btn">Autofill/Parse Resume</button>
+        </div>
       </div>
     </div>
 

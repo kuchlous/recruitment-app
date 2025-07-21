@@ -75,4 +75,15 @@ $(document).ready(() => {
     autoFocus: true,
     position: { my: "left top", at: "left bottom", collision: "flip" }
   });
+
+  // File upload label update
+  $('.file-input').on('change', function() {
+    var fileName = $(this).val().split('\\').pop();
+    var label = $(this).siblings('.file-input-label');
+    if (fileName) {
+      label.find('span').text(fileName);
+    } else {
+      label.find('span').text('Choose File');
+    }
+  });
 });
