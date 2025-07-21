@@ -652,6 +652,7 @@ private
   def create_search_data(txt)
 
     self.resume_text_content = txt
+    self.save
   end
 
   def resume_search_content
