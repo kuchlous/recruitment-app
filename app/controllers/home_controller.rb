@@ -55,24 +55,24 @@ class HomeController < ApplicationController
 
     # Handle empty search text - return all results
     if @search_text.blank?
-      @results = Resume.search("*", 
-                              page: params[:page], 
-                              per_page: get_per_page)
+      redirect_to :back
+      return
     else
-      @results = Resume.search(@search_text, 
+      @results = Resume.search(@search_text,
                               fields: [
-                                :name, 
-                                :email, 
-                                :phone, 
-                                :qualification, 
-                                :location, 
-                                :summary, 
-                                :skills, 
-                                :resume_text_content, 
-                                :overall_status, 
-                                :related_requirements
-                              ],
-                              page: params[:page], 
+                                'name^4', 
+                                'email^4', 
+                                'phone^4', 
+                                'qualification', 
+                                'location^2', 
+                                'preferred_location^2', 
+                                'summary', 
+                                'skills^2', 
+                                'resume_search_content', 
+                                'overall_status^2', 
+                                :related_requirements],
+                              match: :word_start,
+                              page: params[:page],
                               per_page: get_per_page)
     end
   end
@@ -106,6 +106,13 @@ class HomeController < ApplicationController
     @experience_months_max = 1000 if @experience_months_max < @experience_months_min || @experience_months_max == 0
     @requirement = params[:requirement]
     @requirement = nil if @requirement == '0'
+    
+    # New parameters
+    @preferred_location = params[:preferred_location]
+    @uploaded_at_start = params[:uploaded_at_start].present? ? Date.parse(params[:uploaded_at_start]) : nil
+    @uploaded_at_end = params[:uploaded_at_end].present? ? Date.parse(params[:uploaded_at_end]) : nil
+    @exclude_keywords = params[:exclude_keywords]
+    
     conditions = {}
     conditions[:related_requirements] = @requirement if @requirement
     conditions[:overall_status] = @status if @status
@@ -118,16 +125,42 @@ class HomeController < ApplicationController
     where_conditions[:exp_in_months] = {gte: @experience_months_min, lte: @experience_months_max} if @experience_months_min > 0 || @experience_months_max < 1000
     where_conditions[:overall_status] = @status if @status
     where_conditions[:related_requirements] = @requirement if @requirement
+    where_conditions[:preferred_location] = @preferred_location.downcase if @preferred_location.present?
+    where_conditions[:created_at] = {gte: @uploaded_at_start, lte: @uploaded_at_end} if @uploaded_at_start || @uploaded_at_end
 
+    # Handle exclude keywords and preferred location
+    search_query = @search_text
+    if @exclude_keywords.present?
+      exclude_terms = @exclude_keywords.split(',').map(&:strip).reject(&:blank?)
+      if exclude_terms.any?
+        # Add exclude terms to search query
+        exclude_query = exclude_terms.map { |term| "-#{term}" }.join(' ')
+        search_query = search_query.present? ? "#{search_query} #{exclude_query}" : exclude_query
+      end
+    end
+    
+    logger.info("where_conditions = " + where_conditions.to_s)
     # Handle empty search text with filters
-    if @search_text.blank?
+    if search_query.blank?
       @results = Resume.search("*", 
                               where: where_conditions,
                               page: params[:page], 
                               per_page: get_per_page)
     else
-      @results = Resume.search(@search_text, 
-                              fields: [:name, :email, :phone, :qualification, :location, :summary, :skills, :resume_text_content, :overall_status, :related_requirements],
+      @results = Resume.search(search_query, 
+                              fields: [
+                                'name^4', 
+                                'email^4', 
+                                'phone^4', 
+                                'qualification', 
+                                'location^2', 
+                                'preferred_location^2', 
+                                :summary, 
+                                'skills^2', 
+                                'resume_search_content', 
+                                'overall_status^2', 
+                                :related_requirements],
+                              match: :word_start,
                               where: where_conditions,
                               page: params[:page], 
                               per_page: get_per_page)

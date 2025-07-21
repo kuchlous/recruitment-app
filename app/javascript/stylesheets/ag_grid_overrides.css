@@ -1,0 +1,31 @@
+/* Custom styles to ensure AG Grid box-sizing is respected */
+[class^="ag-"],
+[class^="ag-"]:focus,
+[class^="ag-"]:after,
+[class^="ag-"]:before {
+    box-sizing: border-box !important; /* Added !important */
+}
+
+/* Custom styles for AG Grid row highlighting */
+.ag-row-hot {
+  background-color: #fecdcf !important;
+}
+
+.ag-theme-alpine .ag-simple-filter-body-wrapper {
+    background-color: white;
+}
+
+/* Styles for the filter icon when a filter is active */
+.ag-header-icon > .ag-icon-filter {
+  color: #FF5733; 
+  font-weight: bold;
+}
+
+.ag-cell-value > span > a {
+  color: #1a73e8 !important; 
+}
+
+.ag-cell-value > span > a:hover {
+  color: #0d47a1 !important; 
+  text-decoration: underline !important;
+}

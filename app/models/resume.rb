@@ -2,10 +2,10 @@ class Resume < ActiveRecord::Base
   require 'rubygems'
   require 'sanitize'
 
-  searchkick word_start: [:name, :email, :phone, :qualification, :location, :summary, :resume_text_content, :skills, :current_company],
-            suggest: [:name, :email, :phone, :qualification, :location, :summary],
-            filterable: [:id, :ctc, :expected_ctc, :exp_in_months, :overall_status, :related_requirements, :notice, :status, :uniqid],
-            searchable: [:name, :email, :phone, :qualification, :location, :summary, :resume_text_content, :overall_status, :related_requirements, :skills, :current_company],
+  searchkick word_start: [:name, :email, :phone, :qualification, :location, :preferred_location, :resume_search_content, :skills, :current_company],
+            suggest: [:name, :email, :phone, :qualification, :location, :preferred_location],
+            filterable: [:id, :ctc, :expected_ctc, :exp_in_months, :overall_status, :related_requirements, :notice, :status, :uniqid, :preferred_location, :location],
+            searchable: [:name, :email, :phone, :qualification, :location, :preferred_location, :summary, :resume_search_content, :overall_status, :related_requirements, :skills, :current_company],
             mappings: {
               properties: {
                 id: { type: 'integer' },
@@ -19,6 +19,7 @@ class Resume < ActiveRecord::Base
             },
             merge_mappings: true
   
+  before_save :normalize_searchable_fields
   belongs_to               :uniqid
   belongs_to               :employee
   belongs_to               :ta_owner,
@@ -72,6 +73,10 @@ class Resume < ActiveRecord::Base
   $upload_dir       = APP_CONFIG['upload_directory']
   $tmp_directory    = APP_CONFIG['temp_directory']
   $tmp_resumes_directory  = $tmp_directory + '/' + APP_CONFIG['temp_resumes']
+
+  def normalize_searchable_fields
+    self.preferred_location = self.preferred_location&.downcase
+  end
 
   def rejected?
     return "REJECTED" == self.status if self.status != ""
@@ -607,8 +612,9 @@ class Resume < ActiveRecord::Base
       phone: phone,
       qualification: qualification,
       location: location,
+      preferred_location: preferred_location,
       summary: summary,
-      resume_text_content: resume_text_content, 
+      resume_search_content: self.resume_search_content, 
       overall_status: overall_status,
       related_requirements: related_requirements,
       ctc: ctc&.to_f || 0.0,
@@ -623,7 +629,6 @@ class Resume < ActiveRecord::Base
       likely_to_join: likely_to_join,
       skype_id: skype_id,
       practice_head_rating: practice_head_rating,
-      preferred_location: preferred_location,
       git_id: git_id,
       linkedin_id: linkedin_id,
       uniqid: uniqid.name,
@@ -647,17 +652,33 @@ private
   def create_search_data(txt)
 
     self.resume_text_content = txt
+  end
+
+  def resume_search_content
+    search_content = self.resume_text_content
+    search_content << " name: " + self.name.downcase if self.name
+    search_content << " preferred_location: " + self.preferred_location.downcase if self.preferred_location
+    search_content << " location: " + self.location.downcase if self.location
+    search_content << " skills: " + self.skills.downcase if self.skills
+    search_content << " current_company: " + self.current_company.downcase if self.current_company
+    search_content << " overall_status: " + self.overall_status.downcase if self.overall_status
+    search_content << " related_requirements: " + self.related_requirements.downcase if self.related_requirements
+    search_content << " status: " + self.status.downcase if self.status
+    search_content << " qualification: " + self.qualification.downcase if self.qualification
+    search_content << " email: " + self.email.downcase if self.email
+    search_content << " phone: " + self.phone.downcase if self.phone
+    search_content << " summary: " + self.summary.downcase if self.summary
 
     self.forwards.each do |fwd|
-      self.resume_text_content << " " + fwd.status
+      search_content << " " + fwd.status
     end
     self.req_matches.each do |match|
-      self.resume_text_content << " " + match.status
+      search_content << " " + match.status
     end
     self.comments.each do |comment|
-      self.resume_text_content << " " + comment.comment
+      search_content << " " + comment.comment
     end
-    self.save
+    search_content
   end
 
   def find_agency_by_name(iname)

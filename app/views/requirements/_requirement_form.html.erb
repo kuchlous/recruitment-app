@@ -1,7 +1,6 @@
 <div class="form-container">
   <div class="form-header">
     <h2><%= button_tag == "Update" ? "Edit Requirement" : "New Requirement" %></h2>
-    <p><%= button_tag == "Update" ? "Update requirement details" : "Create a new requirement" %></p>
   </div>
 
   <%= form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post"), class: "modern-form"}) do |f|%>
@@ -34,8 +33,6 @@
     <% end %>
 
     <div class="form-section">
-      <h3 class="section-title">Basic Information</h3>
-      
       <div class="form-row">
         <div class="form-group">
           <label for="requirement_name">Requirement Name *</label>
@@ -70,8 +67,6 @@
     </div>
 
     <div class="form-section">
-      <h3 class="section-title">Description & Skills</h3>
-      
       <div class="form-group">
         <label for="requirement_skill">Requirement Skills</label>
         <%= f.text_area :skill, class: "form-control", rows: 3, placeholder: "Enter required skills" %>
@@ -89,8 +84,6 @@
     </div>
 
     <div class="form-section">
-      <h3 class="section-title">Timeline</h3>
-      
       <div class="form-row">
         <div class="form-group">
           <label for="requirement_sdate">Start Date</label>
@@ -104,8 +97,6 @@
     </div>
 
     <div class="form-section">
-      <h3 class="section-title">Team Assignment</h3>
-      
       <div class="form-row">
         <div class="form-group">
           <label for="requirement_employee_id">Manager *</label>
@@ -135,8 +126,6 @@
     </div>
 
     <div class="form-section">
-      <h3 class="section-title">Status & Type</h3>
-      
       <div class="form-row">
         <div class="form-group">
           <label for="requirement_status">Requirement Status</label>
@@ -155,13 +144,3 @@
     </div>
   <% end %>
 </div>
-
-<script>
-  $(function() {
-    $('.datepicker').datepicker({
-      dateFormat: 'dd-mm-yy',
-      showOn: "focus",
-      buttonText: "Select date"
-    });
-  });
-</script>

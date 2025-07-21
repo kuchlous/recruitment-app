@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   match 'requirements/all_reqs', to: 'requirements#all_reqs'                   , via: :get
   match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
+  match 'requirements_new', to: 'requirements#index_new'                       , via: :get
+
   resources :requirements
   match 'add_interviewer', to: 'interview_skills#add_interviewer'              ,via: :post
   match 'interview_skills/create', to: 'interview_skills#create'                             ,via: :post
@@ -139,4 +141,7 @@ Rails.application.routes.draw do
  resources :agencies
  resources :groups
  resources :designations
+  namespace :api do
+    resources :requirements, only: [:index]
+  end
 end
