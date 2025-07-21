@@ -130,13 +130,9 @@ class HomeController < ApplicationController
 
     # Handle exclude keywords and preferred location
     search_query = @search_text
+    exclude_terms = []
     if @exclude_keywords.present?
       exclude_terms = @exclude_keywords.split(',').map(&:strip).reject(&:blank?)
-      if exclude_terms.any?
-        # Add exclude terms to search query
-        exclude_query = exclude_terms.map { |term| "-#{term}" }.join(' ')
-        search_query = search_query.present? ? "#{search_query} #{exclude_query}" : exclude_query
-      end
     end
     
     logger.info("where_conditions = " + where_conditions.to_s)
@@ -162,6 +158,7 @@ class HomeController < ApplicationController
                                 :related_requirements],
                               match: :word_start,
                               where: where_conditions,
+                              exclude: exclude_terms,
                               page: params[:page], 
                               per_page: get_per_page)
     end

@@ -652,22 +652,24 @@ private
   def create_search_data(txt)
 
     self.resume_text_content = txt
+    self.save
   end
 
   def resume_search_content
-    search_content = self.resume_text_content
-    search_content << " name: " + self.name.downcase if self.name
-    search_content << " preferred_location: " + self.preferred_location.downcase if self.preferred_location
-    search_content << " location: " + self.location.downcase if self.location
-    search_content << " skills: " + self.skills.downcase if self.skills
-    search_content << " current_company: " + self.current_company.downcase if self.current_company
-    search_content << " overall_status: " + self.overall_status.downcase if self.overall_status
-    search_content << " related_requirements: " + self.related_requirements.downcase if self.related_requirements
-    search_content << " status: " + self.status.downcase if self.status
-    search_content << " qualification: " + self.qualification.downcase if self.qualification
-    search_content << " email: " + self.email.downcase if self.email
-    search_content << " phone: " + self.phone.downcase if self.phone
-    search_content << " summary: " + self.summary.downcase if self.summary
+    search_content = ""
+    search_content << "text: " + self.resume_text_content if self.resume_text_content
+    search_content << " name: " + self.name if self.name
+    search_content << " preferred_location: " + self.preferred_location if self.preferred_location
+    search_content << " location: " + self.location if self.location
+    search_content << " skills: " + self.skills if self.skills
+    search_content << " current_company: " + self.current_company if self.current_company
+    search_content << " overall_status: " + self.overall_status if self.overall_status
+    search_content << " related_requirements: " + self.related_requirements if self.related_requirements
+    search_content << " status: " + self.status if self.status
+    search_content << " qualification: " + self.qualification if self.qualification
+    search_content << " email: " + self.email if self.email
+    search_content << " phone: " + self.phone if self.phone
+    search_content << " summary: " + self.summary if self.summary
 
     self.forwards.each do |fwd|
       search_content << " " + fwd.status
