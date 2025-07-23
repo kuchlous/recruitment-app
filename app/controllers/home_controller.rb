@@ -333,60 +333,6 @@ class HomeController < ApplicationController
     resumes = get_employee_referred_resumes(e)
     classify_resumes(resumes)
     @employee = e
-    status = params[:status]
-    if status == "New"
-      @resumes = @new
-    elsif status == "Forwards"
-      @resumes = @forwards
-      @render  = "manager_index"
-      @forwards = []
-      @resumes.each do |r|
-        @forwards += r.forwards
-      end
-      @is_req_match  = 0
-    elsif status == "Shortlisted"
-      @resumes = @shortlists
-      @render  = "manager_index"
-      @forwards = []
-      @resumes.each do |r|
-        @forwards += r.req_matches
-      end
-      @is_req_match  = 1
-    elsif status == "Scheduled"
-      @resumes = @scheduled
-      @matches = []
-      @resumes.each do |r|
-        @matches += r.req_matches.find_all { |r|
-          r.status == "SCHEDULED" &&
-          r.resume.resume_overall_status != "Future"
-        }
-      end
-      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
-      @is_req_match  = 1
-    elsif status == "Rejected"
-      @resumes = @rejected
-      @is_req_match  = 1
-      @forwards = []
-    elsif status == "Hold"
-      @resumes = @holds
-      @is_req_match  = 1
-    elsif status == "YTO"
-      @resumes = @ytos
-      @is_req_match  = 1
-    elsif status == "Engg. Select"
-      @resumes = @eng_selects
-      @is_req_match  = 1
-    elsif status == "HAC"
-      @resumes = @hacs
-      @is_req_match  = 1
-    elsif status == "Offered"
-      @resumes = @offered
-      @is_req_match  = 1
-    elsif status == "Joining"
-      @resumes = @joining
-      @is_req_match  = 1
-    end
-    @status = status
   end
  
 private
