@@ -1769,6 +1769,7 @@ class ResumesController < ApplicationController
       int_focus = params["interview_focus#{i}".to_sym]
       interview_level = params["interview_level_#{i}"]
       i_time = Time.zone.parse (int_date + " " + int_time)
+      logger.info("In add_interviews i = #{i} emp_id = #{emp_id}")
       if emp_id
         interview = Interview.new(:employee_id    => emp_id,
                                   :interview_date => int_date,
@@ -1805,6 +1806,7 @@ class ResumesController < ApplicationController
       flash[:notice] = "You have successfully added interview panel"
       redirect_back(fallback_location: root_path)
     elsif interview.errors
+      logger.warn(interview.errors.to_s)
       error_catching_and_flashing(interview)
 
       # Adding comment

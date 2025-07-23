@@ -754,8 +754,11 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
 function getInterviews(cur_element, req_match_id)
 {
   document.getElementById("loader").style.display="flex";
-  // Setting form action
-  setFormAction("add_interviews");
+  // Get the form containing the current element using jQuery
+  var form = jQuery(cur_element).closest('form');
+  // Setting form action and method
+  form.attr("action", prepend_with_image_path + "/resumes/add_interviews");
+  form.attr("method", "POST");
 
   // Create "ajax_reuest_tr" Row
   var elements = createRow(cur_element);

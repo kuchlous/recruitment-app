@@ -1,159 +1,161 @@
-<div class="show-container">
-  <!-- Header Section -->
-  <div class="show-header">
-    <div class="show-title">
-      <h1><%= @requirement.name %></h1>
-      <div class="show-meta">
-        <span class="meta-badge"><%= @requirement.nop %> positions</span>
-        <span class="meta-badge primary"><%= @requirement.req_type %></span>
-      </div>
-    </div>
-    <div class="show-actions">
-      <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "edit", :id => @requirement.id), class: "action-btn icon-btn", title: "Edit Requirement" do %>
-        <%= image_tag "edit.svg", alt: "Edit", class: "action-icon" %>
-      <% end %>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="show-content">
-    <!-- Combined Info & Description Card -->
-    <div class="info-card">
-      <div class="info-grid">
-        <div class="info-item">
-          <label>Designation</label>
-          <span class="info-value"><%= @requirement.designation.name %></span>
-        </div>
-        <div class="info-item">
-          <label>Group</label>
-          <span class="info-value"><%= @requirement.group.name %></span>
-        </div>
-        <div class="info-item">
-          <label>Experience Required</label>
-          <span class="info-value"><%= @requirement.exp %> years</span>
-        </div>
-        <div class="info-item">
-          <label>Requirement Owner</label>
-          <span class="info-value"><%= @requirement.employee.name %></span>
-        </div>
-        <div class="info-item">
-          <label>Posted By</label>
-          <span class="info-value"><%= @requirement.posted_by.name %></span>
-        </div>
-        <div class="info-item">
-          <label>Timeline</label>
-          <span class="info-value">
-            <% if @requirement.sdate && @requirement.edate %>
-              <%= date_in_calendar_format(@requirement.sdate) %> - <%= date_in_calendar_format(@requirement.edate) %>
-            <% elsif @requirement.sdate %>
-              From <%= date_in_calendar_format(@requirement.sdate) %>
-            <% elsif @requirement.edate %>
-              Until <%= date_in_calendar_format(@requirement.edate) %>
-            <% else %>
-              <span class="text-muted">No dates specified</span>
-            <% end %>
-          </span>
+  <div class="show-container">
+    <!-- Header Section -->
+    <div class="show-header">
+      <div class="show-title">
+        <h1><%= @requirement.name %></h1>
+        <div class="show-meta">
+          <span class="meta-badge"><%= @requirement.nop %> positions</span>
+          <span class="meta-badge primary"><%= @requirement.req_type %></span>
         </div>
       </div>
-      
-      <div class="description-content" style="margin-top: 20px;">
-        <div class="description-section">
-          <label>Skills Required</label>
-          <div class="description-text"><%= @requirement.skill.present? ? @requirement.skill : '<span class="text-muted">No skills specified</span>'.html_safe %></div>
-        </div>
-        <div class="description-section">
-          <label>Job Description</label>
-          <div class="description-text"><%= @requirement.description.present? ? @requirement.description : '<span class="text-muted">No description provided</span>'.html_safe %></div>
-        </div>
-        <div class="description-section">
-          <label>Management Comment</label>
-          <div class="description-text"><%= @requirement.mgt_comment.present? ? @requirement.mgt_comment : '<span class="text-muted">No comments</span>'.html_safe %></div>
-        </div>
+      <div class="show-actions">
+        <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "edit", :id => @requirement.id), class: "action-btn icon-btn", title: "Edit Requirement" do %>
+          <%= image_tag "edit.svg", alt: "Edit", class: "action-icon" %>
+        <% end %>
       </div>
     </div>
 
-    <!-- Statistics Card -->
-    <div class="info-card">
-      <div class="card-header">
-        <h3 class="card-title">Resume Statistics</h3>
-        <%= link_to "Export All Resumes", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action" %>
-      </div>
-      
-      <div class="stats-container">
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @req_forwards.size %></div>
-            <div class="stat-label">Forwards</div>
-          </div>
-        <% end %>
-        
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @shortlists.size %></div>
-            <div class="stat-label">Shortlisted</div>
-          </div>
-        <% end %>
-        
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @scheduled.size %></div>
-            <div class="stat-label">Scheduled</div>
-          </div>
-        <% end %>
-        
-        <% if get_current_employee.is_ADMIN? %>
-          <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link" do %>
-            <div class="stat-card">
-              <div class="stat-number"><%= @rejected.size %></div>
-              <div class="stat-label">Rejected</div>
+    <!-- Main Content -->
+    <form id="requirement_form">
+      <div class="show-content">
+      <!-- Combined Info & Description Card -->
+        <div class="info-card">
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Designation</label>
+              <span class="info-value"><%= @requirement.designation.name %></span>
             </div>
-          <% end %>
-        <% else %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @rejected.size %></div>
-            <div class="stat-label">Rejected</div>
+            <div class="info-item">
+              <label>Group</label>
+              <span class="info-value"><%= @requirement.group.name %></span>
+            </div>
+            <div class="info-item">
+              <label>Experience Required</label>
+              <span class="info-value"><%= @requirement.exp %> years</span>
+            </div>
+            <div class="info-item">
+              <label>Requirement Owner</label>
+              <span class="info-value"><%= @requirement.employee.name %></span>
+            </div>
+            <div class="info-item">
+              <label>Posted By</label>
+              <span class="info-value"><%= @requirement.posted_by.name %></span>
+            </div>
+            <div class="info-item">
+              <label>Timeline</label>
+              <span class="info-value">
+                <% if @requirement.sdate && @requirement.edate %>
+                  <%= date_in_calendar_format(@requirement.sdate) %> - <%= date_in_calendar_format(@requirement.edate) %>
+                <% elsif @requirement.sdate %>
+                  From <%= date_in_calendar_format(@requirement.sdate) %>
+                <% elsif @requirement.edate %>
+                  Until <%= date_in_calendar_format(@requirement.edate) %>
+                <% else %>
+                  <span class="text-muted">No dates specified</span>
+                <% end %>
+              </span>
+            </div>
           </div>
-        <% end %>
         
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @hold.size %></div>
-            <div class="stat-label">Holds</div>
+          <div class="description-content" style="margin-top: 20px;">
+            <div class="description-section">
+              <label>Skills Required</label>
+              <div class="description-text"><%= @requirement.skill.present? ? @requirement.skill : '<span class="text-muted">No skills specified</span>'.html_safe %></div>
+            </div>
+            <div class="description-section">
+              <label>Job Description</label>
+              <div class="description-text"><%= @requirement.description.present? ? @requirement.description : '<span class="text-muted">No description provided</span>'.html_safe %></div>
+            </div>
+            <div class="description-section">
+              <label>Management Comment</label>
+              <div class="description-text"><%= @requirement.mgt_comment.present? ? @requirement.mgt_comment : '<span class="text-muted">No comments</span>'.html_safe %></div>
+            </div>
           </div>
-        <% end %>
-        
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Yto"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @yto.size %></div>
-            <div class="stat-label">YTO</div>
-          </div>
-        <% end %>
-        
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @offered.size %></div>
-            <div class="stat-label">Offered</div>
-          </div>
-        <% end %>
-        
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"), class: "stat-link" do %>
-          <div class="stat-card">
-            <div class="stat-number"><%= @joining.size %></div>
-            <div class="stat-label">Joining</div>
-          </div>
-        <% end %>
-      </div>
-    </div>
+        </div>
 
-    <% unless @status.nil? %>
-      <div class="info-card">
-        <h3 class="card-title">Resume Details</h3>
-        <div id="show_requirements_description_div">
-          <%= render "requirements/show_description" %>
+        <!-- Statistics Card -->
+        <div class="info-card">
+          <div class="card-header">
+            <h3 class="card-title">Resume Statistics</h3>
+            <%= link_to "Export All Resumes", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action" %>
+          </div>
+          
+          <div class="stats-container">
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @req_forwards.size %></div>
+                <div class="stat-label">Forwards</div>
+              </div>
+            <% end %>
+            
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @shortlists.size %></div>
+                <div class="stat-label">Shortlisted</div>
+              </div>
+            <% end %>
+            
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @scheduled.size %></div>
+                <div class="stat-label">Scheduled</div>
+              </div>
+            <% end %>
+          
+            <% if get_current_employee.is_ADMIN? %>
+              <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link" do %>
+                <div class="stat-card">
+                  <div class="stat-number"><%= @rejected.size %></div>
+                  <div class="stat-label">Rejected</div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @rejected.size %></div>
+                <div class="stat-label">Rejected</div>
+              </div>
+            <% end %>
+          
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @hold.size %></div>
+                <div class="stat-label">Holds</div>
+              </div>
+            <% end %>
+            
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Yto"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @yto.size %></div>
+                <div class="stat-label">YTO</div>
+              </div>
+            <% end %>
+          
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @offered.size %></div>
+                <div class="stat-label">Offered</div>
+              </div>
+            <% end %>
+            
+            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @joining.size %></div>
+                <div class="stat-label">Joining</div>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
-    <% end %>
-  </div>
+
+      <% unless @status.nil? %>
+        <div class="info-card">
+          <h3 class="card-title">Resume Details</h3>
+          <div id="show_requirements_description_div">
+            <%= render "requirements/show_description" %>
+          </div>
+        </div>
+      <% end %>
+    </form>
 
   <!-- Footer -->
   <div class="show-footer">

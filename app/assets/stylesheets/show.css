@@ -121,7 +121,6 @@
 
 .info-card:hover {
   box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-  transform: translateY(-2px);
 }
 
 .card-title {
@@ -159,7 +158,6 @@
 
 .card-action:hover {
   background: #218838;
-  transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   color: white;
   text-decoration: none;
@@ -257,7 +255,6 @@
 
 .stat-card:hover {
   background: linear-gradient(135deg, rgb(59, 133, 81) 0%, rgb(34, 85, 52) 100%);
-  transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
@@ -332,7 +329,6 @@
 
 .back-link:hover {
   background: #5a6268;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   color: white;
   text-decoration: none;
