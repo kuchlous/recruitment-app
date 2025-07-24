@@ -135,7 +135,6 @@ class HomeController < ApplicationController
       exclude_terms = @exclude_keywords.split(',').map(&:strip).reject(&:blank?)
     end
     
-    logger.info("where_conditions = " + where_conditions.to_s)
     # Handle empty search text with filters
     if search_query.blank?
       @results = Resume.search("*", 
@@ -156,7 +155,7 @@ class HomeController < ApplicationController
                                 'resume_search_content', 
                                 'overall_status^2', 
                                 :related_requirements],
-                              match: :word_start,
+                              match: params[:search_type] == 'phrase' ? :phrase : :word_start,
                               where: where_conditions,
                               exclude: exclude_terms,
                               page: params[:page], 

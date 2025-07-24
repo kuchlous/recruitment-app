@@ -8,7 +8,16 @@
     <div class="form-section">
       <div class="form-group">
         <label for="search">Search Pattern</label>
-        <%= text_field_tag :search, nil, class: "form-control", placeholder: "Enter search keywords" %>
+        <%= text_field_tag :search, nil, class: "form-control", id: "search_input", placeholder: "Enter search keywords" %>
+        <div class="search-type mt-2 d-flex">
+          <%= radio_button_tag :search_type, "keyword", true, class: "form-check-input me-1",
+              onclick: "document.getElementById('search_input').placeholder='Enter search keywords';" %>
+          <%= label_tag :search_type_keyword, "Keyword Search", class: "form-check-label me-3" %>
+          
+          <%= radio_button_tag :search_type, "phrase", false, class: "form-check-input me-1",
+              onclick: "document.getElementById('search_input').placeholder='Enter exact phrase to match';" %>
+          <%= label_tag :search_type_phrase, "Phrase Search", class: "form-check-label" %>
+        </div>
       </div>
       
       <div class="form-row">
