@@ -75,7 +75,12 @@ class Resume < ActiveRecord::Base
   $tmp_resumes_directory  = $tmp_directory + '/' + APP_CONFIG['temp_resumes']
 
   def normalize_searchable_fields
-    self.preferred_location = self.preferred_location&.downcase
+    self.resume_text_content = self.resume_text_content.encode('UTF-8', 'UTF-8', :invalid => :replace, :replace => '').gsub(/[\u{10000}-\u{10FFFF}]/, '')
+    self.preferred_location = self.preferred_location&.strip&.downcase
+    self.location = self.location&.strip&.downcase
+    self.name = self.name&.strip
+    self.phone = self.phone&.strip
+    self.email = self.email&.strip
   end
 
   def rejected?
