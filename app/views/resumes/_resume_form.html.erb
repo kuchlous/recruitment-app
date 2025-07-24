@@ -174,8 +174,8 @@
         </div>
       </div>
       
-      <% if display_var == 1 %>
-        <div class="current-referral" id="current_referral">
+      <div class="current-referral" id="current_referral">
+        <% if display_var == 1 %>
           <strong>Current Referral:</strong>
           <% if @resume.referral_type == "DIRECT" %>
             (Direct)
@@ -184,8 +184,8 @@
               <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %> (<%= @resume.referral_type.titleize %>)
             <% end %>
           <% end %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
 
     <% if display_var == 1 %>
