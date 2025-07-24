@@ -326,11 +326,13 @@ class HomeController < ApplicationController
         @rejected << r
       end
     end
-   end
+  end
 
   def dashboard
     e = get_current_employee
-    resumes = get_employee_referred_resumes(e)
+    referred_resumes = get_employee_referred_resumes(e)
+    ta_resumes = Resume.where(ta_owner: e)
+    resumes = (referred_resumes + ta_resumes).uniq
     classify_resumes(resumes)
     @employee = e
   end

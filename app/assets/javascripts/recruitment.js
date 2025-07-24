@@ -215,6 +215,14 @@ function createHiddenElement(element, name, id, value)
   element.appendChild(input);
 }
 
+function createDropDownListNew(element, name, id, value, innerHTML, className) {
+  var select = jQuery("<select>").addClass(className).attr("name", name).attr("id", id);
+  for (i = 0; i < value.length; i++) {
+    select.append(jQuery("<option>").attr("value", value[i]).html(innerHTML[i]));
+  }
+  element.append(select);
+}
+
 function createDropDownList(element, name, id, value, innerHTML, className)
 {
   var select       = document.createElement("select");
@@ -501,13 +509,12 @@ function addInterviewRow(event,existing_interview_num, req_match_id, row_index, 
 // Provide links to create portal/agencies if they are not present in current database
 function showReferrals(id_array, name_array, add_status_var)
 {
-  var new_td             = document.createElement("td");
-  new_td.className       = "add_resume_field";
-  new_td.style.fontSize  = "8pt";
+  jQuery(".add_resume_field").remove();
+  var referral_div = jQuery("<div>").addClass("add_resume_field").css("font-size", "8pt");
 
   // Element for drop down list of referrals
   // Should be agency/portals/employees
-  var select = createDropDownList(new_td, "resume[referral_id]", "", id_array, name_array, "");
+  var select = createDropDownListNew(referral_div, "resume[referral_id]", "", id_array, name_array, "form-control");
 
   // If correct referral is not in the list then HR can add another referral
   link      = document.createElement('a');
@@ -530,13 +537,10 @@ function showReferrals(id_array, name_array, add_status_var)
   }
   link.setAttribute('target', '_blank');
   link.appendChild(text_node);
-  new_td.appendChild(link);
+  referral_div.append(link);
 
-  var tr_element = document.getElementById("swap_td_for_referrals");
-  tr_element.style.visibility = "visible";
-  var ref_td     = tr_element.getElementsByTagName("td").item(2);
-  tr_element.deleteCell(1);
-  tr_element.insertBefore(new_td, ref_td);
+  var current_referral_div = jQuery("#current_referral");
+  current_referral_div.append(referral_div);
 }
 
 // Removing links and drop down list for referrals in case we use the DIRECT referral type
@@ -745,6 +749,7 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
       span.style.fontWeight = "bold";
       span.innerHTML = "Please select one requirement";
       elements[0].appendChild(span);
+
     }
   }
 }
