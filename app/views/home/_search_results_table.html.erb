@@ -1,46 +1,67 @@
 <% if @results.size > 0 %>
-  <div id="search_results_summary">
+  <div class="table-header">
+    <h2><%= title %></h2>
     <div id="searched_results_description">
       <% unless @search_text.nil? %>
-        Search parameters - <%= @search_text %>
+        <p>Search parameters - <%= @search_text %></p>
       <% end %>
     </div>
-    <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
-    
-    <%# Hidden fields for form preservation - to be added by individual views %>
-    <%= yield :hidden_fields if content_for?(:hidden_fields) %>
-    
-    <table>
+  </div>
+  
+  <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
+  
+  <%# Hidden fields for form preservation - to be added by individual views %>
+  <%= yield :hidden_fields if content_for?(:hidden_fields) %>
+  
+  <table class="modern-table">
+    <thead>
       <tr>
-        <th class="search_resume_name">      Name                </th>
-        <th class="search_resume_qual">      Qualification       </th>
-        <th class="search_resume_skills">    Skills/Summaries    </th>
-        <th class="search_resume_status">    Overall Status      </th>
-        <th class="search_resume_activity">  Recent Activity On  </th>
+        <th>Name</th>
+        <th>Qualification</th>
+        <th>Skills/Summaries</th>
+        <th>Experience</th>
+        <th>Notice Period</th>
+        <th>Overall Status</th>
+        <th>Recent Activity On</th>
       </tr>
+    </thead>
+    <tbody>
       <% @results.each do |result| %>
-        <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
-          <td class="search_resume_name" title="<%= result['name'] %>">
-            <div class="search_resume_name_div">
-              <%= link_to truncate(result['name'], length: 20), url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => result['uniqid']) %>
-            </div>
+        <tr>
+          <td class="table-cell-primary" title="<%= result.name %>">
+            <%= resume_link_with_20_characters(result) %>
           </td>
-          <td class="search_resume_qual" title="<%= result['qualification'] %>">
-            <%= result['qualification'].to_s[0..20] %>
+          <td class="table-cell-secondary" title="<%= result.qualification %>">
+            <%= result.qualification[0..20] %>
           </td>
-          <td class="search_resume_skills" title="<%= result['summary'] %>">
-            <%= result['summary'].to_s[0..20] %>
+          <td class="table-cell-secondary" title="<%= result.summary %>">
+            <%= result.summary[0..20] %>
           </td>
-          <td class="search_resume_status">
-            <%= result['overall_status'] %>
+          <td class="table-cell-secondary">
+            <%= result.experience %>
           </td>
-          <td class="search_resume_activity">
-            <%= print_date(Date.parse(result['updated_at'])) %>
+          <td class="table-cell-secondary">
+            <%= result.notice %>
+          </td>
+          <td>
+            <%= result.resume_overall_status %>
+          </td>
+          <td class="table-cell-secondary">
+            <% if result.comments.size > 0 %>
+              <%= print_date(result.comments.last.updated_at) %>
+            <% else %>
+              <%= print_date(result.updated_at) %>
+            <% end %>
           </td>
         </tr>
       <% end %>
-    </table>
-    <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
+    </tbody>
+  </table>
+  
+  <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
 <% else %>
-  <span class="span_with_13_with_padding_0"> Sorry there are no results found corresponding to your search parameters. </span>
+  <div class="table-empty">
+    <div class="empty-icon">🔍</div>
+    <p>Sorry there are no results found corresponding to your search parameters.</p>
+  </div>
 <% end %> 

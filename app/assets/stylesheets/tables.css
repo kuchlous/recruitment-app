@@ -280,6 +280,129 @@
   align-items: center;
 }
 
+/* Modern Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 20px 0;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.pagination a,
+.pagination a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 4px 8px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pagination a:hover,
+.pagination a:active {
+  background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
+  border-color: rgb(56, 142, 60);
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.pagination .current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 4px 8px;
+  background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
+  border: 1px solid rgb(56, 142, 60);
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  cursor: default;
+}
+
+.pagination .disabled,
+.pagination .disabled:hover {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 4px 8px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #ccc;
+  cursor: not-allowed;
+  font-weight: normal;
+  box-shadow: none;
+}
+
+.pagination .prev,
+.pagination .next {
+  font-weight: 600;
+}
+
+.pagination .gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 4px 8px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+  .pagination {
+    gap: 4px;
+    margin: 15px 0;
+  }
+  
+  .pagination a,
+  .pagination a:visited,
+  .pagination .current,
+  .pagination .disabled,
+  .pagination .gap {
+    min-width: 24px;
+    height: 24px;
+    padding: 3px 6px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 2px;
+    margin: 10px 0;
+  }
+  
+  .pagination a,
+  .pagination a:visited,
+  .pagination .current,
+  .pagination .disabled,
+  .pagination .gap {
+    min-width: 20px;
+    height: 20px;
+    padding: 2px 4px;
+    font-size: 12px;
+  }
+}
+
 /* Legacy Table Support */
 #resume_list_table {
   width: 100%;
