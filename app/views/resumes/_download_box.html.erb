@@ -2,38 +2,44 @@
   if filenames.present? && filenames.is_a?(Array)
     filenames.each do |filename|
       resume_tag = url_for(:host => APP_CONFIG['host_name'], :action => 'download_resume', :name => filename)
-%>
-  <% if /(.pdf)$/.match(filename)
-       image_path = "PdfIcon.png"
-       title_var  = "Preview"
-     elsif /(.doc)$/.match(filename) || /(.docx)$/.match(filename) || /(.rtf)$/.match(filename)
-       image_path = "DocIcon.png"
-       title_var  = "Download this resume as a Doc file"
-     elsif /(.txt)$/.match(filename)
-       image_path = "TxtIcon.png"
-       title_var  = "Download this resume as a Text file"
-     elsif /(.odt)$/.match(filename)
-       image_path = "OoIcon.png"
-       title_var  = "Download this resume as a Odt file"
-     else
-       image_path = "DocIcon.png"
-       title_var  = "Download this resume as an unknown format file"
-     end %>
-     <%if File.extname(filename)== ".pdf" %>
-       <a data-target="#myModal" data-toggle="modal" onclick = "setEmbedSrc('<%= resume_tag %>')" style="position:relative">
-         <%= image_tag(image_path,  :size => "40x40")  %>       
-         <% if is_HR_ADMIN? || is_GM? %>
-           <span class="glyphicon glyphicon-remove" onclick="deleteResume(event,'<%= filename %>')" style="position: absolute;top: -10px; right: -5px;"></span>
-         <% end %>
-       </a>
-     <% else %> 
-       <a href="<%= resume_tag %>" target="_blank" title="<%= title_var %>" style="position:relative">
-         <%= image_tag(image_path,  :size => "40x40")  %>
-         <% if is_HR_ADMIN? || is_GM? %>
-           <span class="glyphicon glyphicon-remove" onclick="deleteResume(event,'<%= filename %>')" style="position: absolute;top: -10px; right: -5px;"></span>
-         <% end %>
-       </a>
-     <% end %>  
+      if /(.pdf)$/.match(filename)
+        image_path = "PdfIcon.png"
+        title_var  = "Preview"
+      elsif /(.doc)$/.match(filename) || /(.docx)$/.match(filename) || /(.rtf)$/.match(filename)
+        image_path = "DocIcon.png"
+        title_var  = "Download this resume as a Doc file"
+      elsif /(.txt)$/.match(filename)
+        image_path = "TxtIcon.png"
+        title_var  = "Download this resume as a Text file"
+      elsif /(.odt)$/.match(filename)
+        image_path = "OoIcon.png"
+        title_var  = "Download this resume as a Odt file"
+      else
+        image_path = "DocIcon.png"
+        title_var  = "Download this resume as an unknown format file"
+      end 
+      if File.extname(filename)== ".pdf" %>
+        <span style="display: inline-block; margin-right: 10px; position: relative;">
+          <a data-target="#myModal" data-toggle="modal" onclick = "setEmbedSrc('<%= resume_tag %>')" style="position:relative" title="Preview PDF">
+            <%= image_tag(image_path,  :size => "40x40")  %>       
+            <% if is_HR_ADMIN? || is_GM? %>
+              <span class="glyphicon glyphicon-remove" onclick="deleteResume(event,'<%= filename %>')" style="position: absolute;top: -10px; right: -5px;"></span>
+            <% end %>
+          </a>
+          <a href="<%= resume_tag %>" download title="Download PDF" style="position: absolute; bottom: -2px; right: -2px; z-index: 10;">
+            <span style="font-size: 12px; color: #007bff; background: white; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">⬇</span>
+          </a>
+        </span>
+      <% else %> 
+        <span style="display: inline-block; margin-right: 10px;">
+          <a href="<%= resume_tag %>" target="_blank" title="<%= title_var %>" style="position:relative">
+            <%= image_tag(image_path,  :size => "40x40")  %>
+            <% if is_HR_ADMIN? || is_GM? %>
+              <span class="glyphicon glyphicon-remove" onclick="deleteResume(event,'<%= filename %>')" style="position: absolute;top: -10px; right: -5px;"></span>
+            <% end %>
+          </a>
+        </span>
+      <% end %>  
     <% end %>
   <% else %>
     <div>No files available</div>
