@@ -75,7 +75,9 @@ class Resume < ActiveRecord::Base
   $tmp_resumes_directory  = $tmp_directory + '/' + APP_CONFIG['temp_resumes']
 
   def normalize_searchable_fields
-    self.resume_text_content = self.resume_text_content.encode('UTF-8', 'UTF-8', :invalid => :replace, :replace => '').gsub(/[\u{10000}-\u{10FFFF}]/, '')
+    if self.resume_text_content
+      self.resume_text_content = self.resume_text_content.encode('UTF-8', 'UTF-8', :invalid => :replace, :replace => '').gsub(/[\u{10000}-\u{10FFFF}]/, '')
+    end
     self.preferred_location = self.preferred_location&.strip&.downcase
     self.location = self.location&.strip&.downcase
     self.name = self.name&.strip
@@ -108,6 +110,20 @@ class Resume < ActiveRecord::Base
       end
     end
     return nil
+  end
+
+  def recreate_resume_text_content
+    file_path, _, ext = preferred_file
+    if file_path && ext != 'txt'
+      # Use comprehensive text extraction that handles all file types
+      txt = TextExtractor.extract_text_from_any_file(file_path)
+      if txt && !txt.empty?
+        # Save extracted text to file
+        txt_file_name = File.join($upload_dir, self.file_name + '.txt')
+        File.open(txt_file_name, "w") { |f| f << txt }
+        create_search_data(txt)
+      end
+    end
   end
 
   def resume_overall_status
