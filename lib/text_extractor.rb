@@ -109,26 +109,7 @@ class TextExtractor
     end
 
     def extract_text_from_doc(doc_path)
-      # For .doc files, we'll use a different approach since they're binary
-      # We can try to extract text using rubyzip if it's a compound file
-      begin
-        # Try to extract as a compound file (some .doc files are actually ZIP files)
-        Zip::File.open(doc_path) do |zip_file|
-          # Look for Word document XML
-          word_doc = zip_file.find_entry('word/document.xml')
-          if word_doc
-            content = word_doc.get_input_stream.read
-            # Basic XML parsing to extract text
-            text = content.gsub(/<[^>]*>/, ' ').gsub(/\s+/, ' ').strip
-            return text
-          end
-        end
-      rescue => e
-        Rails.logger.error("Error extracting text from DOC #{doc_path}: #{e.message}")
-      end
-      
-      # Fallback to shell command
-      `antiword #{doc_path} 2>& 1`
+     `antiword #{doc_path} 2>& 1`
     end
 
     def extract_text_from_html(file_path)
@@ -202,45 +183,38 @@ class TextExtractor
     def detect_file_type(path)
       # Use Ruby's built-in MIME type detection based on file extension
       ext = File.extname(path).downcase
-      mime_type = MIME::Types.type_for(ext).first
-      
-      if mime_type
-        return mime_type.content_type
+      case ext
+      when '.pdf'
+        'application/pdf'
+      when '.doc'
+        'application/msword'
+      when '.docx'
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      when '.rtf'
+        'text/rtf'
+      when '.txt'
+        'text/plain'
+      when '.html', '.htm'
+        'text/html'
+      when '.odt'
+        'application/vnd.oasis.opendocument.text'
+      when '.zip'
+        'application/zip'
+      when '.xls'
+        'application/vnd.ms-excel'
+      when '.xlsx'
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       else
-        # Fallback to common file types based on extension
-        case ext
-        when '.pdf'
-          'application/pdf'
-        when '.doc'
-          'application/msword'
-        when '.docx'
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        when '.rtf'
-          'text/rtf'
-        when '.txt'
-          'text/plain'
-        when '.html', '.htm'
-          'text/html'
-        when '.odt'
-          'application/vnd.oasis.opendocument.text'
-        when '.zip'
-          'application/zip'
-        when '.xls'
-          'application/vnd.ms-excel'
-        when '.xlsx'
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        else
-          # Try to read first few bytes to detect binary vs text
-          begin
-            content = File.read(path, 512)
-            if content.encoding == Encoding::ASCII_8BIT || content.include?("\x00")
-              'application/octet-stream'
-            else
-              'text/plain'
-            end
-          rescue
+        # Try to read first few bytes to detect binary vs text
+        begin
+          content = File.read(path, 512)
+          if content.encoding == Encoding::ASCII_8BIT || content.include?("\x00")
             'application/octet-stream'
+          else
+            'text/plain'
           end
+        rescue
+          'application/octet-stream'
         end
       end
     end

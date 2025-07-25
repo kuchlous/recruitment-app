@@ -195,7 +195,6 @@ class ResumesController < ApplicationController
     @resume.summary    = "UPLOADED without comments." if params[:resume][:summary].nil?
     @resume.uniqid  = Uniqid.generate_unique_id(@resume.name, @resume)
     @resume.file_name = @resume.uniqid.name.downcase
-    logger.info("resume.file_name: #{@resume.file_name}")
     respond_to do |format|
       if @resume.save
         @resume.cleanup_update_resume_data(params[:resume][:upload_resume])
