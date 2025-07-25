@@ -1068,6 +1068,7 @@ class ResumesController < ApplicationController
         req_ids << r
       end
       mesg = Resume.create_reqs(resume, req_ids, get_logged_employee, get_current_employee)
+      resume.update_overall_status
       flash[:notice] = mesg
     end
     render body: nil
