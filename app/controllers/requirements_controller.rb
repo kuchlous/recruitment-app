@@ -57,8 +57,14 @@ class RequirementsController < ApplicationController
     @requirement  = Requirement.new(params.require(:requirement).permit!)
     @requirement.posted_by = get_current_employee
     @requirement.scheduling_employee_id = get_current_employee.id
-    # @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]  # Removed account assignment
     @requirement.exp = params[:req][:min_exp] + "-" + params[:req][:max_exp]
+    
+    if params[:eng_leads_names].present?
+      eng_lead_names = params[:eng_leads_names].split(',').map(&:strip)
+      eng_leads = Employee.where(name: eng_lead_names, employee_status: "ACTIVE")
+      @requirement.eng_leads = eng_leads
+    end
+    
     respond_to do |format|
       if @requirement.save
         email_for_adding_requirement(@requirement)
@@ -78,11 +84,18 @@ class RequirementsController < ApplicationController
   def update
     logger.info("Trying to update requirement")
     @requirement  = Requirement.find(params[:id])
-    # Destroying requirement accounts and then updating
 
     old_owner = @requirement.employee
-    # @requirement.accounts  = Account.find(params[:account_ids]) if params[:account_ids]  # Removed account assignment
     exp          = params[:req][:min_exp] + "-" + params[:req][:max_exp]
+    
+    if params[:eng_leads_names].present?
+      eng_lead_names = params[:eng_leads_names].split(',').map(&:strip)
+      eng_leads = Employee.where(name: eng_lead_names, employee_status: "ACTIVE")
+      @requirement.eng_leads = eng_leads
+    else
+      @requirement.eng_leads.clear
+    end
+    
     respond_to do |format|
       if @requirement.update(params.require(:requirement).permit!) && @requirement.update(:exp => exp)
         logger.info("Updated requirement")
@@ -107,7 +120,7 @@ class RequirementsController < ApplicationController
     # Finding matches/forwards/interviews based upon the parameter coming from the url
     get_forwards_matches_to_reqs(@requirement) unless @status.nil?
 
-    if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_lead == get_current_employee
+    if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_leads.include?(get_current_employee)
       # @accounts    = @requirement.accounts  # Removed accounts reference
       @req_forwards= @requirement.open_forwards
       @shortlists  = @requirement.shortlists

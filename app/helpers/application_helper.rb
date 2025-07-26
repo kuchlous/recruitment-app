@@ -83,7 +83,7 @@ module ApplicationHelper
       r.status   == status &&
       (is_HR_ADMIN? || is_GM? || 
        r.requirement.employee == get_current_employee || 
-       r.requirement.eng_lead == get_current_employee)
+       r.requirement.eng_leads.include?(get_current_employee))
     }
     req_matches += resume.forwards.find_all { |r|
       r.status       == status &&
@@ -97,7 +97,7 @@ module ApplicationHelper
       r.status   == status &&
       (is_HR_ADMIN? || is_GM? || 
        r.requirement.employee == get_current_employee || 
-       r.requirement.eng_lead == get_current_employee)
+       r.requirement.eng_leads.include?(get_current_employee))
     }
     req_matches += Forward.where(resume_id: resume_id).find_all { |r|
       r.status       == status &&

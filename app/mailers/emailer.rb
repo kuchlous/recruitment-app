@@ -218,11 +218,17 @@ class Emailer < ApplicationMailer
   def send_requirement_reminder (requirement)
     @names = []
     @names << requirement.ta_lead.name if requirement.ta_lead.present?
-    @names << requirement.eng_lead.name if requirement.eng_lead.present?
+    # Add all engineering leads from HABTM association
+    requirement.eng_leads.each do |lead|
+      @names << lead.name
+    end
     @names = @names.join(", ")
     recipients = []
     recipients << requirement.ta_lead.email if requirement.ta_lead.present?
-    recipients << requirement.eng_lead.email if requirement.eng_lead.present?
+    # Add all engineering leads emails from HABTM association
+    requirement.eng_leads.each do |lead|
+      recipients << lead.email
+    end
     # TODO: Add Sales Head to recipients
     subject = "Gentle Reminder - Requirement open with No projection for more than 3 days"
     mail(to: recipients, subject: subject) if recipients.length > 0
@@ -231,11 +237,17 @@ class Emailer < ApplicationMailer
   def send_rejection_notification (requirement,resume)
     @names = []
     @names << requirement.ta_lead.name if requirement.ta_lead.present?
-    @names << requirement.eng_lead.name if requirement.eng_lead.present?
+    # Add all engineering leads from HABTM association
+    requirement.eng_leads.each do |lead|
+      @names << lead.name
+    end
     @names = @names.join(", ")
     recipients = []
     recipients << requirement.ta_lead.email if requirement.ta_lead.present?
-    recipients << requirement.eng_lead.email if requirement.eng_lead.present?
+    # Add all engineering leads emails from HABTM association
+    requirement.eng_leads.each do |lead|
+      recipients << lead.email
+    end
     recipients << resume.ta_owner.email if resume.ta_owner.present?
     # TODO: Add Sales Head to recipients
     subject = "#{resume.name} is rejected for #{requirement.name}"

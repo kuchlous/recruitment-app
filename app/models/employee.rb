@@ -10,6 +10,7 @@ class Employee < ActiveRecord::Base
   has_many    :to_schedule_reqs,
               :class_name => "Requirement",
               :foreign_key => "scheduling_employee_id"
+  has_and_belongs_to_many   :requirements_owned, class_name: "Requirement", join_table: "employees_requirements"
   has_many    :forwards,
               :class_name  => "Forward",
               :foreign_key => "forwarded_to"

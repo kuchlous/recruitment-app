@@ -102,10 +102,16 @@
           <label for="requirement_employee_id">Manager *</label>
           <%= collection_select(:requirement, :employee_id, @employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
         </div>
-        <div class="form-group">
-          <label for="requirement_eng_lead_id">Eng Lead</label>
-          <%= collection_select(:requirement, :eng_lead_id, @employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
-        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="eng_leads_names">Engineering Leads (Multiple)</label>
+        <%= text_field_tag :eng_leads_names, 
+                          @requirement&.eng_leads&.map(&:name)&.join(', '), 
+                          class: "form-control eng-leads-autocomplete", 
+                          placeholder: "Type employee names to search...",
+                          data: { autocomplete_url: employees_autocomplete_employees_path } %>
+        <small class="form-text text-muted">Type to search for active employees. Multiple names can be separated by commas.</small>
       </div>
       
       <div class="form-row">

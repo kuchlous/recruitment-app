@@ -253,7 +253,7 @@ class Resume < ActiveRecord::Base
     matches       = self.req_matches.find_all { |r|
 			employee.is_HR?    ||
       employee.is_ADMIN? || employee.is_GM? ||
-      r.requirement.employee == employee || r.requirement.eng_lead == employee
+      r.requirement.employee == employee || r.requirement.eng_leads.include?(employee)
     }
     matches.each do |m|
       matches_array.push([m.requirement.name, m.id])

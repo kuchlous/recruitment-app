@@ -4,7 +4,7 @@ class Requirement < ActiveRecord::Base
   has_many                :interviews
   has_many                :req_matches
   has_and_belongs_to_many :forwards
-  # has_and_belongs_to_many :accounts  # Removed account relationship
+  has_and_belongs_to_many :eng_leads, class_name: "Employee", join_table: "employees_requirements"
   belongs_to              :group,
                           :class_name  => "Group",
                           :foreign_key => "group_id"
@@ -20,10 +20,6 @@ class Requirement < ActiveRecord::Base
                           :optional => true,
                           :class_name => "Employee",
                           :foreign_key => "ta_lead_id"
-  belongs_to              :eng_lead,
-                          :optional => true,
-                          :class_name => "Employee",
-                          :foreign_key => "eng_lead_id"
 
   # Presence stuff
   validates_presence_of :name

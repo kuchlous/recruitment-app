@@ -11,8 +11,18 @@ class EmployeesController < ApplicationController
   end
 
   def employees_autocomplete
-    employees = Employee.order(:name).where("name like ?", "%#{params[:query]}%")
+    employees = Employee.order(:name).where("name like ?", "%#{params[:query]}%").limit(10)
     render json: employees.map{|e| e.name + " - " + e.eid.to_s}
+  end
+
+  def autocomplete_employees
+    query = params[:query]
+    active_employees = Employee.where(employee_status: "ACTIVE")
+                              .where("LOWER(name) LIKE LOWER(?) OR LOWER(login) LIKE LOWER(?)", "%#{query}%", "%#{query}%")
+                              .limit(10)
+                              .pluck(:name)
+    
+    render json: active_employees
   end
 
   def list_my_employees

@@ -507,7 +507,7 @@ class ResumesController < ApplicationController
                                      m.requirement.name] }
 
     joined_resumes   = Resume.where(status: "JOINED")
-    joined_resumes = joined_resumes.sort_by { |r| [!r.joining_date.nil? ?
+    joined_resumes = joined_resumes.sort_by { |r| [!r.joining_date.nil? ? 
                                                       r.joining_date : 
                                                       Date.today
                                                     ] 
@@ -2501,7 +2501,10 @@ class ResumesController < ApplicationController
     gm_for_decision = requirement.employee.gm
     recipients = [gm_for_decision]
     recipients << requirement.ta_lead if requirement.ta_lead
-    recipients << requirement.eng_lead if requirement.eng_lead
+    # Add all engineering leads from HABTM association
+    requirement.eng_leads.each do |lead|
+      recipients << lead
+    end
     ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
     recipients << ta_head if ta_head
     ta_owner = resume.ta_owner
@@ -2525,7 +2528,10 @@ class ResumesController < ApplicationController
     recipients << ta_owner if ta_owner
     recipients << requirement.ta_lead if requirement.ta_lead
     if eng_decision
-      recipients << requirement.eng_lead if requirement.eng_lead
+      # Add all engineering leads from HABTM association
+      requirement.eng_leads.each do |lead|
+        recipients << lead
+      end
       to = requirement.ta_lead
     else
       to = gm_for_decision

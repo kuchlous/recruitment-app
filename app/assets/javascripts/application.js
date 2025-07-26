@@ -64,6 +64,39 @@ function initializeComponents() {
     position: { my: "left top", at: "left bottom", collision: "flip" }
   });
 
+  // Initialize eng leads autocomplete
+  $('.eng-leads-autocomplete').autocomplete({
+    source: function(request, response) {
+      // Extract the current word being typed (after the last comma)
+      var terms = request.term.split(',');
+      var currentTerm = terms[terms.length - 1].trim();
+      
+      $.ajax({
+        url: $(this.element).data('autocomplete-url'),
+        dataType: 'json',
+        data: {
+          query: currentTerm
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    },
+    minLength: 1,
+    delay: 300,
+    autoFocus: true,
+    position: { my: "left top", at: "left bottom", collision: "flip" },
+    select: function(event, ui) {
+      // Get the current value and split by commas
+      var terms = this.value.split(',');
+      // Replace the last term with the selected value
+      terms[terms.length - 1] = ui.item.value;
+      // Join back with commas and update the field
+      this.value = terms.join(', ');
+      return false; // Prevent default behavior
+    }
+  });
+
   // File upload label update
   $('.file-input').on('change', function() {
     var fileName = $(this).val().split('\\').pop();
