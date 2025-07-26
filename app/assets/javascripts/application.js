@@ -71,6 +71,20 @@ function initializeComponents() {
       var terms = request.term.split(',');
       var currentTerm = terms[terms.length - 1].trim();
       
+      // Only proceed if current term has at least 2 characters
+      if (currentTerm.length < 2) {
+        response([]);
+        return;
+      }
+      
+      // Get all currently selected names (excluding the current term being typed)
+      var selectedNames = [];
+      if (terms.length > 1) {
+        selectedNames = terms.slice(0, -1).map(function(name) {
+          return name.trim();
+        });
+      }
+      
       $.ajax({
         url: $(this.element).data('autocomplete-url'),
         dataType: 'json',
@@ -78,11 +92,15 @@ function initializeComponents() {
           query: currentTerm
         },
         success: function(data) {
-          response(data);
+          // Filter out already selected names
+          var filteredData = data.filter(function(name) {
+            return selectedNames.indexOf(name) === -1;
+          });
+          response(filteredData);
         }
       });
     },
-    minLength: 1,
+    minLength: 0,
     delay: 300,
     autoFocus: true,
     position: { my: "left top", at: "left bottom", collision: "flip" },
