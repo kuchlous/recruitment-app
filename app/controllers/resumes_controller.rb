@@ -204,6 +204,9 @@ class ResumesController < ApplicationController
         @resume.add_resume_comment(comment, "INTERNAL", get_logged_employee)
         email_for_upload(@resume)
 
+        ta_owner = @resume.ta_owner
+        Emailer.notify_ta_owner(ta_owner, get_current_employee, @resume, true).deliver_now if ta_owner.present?
+
         # If reqs are selected
         if (params[:requirement_name])
           Resume.create_reqs(@resume, params[:requirement_name], get_logged_employee, get_current_employee)
@@ -281,6 +284,8 @@ class ResumesController < ApplicationController
       @resume.add_resume_comment(comment, ctype, get_logged_employee)
       
       email_for_upload(@resume) if changed_referral
+      ta_owner = @resume.ta_owner
+      Emailer.notify_ta_owner(ta_owner, get_current_employee, @resume, false).deliver_now if ta_owner.present?
 
       flash[:notice]  = "You have successfully updated details of #{@resume.name}"
       redirect_to :action => "show", :id => @resume.uniqid.name
