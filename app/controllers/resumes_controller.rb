@@ -2705,7 +2705,7 @@ class ResumesController < ApplicationController
     
     # Check if current employee is an engineering lead for any of these requirements
     requirements.each do |requirement|
-      if requirement.employee == get_current_employee || requirement.eng_leads.include?(get_current_employee)
+      if requirement.eng_leads.include?(get_current_employee)
         return true
       end
     end

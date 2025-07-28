@@ -110,7 +110,7 @@
                           @requirement&.eng_leads&.map(&:name)&.join(', '), 
                           class: "form-control eng-leads-autocomplete", 
                           placeholder: "Type employee names to search...",
-                          data: { autocomplete_url: employees_autocomplete_employees_path } %>
+                          data: { autocomplete_url: url_for(host: APP_CONFIG['host_name'], controller: 'employees', action: 'autocomplete_employees') } %>
         <small class="form-text text-muted">Type to search for active employees. Multiple names can be separated by commas.</small>
       </div>
       
