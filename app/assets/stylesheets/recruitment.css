@@ -1164,7 +1164,7 @@ th
   width:            500px;
 }
 
-#resume_list_table .resume_list_header_experience,
+#resume_list_table .resume_list_header_experience
 {
   width:            100px;
 }
@@ -1606,9 +1606,21 @@ div.pagination .disabled:hover
 
 .manager_index_mutilple_ddl
 {
-  height:           40px;
-  width:            200px;
+  height:           20px;
+  width:            100%;
   background-color: #E6E6E6;
+  box-sizing:       border-box;
+  overflow:         hidden;
+  resize:           none;
+  line-height:      18px;
+  padding:          1px 2px;
+  font-size:        11px;
+}
+
+.manager_index_mutilple_ddl option
+{
+  height:           18px;
+  line-height:      18px;
 }
 
 #req_create_div .two_dropdownlist_single_td select,

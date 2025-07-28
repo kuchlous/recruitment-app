@@ -35,7 +35,7 @@
              <%= link_to (manual_status ? manual_status : "Add status"),"",:onclick => "showManualStatusBox(event, #{resume.id});" %>
            </td>
            <td> <%= print_date_no_year (fwd.created_at) %> </td>
-           <td> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>
+           <td> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :size => reqs.size, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>
            <td> <%= resume.preferred_location %> </td>
            <td>
              <%= get_manager_actions_dropdownlist(resume, fwd, counter_value, @after_shortlist_page) %>
