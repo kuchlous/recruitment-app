@@ -252,6 +252,16 @@ class RequirementsController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
 
+  def autocomplete_requirements
+    query = params[:query]
+    requirements = Requirement.where(status: "OPEN")
+                             .where("LOWER(name) LIKE LOWER(?)", "%#{query}%")
+                             .limit(10)
+                             .pluck(:name)
+    
+    render json: requirements
+  end
+
 private
   def error_catching_and_flashing(object)
     unless object.valid?
@@ -323,4 +333,5 @@ private
     @ta_employees = @employees.find_all{|e| e.is_HR?}
     # @accounts     = get_all_accounts  # Removed accounts reference
   end
+
 end

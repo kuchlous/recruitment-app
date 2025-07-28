@@ -204,13 +204,20 @@ class ResumesController < ApplicationController
         email_for_upload(@resume)
 
         # If reqs are selected
-        if (params[:requirement_name])
-          Resume.create_reqs(@resume, params[:requirement_name], get_logged_employee, get_current_employee)
-          params[:requirement_name].each do |rid|
-            r = Requirement.find(rid)
-            r.update_attributes(last_forward_recieved:Date.today)
+        if (params[:requirement_names].present?)
+          requirement_names = params[:requirement_names].split(',').map(&:strip)
+          requirements = Requirement.where(name: requirement_names, status: "OPEN")
+          requirement_ids = requirements.pluck(:id)
+          
+          if requirement_ids.any?
+            Resume.create_reqs(@resume, requirement_ids, get_logged_employee, get_current_employee)
+            requirements.each do |req|
+              req.update_attributes(last_forward_recieved: Date.today)
+            end
+            flash_mesg = "You have successfully uploaded the resume and it has been forwarded to the owners of the requirements that you selected"
+          else
+            flash_mesg = "You have successfully uploaded resume (no valid requirements found)"
           end
-          flash_mesg = "You have successfully uploaded the resume and it has been forwarded to the owners of the requirements that you selected"
         else
           flash_mesg = "You have successfully uploaded resume"
         end
@@ -278,6 +285,20 @@ class ResumesController < ApplicationController
       comment   = "UPDATE RESUME: " + comment
       # Adding Comments
       @resume.add_resume_comment(comment, ctype, get_logged_employee)
+      
+      # Handle requirements if provided
+      if params[:requirement_names].present?
+        requirement_names = params[:requirement_names].split(',').map(&:strip)
+        requirements = Requirement.where(name: requirement_names, status: "OPEN")
+        requirement_ids = requirements.pluck(:id)
+        
+        if requirement_ids.any?
+          Resume.create_reqs(@resume, requirement_ids, get_logged_employee, get_current_employee)
+          requirements.each do |req|
+            req.update_attributes(last_forward_recieved: Date.today)
+          end
+        end
+      end
       
       email_for_upload(@resume) if changed_referral
 
