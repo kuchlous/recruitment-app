@@ -1,32 +1,64 @@
-<div id="req_breif_details_div" class="common_class">
-  <span class="span_with_13_with_padding_0"> <%= @requirement.name %> </span>
-  <br /> <br />
-  <table id="req_breif_details_table">
-    <tr>
-      <td> Skills required for this position - </td>
-      <td> <%= @requirement.skill %> </td>
-    </tr>
-    <tr>
-      <td> Job description for this position - </td>
-      <td> <%= @requirement.description %> </td>
-    </tr>
-    <tr>
-      <td> Experience required for this position - </td>
-      <td> <%= @requirement.exp %> yrs </td>
-    </tr>
-    <tr>
-      <td> Requirement owner - </td>
-      <td> <%= @requirement.employee.name %> </td>
-    </tr>
-    <tr>
-      <td> Group - </td>
-      <td> <%= @requirement.group.name %> </td>
-    </tr>
-    <tr>
-      <td> Type - </td>
-      <td> <%= @requirement.req_type %> </td>
-    </tr>
-  </table>
-  <br /> <br />
-  <%= link_to "List of requirements", :host => APP_CONFIG['host_name'], :controller => "requirements", :style => "color: #0000FF;" %> </div>
+<div class="show-container">
+  <!-- Header Section -->
+  <div class="show-header">
+    <div class="show-title">
+      <h1><%= @requirement.name %></h1>
+      <div class="show-meta">
+        <span class="meta-badge"><%= @requirement.req_type %></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="show-content">
+    <div class="info-card">
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Group</label>
+          <span class="info-value"><%= @requirement.group.name %></span>
+        </div>
+        <div class="info-item">
+          <label>Experience Required</label>
+          <span class="info-value"><%= @requirement.exp %> years</span>
+        </div>
+        <div class="info-item">
+          <label>Requirement Owner</label>
+          <span class="info-value"><%= @requirement.employee.name %></span>
+        </div>
+        <div class="info-item">
+          <label>Timeline</label>
+          <span class="info-value">
+            <% if @requirement.sdate && @requirement.edate %>
+              <%= date_in_calendar_format(@requirement.sdate) %> - <%= date_in_calendar_format(@requirement.edate) %>
+            <% elsif @requirement.sdate %>
+              From <%= date_in_calendar_format(@requirement.sdate) %>
+            <% elsif @requirement.edate %>
+              Until <%= date_in_calendar_format(@requirement.edate) %>
+            <% else %>
+              <span class="text-muted">No dates specified</span>
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="description-section">
+        <label>Skills Required</label>
+        <div class="description-text"><%= @requirement.skill.present? ? @requirement.skill : '<span class="text-muted">No skills specified</span>'.html_safe %></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="description-section">
+        <label>Job Description</label>
+        <div class="description-text"><%= @requirement.description.present? ? @requirement.description : '<span class="text-muted">No description provided</span>'.html_safe %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="show-footer">
+    <%= link_to "← Back to Requirements List", url_for(:host => APP_CONFIG['host_name'], :controller => "requirements"), class: "back-link" %>
+  </div>
 </div>
