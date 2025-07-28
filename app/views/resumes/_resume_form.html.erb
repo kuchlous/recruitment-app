@@ -143,7 +143,7 @@
       <div class="form-group">
         <label for="requirement_names">Requirements</label>
         <%= text_field_tag :requirement_names, 
-                          @resume&.req_matches&.map { |match| match.requirement.name }&.join(', '), 
+                          nil, 
                           class: "form-control requirements-autocomplete", 
                           placeholder: "Type requirement names to search...",
                           data: { autocomplete_url: url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "autocomplete_requirements") } %>
