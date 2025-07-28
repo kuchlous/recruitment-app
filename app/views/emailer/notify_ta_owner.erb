@@ -1,0 +1,8 @@
+Hi <%= @ta_owner.name %>,
+
+<p><%= @email_body %></p>
+
+<p>For more details, please log in to your Recruitment account. </p>
+
+<% url = url_for(protocol: "https", host: APP_CONFIG['host_name'], controller: "resumes", action: "show", id: @resume.uniqid.name) %>
+Link to resume: <%= url %>
