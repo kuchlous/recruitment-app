@@ -142,7 +142,7 @@
     <div class="form-section">
       <div class="form-group">
         <label for="requirement_name">Requirements</label>
-        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), multiple: true, class: "form-control multi-select", size: 4 %>
+        <%= select_tag "requirement_name", options_for_select(Requirement.get_requirement_array_for_select), multiple: true, class: "form-control multi-select", style: "max-height: 120px; overflow-y: auto;", size: 4 %>
         <small class="form-text text-muted">Hold control key for multiple selections</small>
       </div>
       
