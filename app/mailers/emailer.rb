@@ -42,6 +42,16 @@ class Emailer < ApplicationMailer
     mail(to: recipients, subject: subject)
   end
 
+  def notify_ta_owner(ta_owner, logged_emp, resume, is_new = false)
+    subject = is_new ? 'New Resume Uploaded' : 'Resume Updated'
+    @ta_owner    = ta_owner
+    @logged_emp  = logged_emp
+    @resume         = resume
+    @email_body = is_new ? "Resume of '#{resume.name}' has been uploaded by #{logged_emp.name}." : "Resume of '#{resume.name}' has been updated by #{logged_emp.name}."
+
+    mail(to: ta_owner.email, subject: subject)
+  end
+
   def panel(mail_to, interview, resume)
     subject = 'Added to interview panel'
     recipients = [ mail_to.email ]
