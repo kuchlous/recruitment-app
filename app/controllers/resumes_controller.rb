@@ -48,6 +48,9 @@ class ResumesController < ApplicationController
       @comments       = get_resume_comments(@resume, get_current_employee)
       @feedbacks      = @resume.feedbacks
       @messages       = @resume.messages
+      
+      # Check if current employee should see CTC information
+      @show_ctc = should_show_ctc?(@resume)
     else
       flash[:notice]  = "No details available for this resume"
       redirect_back(fallback_location: root_path)
@@ -57,7 +60,7 @@ class ResumesController < ApplicationController
   def new_resumes
     if params[:mine]
       employee = get_current_employee
-      resumes = Resume.where("referral_type = ? AND referral_id = ? AND overall_status = ?", "EMPLOYEE", employee.id, "New")
+      resumes = Resume.where("(referral_type = ? AND referral_id = ?) OR (ta_owner_id = ?) AND overall_status = ?", "EMPLOYEE", employee.id, employee.id, "New")
     else
       resumes = Resume.where("overall_status = ?", "New")
     end
@@ -2672,5 +2675,41 @@ class ResumesController < ApplicationController
       end
     end
     not_accepted_comments.sort_by { |c| c[:not_accepted].created_at }
+  end
+
+  private
+
+  ####################################################################################################
+  # FUNCTIONS   : should_show_ctc?                                                                   #
+  # DESCRIPTION : Determines if the current employee should see CTC information for a resume         #
+  #               based on role permissions and engineering lead relationships                        #
+  ####################################################################################################
+  def should_show_ctc?(resume)
+    # Check role-based permissions first
+    if get_current_employee.is_HR? || get_current_employee.is_ADMIN? || get_current_employee.is_GM? || get_current_employee.is_GROUP_HEAD?
+      return true
+    end
+    
+    # Collect all requirements from req_matches and forwards
+    requirements = []
+    
+    # Add requirements from req_matches
+    resume.req_matches.each do |req_match|
+      requirements << req_match.requirement
+    end
+    
+    # Add requirements from forwards
+    resume.forwards.each do |forward|
+      requirements.concat(forward.requirements)
+    end
+    
+    # Check if current employee is an engineering lead for any of these requirements
+    requirements.each do |requirement|
+      if requirement.employee == get_current_employee || requirement.eng_leads.include?(get_current_employee)
+        return true
+      end
+    end
+    
+    false
   end
 end

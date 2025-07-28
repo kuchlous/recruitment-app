@@ -75,17 +75,17 @@
         <span class="item__value item__value--center"> <%= @resume.current_company %> </span>
       </div>
       
-      <% if is_HR_ADMIN? || is_GM? || get_current_employee.is_GROUP_HEAD? %>
+      <% if @show_ctc %>
         <div class="item item--center">
           <span class="item__label item__label--center"> Current CTC: </span>
           <span class="item__value item__value--center">
-              <%= @resume.ctc %> Lakhs
+              <%= @resume.ctc.present? ? @resume.ctc.to_s + " Lakhs" : "N/A" %> 
           </span>
         </div>
         <div class="item item--center">
           <span class="item__label item__label--center"> Expected CTC: </span>
           <span class="item__value item__value--center">
-              <%= @resume.expected_ctc %> Lakhs
+              <%= @resume.expected_ctc.present? ? @resume.expected_ctc.to_s + " Lakhs" : "N/A" %> 
           </span>
         </div>
       <% end %>
