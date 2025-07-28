@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   get 'employees/autocomplete_employees', to: 'employees#autocomplete_employees', as: :employees_autocomplete_employees
-  resources :requirements
+  get 'requirements/autocomplete_requirements', to: 'requirements#autocomplete_requirements', as: :requirements_autocomplete_requirements
   match 'add_interviewer', to: 'interview_skills#add_interviewer'              ,via: :post
   match 'interview_skills/create', to: 'interview_skills#create'                             ,via: :post
   match 'interview_skills/:id', to: 'interview_skills#destroy'                                       , via: :delete
@@ -134,14 +134,14 @@ Rails.application.routes.draw do
   match 'resumes/add_hr_comment',to: 'resumes#add_hr_comment', via: :post
   match 'resumes/add_comment',to: 'resumes#add_comment', via: :post
 
- 
   resources :employees
   resources :resumes
   resources :portals
   resources :agencies
   resources :groups
   resources :designations
-  
+  resources :requirements
+
   # Handle Chrome DevTools specific requests
   get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [404, {}, ['']] }
 end
