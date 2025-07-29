@@ -187,6 +187,20 @@ class Employee < ActiveRecord::Base
     req_array
   end
 
+  # TODO -  Fix infinite loop for below scenario
+  # Record 1
+  # id: 1
+  # name: "X"
+  # manager_id: 2
+
+  # Record 2
+  # id: 2
+  # name: "Y"
+  # manager_id: 1
+
+  # cycle (X -> Y -> X -> Y ...) will repeat forever 
+  # return manager if manager == manager.manager
+
   def gm
     manager = self
     while (true)
