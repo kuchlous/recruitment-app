@@ -218,7 +218,7 @@ class ResumesController < ApplicationController
           if requirement_ids.any?
             Resume.create_reqs(@resume, requirement_ids, get_logged_employee, get_current_employee)
             requirements.each do |req|
-              req.update_attributes(last_forward_recieved: Date.today)
+              req.update(last_forward_recieved: Date.today)
             end
             flash_mesg = "You have successfully uploaded the resume and it has been forwarded to the owners of the requirements that you selected"
           else
@@ -301,7 +301,7 @@ class ResumesController < ApplicationController
         if requirement_ids.any?
           Resume.create_reqs(@resume, requirement_ids, get_logged_employee, get_current_employee)
           requirements.each do |req|
-            req.update_attributes(last_forward_recieved: Date.today)
+            req.update(last_forward_recieved: Date.today)
           end
         end
       end
@@ -661,7 +661,7 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def move_to_future
     resume      = Resume.find(params[:resume_id])
-    resume.update_attributes!(:status => "FUTURE")
+    resume.update!(:status => "FUTURE")
 
     # Adding Comments
     resume.add_resume_comment("FUTURE LIST: Moving to future list", "INTERNAL", get_current_employee)
@@ -752,7 +752,7 @@ class ResumesController < ApplicationController
 
   def mark_active
     resume      = Resume.find(params[:resume_id])
-    resume.update_attributes!(:status => "")
+    resume.update!(:status => "")
 
     # Adding Comments
     resume.add_resume_comment("MARK ACTIVE: Setting resume status as empty for further processing", "INTERNAL", get_current_employee)
@@ -799,10 +799,10 @@ class ResumesController < ApplicationController
   def reject_all_forwards_req_matches
     resume      = Resume.find(params[:resume_id])
     resume.forwards.each do |f|
-      f.update_attributes!(:status => "REJECTED")
+      f.update!(:status => "REJECTED")
     end
     resume.req_matches.each do |m|
-      m.update_attributes!(:status => "REJECTED")
+      m.update!(:status => "REJECTED")
     end
 
     # Adding Comments
@@ -814,7 +814,7 @@ class ResumesController < ApplicationController
 
   def mark_not_accepted
     resume       = Resume.find(params[:resume_id])
-    resume.update_attributes!(:status => "N_ACCEPTED")
+    resume.update!(:status => "N_ACCEPTED")
     expire_fragment('joined')
 
     # Adding Comments 
@@ -841,7 +841,7 @@ class ResumesController < ApplicationController
     end
 
     # Updating resume attributes
-    resume.update_attributes!(:joining_date => joining_date, :status => status)
+    resume.update!(:joining_date => joining_date, :status => status)
     if comment =~ /Enter your comment/
       comment  = "No Comments added"
     end
@@ -945,13 +945,13 @@ class ResumesController < ApplicationController
       end
 
       req_matches.each do |req_match|
-        req_match.update_attributes!(:status => status)
+        req_match.update!(:status => status)
       end
     end
 
     if status == "JOINING"
       joining_date = params[:joining_date]
-      resume.update_attributes!(:joining_date => joining_date)
+      resume.update!(:joining_date => joining_date)
       email_for_joined(resume, "JOINING")
     end
 
@@ -962,7 +962,7 @@ class ResumesController < ApplicationController
 
     # In case the whole resume is rejected the req_match will be empty.
     if status == "REJECTED" && req_matches.size == 0
-      resume.update_attributes!(:status => status) 
+      resume.update!(:status => status) 
       
     end
 
@@ -1067,8 +1067,8 @@ class ResumesController < ApplicationController
       mesg = "This resume already marked as joining. So you can not mark joining two times on same resume."
       comment = "ALREADY JOINED: already marked as joining/joined"
     else
-      resume.update_attributes!(:joining_date => joining_date)
-      match.update_attributes!(:status => status)
+      resume.update!(:joining_date => joining_date)
+      match.update!(:status => status)
       mesg = "You have succesfully added/updated the joining date(#{joining_date}) for #{resume.name}"
       comment = "JOINING: Marked Joining with no comments"
       email_for_joined(resume, "JOINING")
@@ -1726,7 +1726,7 @@ class ResumesController < ApplicationController
     m.save!
 
     # Creating message's reply_to field
-    m.update_attributes(:reply_to => m.id)
+    m.update(:reply_to => m.id)
 
     # Send mail when adding message
     email_for_add_message(m)
@@ -1741,7 +1741,7 @@ class ResumesController < ApplicationController
       chkbox_value = params["chkbox_number#{i}".to_sym]
       if chkbox_value
         message = Message.find(chkbox_value)
-        message.update_attributes!(:is_deleted => 1)
+        message.update!(:is_deleted => 1)
       end
     end
 
@@ -1755,7 +1755,7 @@ class ResumesController < ApplicationController
     mesg    = Message.find(params[:message_id])
     resume  = mesg.resume
     # Update is_replies field in old message
-    mesg.update_attributes(:is_replied => true)
+    mesg.update(:is_replied => true)
 
     # Creating new message to send
     m       = Message.new(:message   => comment,    :sent_to => Employee.find(mesg.sent_by),
@@ -1773,7 +1773,7 @@ class ResumesController < ApplicationController
   # Function to set is_read
   def set_is_read
     message = Message.find(params[:message_id])
-    message.update_attributes!(:is_read => true)
+    message.update!(:is_read => true)
 
     # After rendering this we do not need to create an js file
     # (set_is_read.js)
@@ -1812,7 +1812,7 @@ class ResumesController < ApplicationController
         if is_save
           
           # Scheduled only when interview get saved
-          match.update_attributes!(:status => "SCHEDULED")
+          match.update!(:status => "SCHEDULED")
 
           # Adding employees to an array for comments
           employee  = interview.employee
@@ -1856,7 +1856,7 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
 
     interview = Interview.find(int_id)
-    is_save = interview.update_attributes(:employee_id    => emp_id,
+    is_save = interview.update(:employee_id    => emp_id,
                                 :interview_date => int_date,
                                 :interview_time => int_time,
                                 :focus          => int_focus,
@@ -1926,7 +1926,7 @@ class ResumesController < ApplicationController
     # If interviews size is zero then change status as SCHEDULED
     total_left_interviews = req_match.interviews.size
     if total_left_interviews == 0
-      req_match.update_attributes!(:status => "SHORTLISTED")
+      req_match.update!(:status => "SHORTLISTED")
       flash_mesg += " Also there are no more interviews left for #{resume_name}. So we are marking this resume as \"SHORTLISTED\""
       comment    += " Also marking resume as shortlisted as all interviews deleted."
     end
@@ -1949,7 +1949,7 @@ class ResumesController < ApplicationController
     if (status =~ /Enter your comment/)
       status = ''
     end
-    match.resume.update_attributes!(:manual_status => status)
+    match.resume.update!(:manual_status => status)
     comment  = "No status added"
     if status
       comment = status
@@ -1967,7 +1967,7 @@ class ResumesController < ApplicationController
     if (manual_status =~ /Enter your comment/)
       manual_status = ''
     end
-    resume.update_attributes!(:manual_status => manual_status);
+    resume.update!(:manual_status => manual_status);
 
     comment  = "No status added"
     if manual_status
@@ -2028,7 +2028,7 @@ class ResumesController < ApplicationController
   def update_resume_likely_to_join
     likely_to_join = params[:likely_to_join]
     resume         = Resume.find(params[:resume_id])
-    resume.update_attributes!(:likely_to_join => likely_to_join)
+    resume.update!(:likely_to_join => likely_to_join)
     # respond_to do |format|
     #   format.json { :json => resume.likely_to_join }
     # end
@@ -2037,7 +2037,7 @@ class ResumesController < ApplicationController
 
   def submit_ph_rating
     resume = Resume.find(params[:id])
-    resume.update_attributes!(:practice_head_rating => params[:rating])
+    resume.update!(:practice_head_rating => params[:rating])
     redirect_back(fallback_location: root_path)
   end
 
