@@ -18,6 +18,7 @@ namespace :feedbacks do
     
     associated_count = 0
     skipped_count = 0
+    multiple_matches_count = 0
     
     feedbacks_without_interview.find_each do |feedback|
       begin
@@ -25,27 +26,53 @@ namespace :feedbacks do
         resume = feedback.resume
         interviews = Interview.joins(:req_match).where(req_matches: { resume_id: resume.id })
         
-        # Find interview with the same employee (interviewer)
-        matching_interview = interviews.find_by(employee_id: feedback.employee_id)
+        # Find interviews with the same employee (interviewer)
+        matching_interviews = interviews.where(employee_id: feedback.employee_id)
         
-        if matching_interview
-          # Check if this interview already has feedback
-          if matching_interview.feedback.present?
-            puts "Skipping feedback #{feedback.id} - interview #{matching_interview.id} already has feedback"
-            skipped_count += 1
-          else
-            if debug_mode
-              puts "[DEBUG] Would associate feedback #{feedback.id} with interview #{matching_interview.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
-            else
-              # Associate the feedback with the interview
-              feedback.update!(interview_id: matching_interview.id)
-              puts "Associated feedback #{feedback.id} with interview #{matching_interview.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
-            end
-            associated_count += 1
-          end
-        else
+        if matching_interviews.count == 0
           puts "No matching interview found for feedback #{feedback.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
           skipped_count += 1
+        elsif matching_interviews.count == 1
+          # Single match - proceed normally
+          matching_interview = matching_interviews.first
+          
+          if debug_mode
+            puts "[DEBUG] Would associate feedback #{feedback.id} with interview #{matching_interview.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
+          else
+            # Associate the feedback with the interview
+            feedback.update!(interview_id: matching_interview.id)
+            puts "Associated feedback #{feedback.id} with interview #{matching_interview.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
+          end
+          associated_count += 1
+        else
+          # Multiple matches - need to choose one
+          multiple_matches_count += 1
+          puts "Multiple matching interviews found for feedback #{feedback.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
+          
+          # Strategy 2: Choose the interview closest to feedback creation date
+          feedback_date = feedback.created_at.to_date
+          closest_date_interview = matching_interviews.min_by do |interview|
+            (interview.interview_date - feedback_date).abs
+          end
+          
+          # Use Strategy 2: closest date to feedback creation
+          selected_interview = closest_date_interview
+          
+          puts "  - Found #{matching_interviews.count} interviews:"
+          matching_interviews.each do |interview|
+            days_diff = (interview.interview_date - feedback_date).abs
+            puts "    * Interview #{interview.id}: #{interview.interview_date} at #{interview.interview_time} (days from feedback: #{days_diff})"
+          end
+          puts "  - Selected interview #{selected_interview.id} (closest date to feedback creation)"
+          
+          if debug_mode
+            puts "  [DEBUG] Would associate feedback #{feedback.id} with interview #{selected_interview.id}"
+          else
+            # Associate the feedback with the selected interview
+            feedback.update!(interview_id: selected_interview.id)
+            puts "  - Associated feedback #{feedback.id} with interview #{selected_interview.id}"
+          end
+          associated_count += 1
         end
         
       rescue => e
@@ -59,10 +86,12 @@ namespace :feedbacks do
       puts "[DEBUG MODE] Would have processed: #{total_feedbacks} feedbacks"
       puts "[DEBUG MODE] Would have associated: #{associated_count}"
       puts "[DEBUG MODE] Would have skipped: #{skipped_count}"
+      puts "[DEBUG MODE] Multiple matches found: #{multiple_matches_count}"
     else
       puts "Total feedbacks processed: #{total_feedbacks}"
       puts "Successfully associated: #{associated_count}"
       puts "Skipped: #{skipped_count}"
+      puts "Multiple matches handled: #{multiple_matches_count}"
       puts "Remaining feedbacks without interview: #{Feedback.where(interview_id: nil).count}"
     end
   end
@@ -86,5 +115,23 @@ namespace :feedbacks do
         puts "Feedback #{feedback.id}: #{feedback.employee.name} -> #{feedback.resume.name} (#{feedback.rating})"
       end
     end
+    
+    # Show multiple matches analysis
+    puts "\n=== Multiple Matches Analysis ==="
+    feedbacks_without_interview = Feedback.where(interview_id: nil)
+    multiple_matches_count = 0
+    
+    feedbacks_without_interview.each do |feedback|
+      resume = feedback.resume
+      interviews = Interview.joins(:req_match).where(req_matches: { resume_id: resume.id })
+      matching_interviews = interviews.where(employee_id: feedback.employee_id)
+      
+      if matching_interviews.count > 1
+        multiple_matches_count += 1
+        puts "Feedback #{feedback.id} has #{matching_interviews.count} matching interviews"
+      end
+    end
+    
+    puts "Feedbacks with multiple matching interviews: #{multiple_matches_count}"
   end
 end 
