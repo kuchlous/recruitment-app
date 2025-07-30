@@ -220,7 +220,7 @@ function createDropDownListNew(element, name, id, value, innerHTML, className) {
   for (i = 0; i < value.length; i++) {
     select.append(jQuery("<option>").attr("value", value[i]).html(innerHTML[i]));
   }
-  element.append(select);
+  jQuery(element).append(select);
 }
 
 function createDropDownList(element, name, id, value, innerHTML, className)
