@@ -31,7 +31,47 @@ namespace :feedbacks do
         
         if matching_interviews.count == 0
           puts "No matching interview found for feedback #{feedback.id} (Employee: #{feedback.employee.name}, Resume: #{resume.name})"
-          skipped_count += 1
+          
+          # Find req_matches for this resume
+          req_matches = ReqMatch.where(resume_id: resume.id)
+          
+          if req_matches.count > 0
+            # Find the req_match closest to feedback creation date
+            feedback_date = feedback.created_at.to_date
+            closest_req_match = req_matches.min_by do |req_match|
+              # Use created_at date of req_match as proxy for when the match was made
+              (req_match.created_at.to_date - feedback_date).abs
+            end
+            
+            puts "  - Found #{req_matches.count} req_matches, using closest one (ID: #{closest_req_match.id})"
+            
+            # Create a new interview for this req_match
+            new_interview = Interview.new(
+              req_match_id: closest_req_match.id,
+              employee_id: feedback.employee_id,
+              interview_date: feedback.created_at.to_date,
+              interview_time: feedback.created_at.to_time,
+              created_at: feedback.created_at,
+              updated_at: feedback.created_at
+            )
+            
+            if debug_mode
+              puts "  [DEBUG] Would create interview for req_match #{closest_req_match.id} with employee #{feedback.employee.name}"
+              puts "  [DEBUG] Would associate feedback #{feedback.id} with the new interview"
+            else
+              # Save the new interview
+              new_interview.save!
+              puts "  - Created new interview #{new_interview.id} for req_match #{closest_req_match.id}"
+              
+              # Associate the feedback with the new interview
+              feedback.update!(interview_id: new_interview.id)
+              puts "  - Associated feedback #{feedback.id} with new interview #{new_interview.id}"
+            end
+            associated_count += 1
+          else
+            puts "  - No req_matches found for resume #{resume.id}, skipping feedback"
+            skipped_count += 1
+          end
         elsif matching_interviews.count == 1
           # Single match - proceed normally
           matching_interview = matching_interviews.first
