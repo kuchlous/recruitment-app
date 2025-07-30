@@ -1672,6 +1672,19 @@ class ResumesController < ApplicationController
       else
         feedback.feedback = params[:resume][:comment]
       end
+      
+      # Check if this feedback is for a specific interview
+      if params[:feedback][:interview_id].present?
+        interview = Interview.find(params[:feedback][:interview_id])
+        # Check if interview already has feedback
+        if interview.has_feedback?
+          flash[:notice] = "This interview already has feedback"
+          redirect_back(fallback_location: root_path)
+          return
+        end
+        feedback.interview = interview
+      end
+      
       # Adding feedback
       Feedback.transaction do
         feedback.employee = @current_employee

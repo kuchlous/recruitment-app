@@ -1,10 +1,12 @@
 class Feedback < ActiveRecord::Base
   belongs_to            :employee
   belongs_to            :resume
+  belongs_to            :interview
 
   validates_presence_of :resume_id
   validates_presence_of :employee_id
   validates_presence_of :rating
+  validates_uniqueness_of :interview_id
 
   def numerical_rating
     if rating == "Very Good"
