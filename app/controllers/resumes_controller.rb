@@ -1,6 +1,5 @@
 class ResumesController < ApplicationController
   require 'spreadsheet'
-  require 'actionpack/action_caching'
 
   helper_method :safe_parse_date, :safe_parse_datetime
   
@@ -23,7 +22,6 @@ class ResumesController < ApplicationController
   before_action :check_for_HR_or_ADMIN, :only => [ :edit ]
 
   caches_action :joined, layout: false, cache_path: 'joined', expires_in: 30.minutes
-  # cache_sweeper :resumes_sweeper
 
   ####################################################################################################
   # FUNCTIONS   : new, edit, create, update, show                                                    #
@@ -777,7 +775,7 @@ class ResumesController < ApplicationController
     email_for_decision(resume, requirement, true, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for engineering decision", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} for engineering decision, req: #{requirement.name}"
+    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} (Req Owner) for engineering decision, Req: #{requirement.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -792,7 +790,7 @@ class ResumesController < ApplicationController
     email_for_decision(resume, requirement, false, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for decision", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} for decision, req: #{requirement.name}"
+    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} (GM) for decision, req: #{requirement.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -815,8 +813,7 @@ class ResumesController < ApplicationController
   def mark_not_accepted
     resume       = Resume.find(params[:resume_id])
     resume.update!(:status => "N_ACCEPTED")
-    expire_fragment('joined')
-
+    Rails.cache.delete('joined')
     # Adding Comments 
     resume.add_resume_comment("NOT ACCEPTED: Candidate did not accept our offer.", "INTERNAL", get_current_employee)
     flash[:notice] = "You have succesfully marked #{resume.name} as not accepted"
@@ -850,7 +847,7 @@ class ResumesController < ApplicationController
     resume.add_resume_comment("#{status}: " + comment, "INTERNAL", get_current_employee)
 
     email_for_joined(resume, status)
-    expire_fragment('joined')
+    Rails.cache.delete('joined')
   
     render body: nil
   end
@@ -956,7 +953,7 @@ class ResumesController < ApplicationController
     end
 
     if status == "JOINING" || status == "OFFERED" || status == "NOT ACCEPTED"
-      expire_fragment('joined')
+      Rails.cache.delete('joined')
     end
 
 
@@ -1073,8 +1070,7 @@ class ResumesController < ApplicationController
       comment = "JOINING: Marked Joining with no comments"
       email_for_joined(resume, "JOINING")
     end
-
-    expire_fragment('joined')
+    Rails.cache.delete('joined')
 
     # Adding Comments 
     resume.add_resume_comment(comment, "INTERNAL", get_current_employee)
@@ -2551,24 +2547,22 @@ class ResumesController < ApplicationController
   def email_for_decision(resume, requirement, eng_decision, hire_action)
     attachment, filetype = resume.preferred_file
     gm_for_decision = requirement.employee.gm
-    # gm_for_decision = Employee.find_by_login('alokk')
-    ta = get_current_employee
     attachment, filetype, ext = resume.preferred_file
     if !attachment
       flash[:notice] = "No resume to attach for #{resume.name}"
       redirect_back(fallback_location: root_path)
     end
     attachment = Rails.root + attachment
-    recipients = [gm_for_decision, ta]
-    ta_owner = resume.ta_owner
-    recipients << ta_owner if ta_owner
-    recipients << requirement.ta_lead if requirement.ta_lead
+    recipients = [get_current_employee]
+    recipients << resume.ta_owner if resume.ta_owner.present?
+    recipients << requirement.ta_lead if requirement.ta_lead.present?
     if eng_decision
       # Add all engineering leads from HABTM association
       requirement.eng_leads.each do |lead|
         recipients << lead
       end
       to = requirement.ta_lead
+      recipients << requirement.employee if requirement.employee.present? # Requirement Owner
     else
       to = gm_for_decision
     end
