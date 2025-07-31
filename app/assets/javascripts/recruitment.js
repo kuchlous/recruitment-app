@@ -220,7 +220,7 @@ function createDropDownListNew(element, name, id, value, innerHTML, className) {
   for (i = 0; i < value.length; i++) {
     select.append(jQuery("<option>").attr("value", value[i]).html(innerHTML[i]));
   }
-  element.append(select);
+  jQuery(element).append(select);
 }
 
 function createDropDownList(element, name, id, value, innerHTML, className)
@@ -1490,6 +1490,28 @@ function replyToBox(event, message, parent_message, message_id)
   // Create hidden element to pass message id
   createHiddenElement(elements[0], "message_id", "message_id", message_id);
 }
+function createRowNew(cur_element)
+{
+  // Remove existing ajax_request_tr if it exists
+  $("#ajax_request_tr").remove();
+  
+  // Get the containing row and calculate number of columns
+  var $containing_tr = $(cur_element).closest("tr");
+  num_tds = $containing_tr.children("td").length;
+  
+  var $trElement = $("<tr>", {
+    id: "ajax_request_tr"
+  });
+  
+  var $tdElement = $("<td>", {
+    colspan: num_tds
+  });
+  
+  $trElement.append($tdElement);
+  $containing_tr.after($trElement);
+
+  return {tdElement: $tdElement[0], trElement: $trElement[0], num_tds: num_tds, containing_tr: $containing_tr[0] };
+}
 
 // Function used to create extra row after the current row.
 // Wherever the mouse is clicked, the row will be created just after it
@@ -1667,9 +1689,9 @@ function viewFeedback(event, resume_id, action, cols)
   cur_element = event.target;
 
   // Create "ajax_reuest_tr" Row
-  var elements = createRow(cur_element.parentNode.parentNode,cols);
+  var elements = createRowNew(cur_element);
   // Sending ajax request to get interviews
-  // The interviews will replace innerHTML of the row created by addRow()
+  // The interviews will replace innerHTML of the row created by createRowNew
   jQuery.ajax({
     url: prepend_with_image_path + "/resumes/" + action + "?resume_id=" + resume_id + "&columns=" + cols,
     type: 'POST',
@@ -1684,28 +1706,26 @@ function viewFeedback(event, resume_id, action, cols)
 }
 
 // Basically we use this function to create/send feedback
-function createFeedbackBox(event, resumeId, req_name)
+function createFeedbackBox(event, interviewId, resumeId, req_name)
 {
   event.preventDefault();
   setFormAction("feedback");
 
-  // Finding element where mouse(which td/tr) is clicked
   cur_element = event.target;
 
-  // Creating row (ajax_request_tr)
-  var elements = createRow(cur_element);
+  var elements = createRowNew(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Create ratings drop down list
   var ratings = [ "Select", "Poor", "Below Average", "Average", "Good", "Very Good" ];
-  var select  = createDropDownList(elements[0], "feedback[rating]", "feedback[rating]", ratings, ratings, "feedback_fields");
+  createDropDownListNew(elements.tdElement, "feedback[rating]", "feedback[rating]", ratings, ratings, "feedback_fields");
 
-  createLineBreakElement(elements[0], 2);
+  createLineBreakElement(elements.tdElement, 2);
 
   // Create text area
-  createTextAreaElement(elements[0], "Add Feedback");
+  createTextAreaElement(elements.tdElement, "Add Feedback");
 
   // Image for go-icon
   var element   = imageForGoIcon(10, 64);
@@ -1717,11 +1737,12 @@ function createFeedbackBox(event, resumeId, req_name)
       document.form.submit();
     }
   );
-  elements[0].appendChild(element);
+  elements.tdElement.appendChild(element);
 
   // Pass resume id as hidden element
-  createHiddenElement(elements[0], "feedback[resume_id]", "feedback_resume_id", resumeId);
-  createHiddenElement(elements[0], "requirement_name",    "requirement_name",   req_name);
+  createHiddenElement(elements.tdElement, "feedback[resume_id]", "feedback_resume_id", resumeId);
+  createHiddenElement(elements.tdElement, "feedback[interview_id]", "feedback_interview_id", interviewId);
+  createHiddenElement(elements.tdElement, "requirement_name",    "requirement_name",   req_name);
 }
 
 function closeShowCommentsBox(elementId)
