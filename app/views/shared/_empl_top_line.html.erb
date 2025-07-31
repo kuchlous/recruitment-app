@@ -33,9 +33,8 @@
         <%= link_to "Upload Resume", :host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "new" %>
         | <%= link_to "Upload XLS", :host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "upload_xls" %>
         | <%= link_to "Interview XL", :host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "export_interviews_per_date" %>
-      <% else %>
-        <%= link_to "My Interviews", {:host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "interview_requests" } %>
       <% end %>
+      | <%= link_to "My Interviews", {:host=> APP_CONFIG['host_name'],  :controller => "resumes", :action => "interview_requests" } %>
       | <%= link_to "My Resumes", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "my_resumes" %>
       | <%= link_to "Interview Calendar", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "interview_calendar" %>
       <% if is_ADMIN? %>

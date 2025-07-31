@@ -480,7 +480,7 @@ module ApplicationHelper
 
   def get_current_experience_string(resume)
     year, month = resume.get_current_experience 
-    "#{year} years #{month} months"
+    "#{year}.#{month}"
   end
 
   def resume_link_with_20_characters(resume)

@@ -1,17 +1,29 @@
-<div id="interviews_div" class="common_class">
+<% @matches = @interviews_late %>
+<% @matches += @interviews_done %>
+<% @matches += @under_process %>
+<% @matches = sort_interviews_in_display_order(@matches) %>
+
+<div id="interviews_div" class="table-container">
   <div id="error_messages_div" class="error_messages_div"> </div>
+  
+  <div class="table-header">
+    <h2>Interviews (<%= @matches.size%>)</h2>
+  </div>
+  
   <form name="form" method="post">
-    <% @matches = @interviews_late %>
-    <% @matches += @interviews_done %>
-    <% @matches += @under_process %>
-    <% @matches = sort_interviews_in_display_order(@matches) %>
-    <span class="span_with_13_with_padding_0"> Interviews (<%= @matches.size%>) </span>
-    <%= link_to "(Export Today's Interviews)", {:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_interviews"}, :class => "float_right_with_no_padding" %>
-    <br />
+    <div class="table-footer" style="justify-content: flex-end;">
+      <div class="table-pagination">
+        <%= link_to "Export Today's Interviews", {:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_interviews"}, :class => "action-link" %>
+      </div>
+    </div>
+    
     <% if @matches.size > 0 %>
       <%= render "resumes/interview_table", :matches => @matches %>
     <% else %>
-      No interviews scheduled.
+      <div class="table-empty">
+        <div class="empty-icon">📋</div>
+        <p>No interviews scheduled.</p>
+      </div>
     <% end %>
   </form>
 </div>

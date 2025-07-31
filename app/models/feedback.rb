@@ -6,7 +6,6 @@ class Feedback < ActiveRecord::Base
   validates_presence_of :resume_id
   validates_presence_of :employee_id
   validates_presence_of :rating
-  validates_uniqueness_of :interview_id
 
   def numerical_rating
     if rating == "Very Good"

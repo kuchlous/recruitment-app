@@ -3,7 +3,7 @@ class Interview < ActiveRecord::Base
   # belongs_to :requirement
   belongs_to :req_match
   belongs_to :employee
-  has_many :feedbacks
+  has_many :feedbacks, dependent: :destroy
 
   validates_presence_of :employee_id
   validates_presence_of :interview_date
