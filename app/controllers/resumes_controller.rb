@@ -1,6 +1,5 @@
 class ResumesController < ApplicationController
   require 'spreadsheet'
-  require 'actionpack/action_caching'
 
   helper_method :safe_parse_date, :safe_parse_datetime
   
@@ -23,7 +22,6 @@ class ResumesController < ApplicationController
   before_action :check_for_HR_or_ADMIN, :only => [ :edit ]
 
   caches_action :joined, layout: false, cache_path: 'joined', expires_in: 30.minutes
-  # cache_sweeper :resumes_sweeper
 
   ####################################################################################################
   # FUNCTIONS   : new, edit, create, update, show                                                    #
@@ -815,8 +813,7 @@ class ResumesController < ApplicationController
   def mark_not_accepted
     resume       = Resume.find(params[:resume_id])
     resume.update!(:status => "N_ACCEPTED")
-    expire_fragment('joined')
-
+    Rails.cache.delete('joined')
     # Adding Comments 
     resume.add_resume_comment("NOT ACCEPTED: Candidate did not accept our offer.", "INTERNAL", get_current_employee)
     flash[:notice] = "You have succesfully marked #{resume.name} as not accepted"
@@ -850,7 +847,7 @@ class ResumesController < ApplicationController
     resume.add_resume_comment("#{status}: " + comment, "INTERNAL", get_current_employee)
 
     email_for_joined(resume, status)
-    expire_fragment('joined')
+    Rails.cache.delete('joined')
   
     render body: nil
   end
@@ -956,7 +953,7 @@ class ResumesController < ApplicationController
     end
 
     if status == "JOINING" || status == "OFFERED" || status == "NOT ACCEPTED"
-      expire_fragment('joined')
+      Rails.cache.delete('joined')
     end
 
 
@@ -1073,8 +1070,7 @@ class ResumesController < ApplicationController
       comment = "JOINING: Marked Joining with no comments"
       email_for_joined(resume, "JOINING")
     end
-
-    expire_fragment('joined')
+    Rails.cache.delete('joined')
 
     # Adding Comments 
     resume.add_resume_comment(comment, "INTERNAL", get_current_employee)

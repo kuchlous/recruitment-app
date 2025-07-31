@@ -59,6 +59,7 @@ class Resume < ActiveRecord::Base
 
   after_save :update_overall_status
   after_save :update_search_fields
+  after_update :expire_joined_cache
 
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
@@ -670,6 +671,14 @@ class Resume < ActiveRecord::Base
   end
 
 private
+
+  def expire_joined_cache
+    if Rails.cache.delete('joined')
+      Rails.logger.info("Cache key 'joined' successfully deleted.")
+    else
+      Rails.logger.warn("Cache key 'joined' does not exist.")
+    end
+  end
 
   def create_search_data(txt)
 
