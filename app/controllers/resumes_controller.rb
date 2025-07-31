@@ -775,7 +775,7 @@ class ResumesController < ApplicationController
     email_for_decision(resume, requirement, true, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for engineering decision", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} for engineering decision, req: #{requirement.name}"
+    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} (Req Owner) for engineering decision, Req: #{requirement.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -790,7 +790,7 @@ class ResumesController < ApplicationController
     email_for_decision(resume, requirement, false, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for decision", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} for decision, req: #{requirement.name}"
+    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} (GM) for decision, req: #{requirement.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -2547,24 +2547,22 @@ class ResumesController < ApplicationController
   def email_for_decision(resume, requirement, eng_decision, hire_action)
     attachment, filetype = resume.preferred_file
     gm_for_decision = requirement.employee.gm
-    # gm_for_decision = Employee.find_by_login('alokk')
-    ta = get_current_employee
     attachment, filetype, ext = resume.preferred_file
     if !attachment
       flash[:notice] = "No resume to attach for #{resume.name}"
       redirect_back(fallback_location: root_path)
     end
     attachment = Rails.root + attachment
-    recipients = [gm_for_decision, ta]
-    ta_owner = resume.ta_owner
-    recipients << ta_owner if ta_owner
-    recipients << requirement.ta_lead if requirement.ta_lead
+    recipients = [get_current_employee]
+    recipients << resume.ta_owner if resume.ta_owner.present?
+    recipients << requirement.ta_lead if requirement.ta_lead.present?
     if eng_decision
       # Add all engineering leads from HABTM association
       requirement.eng_leads.each do |lead|
         recipients << lead
       end
       to = requirement.ta_lead
+      recipients << requirement.employee if requirement.employee.present? # Requirement Owner
     else
       to = gm_for_decision
     end

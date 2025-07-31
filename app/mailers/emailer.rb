@@ -194,14 +194,13 @@ class Emailer < ApplicationMailer
     decision_string = eng_decision ? "Eng" : "Management"
     subject = decision_string +  " decision for #{resume.name}, " + "Requirement: " + requirement.name
     recipients = recipients.map{|r| r.email }
-    recipients << resume.ta_owner.email if resume.ta_owner.present?
     attachments[resume.uniqid.name + "." + ext] = File.read(rattachment)
     @resume = resume
     @to = to
     @requirement = requirement
     @hire_action = hire_action
     @eng_decision = eng_decision
-    mail(to: recipients, subject: subject)
+    mail(to: recipients.uniq, subject: subject)
   end
 
   def send_for_status_change(resume, requirement, recipients, status, comment)
