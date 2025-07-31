@@ -1,3 +1,18 @@
-<div id="interviews_hold" class="common_class">
-  <%= render "resumes/joining_offered_hold_form" %>
+<div id="interviews_div" class="table-container">
+  <div id="error_messages_div" class="error_messages_div"> </div>
+  
+  <div class="table-header">
+    <h2>Hold Resumes (<%= @matches.size%>)</h2>
+  </div>
+  
+  <form name="form" method="post">
+    <% if @matches.size > 0 %>
+      <%= render "resumes/interview_table", :matches => @matches %>
+    <% else %>
+      <div class="table-empty">
+        <div class="empty-icon">📋</div>
+        <p>No Hold Resumes.</p>
+      </div>
+    <% end %>
+  </form>
 </div>
