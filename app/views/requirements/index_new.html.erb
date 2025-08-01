@@ -1,0 +1,30 @@
+<div id="req_list_div" class="common_class">
+  <div class="float_left">
+    <span>Requirements</span><br /><br />
+    <div class="background_red">Hot Requirements</div>
+  </div>
+  <% if is_HR_ADMIN? || is_RMS_ANALYST? %>
+  <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
+    <%= link_to "Add New Requirement", host: APP_CONFIG['host_name'], controller: "requirements", action: "new" %>
+  </div>
+  <% end %>
+</div>
+<br>
+<div class="grid-container" style="width: 96%; height: 100%; margin: 0 auto;">
+
+  <div style="margin-bottom: 10px; display: flex; align-items: center;">
+    Search:
+    <input type="text" id="quickFilterInput" placeholder="Type to search..." style="margin-right: 10px;">
+    <button onclick="window.clearAllFilters()">Clear All Filters</button>
+  </div>
+
+  <div id="gridLoader" style="display: none; text-align: center; padding: 20px;">
+    Loading data...
+  </div>
+
+  <div id="gridError" style="display: none; text-align: center; padding: 20px; color: red; border: 1px solid red; background-color: #ffe0e0;">
+  </div>
+
+  <div id="openRequirementsGrid" class="ag-theme-alpine" style="display: none;"></div>
+
+</div>

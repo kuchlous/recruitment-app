@@ -1764,16 +1764,20 @@ div.pagination .disabled:hover
 
 .background_green {
   background-color: #9df405;
-  height: 20px;
   font-size: 10pt;
   font-weight: bold;
+  padding: 5px;
+  text-align: center;
+  border-radius: 3px;
 }
 
 .background_red {
   background-color: #ff8080;
-  height: 20px;
   font-size: 10pt;
   font-weight: bold;
+  padding: 5px;
+  text-align: center;
+  border-radius: 3px;
 }
 
 .float_left {

@@ -1,0 +1,39 @@
+/* Custom styles to ensure AG Grid box-sizing is respected */
+[class^="ag-"],
+[class^="ag-"]:focus,
+[class^="ag-"]:after,
+[class^="ag-"]:before {
+    box-sizing: border-box !important; /* Added !important */
+}
+
+/* Custom styles for AG Grid row highlighting */
+.ag-row-hot {
+  background-color: #fecdcf70 !important;
+  font-weight: bold;
+}
+
+/* Styles for the filter icon */
+.ag-header-icon > .ag-icon-filter {
+  color: blue; 
+  font-weight: bold;
+}
+
+.ag-cell-value > span > a {
+  color: rgb(59, 133, 81) !important; 
+}
+
+.ag-cell-value > span > a:hover {
+  color: rgb(34, 85, 52) !important; 
+  text-decoration: none !important;
+}
+
+
+.ag-theme-alpine .ag-ltr input[class^=ag-]:not([type]),
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=text],
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=number],
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=tel],
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=date],
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=datetime-local],
+.ag-theme-alpine .ag-ltr textarea[class^=ag-] {
+  padding-left: 25px !important; 
+}
