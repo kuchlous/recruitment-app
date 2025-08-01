@@ -3,6 +3,19 @@
    Description - Reusable table styles for consistent UI across the application
    ========================================================== */
 
+/* CSS Custom Properties for consistent spacing */
+:root {
+  --table-cell-padding-horizontal: 10px;
+  --table-cell-padding-vertical: 8px;
+  --table-cell-padding: var(--table-cell-padding-vertical) var(--table-cell-padding-horizontal);
+  --table-cell-padding-mobile-horizontal: 10px;
+  --table-cell-padding-mobile-vertical: 8px;
+  --table-cell-padding-mobile: var(--table-cell-padding-mobile-vertical) var(--table-cell-padding-mobile-horizontal);
+  --table-cell-padding-small-horizontal: 8px;
+  --table-cell-padding-small-vertical: 6px;
+  --table-cell-padding-small: var(--table-cell-padding-small-vertical) var(--table-cell-padding-small-horizontal);
+}
+
 /* Table Container */
 .table-container {
   max-width: 95%;
@@ -15,14 +28,16 @@
 
 /* Table Header */
 .table-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid rgb(59, 133, 81);
 }
 
 .table-header h2 {
-  margin: 0 0 8px 0;
+  margin: 0;
   color: #333;
   font-size: 24px;
   font-weight: 600;
@@ -50,7 +65,7 @@
 .modern-table .header_row td {
   background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
   color: white;
-  padding: 12px 15px;
+  padding: var(--table-cell-padding);
   font-weight: 600;
   font-size: 14px;
   text-align: left;
@@ -88,11 +103,24 @@
 
 /* Table Cells */
 .modern-table td {
-  padding: 12px 15px;
+  padding: var(--table-cell-padding);
   font-size: 14px;
   line-height: 1.4;
   vertical-align: middle;
   color: #333;
+}
+
+/* Table Body th elements (row labels) - Override recruitment.css */
+.modern-table tbody th {
+  background: transparent !important;
+  color: #333 !important;
+  padding: var(--table-cell-padding);
+  font-size: 14px;
+  line-height: 1.4;
+  vertical-align: middle;
+  font-weight: 600;
+  text-align: left;
+  border: none;
 }
 
 /* Alternating Row Colors */
@@ -417,7 +445,7 @@
 #resume_list_table .header_row td {
   background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
   color: white;
-  padding: 12px 15px;
+  padding: var(--table-cell-padding);
   font-weight: 600;
   font-size: 14px;
   text-align: left;
@@ -435,11 +463,24 @@
 }
 
 #resume_list_table td {
-  padding: 12px 15px;
+  padding: var(--table-cell-padding);
   font-size: 14px;
   line-height: 1.4;
   vertical-align: middle;
   color: #333;
+}
+
+/* Override recruitment.css for th elements in table body */
+#resume_list_table tbody th {
+  background: transparent !important;
+  color: #333 !important;
+  padding: var(--table-cell-padding);
+  font-size: 14px;
+  line-height: 1.4;
+  vertical-align: middle;
+  font-weight: 600;
+  text-align: left;
+  border: none;
 }
 
 #resume_list_table tr.yellow {
@@ -491,7 +532,7 @@
   .modern-table th,
   #resume_list_table td,
   #resume_list_table .header_row td {
-    padding: 8px 10px;
+    padding: var(--table-cell-padding-mobile);
   }
   
   .table-actions {
@@ -526,7 +567,7 @@
   .modern-table th,
   #resume_list_table td,
   #resume_list_table .header_row td {
-    padding: 6px 8px;
+    padding: var(--table-cell-padding-small);
   }
   
   .table-cell-truncated {

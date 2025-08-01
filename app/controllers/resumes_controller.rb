@@ -525,30 +525,6 @@ class ResumesController < ApplicationController
     [matches, joined_resumes, not_joined_resumes]
   end
 
-
-  def find_joining_resumes_old
-    matches = get_all_req_matches_of_status("JOINING").find_all { |r|
-                r.resume.resume_overall_status == "Joining Date Given"
-              }
-    matches = matches.sort_by { |m| [m.resume.joining_date ? m.resume.joining_date : Date.today, 
-                                     m.requirement.name] }
-
-    joined_resumes   = Resume.where(status: "JOINED")
-    joined_resumes = joined_resumes.sort_by { |r| [!r.joining_date.nil? ? 
-                                                      r.joining_date : 
-                                                      Date.today
-                                                    ] 
-                                              }
-
-    not_joined_resumes = Resume.where(status: "NOT JOINED")
-    not_joined_resumes = not_joined_resumes.sort_by { 
-                            |r| [!r.joining_date.nil? ? 
-                                    r.joining_date : Date.today 
-                                ] 
-                          }
-    [matches, joined_resumes, not_joined_resumes]
-  end
-
   def fill_months_table(months_table, full_table, type)
     month_index = 0
     full_table.each do |r|
@@ -618,7 +594,6 @@ class ResumesController < ApplicationController
   end
 
   def joined
-    @status             = "JOINING"
     @join_on_req_page   = @offer_on_req_page = 0
     @matches, joined_resumes, not_joined_resumes = find_joining_resumes
     @months_table       = create_months_table(@matches, joined_resumes, not_joined_resumes)
@@ -1571,17 +1546,52 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Used to show joined resumes of that time period/quarter                            #
   ####################################################################################################
   def show_quarterly_joined
-    @smonth = params[:smonth].to_i
-    @emonth = params[:emonth].to_i
-    @year   = params[:year].to_i
+    # Get parameters from the joined page form
+    start_month = params.dig(:start, :month) || params[:start_month]
+    start_year = params.dig(:start, :year) || params[:start_year]
+    end_month = params.dig(:end, :month) || params[:end_month]
+    end_year = params.dig(:end, :year) || params[:end_year]
+    
+    # Convert to integers, defaulting to current date if not provided
+    @smonth = start_month.present? ? start_month.to_i : Date.today.month
+    @emonth = end_month.present? ? end_month.to_i : Date.today.month
+    @start_year = start_year.present? ? start_year.to_i : Date.today.year
+    @end_year = end_year.present? ? end_year.to_i : Date.today.year
+    @status = params[:status] || "JOINED"
+
+    @joined_resumes = Resume.where(status: @status).find_all { |resume| 
+      resume.joining_date && 
+      resume.joining_date.month >= @smonth &&
+      resume.joining_date.month <= @emonth &&
+      resume.joining_date.year >= @start_year &&
+      resume.joining_date.year <= @end_year
+    }
+    @joined_resumes = @joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
+    
+  end
+
+  def show_quarterly_not_joined
+    start_month = params.dig(:start, :month) || params[:start_month]
+    start_year = params.dig(:start, :year) || params[:start_year]
+    end_month = params.dig(:end, :month) || params[:end_month]
+    end_year = params.dig(:end, :year) || params[:end_year]
+    
+    # Convert to integers, defaulting to current date if not provided
+    @smonth = start_month.present? ? start_month.to_i : Date.today.month  
+    @emonth = end_month.present? ? end_month.to_i : Date.today.month
+    @start_year = start_year.present? ? start_year.to_i : Date.today.year
+    @end_year = end_year.present? ? end_year.to_i : Date.today.year
     @status = params[:status]
 
-    @joined_resumes              = Resume.where(status: @status).find_all { |resume| 
-                                                          resume.joining_date && 
-                                                          resume.joining_date.month >= @smonth &&
-                                                          resume.joining_date.month <= @emonth &&
-                                                          resume.joining_date.year  == @year }
-    render "resumes/_show_quarterly_joined"
+    not_joined_resumes = Resume.where(status: @status).find_all { |resume| 
+      resume.joining_date && 
+      resume.joining_date.month >= @smonth &&
+      resume.joining_date.month <= @emonth &&
+      resume.joining_date.year >= @start_year &&
+      resume.joining_date.year <= @end_year
+    }
+    @not_joined_resumes = not_joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
+
   end
 
   ####################################################################################################
@@ -1608,15 +1618,26 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Used to show offered resumes of that time period/quarter                           #
   ####################################################################################################
   def show_quarterly_offered
-    @smonth = params[:smonth].to_i
-    @emonth = params[:emonth].to_i
-    @year   = params[:year].to_i
-    @status = params[:status]
+    # Get parameters from the joined page form
+    start_month = params.dig(:start, :month) || params[:start_month]
+    start_year = params.dig(:start, :year) || params[:start_year]
+    end_month = params.dig(:end, :month) || params[:end_month]
+    end_year = params.dig(:end, :year) || params[:end_year]
+    
+    # Convert to integers, defaulting to current date if not provided
+    @smonth = start_month.present? ? start_month.to_i : Date.today.month
+    @emonth = end_month.present? ? end_month.to_i : Date.today.month
+    @start_year = start_year.present? ? start_year.to_i : Date.today.year
+    @end_year = end_year.present? ? end_year.to_i : Date.today.year
+    @status = params[:status] || "OFFERED"
 
-    offered_comments = Comment.all.find_all { |c| c.comment.include?("OFFERED") &&
-                                                  c.created_at.month >= @smonth &&
-                                                  c.created_at.month <= @emonth &&
-                                                  c.created_at.year  == @year }
+    offered_comments = Comment.all.find_all { |c| 
+      c.comment.include?("OFFERED") &&
+      c.created_at.month >= @smonth &&
+      c.created_at.month <= @emonth &&
+      c.created_at.year >= @start_year &&
+      c.created_at.year <= @end_year
+    }
     @offered_comments = offered_comments.sort_by { |c| [c.created_at] }
     @offered_comments.uniq { |c| c.resume }
 
@@ -1624,11 +1645,20 @@ class ResumesController < ApplicationController
   end
 
   def show_quarterly_not_accepted
-    @smonth = params[:smonth].to_i
-    @emonth = params[:emonth].to_i
-    @year   = params[:year].to_i
-    date = Date.new(@year, @smonth, 1)
-    @not_accepted_comments = get_quarterly_comments_not_accepted(date)
+    # Get parameters from the joined page form
+    start_month = params.dig(:start, :month) || params[:start_month]
+    start_year = params.dig(:start, :year) || params[:start_year]
+    end_month = params.dig(:end, :month) || params[:end_month]
+    end_year = params.dig(:end, :year) || params[:end_year]
+    
+    # Convert to integers, defaulting to current date if not provided
+    @smonth = start_month.present? ? start_month.to_i : Date.today.month
+    @emonth = end_month.present? ? end_month.to_i : Date.today.month
+    @start_year = start_year.present? ? start_year.to_i : Date.today.year
+    @end_year = end_year.present? ? end_year.to_i : Date.today.year
+    
+    date = Date.new(@start_year, @smonth, 1)
+    @not_accepted_comments = get_quarterly_comments_not_accepted_by_date_range(date, date.end_of_month)
     render "resumes/_show_quarterly_not_accepted"
   end
 
@@ -1643,12 +1673,6 @@ class ResumesController < ApplicationController
     @offered_comments.uniq { |c| c.resume }
 
     render "resumes/_show_quarterly_offered"
-  end
-
-  def show_all_not_accepted
-    @status = "NOT ACCEPTED"
-    @not_accepted_comments = get_quarterly_comments_not_accepted(nil)
-    render "resumes/_show_quarterly_not_accepted"
   end
 
   ####################################################################################################
@@ -2643,6 +2667,48 @@ class ResumesController < ApplicationController
     not_accepted_comments.sort_by { |c| c[:not_accepted].created_at }
   end
 
+  def get_quarterly_comments_not_accepted_by_date_range(start_date, end_date)
+    resumes = Resume.where(status: "N_ACCEPTED")
+    not_accepted_comments = []
+    
+    resumes.each do |r|
+      next if r.comments.last.created_at < start_date
+      comments = []
+
+      # Get NOT ACCEPTED comments within date range
+      comments = Comment.find_by_sql([
+        "SELECT * FROM comments 
+         WHERE comments.resume_id = ? 
+         AND comments.comment LIKE '%NOT ACCEPTED%'
+         AND comments.created_at >= ? 
+         AND comments.created_at <= ?
+         ORDER BY created_at DESC", 
+        r.id, start_date, end_date
+      ])
+
+      next if comments.empty?
+      not_accepted_comment = comments.first
+
+      # Get OFFERED comments before the NOT ACCEPTED date
+      offered_comments = Comment.find_by_sql([
+        "SELECT * FROM comments 
+         WHERE comments.resume_id = ?
+         AND comments.comment LIKE '%OFFERED%'
+         AND comments.created_at <= ?
+         ORDER BY created_at DESC",
+        r.id, not_accepted_comment.created_at.to_date
+      ])
+      
+      offered_comment = offered_comments.first
+
+      not_accepted_comments << {
+        not_accepted: not_accepted_comment,
+        offered: offered_comment
+      }
+    end
+
+    not_accepted_comments.sort_by { |c| c[:not_accepted].created_at }
+  end
 
   def get_quarterly_comments_not_accepted(date)
     resumes = Resume.where(status: "N_ACCEPTED")

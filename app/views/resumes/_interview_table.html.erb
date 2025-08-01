@@ -23,9 +23,8 @@
   </thead>
   <% counter_value = 1 %>
   <% @matches.each do |match| %>
-    <% row_class = cycle("yellow", "white") %>
     <% resume = match.resume %>
-    <tr id="all_interviews_table<%= counter_value.to_s %>" class="<%= row_class %>">
+    <tr id="all_interviews_table<%= counter_value.to_s %>">
       <td class="table-cell-primary"><%= get_resume_link_with_mouse_over_and_mouseout(resume) %> </td>
       <td class="table-cell-secondary"> <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %> </td> 
       <td class="table-cell-secondary"> <%= print_date_no_year(match.get_display_interview_date) %> </td> 

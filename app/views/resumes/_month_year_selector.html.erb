@@ -1,0 +1,25 @@
+<div class="table-actions date-range-form-container">
+  <form action="<%= url %>" method="get" class="date-range-form">
+    <div class="date-range-form-group">
+      <label for="start_month" class="date-range-form-label">Start Month</label>
+      <%= select_month(Date.today, {prefix: 'start'}, {class: 'form-control'}) %>
+    </div>
+    <div class="date-range-form-group">
+      <label for="start_year" class="date-range-form-label">Start Year</label>
+      <%= select_year(Date.today, {prefix: 'start', start_year: 2020, end_year: Date.today.year}, {class: 'form-control'}) %>
+    </div>
+    
+    <span class="date-range-form-separator">to</span>
+    
+    <div class="date-range-form-group">
+      <label for="end_month" class="date-range-form-label">End Month</label>
+      <%= select_month(Date.today, {prefix: 'end'}, {class: 'form-control'}) %>
+    </div>
+    <div class="date-range-form-group">
+      <label for="end_year" class="date-range-form-label">End Year</label>
+      <%= select_year(Date.today, {prefix: 'end', start_year: 2020, end_year: Date.today.year}, {class: 'form-control'}) %>
+    </div>
+
+    <button type="submit" class="form-submit-btn">Go</button>
+  </form>
+</div> 

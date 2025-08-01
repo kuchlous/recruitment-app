@@ -1,0 +1,7 @@
+<% month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + " " + @start_year.to_s + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @end_year.to_s %>
+<div class="table-header">
+    <h2>Not Joined: <%= month_year_str %> (<%= @not_joined_resumes.size %>)</h2>
+    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_not_joined') %>
+</div>
+<%= render "resumes/show_quarterly_joined", :resumes => @not_joined_resumes, :status => "NOT JOINED" %>
+

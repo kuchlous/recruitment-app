@@ -285,21 +285,6 @@ require 'will_paginate/array'
     matches
   end
 
-  def get_all_req_matches_of_status_old(status)
-    matches = ReqMatch.find_all_by_status(status);
-    if (status != "SCHEDULED" && status != "OFFERED" && status != "JOINING" && status != "JOINED")
-      matches = matches.find_all { |m|
-         m.requirement.isOPEN?
-      }
-    end
-    if status == "JOINING"
-      matches = matches.find_all { |m|
-        m.resume.status != "JOINED"
-      }
-    end
-    matches
-  end
-
   def get_month_year
     @month          = params[:month].nil? ? Date.today.month : params[:month].to_i
     @year           = params[:year].nil?  ? Date.today.year  : params[:year].to_i
@@ -353,11 +338,35 @@ require 'will_paginate/array'
 
   def rescue_action(exception)
     case exception
-      when ::ActionController::RoutingError, ::ActionController::UnknownAction then
-        render "resumes/bogus_action.html.erb"
-      else
-        super
-      end
+    when ActiveRecord::RecordNotFound
+      render_optional_error_file :not_found
+    when ActionController::UnknownAction
+      render_optional_error_file :not_found
+    when ActionController::RoutingError
+      render_optional_error_file :not_found
+    else
+      # Log the full error details
+      Rails.logger.error "Exception: #{exception.class.name}: #{exception.message}"
+      Rails.logger.error "Backtrace: #{exception.backtrace.join("\n")}"
+      
+      # Call the original rescue_action
+      super
+    end
+  end
+
+  # Add method to log view errors
+  def log_view_error(error, context = {})
+    Rails.logger.error "View Error: #{error.class.name}: #{error.message}"
+    Rails.logger.error "Context: #{context.inspect}"
+    Rails.logger.error "Backtrace: #{error.backtrace.join("\n")}" if error.backtrace
+  end
+
+  # Override render to catch view errors
+  def render(*args)
+    super
+  rescue => e
+    log_view_error(e, { action: action_name, controller: controller_name, args: args })
+    raise e
   end
 
 end

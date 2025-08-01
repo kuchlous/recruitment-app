@@ -106,6 +106,7 @@ Rails.application.routes.draw do
   match 'resumes/yto',to: 'resumes#yto'                                                       , via: :get
   match 'resumes/manager_yto',to: 'resumes#manager_yto'                                       , via: :get
   match 'resumes/show_quarterly_joined',to: 'resumes#show_quarterly_joined'                   , via: :get
+  match 'resumes/show_quarterly_not_joined',to: 'resumes#show_quarterly_not_joined'           , via: :get
   match 'resumes/show_all_joined_or_not_joined',to: 'resumes#show_all_joined_or_not_joined'   , via: :get
   match 'resumes/show_quarterly_offered',to: 'resumes#show_quarterly_offered'                 , via: :get
   match 'resumes/show_all_offered',to: 'resumes#show_all_offered'                             , via: :get
