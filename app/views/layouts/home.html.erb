@@ -1,15 +1,19 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ <head>
     <title> Mirafra - Recruitment Drive </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <%= javascript_tag "prepend_with_image_path = '#{APP_CONFIG['subdomain']}'" %>
-    <%#= load_google_api_or_internal_files_based_upon_ip_address %>
-    <%= yield :head %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
-    <%= stylesheet_link_tag :application, :recursive => true %>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/styles/ag-theme-alpine.css">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
 
     <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <%= yield :head %>
   </head>
   <body>
     <div id="allcontent">
