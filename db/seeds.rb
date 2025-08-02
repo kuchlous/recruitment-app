@@ -35,7 +35,7 @@ Designation.insert_all([
   {id: 6, name: "Engineering Manager", created_at: "2025-07-17 15:12:18", updated_at: "2025-07-17 15:12:18"}
 ])
 Employee.insert_all([
-  {id: 1, name: "Alok", eid: 5, login: "alokk", email: "alokk@mirafra.com", manager_id: 2, employee_type: "SW", employee_status: "ACTIVE", account_id: nil, is_admin: true, joining_date: "2000-04-20", leaving_date: nil, group_id: 1, created_at: "1993-02-16 12:03:14", updated_at: "1993-02-16 12:03:14", n_interviews_per_week: 2, preferred_day_and_time: ""},
+  {id: 1, name: "Alok", eid: 5, login: "alokk", email: "alokk@mirafra.com", manager_id: 0, employee_type: "GM", employee_status: "ACTIVE", account_id: nil, is_admin: true, joining_date: "2000-04-20", leaving_date: nil, group_id: 1, created_at: "1993-02-16 12:03:14", updated_at: "1993-02-16 12:03:14", n_interviews_per_week: 2, preferred_day_and_time: ""},
   {id: 2, name: "Anwesha", eid: 6, login: "anwesha", email: "anweshad@mirafra.com", manager_id: 1, employee_type: "HR", employee_status: "ACTIVE", account_id: nil, is_admin: false, joining_date: "2020-12-09", leaving_date: nil, group_id: 1, created_at: "2011-12-02 07:40:15", updated_at: "2011-12-02 07:40:15", n_interviews_per_week: 4, preferred_day_and_time: ""},
   {id: 3, name: "Megha", eid: 6, login: "megha", email: "megha@mirafra.com", manager_id: 1, employee_type: "HR", employee_status: "ACTIVE", account_id: nil, is_admin: false, joining_date: "2018-05-26", leaving_date: nil, group_id: 2, created_at: "2011-10-25 12:01:52", updated_at: "2011-10-25 12:01:52", n_interviews_per_week: 5, preferred_day_and_time: ""}
 ])

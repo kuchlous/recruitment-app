@@ -8,6 +8,8 @@
 //= require fullcalendar
 //= require fullcalendar/gcal
 //= require twitter/bootstrap/modal
+//= require open_requirements_grid
+
 //= require_tree .
 // for employees available in our database
 function fillInputBoxWithContents()
