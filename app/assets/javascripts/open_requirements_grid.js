@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     gridDiv.style.display = 'none';
 
-    fetch('/api/requirements')
+    fetch(prepend_with_image_path + '/api/requirements')
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP Error! status: ${response.status}`);
