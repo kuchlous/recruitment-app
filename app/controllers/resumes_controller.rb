@@ -1557,7 +1557,7 @@ class ResumesController < ApplicationController
     @emonth = end_month.present? ? end_month.to_i : Date.today.month
     @start_year = start_year.present? ? start_year.to_i : Date.today.year
     @end_year = end_year.present? ? end_year.to_i : Date.today.year
-    @status = params[:status] || "JOINED"
+    @status = "JOINED"
 
     @joined_resumes = Resume.where(status: @status).find_all { |resume| 
       resume.joining_date && 
@@ -1581,7 +1581,7 @@ class ResumesController < ApplicationController
     @emonth = end_month.present? ? end_month.to_i : Date.today.month
     @start_year = start_year.present? ? start_year.to_i : Date.today.year
     @end_year = end_year.present? ? end_year.to_i : Date.today.year
-    @status = params[:status]
+    @status = "NOT JOINED"
 
     not_joined_resumes = Resume.where(status: @status).find_all { |resume| 
       resume.joining_date && 
@@ -1592,17 +1592,6 @@ class ResumesController < ApplicationController
     }
     @not_joined_resumes = not_joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
 
-  end
-
-  ####################################################################################################
-  # FUNCTION    : show_all_joined_or_not_joined                                                      #
-  # DESCRIPTION : Function added to get all joined/not joined resumes and send them using render.    #
-  ####################################################################################################
-  def show_all_joined_or_not_joined
-    @status           = params[:status]
-    @joined_resumes   = Resume.where(status: @status)
-    @joined_resumes   = @joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
-    render "resumes/_show_quarterly_joined"
   end
 
   def get_resume_attachment

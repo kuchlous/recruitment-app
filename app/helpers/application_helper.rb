@@ -656,11 +656,6 @@ module ApplicationHelper
     link_to "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_joined", :smonth => smonth, :emonth => emonth, :year => year, :status => status, :target => "_blank"
   end
 
-  def get_ajax_request_for_all_joined_or_not_joined(text, status)
-    status == "JOINED" ? div = "joined_resumes_div" : div = "not_joined_resumes_div"
-    link_to text, :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_all_joined_or_not_joined", :status => status, :target => "_blank"
-  end
-
   def get_ajax_request_for_quarterly_offered(smonth, emonth, year, status, text)
     div    = "offered_resumes_div"
     link_to "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_offered", :smonth => smonth, :emonth => emonth, :year => year, :status => status, :target => "_blank"

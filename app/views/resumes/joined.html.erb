@@ -102,7 +102,7 @@
 
   <div id="joined_resumes_div">
     <% if @joined_resumes.present? %>
-      <%= render "resumes/show_quarterly_joined", :joined_resumes => @joined_resumes, :status => "JOINED" %>
+      <%= render "resumes/show_quarterly_joined", :resumes => @joined_resumes, :status => "JOINED" %>
     <% else %>
       <div class="table-empty">
         <div class="empty-icon">📋</div>
@@ -118,7 +118,7 @@
   
   <div id="not_joined_resumes_div">
     <% if @not_joined_resumes.present? %>
-      <%= render "resumes/show_quarterly_joined", :joined_resumes => @not_joined_resumes, :status => "NOT JOINED" %>
+      <%= render "resumes/show_quarterly_joined", :resumes => @not_joined_resumes, :status => "NOT JOINED" %>
     <% else %>
       <div class="table-empty">
         <div class="empty-icon">📋</div>

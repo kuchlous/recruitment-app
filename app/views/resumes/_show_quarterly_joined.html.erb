@@ -1,4 +1,4 @@
-<% if @joined_resumes.present? %>
+<% if local_assigns[:resumes].present? %>
   <table id="joined_resumes_table" class="sortable modern-table">
     <thead>
       <tr>
@@ -9,10 +9,10 @@
       </tr>
     </thead>
     <tbody>
-      <% @resumes.each do |r| %>
+      <% local_assigns[:resumes].each do |r| %>
         <tr>
           <td class="table-cell-primary"> <%= get_resume_link_with_mouse_over_and_mouseout(r) %> </td>
-          <td class="table-cell-secondary"> <%= get_resume_requirement(r, @status) %> </td>
+          <td class="table-cell-secondary"> <%= get_resume_requirement(r, local_assigns[:status]) %> </td>
           <td class="table-cell-secondary"> <%= print_date(r.joining_date) %> </td>
           <td class="table-cell-secondary"> <%= r.experience %> </td>
         </tr>
@@ -22,6 +22,6 @@
 <% else %>
   <div class="table-empty">
     <div class="empty-icon">📋</div>
-    <p>No joined resumes found for the selected date range.</p>
+    <p>No resumes found for the selected date range.</p>
   </div>
 <% end %>
