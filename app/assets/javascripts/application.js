@@ -8,6 +8,7 @@
 //= require fullcalendar
 //= require fullcalendar/gcal
 //= require twitter/bootstrap/modal
+//= require twitter/bootstrap/tooltip
 //= require open_requirements_grid
 
 //= require_tree .
@@ -178,6 +179,9 @@ function initializeComponents() {
       label.find('span').text('Choose File');
     }
   });
+
+  // Initialize Bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip();
 }
 
 // Ensure jQuery is available as $ for our main code

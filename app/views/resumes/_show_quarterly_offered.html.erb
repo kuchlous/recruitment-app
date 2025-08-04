@@ -24,8 +24,8 @@
   <tbody>
     <% @offered_comments.each do |c| %>
       <tr>
-        <td class="table-cell-primary"> <%= get_resume_link_with_mouse_over_and_mouseout(c.resume) %> </td>
-        <td class="table-cell-secondary"> <%= get_requirement_from_comment(c, "OFFERED") ? get_requirement_link_with_mouse_over_and_mouseout(get_requirement_from_comment(c, "OFFERED")) : "Not Available" %> </td>
+        <td class="table-cell-primary"> <%= resume_link(c.resume) %> </td>
+        <td class="table-cell-secondary"> <%= get_requirement_from_comment(c, "OFFERED") ? requirement_link(get_requirement_from_comment(c, "OFFERED")) : "Not Available" %> </td>
         <td class="table-cell-secondary"> <%= print_date_and_time(c.created_at) %> </td>
         <td class="table-cell-secondary"> <%= get_current_experience_string(c.resume) %> </td>
       </tr>

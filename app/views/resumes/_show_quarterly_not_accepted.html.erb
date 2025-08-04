@@ -24,8 +24,8 @@
   <tbody>
     <% @not_accepted_comments.each do |c| %>
       <tr>
-        <td class="table-cell-primary"> <%= get_resume_link_with_mouse_over_and_mouseout(c[:not_accepted].resume) %> </td>
-        <td class="table-cell-secondary"> <%= c[:offered] ? get_requirement_from_comment(c[:offered], "OFFERED") ? get_requirement_link_with_mouse_over_and_mouseout(get_requirement_from_comment(c[:offered], "OFFERED")) : "Not Available" : "Not Available" %> </td>
+        <td class="table-cell-primary"> <%= resume_link(c[:not_accepted].resume) %> </td>
+        <td class="table-cell-secondary"> <%= c[:offered] ? get_requirement_from_comment(c[:offered], "OFFERED") ? requirement_link(get_requirement_from_comment(c[:offered], "OFFERED")) : "Not Available" : "Not Available" %> </td>
         <td class="table-cell-secondary"> <%= print_date_and_time(c[:not_accepted].created_at) %> </td>
         <td class="table-cell-secondary"> <%= get_current_experience_string(c[:not_accepted].resume) %> </td>
       </tr>

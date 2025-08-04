@@ -1,5 +1,4 @@
-<% @interviews   = @interview_requests
-   counter_value = 1 %>
+<% @interviews = @interview_requests %>
 <div id="interviews_requests" class="common_class">
   <span class="span_with_13_with_padding_0"> Interview requests (<%= @interviews.size %>) </span>
   <br />
@@ -13,19 +12,19 @@
         <td class="int_reqt_focus"> Focus  </td>
         <td class="int_reqt_actions sorttable_nosort"> Actions </td>
       </tr>
-      <% @interviews.each do |i| %>
+      <% @interviews.each_with_index do |i, index| %>
         <% resume = i.req_match.resume
            req    = i.req_match.requirement
            iclass = get_interview_row_class(i.req_match, i) %>
-        <tr id="interview_request_<%= counter_value.to_s %>" class="<%= iclass %>">
+        <tr id="interview_request_<%= (index + 1).to_s %>" class="<%= iclass %>">
           <td>
-            <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+            <%= resume_link(resume) %>
           </td>
           <td title="<%= print_date(i.interview_date) %>">
             <%= print_date_no_year(i.interview_date) + ' ' + print_time(i.interview_time) %>
           </td>
           <td>
-            <%= get_requirement_link_with_mouse_over_and_mouseout(req) %>
+            <%= requirement_link(req) %>
           </td>
           <td>
             <%  itype = "Telephonic" %>
@@ -45,7 +44,6 @@
             </span>
           </td>
         </tr>
-        <% counter_value += 1 %>
       <% end %>
     </table>
   <% else %>

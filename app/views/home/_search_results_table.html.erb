@@ -29,7 +29,7 @@
       <% @results.each do |result| %>
         <tr>
           <td class="table-cell-primary" title="<%= result.name %>">
-            <%= resume_link_with_20_characters(result) %>
+            <%= resume_link(result) %>
           </td>
           <td class="table-cell-secondary" title="<%= result.qualification %>">
             <%= result.qualification[0..20] %>

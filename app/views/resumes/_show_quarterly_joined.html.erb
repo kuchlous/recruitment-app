@@ -11,7 +11,7 @@
     <tbody>
       <% local_assigns[:resumes].each do |r| %>
         <tr>
-          <td class="table-cell-primary"> <%= get_resume_link_with_mouse_over_and_mouseout(r) %> </td>
+          <td class="table-cell-primary"> <%= resume_link(r) %> </td>
           <td class="table-cell-secondary"> <%= get_resume_requirement(r, local_assigns[:status]) %> </td>
           <td class="table-cell-secondary"> <%= print_date(r.joining_date) %> </td>
           <td class="table-cell-secondary"> <%= r.experience %> </td>

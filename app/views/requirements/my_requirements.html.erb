@@ -42,7 +42,7 @@
         <%= requirement.id %>
         </td>
         <td>
-        <%= get_requirement_link_with_mouse_over_and_mouseout(requirement) %>
+        <%= requirement_link(requirement) %>
         </td>
         <td title = "<%= requirement.skill %> <%= requirement.description %>" >
           <%= snippet(requirement.skill, 5) %> <br />

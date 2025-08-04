@@ -483,15 +483,6 @@ module ApplicationHelper
     "#{year}.#{month}"
   end
 
-  def resume_link_with_20_characters(resume)
-    company = resume.current_company ? resume.current_company : ""
-    uniqid_name = resume.uniqid.name;
-    link_to get_characters(resume.name.titleize, 17), {:host=> APP_CONFIG['host_name'], :controller  => "resumes", :action => "show", :id => uniqid_name },
-                                               :onMouseOver => "popUpDescriptionForResume(#{resume.id}, \"#{snippet(resume.qualification, 10)}\", \"#{get_current_experience_string(resume)}\", \"#{company}\");",
-                                               :onMouseOut  => "HideContent(\"#{resume.id}\");",
-                                               :onClick     => "openResumeInNewTab(\"#{uniqid_name}\"); return false;"
-  end
-
   def get_view_feedback_icon(resume, cols=4)
     link_to image_tag("ViewFeedback.png", :size    => "20x20",
                                                    :class   => "feedback_icon_class",
@@ -525,31 +516,42 @@ module ApplicationHelper
      "19:00", "19:30", "20:00", "20:30", "21:00"]
   end
 
-  def get_resume_link_with_mouse_over_and_mouseout(resume)
+
+
+  def resume_link(resume, placement: "top")
     return '' unless resume
-    company      = resume.current_company ? resume.current_company : ""
-    uniqid_name  = resume.uniqid.name
-    link_to resume.name, { :controller  => "resumes", :action => "show", :host => APP_CONFIG['host_name'], :id => uniqid_name },
-                           :onMouseOver => "popUpDescriptionForResume(#{resume.id}, \"#{snippet(resume.qualification, 10)}\", \"#{get_current_experience_string(resume)}\", \"#{company}\");",
-                           :onMouseOut  => "HideContent(\"#{resume.id}\");",
-                           :onClick     => "openResumeInNewTab(\"#{uniqid_name}\"); return false;"
+    company = resume.current_company ? resume.current_company : ""
+    uniqid_name = resume.uniqid.name
+    year, month = resume.get_current_experience
+    
+    tooltip_html = "Qualification: #{resume.qualification}<br>Experience: #{year}.#{month}<br>Company: #{company}"
+    
+    link_to resume.name, resume_url(uniqid_name, host: APP_CONFIG['host_name']),
+            data: { toggle: "tooltip", placement: placement, html: true },
+            title: tooltip_html,
+            target: "_blank"
   end
 
-  def get_requirement_link_with_mouse_over_and_mouseout(requirement)
-    s = requirement.skill
-    if ! s.valid_encoding?
-      s = s.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+  def requirement_link(requirement, placement: "top")
+    return '' unless requirement
+    skill = requirement.skill
+    if !skill.valid_encoding?
+      skill = skill.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
     end
-    d = requirement.description
-    if ! d.valid_encoding?
-      d = d.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+    description = requirement.description
+    if !description.valid_encoding?
+      description = description.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
     end
-
-    link_to requirement.name, {:host=> APP_CONFIG['host_name'], :controller  => "requirements", :action => "show", :id => requirement.id },
-                                :onMouseOver => "popUpDescriptionForRequirements(#{requirement.id}, \"#{s}\", \"#{d}\");",
-                                :onMouseOut  => "HideContent(\"#{requirement.id}\");"
-    # link_to requirement.name, {:controller  => "requirements", :action => "show", :id => requirement.id}
+    
+    tooltip_html = "Skills: #{skill}<br>Description: #{description}"
+    
+    link_to requirement.name, requirement_url(requirement.id, host: APP_CONFIG['host_name']),
+            data: { toggle: "tooltip", placement: placement, html: true },
+            title: tooltip_html,
+            target: "_blank"
   end
+
+
 
   def get_reqmatches_resumes(matches)
     resumes = []
@@ -594,7 +596,7 @@ module ApplicationHelper
     matches = resume.req_matches
     matches.each do |match|
       if match.status == status
-        return get_requirement_link_with_mouse_over_and_mouseout(match.requirement)
+        return requirement_link(match.requirement)
       end
     end
   end
@@ -603,7 +605,7 @@ module ApplicationHelper
     matches = resume.req_matches
     matches.each do |match|
       if match.resume.status == status
-        return get_requirement_link_with_mouse_over_and_mouseout(match.requirement)
+        return requirement_link(match.requirement)
       end
     end
   end

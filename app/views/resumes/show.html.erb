@@ -336,7 +336,7 @@
             <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
               <td>
                 <% if m.is_a?(ReqMatch) %>
-                  <%= get_requirement_link_with_mouse_over_and_mouseout(m.requirement) %>
+                  <%= requirement_link(m.requirement) %>
                   <% status = "REQMATCH" %>
                 <% else %>
                   <%= m.emp_forwarded_to.name %> <br />

@@ -26,10 +26,10 @@
       resume = f.resume %>
       <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
         <td>
-          <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+          <%= resume_link(resume) %>
         </td>
         <td>
-          <%= get_requirement_link_with_mouse_over_and_mouseout(f.requirement) %>
+          <%= requirement_link(f.requirement) %>
         </td>
         <% if join_display == 1 %>
           <td>
