@@ -23,7 +23,7 @@
         <% @resumes.each do |resume| %>
           <% row_class            = cycle("white", "yellow") %>
           <tr id="<%= row_id_prefix %><%= counter_value %>" class=<%= row_class %>>
-            <td> <%= get_resume_link_with_mouse_over_and_mouseout(resume) %> </td>
+            <td> <%= resume_link(resume) %> </td>
             <td> <%= resume.experience %>                                    </td>
             <td title="<%= resume.qualification %>"> <%= resume.qualification[0..35] %>..  </td>
             <td title="<%= resume.summary %>">       <%= resume.summary[0..45]       %>..  </td>

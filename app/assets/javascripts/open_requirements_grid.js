@@ -1,7 +1,7 @@
 // This registers the module correctly from the single loaded file
 agGrid.ModuleRegistry.registerModules([agGrid.ClientSideRowModelModule]);
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('turbolinks:load', () => {
   const gridDiv = document.querySelector('#openRequirementsGrid');
   const loaderDiv = document.querySelector('#gridLoader');
   const errorDiv = document.querySelector('#gridError');
@@ -42,10 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
             cellRenderer: function(params) {
               if (params.value !== undefined && params.data.id !== undefined) {
                 const iconHtml = '<span class="glyphicon glyphicon-new-window" aria-hidden="true" style="font-size: 0.8em; margin-left: 5px;"></span>';
-                return `<a href="/requirements/${params.data.id}" target="_blank">${params.value} ${iconHtml}</a>`;
+                return `<a href="${prepend_with_image_path}/requirements/${params.data.id}" target="_blank">${params.value} ${iconHtml}</a>`;
               }
               return params.value;
             }
+          },
+          {
+            headerName: 'Group',
+            field: 'group',
+            sortable: true,
+            filter: true,
+            width: 100,
+            flex: 1,
           },
           {
             headerName: 'Skills/Desc',
@@ -56,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             minWidth: 200
           },
           {
-            headerName: 'Exp',
+            headerName: 'Experience',
             field: 'experience',
             sortable: true,
             flex: 1.5,
@@ -75,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
             field: 'positions',
             sortable: true,
             flex: 1.5,
-            minWidth: 50
+            minWidth: 50,
+            headerClass: 'ag-center-header', 
+            cellStyle: { 'text-align': 'center' },
           },
           {
             headerName: 'Owner',
@@ -91,6 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
             filter: true,
             width: 100,
             flex: 1,
+          },
+          {
+            headerName: 'Created At',
+            field: 'created_at',
+            sortable: true,
+            filter: 'agDateColumnFilter',
+            minWidth: 100,
+            flex: 1.5,
           }
         ];
 
@@ -103,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             filter: true,
           },
           pagination: true,
-          paginationPageSize: 100,
+          paginationPageSize: 50,
           domLayout: 'autoHeight',
           getRowClass: function(params) {
             if (params.data.req_type === 'HOT') {

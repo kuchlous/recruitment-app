@@ -10,4 +10,6 @@ json.array! @requirements do |requirement|
   json.positions   requirement.nop
   json.owner       requirement.employee.name
   json.req_type    requirement.req_type
+  json.created_at  requirement.created_at.try(:strftime, '%b %d, %Y')
+  json.group       requirement.group.name
 end

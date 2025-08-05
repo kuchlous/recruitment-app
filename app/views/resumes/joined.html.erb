@@ -61,7 +61,7 @@
         resume = f.resume %>
         <tr>
           <td class="table-cell-primary">
-            <%= get_resume_link_with_mouse_over_and_mouseout(resume) %>
+            <%= resume_link(resume) %>
           </td>
           <td sorttable_customkey="<%= f.requirement.name %>" class="table-cell-secondary">
             <%= f.requirement.name %>

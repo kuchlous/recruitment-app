@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   post 'employees/edit_slot', to: 'employees#edit_slot'
   match 'login', to: 'employees#login'                                         , via: :post
   match 'logout', to: 'employees#logout'                                       , via: :get
-  match 'requirements_new', to: 'requirements#index_new'                       , via: :get
   match 'requirements/my_requirements', to: 'requirements#my_requirements'     , via: :get
   match 'requirements/req_analysis', to: 'requirements#req_analysis'           , via: :get
   match 'requirements/all_reqs', to: 'requirements#all_reqs'                   , via: :get

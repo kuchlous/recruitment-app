@@ -25,8 +25,8 @@
   <% @matches.each do |match| %>
     <% resume = match.resume %>
     <tr id="all_interviews_table<%= counter_value.to_s %>">
-      <td class="table-cell-primary"><%= get_resume_link_with_mouse_over_and_mouseout(resume) %> </td>
-      <td class="table-cell-secondary"> <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %> </td> 
+      <td class="table-cell-primary"><%= resume_link(resume) %> </td>
+      <td class="table-cell-secondary"> <%= requirement_link(match.requirement) %> </td> 
       <td class="table-cell-secondary"> <%= print_date_no_year(match.get_display_interview_date) %> </td> 
       <td class="table-cell-secondary"> <%= get_current_experience_string(resume) %> </td>
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>

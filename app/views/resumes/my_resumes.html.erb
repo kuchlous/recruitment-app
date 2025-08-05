@@ -37,7 +37,7 @@
         <% @resumes.each do |resume| %>
           <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
             <td class="my_resumes_label" title="<%= resume.name %>">
-              <%= resume_link_with_20_characters(resume) %>
+              <%= resume_link(resume) %>
             </td>
             <td class="my_resumes_label">
               <%= print_date(resume.created_at) %>
@@ -57,7 +57,7 @@
                   <% if forwards.size > 1 %>
                     <b> Multiple </b>
                   <% else %>
-                    <%= get_requirement_link_with_mouse_over_and_mouseout(forwards.first.requirements.first) %>
+                    <%= requirement_link(forwards.first.requirements.first) %>
                   <% end %>
                 </td>
               <% elsif @status == "Shortlisted" %>
@@ -70,14 +70,14 @@
                   <% if matches.size > 1 %>
                     <b> Multiple </b>
                   <% else %>
-                    <%= get_requirement_link_with_mouse_over_and_mouseout(matches.first.requirement) %>
+                    <%= requirement_link(matches.first.requirement) %>
                   <% end %>
                 </td>
               <% elsif @status == "Interview Scheduled" %>
                 <td class="my_resumes_label_light">
                   <% interviews  = get_resume_req_matches(resume, "SCHEDULED")
                      interviews.each do |int| %>
-                       <b> <%= get_requirement_link_with_mouse_over_and_mouseout(int.requirement) %> </b>
+                       <b> <%= requirement_link(int.requirement) %> </b>
                      <% end %>
                 </td>
               <% end %>

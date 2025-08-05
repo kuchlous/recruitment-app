@@ -26,6 +26,9 @@ function initAlertFunction()
 
 function displayFadeinBox(mFade, mAutohide, mElement, positionVar)
 {
+  if (!mElement)
+  return;
+
   var ie = document.all && !window.opera;
   var iebody = (document.compatMode == "CSS1Compat") ? document.documentElement : document.body;
 
@@ -1557,126 +1560,7 @@ function imageforCrossIcon()
   return img_element;
 }
 
-// ================Pop Up Brief Descriptions START===============
 
-// Creates and pops up a div for resume with qualification and experience
-function popUpDescriptionForResume(resume_id, qualification, experience, company)
-{
-  popUpDescription(resume_id, qualification, experience, company, "Qualification: ", "Experience: ", "Company: ");
-}
-
-// Creates and pops up a div for requirement with skills and description
-function popUpDescriptionForRequirements(requirement_id, skills, description)
-{
-  popUpDescription(requirement_id, skills, description, "", "Skills: ", "Description: ", "");
-}
-
-// Function to pop-up box
-function popUpDescription(id, qual_skill, exp_desc, company, tag1, tag2, tag3)
-{
-  // Creating div which will work as a container for both of the tags
-  var div   = document.createElement("div");
-  div.id    = "resume" + id;
-  div.className = "resume_description_div";
-
-  // 1st tag of qualification/skills
-  var span_element = document.createElement("span");
-  span_element.innerHTML = tag1.bold()  + qual_skill;
-  div.appendChild(span_element);
-  createLineBreakElement(div, 2);
-
-  // 2nd tag of experience/description
-  var span_element1 = document.createElement("span");
-  span_element1.innerHTML = tag2.bold() + exp_desc;
-  div.appendChild(span_element1);
-
-  if (tag3 != "" && company != "") { 
-    createLineBreakElement(div, 2);
-    var span_element1 = document.createElement("span");
-    span_element1.innerHTML = tag3.bold() + company;
-    div.appendChild(span_element1);
-  }
-
-  document.body.appendChild(div);
-
-  // Displaying the div over here
-  ShowContent("resume" + id);
-}
-
-// Function used for updating the cursor position.
-// Usually title tag comes at static place but this function
-// displays the div near to the cursor position. If the cursor position is changed
-// then cordinates of that div will also be changed.
-var cX = cY = rX = rY = 0;
-function UpdateCursorPosition(e)
-{
-  cX = e.pageX;
-  cY = e.pageY;
-}
-
-function UpdateCursorPositionDocAll(e)
-{
-  cX = event.clientX;
-  cY = event.clientY;
-}
-
-if ( document.all )
-{
-  document.onmousemove = UpdateCursorPositionDocAll;
-}
-else
-{
-  document.onmousemove = UpdateCursorPosition;
-}
-
-function AssignPosition(d)
-{
-  if ( self.pageYOffset )
-  {
-    rX = self.pageXOffset;
-    rY = self.pageYOffset;
-  }
-  else if ( document.documentElement && document.documentElement.scrollTop )
-  {
-    rX = document.documentElement.scrollLeft;
-    rY = document.documentElement.scrollTop;
-  }
-  else if ( document.body )
-  {
-    rX = document.body.scrollLeft;
-    rY = document.body.scrollTop;
-  }
-  if ( document.all )
-  {
-    cX += rX;
-    cY += rY;
-  }
-  d.style.left = (cX+10) + "px";
-  d.style.top  = (cY+10) + "px";
-}
-
-function ShowContent(d)
-{
-  if(d.length < 1)
-  {
-    return;
-  }
-  var dd = document.getElementById(d);
-  AssignPosition(dd);
-  dd.style.display = "block";
-}
-
-// Function to remove the pop-up div from the document itself
-function HideContent(d)
-{
-  if ( d.length < 1 )
-  {
-    return;
-  }
-  div_element = document.getElementById("resume" + d);
-  document.body.removeChild(div_element);
-}
-// ================Pop Up Brief Descriptions END===============
 
 
 function viewFeedback(event, resume_id, action, cols)

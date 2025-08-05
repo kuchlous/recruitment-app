@@ -17,7 +17,7 @@
            row_id_prefix = "outbox_msg_row" %>
         <% @outbox.each do |msg| %>
           <tr id="<%= row_id_prefix %><%= counter_value %>" class="<%= cycle('color_line_odd', 'color_line_even') %>">
-            <td> <%= get_resume_link_with_mouse_over_and_mouseout(msg.resume) %> </td>
+            <td> <%= resume_link(msg.resume) %> </td>
             <td> <%= get_words(msg.sent_to.name, 2) %>
             <td> <%= msg.message     %> </td>
             <td> <%= print_date_and_time(msg.created_at)  %> </td>

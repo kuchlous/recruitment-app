@@ -154,7 +154,7 @@
         <div class="current-selection">
           <strong>Current selection:</strong><br>
           <% @resume.req_matches.each do |match| %>
-            &nbsp; &middot; <%= get_requirement_link_with_mouse_over_and_mouseout(match.requirement) %>(<%= match.requirement.group.name %>)<br>
+            &nbsp; &middot; <%= requirement_link(match.requirement) %>(<%= match.requirement.group.name %>)<br>
           <% end %>
         </div>
       <% end %>

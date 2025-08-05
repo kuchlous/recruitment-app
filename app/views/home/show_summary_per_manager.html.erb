@@ -62,7 +62,7 @@
       </tr>
       <% @req_summary_table.each do |row| %>
         <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-          <td> <%= get_requirement_link_with_mouse_over_and_mouseout(row[:owner]) %>
+          <td> <%= requirement_link(row[:owner]) %>
           <td> <%= row[:positions] %> </td>
           <td> <%= row[:joining] %> </td>
           <td> <%= row[:offered] %> </td>
