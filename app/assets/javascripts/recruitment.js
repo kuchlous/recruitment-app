@@ -26,6 +26,9 @@ function initAlertFunction()
 
 function displayFadeinBox(mFade, mAutohide, mElement, positionVar)
 {
+  if (!mElement)
+  return;
+
   var ie = document.all && !window.opera;
   var iebody = (document.compatMode == "CSS1Compat") ? document.documentElement : document.body;
 

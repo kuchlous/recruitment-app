@@ -4,14 +4,6 @@ class RequirementsController < ApplicationController
   before_action :get_all_objects,                     :only => [ :new, :create, :edit, :update ]
   before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_BD, :only => [ :all_reqs ]
 
-  def index
-    @requirements = Requirement.where(status: "OPEN").order("employee_id")
-
-    respond_to do |format|
-      format.html
-    end
-  end
-
   def all_reqs
     @requirements = Requirement.all.order("employee_id")
     render "index"
