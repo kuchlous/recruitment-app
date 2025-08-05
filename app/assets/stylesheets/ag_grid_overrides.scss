@@ -37,3 +37,8 @@
 .ag-theme-alpine .ag-ltr textarea[class^=ag-] {
   padding-left: 25px !important; 
 }
+
+.ag-theme-alpine .ag-header-cell.ag-center-header .ag-header-cell-label {
+  justify-content: center;
+  text-align: center;
+}
