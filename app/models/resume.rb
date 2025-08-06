@@ -577,8 +577,10 @@ class Resume < ActiveRecord::Base
   end
 
   def update_overall_status
+    logger.info("Resume: Updating overall status from #{self.overall_status}")
     new_overall_status = self.calculate_overall_status
     if new_overall_status != self.overall_status
+      logger.info("Resume: Updating overall status from #{self.overall_status} to #{new_overall_status}")
       self.overall_status = new_overall_status
       self.save
     end

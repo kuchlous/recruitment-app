@@ -28,21 +28,22 @@ document.addEventListener('turbolinks:load', () => {
           {
             headerName: 'ID',
             field: 'id',
-            width: 90,
+            minWidth: 80,
             sortable: true,
             filter: 'agNumberColumnFilter',
-            flex: 1
+            flex: 0.75
           },
           {
             headerName: 'Name',
             field: 'name',
             sortable: true,
             filter: true,
-            flex: 2,
+            flex: 2.5,
+            minWidth: 150,
             cellRenderer: function(params) {
               if (params.value !== undefined && params.data.id !== undefined) {
                 const iconHtml = '<span class="glyphicon glyphicon-new-window" aria-hidden="true" style="font-size: 0.8em; margin-left: 5px;"></span>';
-                return `<a href="${prepend_with_image_path}/requirements/${params.data.id}" target="_blank">${params.value} ${iconHtml}</a>`;
+                return `<a href="${prepend_with_image_path}/requirements/${params.data.id}" target="_blank" title="${params.value}">${params.value} ${iconHtml}</a>`;
               }
               return params.value;
             }
@@ -52,7 +53,7 @@ document.addEventListener('turbolinks:load', () => {
             field: 'group',
             sortable: true,
             filter: true,
-            width: 100,
+            minWidth: 100,
             flex: 1,
           },
           {
@@ -60,30 +61,36 @@ document.addEventListener('turbolinks:load', () => {
             field: 'skill',
             sortable: true,
             filter: true,
-            flex: 3,
-            minWidth: 200
+            flex: 2.5,
+            minWidth: 200,
+            cellRenderer: function(params) {
+              if (params.value) {
+                return `<span title="${params.value}">${params.value}</span>`;
+              }
+              return '';
+            }
           },
           {
             headerName: 'Experience',
             field: 'experience',
             sortable: true,
             flex: 1.5,
-            minWidth: 300
+            minWidth: 150
           },
           {
             headerName: 'End Date',
             field: 'edate',
             sortable: true,
             filter: 'agDateColumnFilter',
-            flex: 1.5,
-            minWidth: 150
+            flex: 1,
+            minWidth: 120
           },
           {
             headerName: 'Positions',
             field: 'positions',
             sortable: true,
-            flex: 1.5,
-            minWidth: 50,
+            flex: 1,
+            minWidth: 80,
             headerClass: 'ag-center-header', 
             cellStyle: { 'text-align': 'center' },
           },
@@ -91,15 +98,15 @@ document.addEventListener('turbolinks:load', () => {
             headerName: 'Owner',
             field: 'owner',
             sortable: true,
-            flex: 1.5,
-            minWidth: 150
+            flex: 1,
+            minWidth: 100
           },
           {
             headerName: 'Status',
             field: 'status',
             sortable: true,
             filter: true,
-            width: 100,
+            minWidth: 100,
             flex: 1,
           },
           {
@@ -107,8 +114,8 @@ document.addEventListener('turbolinks:load', () => {
             field: 'created_at',
             sortable: true,
             filter: 'agDateColumnFilter',
-            minWidth: 100,
-            flex: 1.5,
+            minWidth: 120,
+            flex: 1,
           }
         ];
 
