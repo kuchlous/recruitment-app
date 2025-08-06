@@ -40,9 +40,6 @@
   </div>
   
   <div class="table-footer">
-    <div class="table-info">
-      Total: <%= @matches.size %>
-    </div>
     <div class="table-pagination">
       <%= link_to "Expand", '#', :onclick => "show_column_for_date_when_resume_moved_to_joining(); return false;", :class => "action-link" %>
     </div>
@@ -96,8 +93,8 @@
   <% end %>
 
   <div class="table-header">
-    <h2> Joined </h2>
-    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_joined') %>
+    <h2> Joined (<%=@joined_resumes.size%>) </h2>
+    <%= render "resumes/month_year_selector", url: url_for(host: APP_CONFIG['host_name'], controller: 'resumes', action: 'show_quarterly_joined') %>
   </div>
 
   <div id="joined_resumes_div">
@@ -112,8 +109,8 @@
   </div>
 
   <div class="table-header">
-    <h2>Not Joined</h2>
-    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_not_joined') %>
+    <h2>Not Joined (<%=@not_joined_resumes.size%>)</h2>
+    <%= render "resumes/month_year_selector", url: url_for(host: APP_CONFIG['host_name'], controller: 'resumes', action: 'show_quarterly_not_joined') %>
   </div>
   
   <div id="not_joined_resumes_div">
@@ -128,8 +125,8 @@
   </div>
 
   <div class="table-header">
-    <h2>Offers Made</h2>
-    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_offered') %>
+    <h2>Offers Made (<%=@offered_comments.size%>) </h2>
+    <%= render "resumes/month_year_selector", url: url_for(host: APP_CONFIG['host_name'], controller: 'resumes', action: 'show_quarterly_offered') %>
   </div>
   
   <div id="offered_resumes_div">
@@ -145,8 +142,8 @@
   </div>
 
   <div class="table-header">
-    <h2>Not Accepted</h2>
-    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_not_accepted') %>
+    <h2>Not Accepted (<%=@not_accepted_comments.size%>)</h2>
+    <%= render "resumes/month_year_selector", url: url_for(host: APP_CONFIG['host_name'], controller: 'resumes', action: 'show_quarterly_not_accepted') %>
   </div>
   
   <div id="not_accepted_resumes_div">

@@ -2,23 +2,13 @@
      month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @year.to_s
    end %>
 
-<div class="table-header">
-  <% if params[:action] == "show_quarterly_offered" %>
-    <h2><%= month_year_str %> (<%= @offered_comments.size %>)</h2>
-  <% elsif params[:action] == "show_all_offered" %>
-    <h2>ALL <%= @status.titleize %> Resumes (<%= @offered_comments.size %>)</h2>
-  <% else %>
-    <h2><%= @status.titleize %> resumes for current quarter (<%= @offered_comments.size %>)</h2>
-  <% end %>
-  <p>Detailed offer information and statistics</p>
-</div>
-
 <table id="offered_resumes_table" class="sortable modern-table">
   <thead>
     <tr>
       <th> Name </th>
       <th class="sorttable_alpha"> Requirement </th>
       <th> Offer date </th>
+      <th> Experience </th>
     </tr>
   </thead>
   <tbody>
@@ -26,7 +16,7 @@
       <tr>
         <td class="table-cell-primary"> <%= resume_link(c.resume) %> </td>
         <td class="table-cell-secondary"> <%= get_requirement_from_comment(c, "OFFERED") ? requirement_link(get_requirement_from_comment(c, "OFFERED")) : "Not Available" %> </td>
-        <td class="table-cell-secondary"> <%= print_date_and_time(c.created_at) %> </td>
+        <td class="table-cell-secondary"> <%= print_date(c.created_at) %> </td>
         <td class="table-cell-secondary"> <%= get_current_experience_string(c.resume) %> </td>
       </tr>
     <% end %>
