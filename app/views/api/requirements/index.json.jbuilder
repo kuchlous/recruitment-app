@@ -4,6 +4,7 @@ json.array! @requirements do |requirement|
   json.id          requirement.id
   json.name        requirement.name
   json.skill       requirement.skill
+  json.description requirement.description
   json.status      requirement.status
   json.edate       requirement.edate.try(:strftime, '%d/%m/%Y')
   json.experience  "#{requirement.exp} (#{requirement.designation.name})"

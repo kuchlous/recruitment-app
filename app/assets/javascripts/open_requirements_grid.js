@@ -6,6 +6,29 @@ document.addEventListener('turbolinks:load', () => {
   const loaderDiv = document.querySelector('#gridLoader');
   const errorDiv = document.querySelector('#gridError');
   console.log('Open Requirements Grid script loaded');
+  function LinkCellRenderer() { }
+  
+  LinkCellRenderer.prototype.init = function (params) {
+    this.eGui = document.createElement('a');
+    this.eGui.href = `${prepend_with_image_path}/requirements/${params.data.id}`;
+    this.eGui.target = "_blank";
+    this.eGui.innerHTML = `${params.value} <span class="glyphicon glyphicon-new-window" aria-hidden="true" style="font-size: 0.8em; margin-left: 5px;"></span>`;
+
+    this.eGui.setAttribute('data-toggle', 'tooltip');
+    this.eGui.setAttribute('data-placement', 'top');
+    this.eGui.setAttribute('data-html', 'true');
+    this.eGui.setAttribute('title', `Skills: ${params.data.skill} <br>Description: ${params.data.description}`);
+    if (typeof $ !== 'undefined' && typeof $.fn.tooltip === 'function') {
+      $(this.eGui).tooltip({
+        container: 'body',
+        template: '<div class="tooltip wide-tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+      });
+    }
+  };
+
+  LinkCellRenderer.prototype.getGui = function () {
+    return this.eGui;
+  };
 
   if (gridDiv) {
     if (errorDiv) {
@@ -40,13 +63,7 @@ document.addEventListener('turbolinks:load', () => {
             filter: true,
             flex: 2.5,
             minWidth: 150,
-            cellRenderer: function(params) {
-              if (params.value !== undefined && params.data.id !== undefined) {
-                const iconHtml = '<span class="glyphicon glyphicon-new-window" aria-hidden="true" style="font-size: 0.8em; margin-left: 5px;"></span>';
-                return `<a href="${prepend_with_image_path}/requirements/${params.data.id}" target="_blank" title="${params.value}">${params.value} ${iconHtml}</a>`;
-              }
-              return params.value;
-            }
+            cellRenderer: LinkCellRenderer
           },
           {
             headerName: 'Group',
@@ -135,6 +152,9 @@ document.addEventListener('turbolinks:load', () => {
               return 'ag-row-hot';
             }
             return null;
+          },
+          components: {
+            linkCellRenderer: LinkCellRenderer
           }
         };
 
