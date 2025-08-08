@@ -89,7 +89,7 @@
         <div class="info-card">
           <div class="card-header">
             <h3 class="card-title">Resume Statistics</h3>
-            <%= link_to "Export All Resumes", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action" %>
+            <%= link_to "Export All Resumes", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action", data: {turbolinks: false} %>
           </div>
           
           <div class="stats-container">
@@ -115,7 +115,7 @@
             <% end %>
           
             <% if get_current_employee.is_ADMIN? %>
-              <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link" do %>
+              <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link" , data: {turbolinks: false} do %>
                 <div class="stat-card">
                   <div class="stat-number"><%= @rejected.size %></div>
                   <div class="stat-label">Rejected</div>
