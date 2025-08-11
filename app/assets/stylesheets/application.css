@@ -5,3 +5,8 @@
  *= require_self
  *= require_tree .
 */
+
+ .tooltip.wide-tooltip .tooltip-inner {
+  max-width: 500px;
+  white-space: normal;
+}
