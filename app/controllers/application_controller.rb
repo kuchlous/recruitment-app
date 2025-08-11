@@ -14,11 +14,7 @@ require 'will_paginate/array'
   skip_before_action :verify_authenticity_token
  
   def default_url_options(options=nil)
-    if Rails.env.production?
-      {:protocol => "https", :host => APP_CONFIG['host_name'], :only_path => false, :port => false}
-    else  
-     {}
-    end
+    {:host => APP_CONFIG['host_name'], :only_path => false}
   end
   
   def get_employee_from_id(id)

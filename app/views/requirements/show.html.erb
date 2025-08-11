@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="show-actions">
-        <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "edit", :id => @requirement.id), class: "action-btn icon-btn", title: "Edit Requirement" do %>
+        <%= link_to url_for(:controller => "requirements", :action => "edit", :id => @requirement.id), class: "action-btn icon-btn", title: "Edit Requirement" do %>
           <%= image_tag "edit.svg", alt: "Edit", class: "action-icon" %>
         <% end %>
       </div>
@@ -89,12 +89,12 @@
         <div class="info-card">
           <div class="card-header">
             <h3 class="card-title">Resume Statistics</h3>
-            <%= link_to "Export All Resumes", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action", data: {turbolinks: false} %>
+            <%= link_to "Export All Resumes", url_for(:controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action", data: {turbolinks: false} %>
           </div>
           
           <div class="stats-container">
             <% ["Forwarded", "Shortlisted", "Scheduled", "Hold", "Yto", "Offered", "Joining"].each do |status| %>
-              <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
+              <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
                 <div class="stat-card">
                   <div class="stat-number">
                     <%= instance_variable_get("@#{status.downcase}").size %>
@@ -105,7 +105,7 @@
             <% end %>
             
             <% if get_current_employee.is_ADMIN? %>
-              <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link", data: {turbolinks: false} do %>
+              <%= link_to url_for(:controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link", data: {turbolinks: false} do %>
                 <div class="stat-card">
                   <div class="stat-number"><%= @rejected.size %></div>
                   <div class="stat-label">Rejected</div>
@@ -133,6 +133,6 @@
 
   <!-- Footer -->
   <div class="show-footer">
-    <%= link_to "← Back to Requirements List", url_for(:host => APP_CONFIG['host_name'], :controller => "requirements"), class: "back-link" %>
+    <%= link_to "← Back to Requirements List", url_for(:controller => "requirements"), class: "back-link" %>
   </div>
 </div>

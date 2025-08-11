@@ -2,7 +2,7 @@
 <h1 class="interview-panel__title">Interview Panels</h1>
 <br>
 <div>
-  <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "create"), :method => "post") do %>
+  <%= form_tag(url_for(:controller => "interview_skills", :action => "create"), :method => "post") do %>
     <label for="skill"> Add new skill:</label>
     <%= text_field_tag :skill %> 
     <%= submit_tag "Submit" %> 
@@ -22,7 +22,7 @@
     <div class="skill">
       <span class= "skill-name"><%= skill.name %></span>
       <span>
-        <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "interview_skills", :action => "add_interviewer"), :method => "post") do %>
+        <%= form_tag(url_for(:controller => "interview_skills", :action => "add_interviewer"), :method => "post") do %>
           <span class="add-interviewer">Add new interviewer:</span>   <input type="text" class="new-interviewer" name="new_interviewer" value="" required="required">
           <%= hidden_field_tag "skill_id", skill.id %>
           <%= submit_tag "Add" %> 
@@ -47,7 +47,7 @@
           <td class="t-data" ><%= interviewer.interviews.next_week %></td>
           <td class="t-data" >
             <span id=<%= "#{skill.id}-#{interviewer.eid}"%>> <%= interviewer.n_interviews_per_week %> <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}')", title:"Edit" %></span>
-            <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-form",style: "display:none;") do %>
+            <%= form_tag(url_for(:controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-form",style: "display:none;") do %>
               <input type="number" class="edit_slot" name="n_interviews_per_week" value=<%= interviewer.n_interviews_per_week %>>
               <%= hidden_field_tag "interviewer_id", interviewer.id %>
               <%= submit_tag "update" %> 
@@ -59,7 +59,7 @@
               <%= link_to image_tag("edit.svg", :size => "15x15"),'#', onclick: "toggleElement(event,'##{skill.id}-#{interviewer.eid}-pref-date')", title:"Edit" %>
             <% end %>
             </span>
-            <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-pref-date-form",style: "display:none;") do %>
+            <%= form_tag(url_for(:controller => "employees", :action => "edit_slot"), :method => "post", :id => "#{skill.id}-#{interviewer.eid}-pref-date-form",style: "display:none;") do %>
               <textarea rows="3" class="" name="preferred_day_and_time">
                 <%= interviewer.preferred_day_and_time %>
               </textarea>
@@ -71,7 +71,7 @@
           <td class="t-data"> <%= interviewer.phone %> </td>
           <td class="t-data customer-<%=interviewer.eid%>" >Not Found</td>
           <td><span class="close_box_link">
-            <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(:host => APP_CONFIG['host_name'], controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
+            <%= link_to image_tag("RedCross.png", :size => "22x22"),url_for(controller: :interview_skills, action: :destroy,id: interviewer.id, skill_id: skill.id),method: :delete, data: {confirm: "Are you sure you want to remove interviewer?"},title: "delete" %>
           </span> <br /></td>
         </tr>
       <% end %>

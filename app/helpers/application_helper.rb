@@ -1,6 +1,20 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
 
+  def url_for(options = {})
+    if options.is_a?(Hash) && !options[:host]
+      options[:host] = APP_CONFIG['host_name']
+    end
+    super(options)
+  end
+
+  def link_to(name = nil, options = nil, html_options = nil, &block)
+    if options.is_a?(Hash) && !options[:host]
+      options[:host] = APP_CONFIG['host_name']
+    end
+    super(name, options, html_options, &block)
+  end
+
   def get_employee_from_id(id)
     Employee.find(id)
   end
@@ -653,28 +667,4 @@ module ApplicationHelper
     end
   end
 
-  def get_ajax_request_for_quarterly_joined(smonth, emonth, year, status, text)
-    status == "JOINED" ? div = "joined_resumes_div" : div = "not_joined_resumes_div"
-    link_to "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_joined", :smonth => smonth, :emonth => emonth, :year => year, :status => status, :target => "_blank"
-  end
-
-  def get_ajax_request_for_quarterly_offered(smonth, emonth, year, status, text)
-    div    = "offered_resumes_div"
-    link_to "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_offered", :smonth => smonth, :emonth => emonth, :year => year, :status => status, :target => "_blank"
-  end
-
-  def get_ajax_request_for_all_offered(text, status)
-    div    = "offered_resumes_div"
-    link_to text, :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_all_offered", :status => status, :target => "_blank"
-  end
-
-  def get_ajax_request_for_quarterly_not_accepted(smonth, emonth, year, status, text)
-    div    = "not_accepted_resumes_div"
-    link_to "#{text}(#{Date::ABBR_MONTHNAMES[smonth]} .. #{Date::ABBR_MONTHNAMES[emonth]})", :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_quarterly_not_accepted", :smonth => smonth, :emonth => emonth, :year => year, :status => status, :target => "_blank"
-  end
-
-  def get_ajax_request_for_all_not_accepted(text, status)
-    div    = "not_accepted_resumes_div"
-    link_to text, :host=> APP_CONFIG['host_name'], :controller => "resumes", :action => "show_all_not_accepted", :status => status, :target => "_blank"
-  end
 end

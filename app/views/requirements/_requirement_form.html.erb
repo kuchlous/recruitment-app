@@ -3,7 +3,7 @@
     <h2><%= button_tag == "Update" ? "Edit Requirement" : "New Requirement" %></h2>
   </div>
 
-  <%= form_for(@requirement, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post"), class: "modern-form"}) do |f|%>
+  <%= form_for(@requirement, :url => url_for(:controller => "requirements", :action => (button_tag == "Update" ? "update" : "create")), :html => {:method => (button_tag == "Update" ? "put" : "post"), class: "modern-form"}) do |f|%>
 
     <%if @requirement%>
     <%  if @requirement.exp%>
@@ -146,7 +146,7 @@
 
     <div class="form-actions">
       <%= f.submit(button_tag, class: "btn btn-primary") %>
-      <%= link_to "Cancel", url_for(:host => APP_CONFIG['host_name'], :controller => "requirements"), class: "btn btn-secondary" %>
+      <%= link_to "Cancel", url_for(:controller => "requirements"), class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>

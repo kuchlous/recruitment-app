@@ -1,7 +1,7 @@
 <div id="recent_resume_div" class="common_class">
   <span class="span_with_13"> Recently updated resumes (<%= @resumes.size %>) </span>
  
-  <%= form_tag :controller => "resumes", :action => "find_resume_within_given_dates", :host => APP_CONFIG['host_name'], :method => 'post' do %>
+  <%= form_tag :controller => "resumes", :action => "find_resume_within_given_dates", :method => 'post' do %>
     <span class="float_right">
       From: 
       <%= text_field_tag "recent[sdate]","", class: "datepicker" %>

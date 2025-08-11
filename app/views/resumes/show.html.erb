@@ -2,7 +2,7 @@
  <div class="resume__info">
   <div class="resume__edit">
     <% if is_HR_ADMIN? %>
-      <%= link_to image_tag("edit.svg", :size => "20x20"), :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "edit", :id => @resume.id %>
+      <%= link_to image_tag("edit.svg", :size => "20x20"), :controller => "resumes", :action => "edit", :id => @resume.id %>
     <% end %>
   </div>
    <div class="resume__name">
@@ -148,14 +148,14 @@
      <div class="actions">
         <% if is_HR_ADMIN? %>
           <% unless @resume.status == "JOINED" %>
-            <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_eng_decision" ) do %>
+            <%= form_tag url_for(:action => "send_for_eng_decision" ) do %>
               <div>
                 <%= submit_tag "Send for Engg. Decision", :class => "action__field" %>
                 <%= hidden_field_tag "resume_id", @resume.id %>
               </div>
               <br /> <br />
             <% end %>
-            <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "send_for_decision" ) do %>
+            <%= form_tag url_for(:action => "send_for_decision" ) do %>
               <div>
                 <%= submit_tag "Send for Mgmt. Decision", :class => "action__field" %>
                 <%= hidden_field_tag "resume_id", @resume.id %>
@@ -172,7 +172,7 @@
             <br /> <br />
         <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
             <% unless @resume.status == "FUTURE" %>
-              <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "move_to_future" ) do %>
+              <%= form_tag url_for(:action => "move_to_future" ) do %>
                 <div>
                   <%= submit_tag "Move to Future", :class => "action__field" %>
                   <%= hidden_field_tag "resume_id", @resume.id %>
@@ -185,7 +185,7 @@
                   @resume.status == "NOT JOINED" ||
                   @resume.status == "N_ACCEPTED" ||
                   @resume.status == "JOINED" %>
-              <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "mark_active" ) do %>
+              <%= form_tag url_for(:action => "mark_active" ) do %>
                 <div>
                   <%= submit_tag "Mark Active", :class => "action__field" %>
                   <%= hidden_field_tag "resume_id", @resume.id %>
@@ -193,7 +193,7 @@
               <% end %>
               <br /> <br />
             <% end %>
-            <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "reject_all_forwards_req_matches" ) do %>
+            <%= form_tag url_for(:action => "reject_all_forwards_req_matches" ) do %>
               <div>
                 <%= submit_tag "Reject all Forwards/Req matches", :class => "action__field" %>
                 <%= hidden_field_tag "resume_id", @resume.id %>
@@ -204,7 +204,7 @@
       </div>
       <div class="column-center">
         <p class="item">Click on the "Choose File" to upload more documents:</p>
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "upload_document" ), :method => 'POST', :enctype => "multipart/form-data" do %>
+        <%= form_tag url_for(:action => "upload_document" ), :method => 'POST', :enctype => "multipart/form-data" do %>
           <input class="item" type="file" id="myFile" size="31" name="resume[upload_resume]">
           <%= hidden_field_tag "id", @resume.id %>
           <input type="submit" value="Upload">
@@ -212,7 +212,7 @@
       </div>
       <% if is_GM? %> 
       <div class="column-center">
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "submit_ph_rating"), :method => 'POST' do %>
+        <%= form_tag url_for(:action => "submit_ph_rating"), :method => 'POST' do %>
          <label for="ratings">Practice Head Rating:</label>
          <select name="rating" id="rating">
             <option value="red">Red</option>
@@ -401,7 +401,7 @@
         <div class="modal-title">Add HR Comment for <%= @resume.name %> </div>
       </div>
       <div class="modal-body">
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "add_hr_comment") do %>
+        <%= form_tag url_for(:action => "add_hr_comment") do %>
           <%= text_area_tag "comment", nil, :id => "hr_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
           <%= hidden_field_tag "id", @resume.id %>
           <%= submit_tag "Submit", :class => "btn btn-primary" %>
@@ -419,7 +419,7 @@
         <div class="modal-title">Add Comment for <%= @resume.name %> </div>
       </div>
       <div class="modal-body">
-        <%= form_tag url_for(:host => APP_CONFIG['host_name'], :action => "add_comment") do %>
+        <%= form_tag url_for(:action => "add_comment") do %>
           <%= text_area_tag "comment", nil, :id => "add_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
           <%= hidden_field_tag "id", @resume.id %>
           <%= submit_tag "Submit", :class => "btn btn-primary" %>

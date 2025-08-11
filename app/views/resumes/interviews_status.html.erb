@@ -13,7 +13,7 @@
   <form name="form" method="post">
     <div class="table-footer" style="justify-content: flex-end;">
       <div class="table-pagination">
-        <%= link_to "Export Today's Interviews", {:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_interviews"}, :class => "action-link" %>
+        <%= link_to "Export Today's Interviews", {:controller => "resumes", :action => "export_interviews"}, :class => "action-link" %>
       </div>
     </div>
     

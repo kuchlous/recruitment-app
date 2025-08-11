@@ -3,7 +3,7 @@
     <h2><%= display_var == 1 ? "Edit Resume" : "New Resume" %></h2>
   </div>
 
-  <%= form_for(@resume, :url => url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => (display_var == 1 ? "update" : "create")), :html => {:method => (display_var == 1 ? "put" : "post"), :multipart => true, class: "modern-form"}) do |f| %>
+  <%= form_for(@resume, :url => url_for(:controller => "resumes", :action => (display_var == 1 ? "update" : "create")), :html => {:method => (display_var == 1 ? "put" : "post"), :multipart => true, class: "modern-form"}) do |f| %>
     
     <% if @resume.errors.any? %>
       <div class="error-messages">
@@ -82,14 +82,14 @@
         </div>
         <div class="form-group">
           <label for="resume_location">Location</label>
-          <%= f.text_field :location, class: "form-control location-autocomplete", placeholder: "Enter location", data: { autocomplete_url: url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "location_autocomplete") } %>
+          <%= f.text_field :location, class: "form-control location-autocomplete", placeholder: "Enter location", data: { autocomplete_url: url_for(:controller => "resumes", :action => "location_autocomplete") } %>
         </div>
       </div>
       
       <div class="form-row">
         <div class="form-group">
           <label for="resume_preferred_location">Preferred Location</label>
-          <%= f.text_field :preferred_location, class: "form-control location-autocomplete", placeholder: "Enter preferred location", data: { autocomplete_url: url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "location_autocomplete") } %>
+          <%= f.text_field :preferred_location, class: "form-control location-autocomplete", placeholder: "Enter preferred location", data: { autocomplete_url: url_for(:controller => "resumes", :action => "location_autocomplete") } %>
         </div>
         <div class="form-group">
           <label for="resume_ta_owner_id">TA Owner</label>
@@ -146,7 +146,7 @@
                           nil, 
                           class: "form-control requirements-autocomplete", 
                           placeholder: "Type requirement names to search...",
-                          data: { autocomplete_url: url_for(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "autocomplete_requirements") } %>
+                          data: { autocomplete_url: url_for(:controller => "requirements", :action => "autocomplete_requirements") } %>
         <small class="form-text text-muted">Type to search for requirements. Multiple requirements can be separated by commas.</small>
       </div>
       
@@ -203,7 +203,7 @@
 
     <div class="form-actions">
       <%= f.submit button_tag, class: "btn btn-primary" %>
-      <%= link_to "Cancel", url_for(:host => APP_CONFIG['host_name'], :controller => "resumes"), class: "btn btn-secondary" %>
+              <%= link_to "Cancel", url_for(:controller => "resumes"), class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>

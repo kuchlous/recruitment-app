@@ -5,20 +5,20 @@
     <div class="background_red"> Hot Requirements </div>
   </div>
   <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
-    <%= link_to "ON HOLD", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" , :status => "hold" %>
+    <%= link_to "ON HOLD", :controller => "requirements", :action => "my_requirements" , :status => "hold" %>
   </div>
   <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
-    <%= link_to "OPEN", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" , :status => "open" %>
+    <%= link_to "OPEN", :controller => "requirements", :action => "my_requirements" , :status => "open" %>
   </div>
   <div class="add_link" style="padding-right: 10px; padding-left: 10px;">
-    <%= link_to "ALL", :host => APP_CONFIG['host_name'], :controller => "requirements", :action => "my_requirements" , :status => "any" %>
+    <%= link_to "ALL", :controller => "requirements", :action => "my_requirements" , :status => "any" %>
   </div>
   <br />
   <br />
   <br>
   <br /> <br />
 
-  <%= form_tag(:host => APP_CONFIG['host_name'], :controller => "requirements", :action => "close_requirement") do %>      
+  <%= form_tag(:controller => "requirements", :action => "close_requirement") do %>      
     <table>
       <tr class="header_row">
         <td> Requirement ID </td>

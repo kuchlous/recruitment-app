@@ -8,7 +8,7 @@
     </div>
   </div>
   
-  <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
+  <%= will_paginate @results, { :params => {:only_path => false}} %>
   
   <%# Hidden fields for form preservation - to be added by individual views %>
   <%= yield :hidden_fields if content_for?(:hidden_fields) %>
@@ -58,7 +58,7 @@
     </tbody>
   </table>
   
-  <%= will_paginate @results, { :params => {:host => APP_CONFIG['host_name'], :only_path => false}} %>
+  <%= will_paginate @results, { :params => {:only_path => false}} %>
 <% else %>
   <div class="table-empty">
     <div class="empty-icon">🔍</div>

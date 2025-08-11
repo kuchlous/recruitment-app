@@ -15,4 +15,4 @@
     <%= "\r\n" %>
   <% end %>
   ============================================================== <%= "\r\n" %>
-  This is a system generated message. Please do not reply to this email. Instead login into the recruitment system. Here is a link to the resume <%= url_for(:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>
+  This is a system generated message. Please do not reply to this email. Instead login into the recruitment system. Here is a link to the resume <%= url_for(:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name) %>

@@ -3,7 +3,7 @@
     <h2>Advanced Search</h2>
   </div>
 
-  <%= form_tag(url_for(:host => APP_CONFIG['host_name'], :controller => "home", :action => "advanced_search_results"), :method => "get", class: "modern-form") do %>
+  <%= form_tag(url_for(:controller => "home", :action => "advanced_search_results"), :method => "get", class: "modern-form") do %>
     
     <div class="form-section">
       <div class="form-group">
@@ -100,7 +100,7 @@
 
     <div class="form-actions">
       <%= submit_tag "Search", class: "btn btn-primary" %>
-      <%= link_to "Cancel", url_for(:host => APP_CONFIG['host_name'], :controller => "home"), class: "btn btn-secondary" %>
+      <%= link_to "Cancel", url_for(:controller => "home"), class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>

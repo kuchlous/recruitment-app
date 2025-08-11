@@ -5,7 +5,7 @@
   </head>
   <body>
   <p> Hi, </p>
-    <p> This is for your information. <%= link_to @resume.name, {:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> has been marked by engineering as <%= @status %>. </p>
+    <p> This is for your information. <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> has been marked by engineering as <%= @status %>. </p>
   <p> Requirement: <%= @requirement.name %> </p>
   <p> Comment: <%= @comment %> </p>
   ============================================================== 
@@ -23,7 +23,7 @@
   <p>
   This is a system generated message. Please do not reply to this email. Instead login into
   the recruitment system. Here is a link to the resume
-  <%= link_to @resume.name, {:protocol => "https", :host => APP_CONFIG['host_name'], :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %>
+  <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %>
   </p>
   </body>
 </html>

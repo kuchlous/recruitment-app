@@ -1597,7 +1597,7 @@ class ResumesController < ApplicationController
   def get_resume_attachment
     r = Resume.find(params[:id])
     res = r.resume_path.map do |path|
-      {"file_path": url_for(:host => APP_CONFIG['host_name'], :action => 'download_resume', :name => path), "type":File.extname(path)[1..-1]}
+              {"file_path": url_for(:action => 'download_resume', :name => path), "type":File.extname(path)[1..-1]}
     end
     render json: res   
   end
