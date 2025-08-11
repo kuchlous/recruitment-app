@@ -114,8 +114,8 @@ class RequirementsController < ApplicationController
 
     if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_leads.include?(get_current_employee)
       # @accounts    = @requirement.accounts  # Removed accounts reference
-      @req_forwards= @requirement.open_forwards
-      @shortlists  = @requirement.shortlists
+      @forwarded   = @requirement.open_forwards
+      @shortlisted = @requirement.shortlists
       @scheduled   = @requirement.scheduled
       @rejected    = @requirement.rejected
       @offered     = @requirement.offered
@@ -142,7 +142,7 @@ class RequirementsController < ApplicationController
     @join_on_req_page  = 0
     @after_shortlist_page = false
 
-    if @status       == "Forwards"
+    if @status       == "Forwarded"
       @forwards      = req.open_forwards
       @render        = "manager_index"
       @row_id_prefix = "req_forwards"
@@ -165,7 +165,7 @@ class RequirementsController < ApplicationController
       @after_shortlist_page = true
     elsif @status    == "Hold"
       @matches       = req.hold
-      @render        = "joining_offered_hold_form"
+      @render        = "interview_table"
       @hold_on_req_page = 1
       @is_req_match  = 1
     elsif @status    == "Offered"

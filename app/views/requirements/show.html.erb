@@ -93,29 +93,19 @@
           </div>
           
           <div class="stats-container">
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Forwards"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @req_forwards.size %></div>
-                <div class="stat-label">Forwards</div>
-              </div>
+            <% ["Forwarded", "Shortlisted", "Scheduled", "Hold", "Yto", "Offered", "Joining"].each do |status| %>
+              <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
+                <div class="stat-card">
+                  <div class="stat-number">
+                    <%= instance_variable_get("@#{status.downcase}").size %>
+                  </div>
+                  <div class="stat-label"><%= status %></div>
+                </div>
+              <% end %>
             <% end %>
             
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Shortlisted"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @shortlists.size %></div>
-                <div class="stat-label">Shortlisted</div>
-              </div>
-            <% end %>
-            
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Scheduled"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @scheduled.size %></div>
-                <div class="stat-label">Scheduled</div>
-              </div>
-            <% end %>
-          
             <% if get_current_employee.is_ADMIN? %>
-              <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link" , data: {turbolinks: false} do %>
+              <%= link_to url_for(:host => APP_CONFIG['host_name'], :controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link", data: {turbolinks: false} do %>
                 <div class="stat-card">
                   <div class="stat-number"><%= @rejected.size %></div>
                   <div class="stat-label">Rejected</div>
@@ -125,34 +115,6 @@
               <div class="stat-card">
                 <div class="stat-number"><%= @rejected.size %></div>
                 <div class="stat-label">Rejected</div>
-              </div>
-            <% end %>
-          
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Hold"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @hold.size %></div>
-                <div class="stat-label">Holds</div>
-              </div>
-            <% end %>
-            
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Yto"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @yto.size %></div>
-                <div class="stat-label">YTO</div>
-              </div>
-            <% end %>
-          
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Offered"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @offered.size %></div>
-                <div class="stat-label">Offered</div>
-              </div>
-            <% end %>
-            
-            <%= link_to url_for(:host => APP_CONFIG['host_name'], :action => "show", :id => @requirement.id, :status => "Joining"), class: "stat-link" do %>
-              <div class="stat-card">
-                <div class="stat-number"><%= @joining.size %></div>
-                <div class="stat-label">Joining</div>
               </div>
             <% end %>
           </div>

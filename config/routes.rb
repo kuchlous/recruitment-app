@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   match 'employees/change_to',to: 'employees#change_to'                          , via: :get
   match 'resumes/export_as_xls_requirement',to:'resumes#export_as_xls_requirement' , via: :get
   match 'resumes/export_as_xls_requirement_for_shortlisted',to: 'resumes#export_as_xls_requirement_for_shortlisted', via: :get
-  match 'resumes/export_as_xls_requirement_for_forwards',to: 'resumes#export_as_xls_requirement_for_forwards'      , via: :get
+  match 'resumes/export_as_xls_requirement_for_forwarded',to: 'resumes#export_as_xls_requirement_for_forwarded'      , via: :get
   match 'resumes/export_as_xls_requirement_for_offered',to: 'resumes#export_as_xls_requirement_for_offered'        , via: :get 
   match 'resumes/export_as_xls_requirement_for_yto',to: 'resumes#export_as_xls_requirement_for_yto'                , via: :get 
   match 'resumes/export_as_xls_requirement_for_scheduled',to: 'resumes#export_as_xls_requirement_for_scheduled'    , via: :get

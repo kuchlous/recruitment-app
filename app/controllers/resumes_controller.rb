@@ -1411,7 +1411,7 @@ class ResumesController < ApplicationController
     send_file_to_download(book, output)
   end
 
-  def export_as_xls_requirement_for_forwards
+  def export_as_xls_requirement_for_forwarded
     sheet, book, output, forward_matches   = create_xls_sheet_and_get_matches("FORWARDED")
     fill_forwarded_shortlisted_data(sheet, forward_matches)
     send_file_to_download(book, output)
