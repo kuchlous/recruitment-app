@@ -1,0 +1,14 @@
+<p>Dear <%= @panel_member.name %>,</p>
+
+<p>This is a reminder to provide feedback 
+    for the interview conducted on <%= @interview.interview_date.strftime('%d/%m/%Y') %>.</p>
+
+<p>Requirement: <%= @requirement.name %></p>
+<p>Resume: <%= @resume.name %></p>
+
+<p>Please submit your feedback as soon as possible.</p>
+
+<p>Thank you!</p>
+<p>Regards,<br/>Recruitment Team</p>
+
+<%# TODO feeback link to be added here %>
