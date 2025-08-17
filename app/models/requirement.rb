@@ -70,29 +70,19 @@ class Requirement < ActiveRecord::Base
   end
 
   def open_forwards
-    self.forwards.find_all { |f|
-      f.status == "FORWARDED"
-    }
+    self.forwards.where(status: "FORWARDED")
   end
 
   def shortlists
-    self.req_matches.find_all { |r|
-      r.status == "SHORTLISTED"
-    }
+    self.req_matches.where(status: "SHORTLISTED")
   end
 
   def scheduled
-    self.req_matches.find_all { |r|
-      r.status == "SCHEDULED" &&
-      r.resume.resume_overall_status != "Future"
-    }
+    self.req_matches.joins(:resume).where(status: "SCHEDULED").where.not(resumes: {overall_status: "Future"})
   end
 
   def rejected
-    # Find forward's rejected also
-    self.req_matches.find_all { |r|
-      r.status == "REJECTED"
-    }
+    self.req_matches.where(status: "REJECTED")
   end
 
   def yto
@@ -100,36 +90,23 @@ class Requirement < ActiveRecord::Base
   end
 
   def hold
-    self.req_matches.find_all { |r|
-      r.status == "HOLD"
-    }
+    self.req_matches.where(status: "HOLD")
   end
 
   def offered
-    self.req_matches.find_all { |r|
-      r.status == "OFFERED"
-    }
+    self.req_matches.where(status: "OFFERED")
   end
 
   def joining
-    self.req_matches.find_all { |r|
-      r.status        == "JOINING" &&
-      r.resume.resume_overall_status == "Joining Date Given"
-    }
+    self.req_matches.joins(:resume).where(status: "JOINING").where(resumes: {overall_status: "Joining Date Given"})
   end
 
   def Requirement.open_requirements
-    Requirement.all.find_all { |r|
-      r.status == "OPEN"
-    }
+    Requirement.all.where(status: "OPEN")
   end
 
   def isOPEN?
-    if self.status == "OPEN"
-      return true
-    else
-      return false
-    end
+    self.status == "OPEN"
   end
 
   def name_for_js

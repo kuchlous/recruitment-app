@@ -39,7 +39,7 @@ class ResumesController < ApplicationController
   def show
     unless params[:id].nil? || Uniqid.find_by_name(params[:id]).nil?
       @resume         = Uniqid.find_by_name(params[:id]).resume
-      @overall_status = @resume.resume_overall_status
+      @overall_status = @resume.overall_status
       if @overall_status == "N_ACCEPTED"
         @overall_status  = "Not Accepted"
       end
@@ -428,11 +428,11 @@ class ResumesController < ApplicationController
     @matches          = ReqMatch.find_employee_requirements_req_matches(get_current_employee, false)
     @joined_matches   = @matches.find_all { |m|
       m.status       == @status &&
-      m.resume.resume_overall_status == "Joined"
+              m.resume.overall_status == "Joined"
     }
     @joining_matches = @matches.find_all { |m|
       m.status       == @status &&
-      m.resume.resume_overall_status == "Joining Date Given"
+              m.resume.overall_status == "Joining Date Given"
     }
   end
 
@@ -513,7 +513,7 @@ class ResumesController < ApplicationController
     matches = ReqMatch.find_by_sql("SELECT * FROM req_matches INNER JOIN resumes ON resumes.id = req_matches.resume_id WHERE req_matches.status = \"JOINING\" AND resumes.status != \"JOINED\" AND resumes.joining_date > \"#{(Date.today - 365).to_s}\" ORDER BY resumes.joining_date")
 
     matches = matches.find_all { |r|
-                r.resume.resume_overall_status == "Joining Date Given"
+                r.resume.overall_status == "Joining Date Given"
               }
     joined_resumes     = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"JOINED\" ORDER BY joining_date")
     not_joined_resumes = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"NOT JOINED\" ORDER BY joining_date")
@@ -655,10 +655,10 @@ class ResumesController < ApplicationController
      if @employee.is_HR?
        resumes  = @employee.resumes
        unless @status == "Joining Date Given"
-         @resumes = resumes.find_all { |r| r.resume_overall_status == @status }
+         @resumes = resumes.find_all { |r| r.overall_status == @status }
        else
-         @resumes = resumes.find_all { |r| r.resume_overall_status == @status   || r.resume_overall_status == "Joined"  ||
-                                           r.resume_overall_status == "Not Joined" }
+                   @resumes = resumes.find_all { |r| r.overall_status == @status   || r.overall_status == "Joined"  ||
+            r.overall_status == "Not Joined" }
        end
      else
        @resumes = get_employee_referred_resumes(@employee)
@@ -1033,7 +1033,7 @@ class ResumesController < ApplicationController
     resume       = Resume.find(params[:resume_id])
     joining_date = params[:joining_date]
 
-    overall_status = resume.resume_overall_status
+            overall_status = resume.overall_status
     if overall_status == "Joining Date Given" ||
        overall_status == "JOINED"
       mesg = "This resume already marked as joining. So you can not mark joining two times on same resume."
@@ -2087,7 +2087,7 @@ class ResumesController < ApplicationController
 
     all_matches   = req_matches.find_all { |match|
       ( match.status                       == "SCHEDULED" ) &&
-      ( match.resume.resume_overall_status == "Interview Scheduled" )
+              ( match.resume.overall_status == "Interview Scheduled" )
     }
 
     @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(all_matches)
@@ -2128,7 +2128,7 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def find_resumes_with_status(status)
     Resume.all.find_all { |r|
-      r.resume_overall_status == status
+              r.overall_status == status
     }
   end
 
@@ -2192,11 +2192,10 @@ class ResumesController < ApplicationController
   def get_hr_matches(status, employee = nil)
     @row_id_prefix = get_row_id_prefix(status)
     forwards = []
-    resume_status = Resume.req_match_status_to_resume_status(status)
     if employee
-      resumes = get_employee_referred_resumes(employee, resume_status)
+      resumes = get_employee_referred_resumes(employee, status)
     else
-      resumes = Resume.where(overall_status: resume_status)
+      resumes = Resume.where(overall_status: status)
     end
     resumes.each do |r|
       forwards += r.forwards.where(status: status)
@@ -2340,7 +2339,7 @@ class ResumesController < ApplicationController
       sheet.row(row).push Spreadsheet::Link.new get_resume_url(m.resume.uniqid), m.resume.name
       sheet.row(row).push m.resume.current_company
       sheet.row(row).push m.requirement.name
-      sheet.row(row).push m.resume.resume_overall_status
+      sheet.row(row).push m.resume.overall_status
       sheet.row(row).push m.resume.email
       sheet.row(row).push m.resume.phone
       sheet.row(row).push m.resume.referral_name
@@ -2427,7 +2426,7 @@ class ResumesController < ApplicationController
     resume.each do |r|
       sheet.row(row).height = 20
       sheet.row(row).push Spreadsheet::Link.new get_resume_url(r.uniqid), r.name
-      sheet.row(row).push r.resume_overall_status
+      sheet.row(row).push r.overall_status
       recent_activity       = r.comments.size ? r.comments.last.updated_at : r.updated_at
       sheet.row(row).push recent_activity.strftime('%b %d, %Y')
       sheet.row(row).push r.phone      

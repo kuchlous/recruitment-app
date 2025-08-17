@@ -182,7 +182,7 @@ module ApplicationHelper
     end
 
     resumes = Resume.all.find_all { |resume|
-      resume.resume_overall_status == status.titleize
+      resume.overall_status == status.titleize
     }
   end
 

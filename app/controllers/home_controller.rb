@@ -302,28 +302,28 @@ class HomeController < ApplicationController
     @new = []
 
     resumes.each do |r|
-      resume_overall_status = r.resume_overall_status
-      if resume_overall_status == "Joining Date Given"
+      overall_status = r.overall_status
+      if overall_status == "Joining Date Given"
         @joining << r
-      elsif resume_overall_status == "Offered"
+      elsif overall_status == "Offered"
         @offered << r
-      elsif resume_overall_status == "Yet To Offer"
+      elsif overall_status == "Yet To Offer"
         @ytos << r
-      elsif resume_overall_status == "On Hold"
+      elsif overall_status == "On Hold"
         @holds << r
-      elsif resume_overall_status == "Engg. Select"
+      elsif overall_status == "Engg. Select"
         @eng_selects << r
-      elsif resume_overall_status == "HAC"
+      elsif overall_status == "HAC"
         @hacs << r
-      elsif resume_overall_status == "Interview Scheduled"
+      elsif overall_status == "Interview Scheduled"
         @scheduled << r
-      elsif resume_overall_status == "Shortlisted"
+      elsif overall_status == "Shortlisted"
         @shortlists << r
-      elsif resume_overall_status == "Forwarded"
+      elsif overall_status == "Forwarded"
         @forwards << r
-      elsif resume_overall_status == "New"
+      elsif overall_status == "New"
         @new << r
-      elsif resume_overall_status == "Rejected"
+      elsif overall_status == "Rejected"
         @rejected << r
       end
     end

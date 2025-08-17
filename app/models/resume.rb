@@ -127,14 +127,6 @@ class Resume < ActiveRecord::Base
     end
   end
 
-  def resume_overall_status
-    if self.status   != ""
-      return self.status.titleize
-    end
-
-    self.overall_status
-  end
-
   @@STATUS_MAP = {
     "JOINING" => "Joining Date Given",
     "OFFERED" => "Offered",
@@ -149,13 +141,10 @@ class Resume < ActiveRecord::Base
     "NEW" => "New"
   }
 
-  def self.req_match_status_to_resume_status(req_match_status)
-    @@STATUS_MAP[req_match_status]
-  end
-
   def calculate_overall_status
-    status_array = []
+    return self.status.titleize if self.status != ""
 
+    status_array = []
     self.req_matches.each do |match|
       status_array << match.status
     end
@@ -194,7 +183,7 @@ class Resume < ActiveRecord::Base
   end
 
   def Resume.get_resume_statuses
-    ["Any", "Joining Date Given", "Offered", "On Hold", "Selected", "Interview Scheduled", "Shortlisted", "Forwarded", "New", "Rejected", "FUTURE", "HAC", "N Accepted", "Not Joined"]
+    ["Any", "JOINING", "OFFERED", "HOLD", "SELECTED", "SCHEDULED", "SHORTLISTED", "FORWARDED", "NEW", "REJECTED", "FUTURE", "HAC", "N_ACCEPTED", "NOT JOINED"]
   end
 
   def move_temp_file_to_upload_directory
