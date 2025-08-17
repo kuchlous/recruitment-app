@@ -4,7 +4,6 @@ class Emailer < ApplicationMailer
   def add_message(mesg, log_employee)
     subject =   "From: #{mesg.sent_by.name}, Resume: #{mesg.resume.name}"
     recipients =   [ mesg.sent_to.email ]
-    from =    [ log_employee.email ]
     @emp_from = mesg.sent_by
     @emp_to = mesg.sent_to
     @mesg = mesg
@@ -261,6 +260,23 @@ class Emailer < ApplicationMailer
     # TODO: Add Sales Head to recipients
     subject = "#{resume.name} is rejected for #{requirement.name}"
     mail(to: recipients, subject: subject) if recipients.length > 0
+  end
+
+  # Weekly summary mail to Hiring Managers listing requirements pending review
+  def weekly_hm_requirement_summary(hiring_manager, requirements)
+    @hiring_manager = hiring_manager
+    @requirements = requirements
+    subject = "Weekly Pending Requirement Review Summary"
+    mail(to: hiring_manager.email, subject: subject)
+  end
+
+  def feedback_reminder(interview)
+    @panel_member = interview.employee
+    @interview = interview
+    @requirement = interview.req_match.requirement
+    @resume = interview.req_match.resume
+    subject = "Reminder to provide feedback for the interview conducted on #{@interview.interview_date}"
+    mail(to: @panel_member.email, subject: subject)
   end
 end
 
