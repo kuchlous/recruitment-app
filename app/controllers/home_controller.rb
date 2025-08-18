@@ -113,9 +113,6 @@ class HomeController < ApplicationController
     @uploaded_at_end = params[:uploaded_at_end].present? ? Date.parse(params[:uploaded_at_end]) : nil
     @exclude_keywords = params[:exclude_keywords]
     
-    conditions = {}
-    conditions[:related_requirements] = @requirement if @requirement
-    conditions[:overall_status] = @status if @status
     logger.info("search = " + @search_text + "ctc_min = " + @ctc_min.to_s  + "ctc_max = " + @ctc_max.to_s + "expected_ctc_min = " + @expected_ctc_min.to_s + "expected_ctc_max = " + @expected_ctc_max.to_s + "experience_months_min = " + @experience_months_min.to_s + "experience_months_max = " + @experience_months_max.to_s) 
     
     # Build where conditions for filters
@@ -123,9 +120,7 @@ class HomeController < ApplicationController
     where_conditions[:ctc] = {gte: @ctc_min, lte: @ctc_max} if @ctc_min > 0 || @ctc_max < 1000
     where_conditions[:expected_ctc] = {gte: @expected_ctc_min, lte: @expected_ctc_max} if @expected_ctc_min > 0 || @expected_ctc_max < 1000
     where_conditions[:exp_in_months] = {gte: @experience_months_min, lte: @experience_months_max} if @experience_months_min > 0 || @experience_months_max < 1000
-    if @status
-      where_conditions[:_or] = [{overall_status: @status}, {status: @status.upcase}]
-    end
+    where_conditions[:overall_status] = @status if @status
     where_conditions[:related_requirements] = @requirement if @requirement
     where_conditions[:preferred_location] = @preferred_location.downcase if @preferred_location.present?
     where_conditions[:created_at] = {gte: @uploaded_at_start, lte: @uploaded_at_end} if @uploaded_at_start || @uploaded_at_end
