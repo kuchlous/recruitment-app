@@ -78,7 +78,7 @@ class Requirement < ActiveRecord::Base
   end
 
   def scheduled
-    self.req_matches.joins(:resume).where(status: "SCHEDULED").where.not(resumes: {overall_status: "Future"})
+    self.req_matches.joins(:resume).where(status: "SCHEDULED").where.not(resumes: {overall_status: "FUTURE"})
   end
 
   def rejected
@@ -98,7 +98,7 @@ class Requirement < ActiveRecord::Base
   end
 
   def joining
-    self.req_matches.joins(:resume).where(status: "JOINING").where(resumes: {overall_status: "Joining Date Given"})
+    self.req_matches.joins(:resume).where(status: "JOINING").where(resumes: {overall_status: "JOINING"})
   end
 
   def Requirement.open_requirements

@@ -58,11 +58,11 @@ class ResumesController < ApplicationController
   def new_resumes
     if params[:mine]
       employee = get_current_employee
-      resumes = Resume.where("(referral_type = ? AND referral_id = ?) OR (ta_owner_id = ?) AND overall_status = ?", "EMPLOYEE", employee.id, employee.id, "New")
+      resumes = Resume.where("(referral_type = ? AND referral_id = ?) OR (ta_owner_id = ?) AND overall_status = ?", "EMPLOYEE", employee.id, employee.id, "NEW")
     else
-      resumes = Resume.where("overall_status = ?", "New")
+      resumes = Resume.where("overall_status = ?", "NEW")
     end
-    @resumes      = resumes
+    @resumes = resumes
   end
 
   def show_by_id
@@ -428,11 +428,11 @@ class ResumesController < ApplicationController
     @matches          = ReqMatch.find_employee_requirements_req_matches(get_current_employee, false)
     @joined_matches   = @matches.find_all { |m|
       m.status       == @status &&
-              m.resume.overall_status == "Joined"
+              m.resume.overall_status == "JOINED"
     }
     @joining_matches = @matches.find_all { |m|
       m.status       == @status &&
-              m.resume.overall_status == "Joining Date Given"
+              m.resume.overall_status == "JOINING"
     }
   end
 
@@ -513,7 +513,7 @@ class ResumesController < ApplicationController
     matches = ReqMatch.find_by_sql("SELECT * FROM req_matches INNER JOIN resumes ON resumes.id = req_matches.resume_id WHERE req_matches.status = \"JOINING\" AND resumes.status != \"JOINED\" AND resumes.joining_date > \"#{(Date.today - 365).to_s}\" ORDER BY resumes.joining_date")
 
     matches = matches.find_all { |r|
-                r.resume.overall_status == "Joining Date Given"
+                r.resume.overall_status == "JOINING"
               }
     joined_resumes     = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"JOINED\" ORDER BY joining_date")
     not_joined_resumes = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"NOT JOINED\" ORDER BY joining_date")
@@ -654,11 +654,11 @@ class ResumesController < ApplicationController
    if @employee.provides_visibility_to?(get_current_employee)
      if @employee.is_HR?
        resumes  = @employee.resumes
-       unless @status == "Joining Date Given"
+       unless @status == "JOINING"
          @resumes = resumes.find_all { |r| r.overall_status == @status }
        else
-                   @resumes = resumes.find_all { |r| r.overall_status == @status   || r.overall_status == "Joined"  ||
-            r.overall_status == "Not Joined" }
+                   @resumes = resumes.find_all { |r| r.overall_status == @status   || r.overall_status == "JOINED"  ||
+            r.overall_status == "NOT JOINED" }
        end
      else
        @resumes = get_employee_referred_resumes(@employee)
@@ -935,7 +935,6 @@ class ResumesController < ApplicationController
     # In case the whole resume is rejected the req_match will be empty.
     if status == "REJECTED" && req_matches.size == 0
       resume.update!(:status => status) 
-      
     end
 
     # ADDING: Comment
@@ -1033,9 +1032,8 @@ class ResumesController < ApplicationController
     resume       = Resume.find(params[:resume_id])
     joining_date = params[:joining_date]
 
-            overall_status = resume.overall_status
-    if overall_status == "Joining Date Given" ||
-       overall_status == "JOINED"
+    overall_status = resume.overall_status
+    if overall_status == "JOINING" || overall_status == "JOINED"
       mesg = "This resume already marked as joining. So you can not mark joining two times on same resume."
       comment = "ALREADY JOINED: already marked as joining/joined"
     else
@@ -2087,7 +2085,7 @@ class ResumesController < ApplicationController
 
     all_matches   = req_matches.find_all { |match|
       ( match.status                       == "SCHEDULED" ) &&
-              ( match.resume.overall_status == "Interview Scheduled" )
+              ( match.resume.overall_status == "SCHEDULED" )
     }
 
     @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(all_matches)

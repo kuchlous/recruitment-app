@@ -10,7 +10,7 @@
    </div>
    <div class="resume__status">
      <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %> 
-        (Status : <%= @overall_status %>) 
+        (Status : <%= @resume.get_resume_overall_status_title %>) 
      <% end %>
      <% if is_HR_ADMIN? || is_GM? || is_GROUP_HEAD?%>
        <% if @resume.summary && @resume.summary != "" %>
@@ -229,7 +229,7 @@
 </div>
 <div id="resume_details_div" class="common_class">
   <form name="form" method="post">
-    <% if (@resume.overall_status != "Joined") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
+    <% if (@resume.overall_status != "JOINED") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
       <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
         <div class="section" id="feedback">
           <div class="section__title">

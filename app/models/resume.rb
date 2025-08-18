@@ -127,20 +127,6 @@ class Resume < ActiveRecord::Base
     end
   end
 
-  @@STATUS_MAP = {
-    "JOINING" => "Joining Date Given",
-    "OFFERED" => "Offered",
-    "YTO" => "Yet To Offer",
-    "HAC" => "HAC",
-    "ENG_SELECT" => "Engg. Select",
-    "HOLD" => "On Hold",
-    "SCHEDULED" => "Interview Scheduled",
-    "SHORTLISTED" => "Shortlisted",
-    "FORWARDED" => "Forwarded",
-    "REJECTED" => "Rejected",
-    "NEW" => "New"
-  }
-
   def calculate_overall_status
     return self.status.titleize if self.status != ""
 
@@ -157,33 +143,54 @@ class Resume < ActiveRecord::Base
 
     reject_array = Array.new(status_array.size, "REJECTED")
     if status_array.include?("JOINING")
-      return "Joining Date Given"
+      return "JOINING"
     elsif status_array.include?("OFFERED")
-      return "Offered"
+      return "OFFERED"
     elsif status_array.include?("YTO")
-      return "Yet To Offer"
+      return "YTO"
     elsif status_array.include?("HAC")
       return "HAC"
     elsif status_array.include?("ENG_SELECT")
-      return "Engg. Select"
+      return "ENG_SELECT"
     elsif status_array.include?("HOLD")
-      return "On Hold"
+      return "HOLD"
     elsif status_array.include?("SCHEDULED")
-      return "Interview Scheduled"
+      return "SCHEDULED"
     elsif status_array.include?("SHORTLISTED")
-      return "Shortlisted"
+      return "SHORTLISTED"
     elsif status_array.include?("FORWARDED")
-      return "Forwarded"
+      return "FORWARDED"
     elsif status_array.size == 0
-      return "New"
+      return "NEW"
     elsif status_array.eql?(reject_array)
-      return "Rejected"
+      return "REJECTED"
     else
     end
   end
 
   def Resume.get_resume_statuses
     ["Any", "JOINING", "OFFERED", "HOLD", "SELECTED", "SCHEDULED", "SHORTLISTED", "FORWARDED", "NEW", "REJECTED", "FUTURE", "HAC", "N_ACCEPTED", "NOT JOINED"]
+  end
+
+  STATUS_TITLES = {
+    "JOINING" => "Joining",
+    "OFFERED" => "Offered", 
+    "YTO" => "Yet To Offer",
+    "ENG_SELECT" => "Engg. Select",
+    "HOLD" => "On Hold",
+    "SCHEDULED" => "Interview Scheduled",
+    "SHORTLISTED" => "Shortlisted",
+    "FORWARDED" => "Forwarded",
+    "NEW" => "New",
+    "REJECTED" => "Rejected",
+    "FUTURE" => "Future",
+    "HAC" => "HAC",
+    "N_ACCEPTED" => "Not Accepted",
+    "NOT JOINED" => "Not Joined"
+  }.freeze
+
+  def get_resume_overall_status_title
+    STATUS_TITLES[self.overall_status] || "Unknown"
   end
 
   def move_temp_file_to_upload_directory

@@ -4,15 +4,15 @@
 
   <% if is_hr || params[:status] %>
     ( <%= link_to "Export all", :controller => "resumes", :action => "export_as_xls_all_uploaded_resumes" %> ) <br /> <br />
-    <%= link_to "New",         :action => "my_resumes", :status => "New"                 , :id => @employee.id  %> |
-    <%= link_to "Forwarded",   :action => "my_resumes", :status => "Forwarded"           , :id => @employee.id  %> |
-    <%= link_to "Shortlisted", :action => "my_resumes", :status => "Shortlisted"         , :id => @employee.id  %> |
-    <%= link_to "Hold",        :action => "my_resumes", :status => "On Hold"             , :id => @employee.id  %> |
-    <%= link_to "Offered",     :action => "my_resumes", :status => "Offered"             , :id => @employee.id  %> |
-    <%= link_to "Joining",     :action => "my_resumes", :status => "Joining Date Given"  , :id => @employee.id  %> |
-    <%= link_to "Interviews",  :action => "my_resumes", :status => "Interview Scheduled" , :id => @employee.id  %> |
-    <%= link_to "Rejected",    :action => "my_resumes", :status => "Rejected"            , :id => @employee.id  %> |
-    <%= link_to "Future",      :action => "my_resumes", :status => "Future"              , :id => @employee.id  %> |
+    <%= link_to "New",         :action => "my_resumes", :status => "NEW"                 , :id => @employee.id  %> |
+    <%= link_to "Forwarded",   :action => "my_resumes", :status => "FORWARDED"           , :id => @employee.id  %> |
+    <%= link_to "Shortlisted", :action => "my_resumes", :status => "SHORTLISTED"         , :id => @employee.id  %> |
+    <%= link_to "Hold",        :action => "my_resumes", :status => "HOLD"             , :id => @employee.id  %> |
+    <%= link_to "Offered",     :action => "my_resumes", :status => "OFFERED"             , :id => @employee.id  %> |
+    <%= link_to "Joining",     :action => "my_resumes", :status => "JOINING"  , :id => @employee.id  %> |
+    <%= link_to "Interviews",  :action => "my_resumes", :status => "SCHEDULED" , :id => @employee.id  %> |
+    <%= link_to "Rejected",    :action => "my_resumes", :status => "REJECTED"            , :id => @employee.id  %> |
+    <%= link_to "Future",      :action => "my_resumes", :status => "FUTURE"              , :id => @employee.id  %> |
     <%= link_to "Recent",      :action => "recent" %> |
   <% end %>
   <br /> <br />
@@ -45,7 +45,7 @@
             <% if is_hr && ( @status == "Forwarded"   ||
                              @status == "Shortlisted" ||
                              @status == "Interview Scheduled" ) %>
-              <% if @status == "Forwarded" %>
+              <% if @status == "FORWARDED" %>
                 <% forwards = get_resume_forwards(resume) %>
                 <% title_tag_for_multiple_fwds = [] %>
                 <% forwards.each do |f| %>
@@ -60,7 +60,7 @@
                     <%= requirement_link(forwards.first.requirements.first) %>
                   <% end %>
                 </td>
-              <% elsif @status == "Shortlisted" %>
+              <% elsif @status == "SHORTLISTED" %>
                 <% matches  = get_resume_req_matches(resume, @status.upcase) %>
                 <% title_tag_for_multiple_shortlisted_matches = [] %>
                 <% matches.each do |m| %>
@@ -73,7 +73,7 @@
                     <%= requirement_link(matches.first.requirement) %>
                   <% end %>
                 </td>
-              <% elsif @status == "Interview Scheduled" %>
+              <% elsif @status == "SCHEDULED" %>
                 <td class="my_resumes_label_light">
                   <% interviews  = get_resume_req_matches(resume, "SCHEDULED")
                      interviews.each do |int| %>
