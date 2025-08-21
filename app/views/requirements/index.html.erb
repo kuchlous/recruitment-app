@@ -14,10 +14,26 @@
 <br>
 <div class="grid-container" style="width: 96%; height: 100%; margin: 0 auto;">
 
-  <div style="margin-bottom: 10px; display: flex; align-items: center;">
-    Search:
-    <input type="text" id="quickFilterInput" placeholder="Type to search..." style="margin-right: 10px;">
-    <button onclick="window.clearAllFilters()">Clear All Filters</button>
+  <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center;">
+      Search:
+      <input type="text" id="quickFilterInput" placeholder="Type to search..." style="margin-right: 10px;">
+      <button onclick="window.clearAllFilters()">Clear All Filters</button>
+    </div>
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <span>
+        <input type="radio" id="openHold" name="status" value="open" checked>
+        <label for="openHold">Open/Hold</label>
+      </span>
+      <span>
+        <input type="radio" id="closed" name="status" value="closed">
+        <label for="closed">Closed</label>
+      </span>
+      <span>
+        <input type="radio" id="all" name="status" value="all">
+        <label for="all">All</label>
+      </span>
+    </div>
   </div>
 
   <div id="gridLoader" style="display: none; text-align: center; padding: 20px;">
