@@ -1225,7 +1225,7 @@ class ResumesController < ApplicationController
   def interviews_status
     resumes = nil
     if params[:mine]
-      resumes = Resume.where(referral_type: "EMPLOYEE").where(referral_id: get_current_employee.id)
+      resumes = employee_owned_resumes(get_current_employee, "SCHEDULED")
     end
 
     @interviews_late, @interviews_done, @under_process = ResumesController.filter_interviews_based_upon_processing(nil, resumes)

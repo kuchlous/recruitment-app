@@ -1,17 +1,5 @@
 <div id="resume_search_div" class="common_class">
   <span class="span_with_13"> All <%= @status %>  Resumes: (<%= @resumes.size %>) </span>
-  <% if params[:status] %>
-    ( <%= link_to "Export all", :controller => "resumes", :action => "export_as_xls_all_uploaded_resumes" %> ) <br /> <br />
-    <%= link_to "New",         :action => "my_resumes", :status => "NEW" %> |
-    <%= link_to "Forwarded",   :action => "my_resumes", :status => "FORWARDED" %> |
-    <%= link_to "Shortlisted", :action => "my_resumes", :status => "SHORTLISTED" %> |
-    <%= link_to "Hold",        :action => "my_resumes", :status => "HOLD" %> |
-    <%= link_to "Offered",     :action => "my_resumes", :status => "OFFERED" %> |
-    <%= link_to "Joining",     :action => "my_resumes", :status => "JOINING" %> |
-    <%= link_to "Interviews",  :action => "my_resumes", :status => "SCHEDULED" %> |
-    <%= link_to "Rejected",    :action => "my_resumes", :status => "REJECTED" %> |
-    <%= link_to "Future",      :action => "my_resumes", :status => "FUTURE" %> |
-  <% end %>
   <br /> <br />
   <% if @resumes.size > 0 %>
     <div id="my_resumes_div">

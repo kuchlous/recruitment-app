@@ -309,11 +309,11 @@ require 'will_paginate/array'
   end
 
   def employee_owned_resumes(employee, status = "")
-    resumes = []
+    resumes = nil
     if status != ""
-      resumes += Resume.where(ta_owner: employee, overall_status: status)
+      resumes = Resume.where(ta_owner: employee, overall_status: status)
     else
-      resumes += Resume.where(ta_owner: employee)
+      resumes = Resume.where(ta_owner: employee)
     end
 
     resumes
