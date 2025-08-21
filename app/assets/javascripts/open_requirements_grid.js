@@ -39,7 +39,134 @@ document.addEventListener('turbolinks:load', () => {
     }
     gridDiv.style.display = 'none';
 
-    fetch(prepend_with_image_path + '/api/requirements')
+    const columnDefs = [
+      {
+        headerName: 'ID',
+        field: 'id',
+        minWidth: 80,
+        sortable: true,
+        filter: 'agNumberColumnFilter',
+        flex: 0.75
+      },
+      {
+        headerName: 'Name',
+        field: 'name',
+        sortable: true,
+        filter: true,
+        flex: 2.5,
+        minWidth: 150,
+        cellRenderer: LinkCellRenderer
+      },
+      {
+        headerName: 'Group',
+        field: 'group',
+        sortable: true,
+        filter: true,
+        minWidth: 100,
+        flex: 1,
+      },
+      {
+        headerName: 'Skills/Desc',
+        field: 'skill',
+        sortable: true,
+        filter: true,
+        flex: 2.5,
+        minWidth: 200,
+        cellRenderer: function(params) {
+          if (params.value) {
+            return `<span title="${params.value}">${params.value}</span>`;
+          }
+          return '';
+        }
+      },
+      {
+        headerName: 'Experience',
+        field: 'experience',
+        sortable: true,
+        flex: 1.5,
+        minWidth: 150
+      },
+      {
+        headerName: 'End Date',
+        field: 'edate',
+        sortable: true,
+        filter: 'agDateColumnFilter',
+        flex: 1,
+        minWidth: 120
+      },
+      {
+        headerName: 'Positions',
+        field: 'positions',
+        sortable: true,
+        flex: 1,
+        minWidth: 80,
+        headerClass: 'ag-center-header', 
+        cellStyle: { 'text-align': 'center' },
+      },
+      {
+        headerName: 'Owner',
+        field: 'owner',
+        sortable: true,
+        flex: 1,
+        minWidth: 100
+      },
+      {
+        headerName: 'Status',
+        field: 'status',
+        sortable: true,
+        filter: true,
+        minWidth: 100,
+        flex: 1,
+      },
+      {
+        headerName: 'Created At',
+        field: 'created_at',
+        sortable: true,
+        filter: 'agDateColumnFilter',
+        minWidth: 120,
+        flex: 1,
+      }
+    ];
+
+    const gridOptions = {
+      columnDefs: columnDefs,
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        filter: true,
+      },
+      pagination: true,
+      paginationPageSize: 50,
+      domLayout: 'autoHeight',
+      getRowClass: function(params) {
+        if (params.data && params.data.req_type === 'HOT') {
+          return 'ag-row-hot';
+        }
+        return null;
+      },
+      components: {
+        linkCellRenderer: LinkCellRenderer
+      }
+    };
+    
+    const gridApi = agGrid.createGrid(gridDiv, gridOptions);
+    window.agGridApi = gridApi;
+    
+    if (loaderDiv) {
+      loaderDiv.style.display = 'none';
+    }
+    gridDiv.style.display = 'block';
+
+    const quickFilterInput = document.getElementById('quickFilterInput');
+    if (quickFilterInput) {
+      quickFilterInput.addEventListener('input', (event) => {
+        gridApi.setGridOption('quickFilterText', event.target.value);
+      });
+    }
+    function fetchData() {
+      const selectedOption = document.querySelector('input[name="status"]:checked');
+      const url = `${prepend_with_image_path}/api/requirements?status=${selectedOption?.value}`;
+      fetch(url)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP Error! status: ${response.status}`);
@@ -47,143 +174,22 @@ document.addEventListener('turbolinks:load', () => {
         return response.json();
       })
       .then(rowData => {
-        const columnDefs = [
-          {
-            headerName: 'ID',
-            field: 'id',
-            minWidth: 80,
-            sortable: true,
-            filter: 'agNumberColumnFilter',
-            flex: 0.75
-          },
-          {
-            headerName: 'Name',
-            field: 'name',
-            sortable: true,
-            filter: true,
-            flex: 2.5,
-            minWidth: 150,
-            cellRenderer: LinkCellRenderer
-          },
-          {
-            headerName: 'Group',
-            field: 'group',
-            sortable: true,
-            filter: true,
-            minWidth: 100,
-            flex: 1,
-          },
-          {
-            headerName: 'Skills/Desc',
-            field: 'skill',
-            sortable: true,
-            filter: true,
-            flex: 2.5,
-            minWidth: 200,
-            cellRenderer: function(params) {
-              if (params.value) {
-                return `<span title="${params.value}">${params.value}</span>`;
-              }
-              return '';
-            }
-          },
-          {
-            headerName: 'Experience',
-            field: 'experience',
-            sortable: true,
-            flex: 1.5,
-            minWidth: 150
-          },
-          {
-            headerName: 'End Date',
-            field: 'edate',
-            sortable: true,
-            filter: 'agDateColumnFilter',
-            flex: 1,
-            minWidth: 120
-          },
-          {
-            headerName: 'Positions',
-            field: 'positions',
-            sortable: true,
-            flex: 1,
-            minWidth: 80,
-            headerClass: 'ag-center-header', 
-            cellStyle: { 'text-align': 'center' },
-          },
-          {
-            headerName: 'Owner',
-            field: 'owner',
-            sortable: true,
-            flex: 1,
-            minWidth: 100
-          },
-          {
-            headerName: 'Status',
-            field: 'status',
-            sortable: true,
-            filter: true,
-            minWidth: 100,
-            flex: 1,
-          },
-          {
-            headerName: 'Created At',
-            field: 'created_at',
-            sortable: true,
-            filter: 'agDateColumnFilter',
-            minWidth: 120,
-            flex: 1,
-          }
-        ];
-
-        const gridOptions = {
-          columnDefs: columnDefs,
-          rowData: rowData,
-          defaultColDef: {
-            resizable: true,
-            sortable: true,
-            filter: true,
-          },
-          pagination: true,
-          paginationPageSize: 50,
-          domLayout: 'autoHeight',
-          getRowClass: function(params) {
-            if (params.data.req_type === 'HOT') {
-              return 'ag-row-hot';
-            }
-            return null;
-          },
-          components: {
-            linkCellRenderer: LinkCellRenderer
-          }
-        };
-
-        const gridApi = agGrid.createGrid(gridDiv, gridOptions);
-        window.agGridApi = gridApi;
-
-        if (loaderDiv) {
-          loaderDiv.style.display = 'none';
-        }
-        gridDiv.style.display = 'block';
-
-        const quickFilterInput = document.getElementById('quickFilterInput');
-        if (quickFilterInput) {
-          quickFilterInput.addEventListener('input', (event) => {
-            gridApi.setGridOption('quickFilterText', event.target.value);
-          });
-        }
+        gridApi.updateGridOptions({ rowData: rowData });
       })
       .catch(error => {
         console.error('Error fetching requirements data:', error);
-        if (loaderDiv) {
-          loaderDiv.style.display = 'none';
-        }
         if (errorDiv) {
           errorDiv.textContent = `Failed to load data: ${error.message}. Please try again later.`;
           errorDiv.style.display = 'block';
         }
-        gridDiv.style.display = 'none';
       });
+    }
+
+    const statusRadioButtons = document.querySelectorAll('input[name="status"]');
+    statusRadioButtons.forEach(radio => {
+      radio.addEventListener('change', fetchData);
+    });
+    fetchData(); // initial data fetch
 
     window.clearAllFilters = () => {
       if (window.agGridApi) {
