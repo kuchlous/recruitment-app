@@ -18,7 +18,7 @@
   <tbody>
     <% @requirements.each do |req| %>
       <tr>
-        <td><%= req.name %></td>
+        <td><%= link_to req.name, url_for(:protocol => "https", :controller => "requirements", :action => "show", :id => req.id), target: "_blank" %></td>
         <td><%= req.status %></td>
         <td><%= req.ta_lead&.name %></td>
         <td><%= req.eng_leads.map(&:name).join(', ') %></td>
