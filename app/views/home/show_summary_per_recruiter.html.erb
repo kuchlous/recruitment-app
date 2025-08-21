@@ -27,7 +27,7 @@
       </tr>
       <% @recruiter_summary_table.each do |employee, row| %>
         <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-          <td> <%= link_to employee.name, :controller => "resumes", :action => "my_resumes", :id => employee.id %> </td>
+          <td> <%= employee.name %> </td>
           <td> <%= row[:uploads] %> </td>
           <td> <%= row[:forwards] %> </td>
           <td> <%= row[:shortlists] %> </td>

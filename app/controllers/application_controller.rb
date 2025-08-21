@@ -308,18 +308,19 @@ require 'will_paginate/array'
     nreqs
   end
 
-  def get_employee_referred_resumes(employee, overall_status = "")
-    if overall_status == ""
-      Resume.where("referral_type = ? AND referral_id = ?", "EMPLOYEE", employee.id)
+  def employee_owned_resumes(employee, status = "")
+    resumes = []
+    if status != ""
+      resumes += Resume.where(ta_owner: employee, overall_status: status)
     else
-      Resume.where("referral_type = ? AND referral_id = ? && overall_status = ?", "EMPLOYEE", employee.id, overall_status)
+      resumes += Resume.where(ta_owner: employee)
     end
+
+    resumes
   end
 
   def sort_resumes_by_date(resumes)
     resumes.sort_by { |r| [r.change_date] }.reverse
-
-# resumes.sort! { |a, b| b.updated_at <=> a.updated_at }
   end
 
   protected

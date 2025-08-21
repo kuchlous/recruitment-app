@@ -326,9 +326,7 @@ class HomeController < ApplicationController
 
   def dashboard
     e = get_current_employee
-    referred_resumes = get_employee_referred_resumes(e)
-    ta_resumes = Resume.where(ta_owner: e)
-    resumes = (referred_resumes + ta_resumes).uniq
+    resumes = employee_owned_resumes(e)
     classify_resumes(resumes)
     @employee = e
   end

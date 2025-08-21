@@ -39,10 +39,6 @@ class ResumesController < ApplicationController
   def show
     unless params[:id].nil? || Uniqid.find_by_name(params[:id]).nil?
       @resume         = Uniqid.find_by_name(params[:id]).resume
-      @overall_status = @resume.overall_status
-      if @overall_status == "N_ACCEPTED"
-        @overall_status  = "Not Accepted"
-      end
       @comments       = get_resume_comments(@resume, get_current_employee)
       @feedbacks      = @resume.feedbacks
       @messages       = @resume.messages
@@ -509,20 +505,27 @@ class ResumesController < ApplicationController
     end
   end
 
-  def find_joining_resumes
-    matches = ReqMatch.find_by_sql("SELECT * FROM req_matches INNER JOIN resumes ON resumes.id = req_matches.resume_id WHERE req_matches.status = \"JOINING\" AND resumes.status != \"JOINED\" AND resumes.joining_date > \"#{(Date.today - 365).to_s}\" ORDER BY resumes.joining_date")
-
-    matches = matches.find_all { |r|
-                r.resume.overall_status == "JOINING"
-              }
-    joined_resumes     = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"JOINED\" ORDER BY joining_date")
-    not_joined_resumes = Resume.find_by_sql("SELECT * FROM resumes WHERE resumes.status = \"NOT JOINED\" ORDER BY joining_date")
-    if params[:mine]
-      matches = matches.find_all{|f| f.resume.referral_type == "EMPLOYEE" && f.resume.referral_id == get_current_employee.id}
-      joined_resumes = joined_resumes.find_all{|r| r.referral_type == "EMPLOYEE" && r.referral_id == get_current_employee.id} 
-      not_joined_resumes = not_joined_resumes.find_all{|r| r.referral_type == "EMPLOYEE" && r.referral_id == get_current_employee.id} 
+  def find_joining_resumes(start_date, end_date, mine)
+    if mine
+      mine_condition = "resumes.referral_type = 'EMPLOYEE' AND resumes.referral_id = #{get_current_employee.id}"
+    else
+      mine_condition = ""
     end
-    [matches, joined_resumes, not_joined_resumes]
+    joining_matches = ReqMatch.joins(:resume)
+                     .where(status: "JOINING")
+                     .where(resumes: { overall_status: "JOINING", joining_date: start_date..end_date })
+                     .order("resumes.joining_date")
+                     .where(mine_condition)
+
+    joined_resumes = Resume.where(overall_status: "JOINED", joining_date: start_date..end_date)
+                          .order(:joining_date)
+                          .where(mine_condition)
+                          
+    not_joined_resumes = Resume.where(overall_status: "NOT JOINED", joining_date: start_date..end_date)
+                              .order(:joining_date)
+                              .where(mine_condition)
+
+    [joining_matches, joined_resumes, not_joined_resumes]
   end
 
   def fill_months_table(months_table, full_table, type)
@@ -580,9 +583,9 @@ class ResumesController < ApplicationController
       joining << m.resume
     end
 
-    fill_months_table(months_table, filter_by_joining_date(joining, start_date, end_date), :joining)
-    fill_months_table(months_table, filter_by_joining_date(joined, start_date, end_date), :joined)
-    fill_months_table(months_table, filter_by_joining_date(not_joined, start_date, end_date), :not_joined)
+    fill_months_table(months_table, joining, :joining)
+    fill_months_table(months_table, joined, :joined)
+    fill_months_table(months_table, not_joined, :not_joined)
 
     months_table
   end
@@ -595,8 +598,8 @@ class ResumesController < ApplicationController
 
   def joined
     @join_on_req_page   = @offer_on_req_page = 0
-    @matches, joined_resumes, not_joined_resumes = find_joining_resumes
-    @months_table       = create_months_table(@matches, joined_resumes, not_joined_resumes)
+    @joining_matches, @joined_resumes, @not_joined_resumes = find_joining_resumes(Date.today - 365, Date.today + 90, params[:mine])
+    @months_table       = create_months_table(@joining_matches, @joined_resumes, @not_joined_resumes)
     @joined_resumes     = get_current_quarter_resumes("JOINED")
     @not_joined_resumes = get_current_quarter_resumes("NOT JOINED")
     @offered_comments   = get_current_quarter_resumes_for_offered
@@ -649,26 +652,11 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Gets all resumes which are uploaded by employee(HR)                                #
   ####################################################################################################
   def my_resumes
-   @employee = params[:id]     ? Employee.find(params[:id]) : get_current_employee
-   @status   = params[:status] ? params[:status]            : "New"
-   if @employee.provides_visibility_to?(get_current_employee)
-     if @employee.is_HR?
-       resumes  = @employee.resumes
-       unless @status == "JOINING"
-         @resumes = resumes.find_all { |r| r.overall_status == @status }
-       else
-                   @resumes = resumes.find_all { |r| r.overall_status == @status   || r.overall_status == "JOINED"  ||
-            r.overall_status == "NOT JOINED" }
-       end
-     else
-       @resumes = get_employee_referred_resumes(@employee)
-       @status  = "Referral"
-     end
-     @resumes = sort_resumes_by_date(@resumes)
-   else
-     flash[:notice] = "You are not authorised to access this page."
-     redirect_to :controller => "home", :action => "actions_page"
-   end
+    @employee = get_current_employee
+    @status   = params[:status] ? params[:status]            : "New"
+    @resumes = Resume.where(referral_type: "EMPLOYEE", referral_id: @employee.id)
+    @status  = "Referral"
+    @resumes = sort_resumes_by_date(@resumes)
   end
 
   ####################################################################################################
@@ -1363,7 +1351,7 @@ class ResumesController < ApplicationController
     all_interview_matches       = @interviews_late + @interviews_done + @under_process
     fill_interview_data(interviews_sheet, all_interview_matches)
 
-    joining_matches, joined_resumes, not_joined_resumes = find_joining_resumes
+    joining_matches, joined_resumes, not_joined_resumes = find_joining_resumes(Date.today - 365, Date.today + 90, false)
     fill_joining_data(joining_sheet, joining_matches, joined_resumes, not_joined_resumes)
 
     book.write output
@@ -2191,7 +2179,7 @@ class ResumesController < ApplicationController
     @row_id_prefix = get_row_id_prefix(status)
     forwards = []
     if employee
-      resumes = get_employee_referred_resumes(employee, status)
+      resumes = employee_owned_resumes(employee, status)
     else
       resumes = Resume.where(overall_status: status)
     end

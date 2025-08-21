@@ -36,7 +36,7 @@
   </table>
 
   <div class="table-header">
-    <h2><%= @status.titleize + "(" + @matches.size.to_s + ")" %></h2>
+    <h2><%= @status.titleize + "(" + @joining_matches.size.to_s + ")" %></h2>
   </div>
   
   <div class="table-footer">
@@ -45,7 +45,7 @@
     </div>
   </div>
   
-  <% if @matches && @matches.size > 0 %>
+  <% if @joining_matches && @joining_matches.size > 0 %>
     <table id="joining_resumes_table" class="sortable modern-table">
       <thead>
         <tr>
@@ -57,17 +57,17 @@
         </tr>
       </thead>
       <tbody>
-      <% @matches.each do |f|
-        resume = f.resume %>
+      <% @joining_matches.each do |m|
+        resume = m.resume %>
         <tr>
           <td class="table-cell-primary">
             <%= resume_link(resume) %>
           </td>
-          <td sorttable_customkey="<%= f.requirement.name %>" class="table-cell-secondary">
-            <%= f.requirement.name %>
+          <td sorttable_customkey="<%= m.requirement.name %>" class="table-cell-secondary">
+            <%= m.requirement.name %>
           </td>
           <td class="table-cell-secondary">
-            <%= link_to print_date(resume.joining_date), "", :onClick=>"showEditJoiningBox(event, #{resume.id}, #{f.id})" %>
+            <%= link_to print_date(resume.joining_date), "", :onClick=>"showEditJoiningBox(event, #{resume.id}, #{m.id})" %>
           </td>
           <td id=<%= "likely-to-join-" + resume.id.to_s %> class="table-cell-secondary">
             <%= image_tag("#{get_image_name(resume)}_Image.png", :size => "20x20", :onClick=>"showAllImagesForLikelyToJoin(event," + resume.id.to_s + ")") %>
