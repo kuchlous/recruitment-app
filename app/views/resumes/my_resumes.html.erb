@@ -1,41 +1,52 @@
 <div id="resume_search_div" class="common_class">
-  <span class="span_with_13"> All <%= @status %>  Resumes: (<%= @resumes.size %>) </span>
-  <br /> <br />
+  <div class="table-header">
+    <h2>All <%= @status %> Resumes</h2>
+    <p><%= @resumes.size %> resumes found</p>
+  </div>
+  
   <% if @resumes.size > 0 %>
-    <div id="my_resumes_div">
-      <table class="sortable">
-        <tr>
-          <th class="my_resumes_label">      Name                </th>
-          <th class="my_resumes_label">      Upload Date         </th>
-          <th class="my_resumes_label">      Overall Status      </th>
-          <th class="my_resumes_label">      Recent Activity On  </th>
-          <th class="my_resumes_label">      Phone Number        </th>
-          <th class="my_resumes_label">      Email               </th>
-        </tr>
-        <% @resumes.each do |resume| %>
-          <tr class="<%= cycle('result_line_odd', 'result_line_even') %>" >
-            <td class="my_resumes_label" title="<%= resume.name %>">
-              <%= resume_link(resume) %>
-            </td>
-            <td class="my_resumes_label">
-              <%= print_date(resume.created_at) %>
-            </td>
-            <td class="my_resumes_label">
-              <%= resume.overall_status %>
-            </td>
-            <td class="my_resumes_label">
-              <%= print_date(resume.change_date) %>
-            </td>
-            <td class="my_resumes_label" title="<%= resume.phone %>">
-               <%= resume.phone %>
-            </td>
-            <td class="my_resumes_label" title="<%= resume.email %>">
-               <%= resume.email %>
-            </td>
+    <div class="table-responsive">
+      <table class="modern-table sortable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Upload Date</th>
+            <th>Overall Status</th>
+            <th>Recent Activity On</th>
+            <th>Phone Number</th>
+            <th>Email</th>
           </tr>
-        <% end %>
+        </thead>
+        <tbody>
+          <% @resumes.each do |resume| %>
+            <tr>
+              <td class="table-cell-primary" title="<%= resume.name %>">
+                <%= resume_link(resume) %>
+              </td>
+              <td class="table-cell-secondary">
+                <%= print_date(resume.created_at) %>
+              </td>
+              <td class="table-cell-secondary">
+                <%= resume.overall_status %>
+              </td>
+              <td class="table-cell-secondary">
+                <%= print_date(resume.change_date) %>
+              </td>
+              <td class="table-cell-truncated" title="<%= resume.phone %>">
+                <%= resume.phone %>
+              </td>
+              <td class="table-cell-truncated" title="<%= resume.email %>">
+                <%= resume.email %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
       </table>
+    </div>
   <% else %>
-    <span class="span_with_13_with_padding_0"> <br /> Sorry there are no resumes found. </span>
+    <div class="table-empty">
+      <div class="empty-icon">📄</div>
+      <p>Sorry, there are no resumes found.</p>
+    </div>
   <% end %>
 </div>

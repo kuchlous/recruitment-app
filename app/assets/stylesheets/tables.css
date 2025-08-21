@@ -108,6 +108,7 @@
   line-height: 1.4;
   vertical-align: middle;
   color: #333;
+  text-align: left !important; /* Override .common td center alignment */
 }
 
 /* Table Body th elements (row labels) - Override recruitment.css */
