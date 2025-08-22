@@ -1,4 +1,20 @@
 class Requirement < ActiveRecord::Base
+  searchkick word_start: [:name, :description, :skills, :location],
+            suggest: [:name, :description, :skills, :location],
+            filterable: [:id, :status, :experience, :notice_period, :employee_id, :designation_id, :group_id],
+            searchable: [:name, :description, :skills, :location, :experience, :notice_period],
+            mappings: {
+              properties: {
+                id: { type: 'integer' },
+                experience: { type: 'integer' },
+                notice_period: { type: 'integer' },
+                created_at: { type: 'date' },
+                updated_at: { type: 'date' },
+                embedding: { type: 'dense_vector', dims: 1536 } # OpenAI ada-002 embedding dimensions
+              }
+            },
+            merge_mappings: true
+
   belongs_to              :employee
   belongs_to              :designation
   has_many                :interviews

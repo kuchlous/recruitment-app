@@ -28,11 +28,10 @@ class EmployeesController < ApplicationController
   def autocomplete_hr_employees
     query = params[:query]
     hr_employees = Employee.where(employee_status: "ACTIVE")
-                          .where(employee_type: "HR")
+                          .where("employee_type LIKE ?", "%HR%")
                           .where("LOWER(name) LIKE LOWER(?) OR LOWER(login) LIKE LOWER(?)", "%#{query}%", "%#{query}%")
                           .limit(10)
                           .pluck(:name)
-    
     render json: hr_employees
   end
 
