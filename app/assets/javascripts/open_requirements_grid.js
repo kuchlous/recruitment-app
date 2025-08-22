@@ -31,14 +31,6 @@ document.addEventListener('turbolinks:load', () => {
   };
 
   if (gridDiv) {
-    if (errorDiv) {
-      errorDiv.style.display = 'none';
-    }
-    if (loaderDiv) {
-      loaderDiv.style.display = 'block';
-    }
-    gridDiv.style.display = 'none';
-
     const columnDefs = [
       {
         headerName: 'ID',
@@ -152,11 +144,6 @@ document.addEventListener('turbolinks:load', () => {
     const gridApi = agGrid.createGrid(gridDiv, gridOptions);
     window.agGridApi = gridApi;
     
-    if (loaderDiv) {
-      loaderDiv.style.display = 'none';
-    }
-    gridDiv.style.display = 'block';
-
     const quickFilterInput = document.getElementById('quickFilterInput');
     if (quickFilterInput) {
       quickFilterInput.addEventListener('input', (event) => {
@@ -164,6 +151,13 @@ document.addEventListener('turbolinks:load', () => {
       });
     }
     function fetchData() {
+      if (errorDiv) {
+        errorDiv.style.display = 'none';
+      }
+      if (loaderDiv) {
+        loaderDiv.style.display = 'block';
+      }
+      gridDiv.style.display = 'none';
       const selectedOption = document.querySelector('input[name="status"]:checked');
       const url = `${prepend_with_image_path}/api/requirements?status=${selectedOption?.value}`;
       fetch(url)
@@ -175,6 +169,10 @@ document.addEventListener('turbolinks:load', () => {
       })
       .then(rowData => {
         gridApi.updateGridOptions({ rowData: rowData });
+        if (loaderDiv) {
+          loaderDiv.style.display = 'none';
+        }
+        gridDiv.style.display = 'block';        
       })
       .catch(error => {
         console.error('Error fetching requirements data:', error);
