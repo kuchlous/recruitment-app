@@ -25,6 +25,17 @@ class EmployeesController < ApplicationController
     render json: active_employees
   end
 
+  def autocomplete_hr_employees
+    query = params[:query]
+    hr_employees = Employee.where(employee_status: "ACTIVE")
+                          .where(employee_type: "HR")
+                          .where("LOWER(name) LIKE LOWER(?) OR LOWER(login) LIKE LOWER(?)", "%#{query}%", "%#{query}%")
+                          .limit(10)
+                          .pluck(:name)
+    
+    render json: hr_employees
+  end
+
   def list_my_employees
     @employees = Employee.where(employee_status:"ACTIVE").order(:name).find_all { 
                         |e| e.provides_visibility_to?(get_current_employee) 

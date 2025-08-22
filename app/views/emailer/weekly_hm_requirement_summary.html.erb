@@ -7,8 +7,8 @@
     <tr>
       <th>Requirement</th>
       <th>Status</th>
-      <th>TA Lead</th>
       <th>Engineering Leads</th>
+      <th>TA Leads</th>
       <th>Last Forward Received</th>
       <th>Open Forwards</th>
       <th>Shortlisted</th>
@@ -20,8 +20,8 @@
       <tr>
         <td><%= link_to req.name, url_for(:protocol => "https", :controller => "requirements", :action => "show", :id => req.id), target: "_blank" %></td>
         <td><%= req.status %></td>
-        <td><%= req.ta_lead&.name %></td>
         <td><%= req.eng_leads.map(&:name).join(', ') %></td>
+        <td><%= req.ta_leads.map(&:name).join(', ') %></td>
         <td><%= req.last_forward_recieved.strftime('%d/%m/%Y') %></td>
         <td><%= req.open_forwards.count %></td>
         <td><%= req.shortlists.count %></td>

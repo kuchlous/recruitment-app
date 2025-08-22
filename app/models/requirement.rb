@@ -5,6 +5,7 @@ class Requirement < ActiveRecord::Base
   has_many                :req_matches
   has_and_belongs_to_many :forwards
   has_and_belongs_to_many :eng_leads, class_name: "Employee", join_table: "employees_requirements"
+  has_and_belongs_to_many :ta_leads, class_name: "Employee", join_table: "requirements_ta_leads"
   belongs_to              :group,
                           :class_name  => "Group",
                           :foreign_key => "group_id"
@@ -16,10 +17,7 @@ class Requirement < ActiveRecord::Base
                           :optional => true,
                           :class_name => "Employee",
                           :foreign_key => "scheduling_employee_id"
-  belongs_to              :ta_lead,
-                          :optional => true,
-                          :class_name => "Employee",
-                          :foreign_key => "ta_lead_id"
+
 
   # Presence stuff
   validates_presence_of :name

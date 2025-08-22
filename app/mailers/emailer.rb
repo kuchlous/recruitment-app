@@ -225,14 +225,20 @@ class Emailer < ApplicationMailer
   
   def send_requirement_reminder (requirement)
     @names = []
-    @names << requirement.ta_lead.name if requirement.ta_lead.present?
+    # Add all TA leads from HABTM association
+    requirement.ta_leads.each do |lead|
+      @names << lead.name
+    end
     # Add all engineering leads from HABTM association
     requirement.eng_leads.each do |lead|
       @names << lead.name
     end
     @names = @names.join(", ")
     recipients = []
-    recipients << requirement.ta_lead.email if requirement.ta_lead.present?
+    # Add all TA leads emails from HABTM association
+    requirement.ta_leads.each do |lead|
+      recipients << lead.email
+    end
     # Add all engineering leads emails from HABTM association
     requirement.eng_leads.each do |lead|
       recipients << lead.email
@@ -244,14 +250,20 @@ class Emailer < ApplicationMailer
 
   def send_rejection_notification (requirement,resume)
     @names = []
-    @names << requirement.ta_lead.name if requirement.ta_lead.present?
+    # Add all TA leads from HABTM association
+    requirement.ta_leads.each do |lead|
+      @names << lead.name
+    end
     # Add all engineering leads from HABTM association
     requirement.eng_leads.each do |lead|
       @names << lead.name
     end
     @names = @names.join(", ")
     recipients = []
-    recipients << requirement.ta_lead.email if requirement.ta_lead.present?
+    # Add all TA leads emails from HABTM association
+    requirement.ta_leads.each do |lead|
+      recipients << lead.email
+    end
     # Add all engineering leads emails from HABTM association
     requirement.eng_leads.each do |lead|
       recipients << lead.email

@@ -12,6 +12,69 @@
 //= require open_requirements_grid
 
 //= require_tree .
+
+// Helper function to create comma-separated autocomplete with filtering
+function createCommaSeparatedAutocomplete(selector, options) {
+  var defaultOptions = {
+    minLength: 0,
+    delay: 300,
+    autoFocus: true,
+    position: { my: "left top", at: "left bottom", collision: "flip" }
+  };
+  
+  var config = $.extend({}, defaultOptions, options);
+  
+  $(selector).autocomplete({
+    source: function(request, response) {
+      // Extract the current word being typed (after the last comma)
+      var terms = request.term.split(',');
+      var currentTerm = terms[terms.length - 1].trim();
+      
+      // Only proceed if current term has at least 2 characters
+      if (currentTerm.length < 2) {
+        response([]);
+        return;
+      }
+      
+      // Get all currently selected names (excluding the current term being typed)
+      var selectedNames = [];
+      if (terms.length > 1) {
+        selectedNames = terms.slice(0, -1).map(function(name) {
+          return name.trim();
+        });
+      }
+      
+      $.ajax({
+        url: $(this.element).data('autocomplete-url'),
+        dataType: 'json',
+        data: {
+          query: currentTerm
+        },
+        success: function(data) {
+          // Filter out already selected names
+          var filteredData = data.filter(function(name) {
+            return selectedNames.indexOf(name) === -1;
+          });
+          response(filteredData);
+        }
+      });
+    },
+    minLength: config.minLength,
+    delay: config.delay,
+    autoFocus: config.autoFocus,
+    position: config.position,
+    select: function(event, ui) {
+      // Get the current value and split by commas
+      var terms = this.value.split(',');
+      // Replace the last term with the selected value
+      terms[terms.length - 1] = ui.item.value;
+      // Join back with commas and update the field
+      this.value = terms.join(', ');
+      return false; // Prevent default behavior
+    }
+  });
+}
+
 // for employees available in our database
 function fillInputBoxWithContents()
 {
@@ -67,107 +130,10 @@ function initializeComponents() {
     position: { my: "left top", at: "left bottom", collision: "flip" }
   });
 
-  // Initialize eng leads autocomplete
-  $('.eng-leads-autocomplete').autocomplete({
-    source: function(request, response) {
-      // Extract the current word being typed (after the last comma)
-      var terms = request.term.split(',');
-      var currentTerm = terms[terms.length - 1].trim();
-      
-      // Only proceed if current term has at least 2 characters
-      if (currentTerm.length < 2) {
-        response([]);
-        return;
-      }
-      
-      // Get all currently selected names (excluding the current term being typed)
-      var selectedNames = [];
-      if (terms.length > 1) {
-        selectedNames = terms.slice(0, -1).map(function(name) {
-          return name.trim();
-        });
-      }
-      
-      $.ajax({
-        url: $(this.element).data('autocomplete-url'),
-        dataType: 'json',
-        data: {
-          query: currentTerm
-        },
-        success: function(data) {
-          // Filter out already selected names
-          var filteredData = data.filter(function(name) {
-            return selectedNames.indexOf(name) === -1;
-          });
-          response(filteredData);
-        }
-      });
-    },
-    minLength: 0,
-    delay: 300,
-    autoFocus: true,
-    position: { my: "left top", at: "left bottom", collision: "flip" },
-    select: function(event, ui) {
-      // Get the current value and split by commas
-      var terms = this.value.split(',');
-      // Replace the last term with the selected value
-      terms[terms.length - 1] = ui.item.value;
-      // Join back with commas and update the field
-      this.value = terms.join(', ');
-      return false; // Prevent default behavior
-    }
-  });
-
-  // Initialize requirements autocomplete
-  $('.requirements-autocomplete').autocomplete({
-    source: function(request, response) {
-      // Extract the current word being typed (after the last comma)
-      var terms = request.term.split(',');
-      var currentTerm = terms[terms.length - 1].trim();
-      
-      // Only proceed if current term has at least 2 characters
-      if (currentTerm.length < 2) {
-        response([]);
-        return;
-      }
-      
-      // Get all currently selected names (excluding the current term being typed)
-      var selectedNames = [];
-      if (terms.length > 1) {
-        selectedNames = terms.slice(0, -1).map(function(name) {
-          return name.trim();
-        });
-      }
-      
-      $.ajax({
-        url: $(this.element).data('autocomplete-url'),
-        dataType: 'json',
-        data: {
-          query: currentTerm
-        },
-        success: function(data) {
-          // Filter out already selected names
-          var filteredData = data.filter(function(name) {
-            return selectedNames.indexOf(name) === -1;
-          });
-          response(filteredData);
-        }
-      });
-    },
-    minLength: 0,
-    delay: 300,
-    autoFocus: true,
-    position: { my: "left top", at: "left bottom", collision: "flip" },
-    select: function(event, ui) {
-      // Get the current value and split by commas
-      var terms = this.value.split(',');
-      // Replace the last term with the selected value
-      terms[terms.length - 1] = ui.item.value;
-      // Join back with commas and update the field
-      this.value = terms.join(', ');
-      return false; // Prevent default behavior
-    }
-  });
+  // Initialize comma-separated autocomplete fields using the helper function
+  createCommaSeparatedAutocomplete('.eng-leads-autocomplete');
+  createCommaSeparatedAutocomplete('.ta-leads-autocomplete');
+  createCommaSeparatedAutocomplete('.requirements-autocomplete');
 
   // File upload label update
   $('.file-input').on('change', function() {

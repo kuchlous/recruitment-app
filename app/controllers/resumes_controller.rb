@@ -729,8 +729,8 @@ class ResumesController < ApplicationController
       redirect_back(fallback_location: root_path)
       return
     end
-    if !requirement.ta_lead
-      flash[:notice] = "No TA lead found for requirement #{requirement.name}"
+    if !requirement.ta_leads.any?
+      flash[:notice] = "No TA leads found for requirement #{requirement.name}"
       redirect_back(fallback_location: root_path)
       return
     end
@@ -2530,12 +2530,16 @@ class ResumesController < ApplicationController
   def email_for_status_change(resume, requirement, status, comment)
     gm_for_decision = requirement.employee.gm
     recipients = [gm_for_decision]
-    recipients << requirement.ta_lead if requirement.ta_lead
+    # Add all TA leads from HABTM association
+    requirement.ta_leads.each do |lead|
+      recipients << lead
+    end
     # Add all engineering leads from HABTM association
     requirement.eng_leads.each do |lead|
       recipients << lead
     end
-    ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
+    # Get ta_head from first ta_lead (assuming they all have the same ta_head)
+    ta_head = requirement.ta_leads.first.ta_head if requirement.ta_leads.any?
     recipients << ta_head if ta_head
     ta_owner = resume.ta_owner
     recipients << ta_owner if ta_owner
@@ -2553,18 +2557,22 @@ class ResumesController < ApplicationController
     attachment = Rails.root + attachment
     recipients = [get_current_employee]
     recipients << resume.ta_owner if resume.ta_owner.present?
-    recipients << requirement.ta_lead if requirement.ta_lead.present?
+    # Add all TA leads from HABTM association
+    requirement.ta_leads.each do |lead|
+      recipients << lead
+    end
     if eng_decision
       # Add all engineering leads from HABTM association
       requirement.eng_leads.each do |lead|
         recipients << lead
       end
-      to = requirement.ta_lead
+      to = requirement.ta_leads.first if requirement.ta_leads.any?
       recipients << requirement.employee if requirement.employee.present? # Requirement Owner
     else
       to = gm_for_decision
     end
-    ta_head = requirement.ta_lead.ta_head if requirement.ta_lead
+    # Get ta_head from first ta_lead (assuming they all have the same ta_head)
+    ta_head = requirement.ta_leads.first.ta_head if requirement.ta_leads.any?
     recipients << ta_head if ta_head
     Emailer.send_for_decision(resume, requirement, to, attachment, filetype, ext, recipients, eng_decision, hire_action).deliver_now
   end

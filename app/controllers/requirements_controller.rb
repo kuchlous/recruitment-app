@@ -57,6 +57,12 @@ class RequirementsController < ApplicationController
       @requirement.eng_leads = eng_leads
     end
     
+    if params[:ta_leads_names].present?
+      ta_lead_names = params[:ta_leads_names].split(',').map(&:strip)
+      ta_leads = Employee.where(name: ta_lead_names, employee_status: "ACTIVE")
+      @requirement.ta_leads = ta_leads
+    end
+    
     respond_to do |format|
       if @requirement.save
         email_for_adding_requirement(@requirement)
@@ -86,6 +92,14 @@ class RequirementsController < ApplicationController
       @requirement.eng_leads = eng_leads
     else
       @requirement.eng_leads.clear
+    end
+    
+    if params[:ta_leads_names].present?
+      ta_lead_names = params[:ta_leads_names].split(',').map(&:strip)
+      ta_leads = Employee.where(name: ta_lead_names, employee_status: "ACTIVE")
+      @requirement.ta_leads = ta_leads
+    else
+      @requirement.ta_leads.clear
     end
     
     respond_to do |format|

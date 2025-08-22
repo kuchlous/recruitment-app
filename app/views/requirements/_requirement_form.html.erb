@@ -114,6 +114,16 @@
         <small class="form-text text-muted">Type to search for active employees. Multiple names can be separated by commas.</small>
       </div>
       
+      <div class="form-group">
+        <label for="ta_leads_names">TA Leads (Multiple)</label>
+        <%= text_field_tag :ta_leads_names, 
+                          @requirement&.ta_leads&.map(&:name)&.join(', '), 
+                          class: "form-control ta-leads-autocomplete", 
+                          placeholder: "Type HR employee names to search...",
+                          data: { autocomplete_url: url_for(host: APP_CONFIG['host_name'], controller: 'employees', action: 'autocomplete_hr_employees') } %>
+        <small class="form-text text-muted">Type to search for TA Leads. Multiple names can be separated by commas.</small>
+      </div>
+      
       <div class="form-row">
         <div class="form-group">
           <label for="requirement_source_owner">Source Owner</label>
@@ -125,10 +135,7 @@
         </div>
       </div>
       
-      <div class="form-group">
-        <label for="requirement_ta_lead_id">TA Lead</label>
-        <%= collection_select(:requirement, :ta_lead_id, @ta_employees, :id, :name, { :prompt => "Please Select" }, class: "form-control") %>
-      </div>
+
     </div>
 
     <div class="form-section">

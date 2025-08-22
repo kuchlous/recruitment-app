@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   match 'requirements/search', to: 'requirements#search'                       , via: :post
   match 'requirements/close_requirement', to: 'requirements#close_requirement' , via: :post
   get 'employees/autocomplete_employees', to: 'employees#autocomplete_employees', as: :employees_autocomplete_employees
+  get 'employees/autocomplete_hr_employees', to: 'employees#autocomplete_hr_employees', as: :employees_autocomplete_hr_employees
   get 'requirements/autocomplete_requirements', to: 'requirements#autocomplete_requirements', as: :requirements_autocomplete_requirements
   match 'add_interviewer', to: 'interview_skills#add_interviewer'              ,via: :post
   match 'interview_skills/create', to: 'interview_skills#create'                             ,via: :post
