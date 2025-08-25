@@ -13,24 +13,24 @@ end
 
 # rake weekly:hm_requirement_summary
 namespace :weekly do
-  desc 'Send weekly summary to Hiring Managers for requirements open > 3 business days with no projection'
-  task :hm_requirement_summary => :environment do
+  desc 'Send weekly summary to TA Leads for requirements open > 3 business days with no projection'
+  task :ta_requirement_summary => :environment do
 
     # Build HM => [requirements] mapping
-    hm_to_requirements = Hash.new { |h, k| h[k] = [] }
+    ta_to_requirements = Hash.new { |h, k| h[k] = [] }
     open_requirements = Requirement.where(status: ['OPEN', 'HOLD'])
     open_requirements.each do |requirement|
-      next if requirement.employee.nil? # HM must exist
+      next if requirement.ta_leads.size == 0 # TA Leads must exist
       no_of_business_days = business_days_between(requirement.last_forward_recieved, Date.today)
-
       next if no_of_business_days <= 3
-      hm_to_requirements[requirement.employee] << requirement
+      requirement.ta_leads.each do |lead|
+        ta_to_requirements[lead] << requirement
+      end
     end
-
-    hm_to_requirements.each do |hm, reqs|
+    ta_to_requirements.each do |ta, reqs|
       next if reqs.size == 0
-      Emailer.weekly_hm_requirement_summary(hm, reqs).deliver_now
-      puts "Sent weekly HM summary to #{hm.name} (#{hm.email}) with #{reqs.size} requirement(s)."
+      Emailer.weekly_ta_requirement_summary(ta, reqs).deliver_now
+      puts "Sent weekly TA Lead summary to #{ta.name} (#{ta.email}) with #{reqs.size} requirement(s)."
     end
   end
 end
