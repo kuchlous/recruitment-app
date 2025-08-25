@@ -14,7 +14,8 @@ class Resume < ActiveRecord::Base
                 expected_ctc: { type: 'float' },
                 notice: { type: 'integer' },
                 created_at: { type: 'date' },
-                updated_at: { type: 'date' }
+                updated_at: { type: 'date' },
+                embedding: { type: 'dense_vector', dims: 1536 } # OpenAI text-embedding-3-small embedding dimensions
               }
             },
             merge_mappings: true
