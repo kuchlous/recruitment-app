@@ -274,12 +274,12 @@ class Emailer < ApplicationMailer
     mail(to: recipients, subject: subject) if recipients.length > 0
   end
 
-  # Weekly summary mail to Hiring Managers listing requirements pending review
-  def weekly_hm_requirement_summary(hiring_manager, requirements)
-    @hiring_manager = hiring_manager
+  # Weekly summary mail to TA lead listing requirements pending review
+  def weekly_ta_requirement_summary(ta_lead, requirements)
+    @ta_lead = ta_lead
     @requirements = requirements
     subject = "Weekly Pending Requirement Review Summary"
-    mail(to: hiring_manager.email, subject: subject)
+    mail(to: ta_lead.email, subject: subject)
   end
 
   def feedback_reminder(interview)
