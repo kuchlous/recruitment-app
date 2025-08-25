@@ -1,4 +1,3 @@
-// This registers the module correctly from the single loaded file
 agGrid.ModuleRegistry.registerModules([agGrid.ClientSideRowModelModule]);
 
 document.addEventListener('turbolinks:load', () => {
@@ -138,6 +137,12 @@ document.addEventListener('turbolinks:load', () => {
       },
       components: {
         linkCellRenderer: LinkCellRenderer
+      },
+      onGridReady: (params) => {
+          updateRowCount(params.api);
+      },
+      onModelUpdated: (params) => {
+          updateRowCount(params.api);
       }
     };
     
@@ -201,3 +206,11 @@ document.addEventListener('turbolinks:load', () => {
     };
   }
 });
+
+function updateRowCount(api) {
+    const rowCount = api.getDisplayedRowCount();
+    const rowCountDisplay = document.getElementById('record-count-display');
+    if (rowCountDisplay) {
+        rowCountDisplay.textContent = rowCount;
+    }
+}
