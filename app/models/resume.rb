@@ -187,7 +187,8 @@ class Resume < ActiveRecord::Base
     "FUTURE" => "Future",
     "HAC" => "HAC",
     "N_ACCEPTED" => "Not Accepted",
-    "NOT JOINED" => "Not Joined"
+    "NOT JOINED" => "Not Joined",
+    "JOINED" => "Joined"
   }.freeze
 
   def get_resume_overall_status_title
