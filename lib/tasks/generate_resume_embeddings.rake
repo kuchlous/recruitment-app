@@ -9,14 +9,6 @@ namespace :resumes do
       exit 1
     end
     
-    # Check if OpenAI API key is set
-    openai_api_key = ENV['OPENAI_API_KEY']
-    if openai_api_key.blank?
-      puts "Error: OPENAI_API_KEY environment variable is not set"
-      puts "Please set it with: export OPENAI_API_KEY='your-api-key-here'"
-      exit 1
-    end
-    
     # Find the resume
     resume = Resume.find_by(id: resume_id)
     if resume.nil?
@@ -26,28 +18,14 @@ namespace :resumes do
     
     puts "Processing resume: #{resume.name} (ID: #{resume.id})"
     
-    # Prepare the text for embedding
-    text_to_embed = prepare_resume_text(resume)
-    if text_to_embed.blank?
-      puts "Error: No text content found for resume"
-      exit 1
-    end
-    
-    puts "Text to embed: #{text_to_embed[0..100]}..."
-    
     begin
-      # Generate embedding using OpenAI
-      embedding = generate_openai_embedding(text_to_embed, openai_api_key)
-      
-      if embedding.nil?
-        puts "Error: Failed to generate embedding"
+      # Generate and save embedding using the model method
+      if resume.generate_and_save_embedding
+        puts "Successfully generated and saved embedding to Elasticsearch"
+      else
+        puts "Error: Failed to generate or save embedding"
         exit 1
       end
-      
-      puts "Successfully generated embedding vector with #{embedding.length} dimensions"
-      
-      # Save embedding to Elasticsearch
-      save_embedding_to_elasticsearch(resume, embedding)
       
       puts "Successfully saved embedding to Elasticsearch"
       
@@ -60,14 +38,6 @@ namespace :resumes do
   
   desc "Generate embeddings for all resumes"
   task generate_all_embeddings: :environment do
-    # Check if OpenAI API key is set
-    openai_api_key = ENV['OPENAI_API_KEY']
-    if openai_api_key.blank?
-      puts "Error: OPENAI_API_KEY environment variable is not set"
-      puts "Please set it with: export OPENAI_API_KEY='your-api-key-here'"
-      exit 1
-    end
-    
     resumes = Resume.all
     total_resumes = resumes.count
     
@@ -77,18 +47,10 @@ namespace :resumes do
       puts "Processing #{index + 1}/#{total_resumes}: #{resume.name} (ID: #{resume.id})"
       
       begin
-        # Prepare the text for embedding
-        text_to_embed = prepare_resume_text(resume)
-        next if text_to_embed.blank?
-        
-        # Generate embedding using OpenAI
-        embedding = generate_openai_embedding(text_to_embed, openai_api_key)
-        next if embedding.nil?
-        
-        # Save embedding to Elasticsearch
-        save_embedding_to_elasticsearch(resume, embedding)
-        
-        puts "  ✓ Successfully processed resume #{resume.id}"
+        # Generate and save embedding using the model method
+        if resume.generate_and_save_embedding
+          puts "  ✓ Successfully processed resume #{resume.id}"
+        end
         
         # Add a small delay to avoid rate limiting
         sleep(0.1)
@@ -113,14 +75,6 @@ namespace :resumes do
       exit 1
     end
     
-    # Check if OpenAI API key is set
-    openai_api_key = ENV['OPENAI_API_KEY']
-    if openai_api_key.blank?
-      puts "Error: OPENAI_API_KEY environment variable is not set"
-      puts "Please set it with: export OPENAI_API_KEY='your-api-key-here'"
-      exit 1
-    end
-    
     # Find resumes with the specified status
     resumes = Resume.joins(:req_matches).where(req_matches: { status: status.upcase }).distinct
     total_resumes = resumes.count
@@ -136,18 +90,10 @@ namespace :resumes do
       puts "Processing #{index + 1}/#{total_resumes}: #{resume.name} (ID: #{resume.id}) - Status: #{status.upcase}"
       
       begin
-        # Prepare the text for embedding
-        text_to_embed = prepare_resume_text(resume)
-        next if text_to_embed.blank?
-        
-        # Generate embedding using OpenAI
-        embedding = generate_openai_embedding(text_to_embed, openai_api_key)
-        next if embedding.nil?
-        
-        # Save embedding to Elasticsearch
-        save_embedding_to_elasticsearch(resume, embedding)
-        
-        puts "  ✓ Successfully processed resume #{resume.id}"
+        # Generate and save embedding using the model method
+        if resume.generate_and_save_embedding
+          puts "  ✓ Successfully processed resume #{resume.id}"
+        end
         
         # Add a small delay to avoid rate limiting
         sleep(0.1)
@@ -161,66 +107,4 @@ namespace :resumes do
     puts "Completed processing #{total_resumes} resumes with status: #{status.upcase}"
   end
   
-  private
-  
-  def prepare_resume_text(resume)
-    # Combine relevant fields for embedding
-    text_parts = []
-    
-    text_parts << "Resume Qualification: #{resume.qualification}" if resume.qualification.present?
-    text_parts << "Resume Skills: #{resume.skills}" if resume.skills.present?
-    text_parts << "Resume Summary: #{resume.summary}" if resume.summary.present?
-    
-    # Add resume text content (the main content)
-    if resume.resume_text_content.present?
-      # Truncate if too long to avoid token limits
-      content = resume.resume_text_content.length > 4000 ? resume.resume_text_content[0..4000] + "..." : resume.resume_text_content
-      text_parts << "Resume Content: #{content}"
-    end
-    
-    # Add experience information
-    if resume.exp_in_months.present?
-      years = (resume.exp_in_months.to_f / 12).round(1)
-      text_parts << "Resume Experience: #{years} years (#{resume.exp_in_months} months)"
-    end
-   # Join all parts with spaces and clean up
-    text_parts.compact.join(" ").strip
-  end
-  
-  def generate_openai_embedding(text, api_key)
-    require 'openai'
-    
-    client = OpenAI::Client.new(api_key: api_key)
-    
-    response = client.embeddings.create(
-      model: "text-embedding-3-small",
-      input: text,
-      encoding_format: "float"
-    )
-
-    puts "Response: #{response.inspect}"
-    return response[:data][0][:embedding]
-    
-  rescue => e
-    puts "Error calling OpenAI API: #{e.message}"
-    return nil
-  end
-  
-  def save_embedding_to_elasticsearch(resume, embedding)
-    # Get the Searchkick index for resumes
-    index_name = "recruitment_app_#{Rails.env}_resumes"
-    
-    # Create or update the document in Elasticsearch
-    Searchkick.client.index(
-      index: index_name,
-      id: resume.id,
-      body: {
-        doc: {
-          embedding: embedding,
-          updated_at: Time.current
-        },
-        doc_as_upsert: true
-      }
-    )
-  end
 end

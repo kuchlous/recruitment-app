@@ -721,4 +721,66 @@ private
     self.phone.gsub!(/\s+/, "")
   end
 
+  # Prepare text for embedding generation
+  def prepare_text_for_embedding
+    # Combine relevant fields for embedding
+    text_parts = []
+    
+    text_parts << "Resume Qualification: #{qualification}" if qualification.present?
+    text_parts << "Resume Skills: #{skills}" if skills.present?
+    text_parts << "Resume Summary: #{summary}" if summary.present?
+    
+    # Add resume text content (the main content)
+    if resume_text_content.present?
+      # Truncate if too long to avoid token limits
+      content = resume_text_content.length > 4000 ? resume_text_content[0..4000] + "..." : resume_text_content
+      text_parts << "Resume Content: #{content}"
+    end
+    
+    # Add experience information
+    if exp_in_months.present?
+      years = (exp_in_months.to_f / 12).round(1)
+      text_parts << "Resume Experience: #{years} years (#{exp_in_months} months)"
+    end
+    
+    # Join all parts with spaces and clean up
+    text_parts.compact.join(" ").strip
+  end
+
+  # Save embedding to Elasticsearch
+  def save_embedding_to_elasticsearch(embedding)
+    # Get the Searchkick index for resumes
+    index_name = "recruitment_app_#{Rails.env}_resumes"
+    
+    # Create or update the document in Elasticsearch
+    Searchkick.client.index(
+      index: index_name,
+      id: id,
+      body: {
+        doc: {
+          embedding: embedding,
+          updated_at: Time.current
+        },
+        doc_as_upsert: true
+      }
+    )
+  end
+
+  # Generate and save embedding for this resume
+  def generate_and_save_embedding
+    text_to_embed = prepare_text_for_embedding
+    return false if text_to_embed.blank?
+    
+    begin
+      embedding = OpenaiUtils.generate_embedding(text_to_embed)
+      return false if embedding.nil?
+      
+      save_embedding_to_elasticsearch(embedding)
+      true
+    rescue => e
+      Rails.logger.error "Error generating embedding for resume #{id}: #{e.message}"
+      false
+    end
+  end
+
 end
