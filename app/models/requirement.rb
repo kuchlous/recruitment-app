@@ -153,4 +153,52 @@ class Requirement < ActiveRecord::Base
     ]
   end
 
+  # Prepare text for embedding generation
+  def prepare_text_for_embedding
+    text_parts = []
+    
+    text_parts << "Requirement Name: #{name}" if name.present?
+    text_parts << "Requirement Description: #{description}" if description.present?
+    text_parts << "Requirement Skills: #{skill}" if skill.present?
+    text_parts << "Requirement Experience: #{exp.split('-').first} years to #{exp.split('-').last} years" if exp.present?
+    
+    text_parts.compact.join(" ").strip
+  end
+
+  # Save embedding to Elasticsearch
+  def save_embedding_to_elasticsearch(embedding)
+    # Get the Searchkick index for requirements
+    index_name = "recruitment_app_#{Rails.env}_requirements"
+    
+    # Create or update the document in Elasticsearch
+    Searchkick.client.index(
+      index: index_name,
+      id: id,
+      body: {
+        doc: {
+          embedding: embedding,
+          updated_at: Time.current
+        },
+        doc_as_upsert: true
+      }
+    )
+  end
+
+  # Generate and save embedding for this requirement
+  def generate_and_save_embedding
+    text_to_embed = prepare_text_for_embedding
+    return false if text_to_embed.blank?
+    
+    begin
+      embedding = OpenaiUtils.generate_embedding(text_to_embed)
+      return false if embedding.nil?
+      
+      save_embedding_to_elasticsearch(embedding)
+      true
+    rescue => e
+      Rails.logger.error "Error generating embedding for requirement #{id}: #{e.message}"
+      false
+    end
+  end
+
 end
