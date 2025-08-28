@@ -3,6 +3,7 @@ class Requirement < ActiveRecord::Base
             suggest: [:name, :description, :skills, :location],
             filterable: [:id, :status, :experience, :notice_period, :employee_id, :designation_id, :group_id],
             searchable: [:name, :description, :skills, :location, :experience, :notice_period],
+            knn: {embedding: {dimensions: 1536, distance_type: "cosine"}},
             mappings: {
               properties: {
                 id: { type: 'integer' },
@@ -10,7 +11,7 @@ class Requirement < ActiveRecord::Base
                 notice_period: { type: 'integer' },
                 created_at: { type: 'date' },
                 updated_at: { type: 'date' },
-                embedding: { type: 'dense_vector', dims: 1536 } # OpenAI ada-002 embedding dimensions
+                embedding: { type: 'dense_vector', dims: 1536 } # OpenAI text-embedding-3-small embedding dimensions
               }
             },
             merge_mappings: true
@@ -165,24 +166,7 @@ class Requirement < ActiveRecord::Base
     text_parts.compact.join(" ").strip
   end
 
-  # Save embedding to Elasticsearch
-  def save_embedding_to_elasticsearch(embedding)
-    # Get the Searchkick index for requirements
-    index_name = "recruitment_app_#{Rails.env}_requirements"
-    
-    # Create or update the document in Elasticsearch
-    Searchkick.client.index(
-      index: index_name,
-      id: id,
-      body: {
-        doc: {
-          embedding: embedding,
-          updated_at: Time.current
-        },
-        doc_as_upsert: true
-      }
-    )
-  end
+
 
   # Generate and save embedding for this requirement
   def generate_and_save_embedding
@@ -193,12 +177,65 @@ class Requirement < ActiveRecord::Base
       embedding = OpenaiUtils.generate_embedding(text_to_embed)
       return false if embedding.nil?
       
-      save_embedding_to_elasticsearch(embedding)
+      # Save to database
+      self.update(embedding: embedding.to_json)
+      
+      # Reindex in Elasticsearch to include the new embedding
+      reindex
+      
       true
     rescue => e
       Rails.logger.error "Error generating embedding for requirement #{id}: #{e.message}"
       false
     end
+  end
+
+  # Retrieve embedding from database
+  def get_embedding
+    return nil if embedding.blank?
+    
+    begin
+      JSON.parse(embedding)
+    rescue JSON::ParserError
+      Rails.logger.error "Error parsing embedding for requirement #{id}"
+      nil
+    end
+  end
+
+  # Searchkick methods
+  def search_data
+    {
+      id: id,
+      name: name,
+      description: description,
+      skill: skill,
+      exp: exp,
+      status: status,
+      req_type: req_type,
+      employee_id: employee_id,
+      designation_id: designation_id,
+      group_id: group_id,
+      created_at: created_at,
+      updated_at: updated_at,
+      embedding: get_embedding
+    }
+  end
+
+  def should_index?
+    # Only index requirements that are not deleted
+    !destroyed?
+  end
+
+  # Class method for KNN similarity search
+  def self.similar_requirements(embedding_vector, limit: 20, distance: "cosine")
+    search(
+      knn: {
+        field: :embedding,
+        vector: embedding_vector,
+        distance: distance
+      },
+      limit: limit
+    )
   end
 
 end

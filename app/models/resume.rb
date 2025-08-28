@@ -6,6 +6,7 @@ class Resume < ActiveRecord::Base
             suggest: [:name, :email, :phone, :qualification, :location, :preferred_location],
             filterable: [:id, :ctc, :expected_ctc, :exp_in_months, :overall_status, :related_requirements, :notice, :status, :uniqid, :preferred_location, :location],
             searchable: [:name, :email, :phone, :qualification, :location, :preferred_location, :summary, :resume_search_content, :overall_status, :related_requirements, :skills, :current_company],
+            knn: {embedding: {dimensions: 1536, distance_type: "cosine"}},
             mappings: {
               properties: {
                 id: { type: 'integer' },
@@ -661,13 +662,36 @@ class Resume < ActiveRecord::Base
       file_name: file_name,
       ta_owner_name: ta_owner&.name,
       created_at: created_at,
-      updated_at: updated_at
+      updated_at: updated_at,
+      embedding: get_embedding
     }
   end
 
   def should_index?
     # Only index resumes that are not deleted
     !destroyed?
+  end
+
+  # Generate and save embedding for this resume
+  def generate_and_save_embedding
+    text_to_embed = prepare_text_for_embedding
+    return false if text_to_embed.blank?
+    
+    begin
+      embedding = OpenaiUtils.generate_embedding(text_to_embed)
+      return false if embedding.nil?
+      
+      # Save to database
+      self.update(embedding: embedding.to_json)
+      
+      # Reindex in Elasticsearch to include the new embedding
+      reindex
+      
+      true
+    rescue => e
+      Rails.logger.error "Error generating embedding for resume #{id}: #{e.message}"
+      false
+    end
   end
 
 private
@@ -681,7 +705,6 @@ private
   end
 
   def create_search_data(txt)
-
     self.resume_text_content = txt
     self.save
   end
@@ -748,40 +771,30 @@ private
     text_parts.compact.join(" ").strip
   end
 
-  # Save embedding to Elasticsearch
-  def save_embedding_to_elasticsearch(embedding)
-    # Get the Searchkick index for resumes
-    index_name = "recruitment_app_#{Rails.env}_resumes"
-    
-    # Create or update the document in Elasticsearch
-    Searchkick.client.index(
-      index: index_name,
-      id: id,
-      body: {
-        doc: {
-          embedding: embedding,
-          updated_at: Time.current
-        },
-        doc_as_upsert: true
-      }
-    )
-  end
 
-  # Generate and save embedding for this resume
-  def generate_and_save_embedding
-    text_to_embed = prepare_text_for_embedding
-    return false if text_to_embed.blank?
+
+  # Retrieve embedding from database
+  def get_embedding
+    return nil if embedding.blank?
     
     begin
-      embedding = OpenaiUtils.generate_embedding(text_to_embed)
-      return false if embedding.nil?
-      
-      save_embedding_to_elasticsearch(embedding)
-      true
-    rescue => e
-      Rails.logger.error "Error generating embedding for resume #{id}: #{e.message}"
-      false
+      JSON.parse(embedding)
+    rescue JSON::ParserError
+      Rails.logger.error "Error parsing embedding for resume #{id}"
+      nil
     end
+  end
+
+  # Class method for KNN similarity search
+  def self.similar_resumes(embedding_vector, limit: 20, distance: "cosine")
+    search(
+      knn: {
+        field: :embedding,
+        vector: embedding_vector,
+        distance: distance
+      },
+      limit: limit
+    )
   end
 
 end
