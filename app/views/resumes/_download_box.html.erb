@@ -58,7 +58,7 @@
     </div>
   </div>
 </div>
-<% url = "https://" + APP_CONFIG['host_name'] + delete_file_path %>
+<% url = url_for(action: :delete_file, controller: :resumes, only_path: false) %>
 <script>
   function deleteResume (e, filepath) {
     e.preventDefault();

@@ -77,7 +77,7 @@ Rails.application.routes.draw do
   match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get
-  match 'resumes/delete_resume',to: 'resumes#delete_resume'                 , via: :delete, as: :delete_resume
+  match 'resumes/delete_file',to: 'resumes#delete_file'                 , via: :delete, as: :delete_file
   match 'resumes/manager_joined',to: 'resumes#manager_joined'               , via: :get
   match 'resumes/manager_offered',to: 'resumes#manager_offered'             , via: :get
   match 'resumes/manager_hold',to: 'resumes#manager_hold'                   , via: :get
@@ -143,7 +143,11 @@ Rails.application.routes.draw do
   resources :agencies
   resources :groups
   resources :designations
-  resources :requirements
+  resources :requirements do
+    member do
+      get :suggested_resumes
+    end
+  end
 
   namespace :api do
     resources :requirements, only: [:index]
