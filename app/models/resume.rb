@@ -674,6 +674,7 @@ class Resume < ActiveRecord::Base
 
   # Generate and save embedding for this resume
   def generate_and_save_embedding
+    return false if self.embedding
     text_to_embed = prepare_text_for_embedding
     return false if text_to_embed.blank?
     

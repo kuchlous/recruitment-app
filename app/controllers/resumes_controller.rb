@@ -598,7 +598,7 @@ class ResumesController < ApplicationController
 
   def joined
     @join_on_req_page   = @offer_on_req_page = 0
-    @joining_matches, @joined_resumes, @not_joined_resumes = find_joining_resumes(Date.today - 365, Date.today + 90, params[:mine])
+    @joining_matches, @joined_resumes, @not_joined_resumes = find_joining_resumes(Date.today - 350, Date.today + 90, params[:mine])
     @months_table       = create_months_table(@joining_matches, @joined_resumes, @not_joined_resumes)
     @joined_resumes     = get_current_quarter_resumes("JOINED")
     @not_joined_resumes = get_current_quarter_resumes("NOT JOINED")
