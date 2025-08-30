@@ -24,15 +24,11 @@ Rails.application.routes.draw do
   match 'interview_skills/create', to: 'interview_skills#create'                             ,via: :post
   match 'interview_skills/:id', to: 'interview_skills#destroy'                                       , via: :delete
   match 'home/interview-panels', to: 'home#interview_panels'                                       , via: :get
-  match 'home/search', to: 'home#search'                                       , via: :post
-  match 'home/search', to: 'home#search'                                       , via: :get
   match 'home/show_summary_per_interviewer', to:'home#show_summary_per_interviewer'                                       , via: :get
   match 'home/show_summary_per_recruiter', to: 'home#show_summary_per_recruiter'                                     , via: :get
 
   match 'home/show_summary_per_manager', to: 'home#show_summary_per_manager'                                     , via: :get
   match 'home/actions', to: 'home#actions'                                     , via: :get
-  match 'home/advanced_search_results', to: 'home#advanced_search_results'     , via: :get
-  match 'home/advanced_search', to: 'home#advanced_search'          , via: :get
   match 'home/actions_page', to: 'home#actions_page'                , via: :get
   match 'home/dashboard', to: 'home#dashboard'                      , via: :get
   match 'home/summaries', to: 'home#summaries'                      , via: :get
@@ -81,7 +77,7 @@ Rails.application.routes.draw do
   match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get
-  match 'resumes/delete_resume',to: 'resumes#delete_resume'                 , via: :delete, as: :delete_resume
+  match 'resumes/delete_file',to: 'resumes#delete_file'                 , via: :delete, as: :delete_file
   match 'resumes/manager_joined',to: 'resumes#manager_joined'               , via: :get
   match 'resumes/manager_offered',to: 'resumes#manager_offered'             , via: :get
   match 'resumes/manager_hold',to: 'resumes#manager_hold'                   , via: :get
@@ -136,13 +132,22 @@ Rails.application.routes.draw do
   match 'resumes/add_hr_comment',to: 'resumes#add_hr_comment', via: :post
   match 'resumes/add_comment',to: 'resumes#add_comment', via: :post
 
+  # Search functionality moved from home to resumes
+  match 'resumes/search', to: 'resumes#search'                                       , via: [:get, :post]
+  match 'resumes/advanced_search', to: 'resumes#advanced_search'          , via: :get
+  match 'resumes/advanced_search_results', to: 'resumes#advanced_search_results'     , via: :get
+
   resources :employees
   resources :resumes
   resources :portals
   resources :agencies
   resources :groups
   resources :designations
-  resources :requirements
+  resources :requirements do
+    member do
+      get :suggested_resumes
+    end
+  end
 
   namespace :api do
     resources :requirements, only: [:index]

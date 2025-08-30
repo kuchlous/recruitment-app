@@ -268,6 +268,39 @@ class RequirementsController < ApplicationController
     render json: requirements
   end
 
+  def suggested_resumes
+    @requirement = Requirement.find(params[:id])
+    
+    # Get the requirement's embedding
+    requirement_embedding = @requirement.get_embedding
+    
+    if requirement_embedding.present?
+      # Find similar resumes using KNN search
+      @results = Resume.similar_resumes(requirement_embedding, limit: 50)
+    else
+      # Fallback to text-based search if no embedding
+      search_text = @requirement.prepare_text_for_embedding
+      @results = Resume.search(search_text,
+                              fields: [
+                                'name^2', 
+                                'qualification', 
+                                'location', 
+                                'preferred_location', 
+                                'summary', 
+                                'skills^3', 
+                                'resume_search_content', 
+                                'current_company'],
+                              match: :word_start,
+                              limit: 50)
+    end
+    
+    # Filter out resumes that are already associated with this requirement
+    existing_resume_ids = @requirement.forwards.pluck(:resume_id) + @requirement.req_matches.pluck(:resume_id)
+    @results = @results.reject { |resume| existing_resume_ids.include?(resume.id) }
+    
+    render 'resumes/_search_results_table', locals: { title: "Suggested Resumes for #{@requirement.name}" }
+  end
+
 private
   def error_catching_and_flashing(object)
     unless object.valid?

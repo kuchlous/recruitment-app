@@ -13,7 +13,7 @@
       <br /> <br />
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
         <div id="search_box">
-          <%= form_tag :controller => "home", :action => "search", :method => 'post' do %>
+          <%= form_tag :controller => "resumes", :action => "search", :method => 'post' do %>
             <table>
               <tr>
                 <td class="search_box_field">         <%= text_field "search", "box" %> </td>
@@ -21,7 +21,7 @@
               </tr>
             </table>
           <% end %>
-          <%= link_to "(Advanced Search)", {:controller => "home", :action => "advanced_search"}, :class => "float_right_with_no_padding" %>
+          <%= link_to "(Advanced Search)", {:controller => "resumes", :action => "advanced_search"}, :class => "float_right_with_no_padding" %>
         </div>
       <% end %>
     </div>

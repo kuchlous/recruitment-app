@@ -8,7 +8,9 @@
     </div>
   </div>
   
-  <%= will_paginate @results, { :params => {:only_path => false}} %>
+  <% if @results.respond_to?(:total_pages) %>
+    <%= will_paginate @results, { :params => {:only_path => false}} %>
+  <% end %>
   
   <%# Hidden fields for form preservation - to be added by individual views %>
   <%= yield :hidden_fields if content_for?(:hidden_fields) %>
@@ -58,10 +60,12 @@
     </tbody>
   </table>
   
-  <%= will_paginate @results, { :params => {:only_path => false}} %>
+  <% if @results.respond_to?(:total_pages) %>
+    <%= will_paginate @results, { :params => {:only_path => false}} %>
+  <% end %>
 <% else %>
   <div class="table-empty">
     <div class="empty-icon">🔍</div>
     <p>Sorry there are no results found corresponding to your search parameters.</p>
   </div>
-<% end %> 
+<% end %>
