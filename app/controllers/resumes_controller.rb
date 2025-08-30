@@ -2050,6 +2050,122 @@ class ResumesController < ApplicationController
     render body: nil
   end
 
+  def search
+    @results = ""
+    unless params[:search].nil?
+      @search_text  = params[:search][:box]
+      session[:search_text] = @search_text
+    else
+      @search_text  = session[:search_text]
+    end
+
+    # Handle empty search text - return all results
+    if @search_text.blank?
+      redirect_to :back
+      return
+    else
+      @results = Resume.search(@search_text,
+                              fields: [
+                                'name^4', 
+                                'email^4', 
+                                'phone^4', 
+                                'qualification', 
+                                'location^2', 
+                                'preferred_location^2', 
+                                'summary', 
+                                'skills^2', 
+                                'resume_search_content', 
+                                'overall_status^2', 
+                                :related_requirements],
+                              match: :word_start,
+                              page: params[:page],
+                              per_page: get_per_page)
+    end
+  end
+
+  def advanced_search
+  end
+
+  def advanced_search_results
+    @resume = Resume.new
+    @results = ""
+    @search_text = params[:search]
+    @ctc_min = params[:ctc_min] ? params[:ctc_min].to_f * 1.0 : 0.0
+    @ctc_max = params[:ctc_max] ? params[:ctc_max].to_f * 1.0 : 1000.0
+    @ctc_max = 1000.0 if @ctc_max < @ctc_min || @ctc_max == 0
+    @expected_ctc_min = params[:expected_ctc_min] ? params[:expected_ctc_min].to_f * 1.0 : 0.0
+    @expected_ctc_max = params[:expected_ctc_max] ? params[:expected_ctc_max].to_f * 1.0 : 1000.0
+    @expected_ctc_max = 1000.0 if @expected_ctc_max < @expected_ctc_min || @expected_ctc_max == 0
+    @status = params[:status]
+    @status = nil if @status == "Any"
+    @experience_months_min = 0
+    if (params[:experience_years_min] || params[:experience_months_min])
+      @experience_months_min += params[:experience_years_min].to_i * 12 if params[:experience_years_min]
+      @experience_months_min += params[:experience_months_min].to_i if params[:experience_months_min]
+    end
+    @experience_months_max = 1000
+    if (params[:experience_years_max] || params[:experience_months_max])
+      @experience_months_max = 0
+      @experience_months_max += params[:experience_years_max].to_i * 12 if params[:experience_years_max]
+      @experience_months_max += params[:experience_years_max].to_i if params[:experience_years_max]
+    end
+    @experience_months_max = 1000 if @experience_months_max < @experience_months_min || @experience_months_max == 0
+    @requirement = params[:requirement]
+    @requirement = nil if @requirement == '0'
+    
+    # New parameters
+    @preferred_location = params[:preferred_location]
+    @uploaded_at_start = params[:uploaded_at_start].present? ? Date.parse(params[:uploaded_at_start]) : nil
+    @uploaded_at_end = params[:uploaded_at_end].present? ? Date.parse(params[:uploaded_at_end]) : nil
+    @exclude_keywords = params[:exclude_keywords]
+    
+    logger.info("search = " + @search_text + "ctc_min = " + @ctc_min.to_s  + "ctc_max = " + @ctc_max.to_s + "expected_ctc_min = " + @expected_ctc_min.to_s + "expected_ctc_max = " + @expected_ctc_max.to_s + "experience_months_min = " + @experience_months_min.to_s + "experience_months_max = " + @experience_months_max.to_s) 
+    
+    # Build where conditions for filters
+    where_conditions = {}
+    where_conditions[:ctc] = {gte: @ctc_min, lte: @ctc_max} if @ctc_min > 0 || @ctc_max < 1000
+    where_conditions[:expected_ctc] = {gte: @expected_ctc_min, lte: @expected_ctc_max} if @expected_ctc_min > 0 || @expected_ctc_max < 1000
+    where_conditions[:exp_in_months] = {gte: @experience_months_min, lte: @experience_months_max} if @experience_months_min > 0 || @experience_months_max < 1000
+    where_conditions[:overall_status] = @status if @status
+    where_conditions[:related_requirements] = @requirement if @requirement
+    where_conditions[:preferred_location] = @preferred_location.downcase if @preferred_location.present?
+    where_conditions[:created_at] = {gte: @uploaded_at_start, lte: @uploaded_at_end} if @uploaded_at_start || @uploaded_at_end
+
+    # Handle exclude keywords and preferred location
+    search_query = @search_text
+    exclude_terms = []
+    if @exclude_keywords.present?
+      exclude_terms = @exclude_keywords.split(',').map(&:strip).reject(&:blank?)
+    end
+    
+    # Handle empty search text with filters
+    if search_query.blank?
+      @results = Resume.search("*", 
+                              where: where_conditions,
+                              page: params[:page], 
+                              per_page: get_per_page)
+    else
+      @results = Resume.search(search_query, 
+                              fields: [
+                                'name^4', 
+                                'email^4', 
+                                'phone^4', 
+                                'qualification', 
+                                'location^2', 
+                                'preferred_location^2', 
+                                :summary, 
+                                'skills^2', 
+                                'resume_search_content', 
+                                'overall_status^2', 
+                                :related_requirements],
+                              match: params[:search_type] == 'phrase' ? :phrase : :word_start,
+                              where: where_conditions,
+                              exclude: exclude_terms,
+                              page: params[:page], 
+                              per_page: get_per_page)
+    end
+  end
+
   private
 
   # PRIVATE FUNCTIONS
