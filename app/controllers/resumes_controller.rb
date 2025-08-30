@@ -2087,7 +2087,6 @@ class ResumesController < ApplicationController
   end
 
   def advanced_search_results
-    @resume = Resume.new
     @results = ""
     @search_text = params[:search]
     @ctc_min = params[:ctc_min] ? params[:ctc_min].to_f * 1.0 : 0.0
