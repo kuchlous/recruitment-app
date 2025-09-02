@@ -785,16 +785,24 @@ private
     end
   end
 
-  # Class method for KNN similarity search
-  def self.similar_resumes(embedding_vector, limit: 20, distance: "cosine")
-    search(
+  # Class method for KNN similarity search with optional filters
+  def self.similar_resumes(embedding_vector, where_conditions: {}, exclude_terms: [], limit: 20, distance: "cosine")
+    search_options = {
       knn: {
         field: :embedding,
         vector: embedding_vector,
         distance: distance
       },
       limit: limit
-    )
+    }
+    
+    # Add where conditions if provided
+    search_options[:where] = where_conditions if where_conditions.present?
+    
+    # Add exclude terms if provided
+    search_options[:exclude] = exclude_terms if exclude_terms.present?
+    
+    search(search_options)
   end
 
 end
