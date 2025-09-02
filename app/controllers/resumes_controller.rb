@@ -2137,13 +2137,34 @@ class ResumesController < ApplicationController
       exclude_terms = @exclude_keywords.split(',').map(&:strip).reject(&:blank?)
     end
     
-    # Handle empty search text with filters
+    # Handle different search types
     if search_query.blank?
       @results = Resume.search("*", 
                               where: where_conditions,
                               page: params[:page], 
                               per_page: get_per_page)
+    elsif params[:search_type] == 'ai'
+      # AI Search: Generate embedding and perform KNN search
+      begin
+        # Generate embedding for the search query
+        embedding = OpenaiUtils.generate_embedding(search_query)
+        
+        if embedding.present?
+          # Perform KNN search with filters
+          @results = Resume.similar_resumes(
+            embedding,
+            where_conditions: where_conditions,
+            exclude_terms: exclude_terms,
+            limit: get_per_page
+          )
+        end
+      rescue => e
+        Rails.logger.error "Error in AI search: #{e.message}"
+        # Fallback to regular search on error
+        @results = []
+      end
     else
+      # Regular keyword or phrase search
       @results = Resume.search(search_query, 
                               fields: [
                                 'name^4', 
