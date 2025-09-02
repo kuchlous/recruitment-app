@@ -263,9 +263,9 @@ class RequirementsController < ApplicationController
     requirements = Requirement.where(status: "OPEN")
                              .where("LOWER(name) LIKE LOWER(?)", "%#{query}%")
                              .limit(10)
-                             .pluck(:name)
+                             .select(:id, :name)
     
-    render json: requirements
+    render json: requirements.map { |req| { id: req.id, name: req.name } }
   end
 
   def suggested_resumes
