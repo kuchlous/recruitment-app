@@ -2117,8 +2117,9 @@ class ResumesController < ApplicationController
     @uploaded_at_start = params[:uploaded_at_start].present? ? Date.parse(params[:uploaded_at_start]) : nil
     @uploaded_at_end = params[:uploaded_at_end].present? ? Date.parse(params[:uploaded_at_end]) : nil
     @exclude_keywords = params[:exclude_keywords]
+    @requirement_id = params[:requirement_id]
     
-    logger.info("search = " + @search_text + "ctc_min = " + @ctc_min.to_s  + "ctc_max = " + @ctc_max.to_s + "expected_ctc_min = " + @expected_ctc_min.to_s + "expected_ctc_max = " + @expected_ctc_max.to_s + "experience_months_min = " + @experience_months_min.to_s + "experience_months_max = " + @experience_months_max.to_s) 
+    logger.info("search_type = " + params[:search_type] + "search_text = " + @search_text + "ctc_min = " + @ctc_min.to_s  + "ctc_max = " + @ctc_max.to_s + "expected_ctc_min = " + @expected_ctc_min.to_s + "expected_ctc_max = " + @expected_ctc_max.to_s + "experience_months_min = " + @experience_months_min.to_s + "experience_months_max = " + @experience_months_max.to_s) 
     
     # Build where conditions for filters
     where_conditions = {}
@@ -2138,11 +2139,52 @@ class ResumesController < ApplicationController
     end
     
     # Handle different search types
-    if search_query.blank?
+    if search_query.blank? && params[:search_type] != 'requirement'
       @results = Resume.search("*", 
                               where: where_conditions,
                               page: params[:page], 
                               per_page: get_per_page)
+    elsif params[:search_type] == 'requirement'
+      # Requirement-based search: Use requirement embedding for KNN search
+      if @requirement_id.present?
+        begin
+          requirement = Requirement.find(@requirement_id)
+          requirement_embedding = requirement.get_embedding
+          logger.info("requirement_embedding = " + requirement_embedding.to_s[0..100])
+          if requirement_embedding.present?
+            # Perform KNN search using requirement embedding
+            @results = Resume.similar_resumes(
+              requirement_embedding,
+              where_conditions: where_conditions,
+              exclude_terms: exclude_terms,
+              limit: get_per_page
+            )
+          else
+            # Fallback to text-based search if no embedding
+            search_text = requirement.prepare_text_for_embedding
+            @results = Resume.search(search_text,
+                                    fields: [
+                                      'name^2', 
+                                      'qualification', 
+                                      'location', 
+                                      'preferred_location', 
+                                      'summary', 
+                                      'skills^3', 
+                                      'resume_search_content', 
+                                      'current_company'],
+                                    match: :word_start,
+                                    where: where_conditions,
+                                    exclude: exclude_terms,
+                                    page: params[:page], 
+                                    per_page: get_per_page)
+          end
+        rescue => e
+          Rails.logger.error "Error in requirement search: #{e.message}"
+          @results = []
+        end
+      else
+        @results = []
+      end
     elsif params[:search_type] == 'ai'
       # AI Search: Generate embedding and perform KNN search
       begin

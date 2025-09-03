@@ -8,7 +8,15 @@
     <%= hidden_field_tag "experience_months_min", :value => @experience_months_min %>
     <%= hidden_field_tag "experience_months_max", :value => @experience_months_max %>
     <%= hidden_field_tag "status", :value => @status ? @status : "Any" %>
+    <%= hidden_field_tag "requirement_id", :value => @requirement_id if @requirement_id.present? %>
   <% end %>
   
-  <%= render 'search_results_table', title: 'Advanced Search Results' %>
+  <% 
+    title = 'Advanced Search Results'
+    if @requirement_id.present?
+      requirement = Requirement.find(@requirement_id) rescue nil
+      title = "Resumes Matching: #{requirement.name}" if requirement
+    end
+  %>
+  <%= render 'search_results_table', title: title %>
 </div>

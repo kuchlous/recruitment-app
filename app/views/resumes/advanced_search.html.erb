@@ -9,18 +9,23 @@
       <div class="form-group">
         <label for="search">Search Pattern</label>
         <%= text_field_tag :search, nil, class: "form-control", id: "search_input", placeholder: "Enter search keywords" %>
-        <div class="search-type mt-2 d-flex">
+        <%= hidden_field_tag :requirement_id, nil, id: "requirement_id_input" %>
+        <div class="search-type mt-2 d-flex flex-wrap">
           <%= radio_button_tag :search_type, "keyword", true, class: "form-check-input me-1",
-              onclick: "document.getElementById('search_input').placeholder='Enter search keywords';" %>
+              onclick: "updateSearchInput('keyword', 'Enter search keywords');" %>
           <%= label_tag :search_type_keyword, "Keyword Search", class: "form-check-label me-3" %>
           
           <%= radio_button_tag :search_type, "phrase", false, class: "form-check-input me-1",
-              onclick: "document.getElementById('search_input').placeholder='Enter exact phrase to match';" %>
+              onclick: "updateSearchInput('phrase', 'Enter exact phrase to match');" %>
           <%= label_tag :search_type_phrase, "Phrase Search", class: "form-check-label me-3" %>
           
           <%= radio_button_tag :search_type, "ai", false, class: "form-check-input me-1",
-              onclick: "document.getElementById('search_input').placeholder='Describe your requirement in a few words for AI search';" %>
-          <%= label_tag :search_type_ai, "AI Search", class: "form-check-label" %>
+              onclick: "updateSearchInput('ai', 'Describe your requirement in a few words for AI search');" %>
+          <%= label_tag :search_type_ai, "AI Search", class: "form-check-label me-3" %>
+          
+          <%= radio_button_tag :search_type, "requirement", false, class: "form-check-input me-1",
+              onclick: "updateSearchInput('requirement', 'Type requirement name to search...');" %>
+          <%= label_tag :search_type_requirement, "Requirement Match", class: "form-check-label" %>
         </div>
       </div>
       
@@ -108,3 +113,80 @@
     </div>
   <% end %>
 </div>
+
+<script>
+let currentSearchType = 'keyword';
+
+function updateSearchInput(searchType, placeholder) {
+  const searchInput = document.getElementById('search_input');
+  const requirementIdInput = document.getElementById('requirement_id_input');
+  
+  currentSearchType = searchType;
+  searchInput.placeholder = placeholder;
+  
+  // Clear the input and requirement ID when switching types
+  searchInput.value = '';
+  requirementIdInput.value = '';
+  
+  // Destroy existing autocomplete if it exists
+  if (searchInput.hasAttribute('data-autocomplete-initialized')) {
+    $(searchInput).autocomplete('destroy');
+    searchInput.removeAttribute('data-autocomplete-initialized');
+  }
+  
+  // Initialize autocomplete for requirement search
+  if (searchType === 'requirement') {
+    initializeRequirementAutocomplete();
+  }
+}
+
+function initializeRequirementAutocomplete() {
+  const searchInput = document.getElementById('search_input');
+  
+  // Check if jQuery UI autocomplete is available
+  if (typeof $.fn.autocomplete === 'undefined') {
+    console.error('jQuery UI autocomplete plugin is not loaded');
+    return;
+  }
+  
+  $(searchInput).autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: "/requirements/autocomplete_requirements",
+        dataType: "json",
+        data: {
+          query: request.term
+        },
+        success: function(data) {
+          response(data.map(function(item) {
+            return {
+              label: item.name,
+              value: item.name,
+              id: item.id
+            };
+          }));
+        }
+      });
+    },
+    minLength: 2,
+    select: function(event, ui) {
+      // Set the requirement ID directly from the autocomplete response
+      if (ui.item.id) {
+        $("#requirement_id_input").val(ui.item.id);
+      }
+    }
+  });
+  
+  searchInput.setAttribute('data-autocomplete-initialized', 'true');
+}
+
+// Also handle Turbolinks page loads
+// $(document).on('turbolinks:load', function() {
+  // Ensure jQuery UI is loadedkkkk
+  // if (typeof $.fn.autocomplete !== 'undefined') {
+//    console.log('jQuery UI autocomplete is available');
+//  } else {
+//    console.warn('jQuery UI autocomplete is not available');
+//  }
+//});
+</script>

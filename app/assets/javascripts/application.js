@@ -51,8 +51,13 @@ function createCommaSeparatedAutocomplete(selector, options) {
           query: currentTerm
         },
         success: function(data) {
+          // Handle both old format (array of strings) and new format (array of objects)
+          var names = data.map(function(item) {
+            return typeof item === 'string' ? item : item.name;
+          });
+          
           // Filter out already selected names
-          var filteredData = data.filter(function(name) {
+          var filteredData = names.filter(function(name) {
             return selectedNames.indexOf(name) === -1;
           });
           response(filteredData);
