@@ -166,10 +166,9 @@ class Requirement < ActiveRecord::Base
     text_parts.compact.join(" ").strip
   end
 
-
-
   # Generate and save embedding for this requirement
-  def generate_and_save_embedding
+  def generate_and_save_embedding(force:false)
+    return false if embedding and not force
     text_to_embed = prepare_text_for_embedding
     return false if text_to_embed.blank?
     

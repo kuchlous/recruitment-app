@@ -673,8 +673,8 @@ class Resume < ActiveRecord::Base
   end
 
   # Generate and save embedding for this resume
-  def generate_and_save_embedding
-    return false if self.embedding
+  def generate_and_save_embedding(force:false)
+    return false if self.embedding and not force
     text_to_embed = prepare_text_for_embedding
     return false if text_to_embed.blank?
     
@@ -787,23 +787,12 @@ private
   end
 
   # Class method for KNN similarity search with optional filters
-  def self.similar_resumes(embedding_vector, where_conditions: {}, exclude_terms: [], limit: 20, distance: "cosine")
-    search_options = {
-      knn: {
-        field: :embedding,
-        vector: embedding_vector,
-        distance: distance
-      },
-      limit: limit
-    }
-    
-    # Add where conditions if provided
-    search_options[:where] = where_conditions if where_conditions.present?
-    
-    # Add exclude terms if provided
-    search_options[:exclude] = exclude_terms if exclude_terms.present?
-    
-    search(search_options)
+  def self.similar_resumes(embedding_vector, where_conditions: [], exclude_terms: [], distance: "cosine", page: 1, per_page:20)
+    search(knn: { field: :embedding, vector: embedding_vector, distance: distance},
+           where: where_conditions,
+           exclude: exclude_terms,
+           page: page,
+           per_page: per_page)
   end
 
 end

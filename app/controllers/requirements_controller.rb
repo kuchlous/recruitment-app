@@ -276,7 +276,7 @@ class RequirementsController < ApplicationController
     
     if requirement_embedding.present?
       # Find similar resumes using KNN search
-      @results = Resume.similar_resumes(requirement_embedding, limit: 50)
+      @results = Resume.similar_resumes(requirement_embedding, per_page:get_per_page, page:params[:page])
     else
       # Fallback to text-based search if no embedding
       search_text = @requirement.prepare_text_for_embedding

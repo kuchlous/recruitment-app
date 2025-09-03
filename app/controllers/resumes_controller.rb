@@ -2157,7 +2157,8 @@ class ResumesController < ApplicationController
               requirement_embedding,
               where_conditions: where_conditions,
               exclude_terms: exclude_terms,
-              limit: get_per_page
+              per_page: get_per_page,
+              page: params[:page]
             )
           else
             # Fallback to text-based search if no embedding
@@ -2197,7 +2198,8 @@ class ResumesController < ApplicationController
             embedding,
             where_conditions: where_conditions,
             exclude_terms: exclude_terms,
-            limit: get_per_page
+            per_page: get_per_page,
+            page: params[:page]
           )
         end
       rescue => e

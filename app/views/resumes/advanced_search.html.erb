@@ -152,7 +152,7 @@ function initializeRequirementAutocomplete() {
   $(searchInput).autocomplete({
     source: function(request, response) {
       $.ajax({
-        url: "/requirements/autocomplete_requirements",
+        url: prepend_with_image_path + "/requirements/autocomplete_requirements",
         dataType: "json",
         data: {
           query: request.term
