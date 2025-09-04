@@ -2150,7 +2150,8 @@ class ResumesController < ApplicationController
         begin
           requirement = Requirement.find(@requirement_id)
           requirement_embedding = requirement.get_embedding
-          logger.info("requirement_embedding = " + requirement_embedding.to_s[0..100])
+          existing_resume_ids = requirement.forwards.pluck(:resume_id) + requirement.req_matches.pluck(:resume_id)
+          where_conditions[:id] = { not: existing_resume_ids }
           if requirement_embedding.present?
             # Perform KNN search using requirement embedding
             @results = Resume.similar_resumes(

@@ -273,30 +273,19 @@ class RequirementsController < ApplicationController
     
     # Get the requirement's embedding
     requirement_embedding = @requirement.get_embedding
+    existing_resume_ids = @requirement.forwards.pluck(:resume_id) + @requirement.req_matches.pluck(:resume_id)
     
     if requirement_embedding.present?
-      # Find similar resumes using KNN search
-      @results = Resume.similar_resumes(requirement_embedding, per_page:get_per_page, page:params[:page])
+      # Find similar resumes using KNN search with exclusion
+      @results = Resume.similar_resumes(
+        requirement_embedding,
+        where_conditions: { id: { not: existing_resume_ids } },
+        page: params[:page],
+        per_page: get_per_page
+      )
     else
-      # Fallback to text-based search if no embedding
-      search_text = @requirement.prepare_text_for_embedding
-      @results = Resume.search(search_text,
-                              fields: [
-                                'name^2', 
-                                'qualification', 
-                                'location', 
-                                'preferred_location', 
-                                'summary', 
-                                'skills^3', 
-                                'resume_search_content', 
-                                'current_company'],
-                              match: :word_start,
-                              limit: 50)
+      @results = []
     end
-    
-    # Filter out resumes that are already associated with this requirement
-    existing_resume_ids = @requirement.forwards.pluck(:resume_id) + @requirement.req_matches.pluck(:resume_id)
-    @results = @results.reject { |resume| existing_resume_ids.include?(resume.id) }
     
     render 'resumes/_search_results_table', locals: { title: "Suggested Resumes for #{@requirement.name}" }
   end
