@@ -148,6 +148,6 @@ class Interview < ActiveRecord::Base
   end
 
   def notes
-    focus.present? ? focus : "Interview scheduled"
+    focus.present? ? focus : ""
   end
 end

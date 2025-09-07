@@ -194,7 +194,7 @@ class MicrosoftGraphService
 
   def build_event_data(interview)
     {
-      subject: "Interview - #{interview.resume.name}",
+      subject: "Interview - #{interview.resume.name} (#{interview.requirement.name})",
       body: {
         contentType: "HTML",
         content: build_event_content(interview)
@@ -216,12 +216,11 @@ class MicrosoftGraphService
   def build_event_content(interview)
     <<~HTML
       <h3>Interview Details</h3>
-      <p><strong>Candidate:</strong> #{interview.resume.name}</p>
+      <p><strong>Candidate:</strong> <a href="#{Rails.application.routes.url_helpers.resume_url(interview.resume.uniqid.name, host: APP_CONFIG['host_name'])}">#{interview.resume.name}</a></p>
       <p><strong>Position:</strong> #{interview.requirement.name}</p>
       <p><strong>Interviewer:</strong> #{interview.employee.name}</p>
       <p><strong>Type:</strong> #{interview.interview_type}</p>
       <p><strong>Notes:</strong> #{interview.notes}</p>
-      <p><strong>Resume Link:</strong> <a href="#{Rails.application.routes.url_helpers.resume_url(interview.resume.uniqid.name, host: APP_CONFIG['host_name'])}">View Resume</a></p>
     HTML
   end
 

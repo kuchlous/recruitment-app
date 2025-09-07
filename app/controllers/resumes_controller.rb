@@ -1798,6 +1798,7 @@ class ResumesController < ApplicationController
       int_time  = params["time_slot#{i}".to_sym]
       int_date  = params["interview_date#{i}"]
       int_focus = params["interview_focus#{i}".to_sym]
+      int_focus = "" if int_focus == "Enter focus"
       interview_level = params["interview_level_#{i}"]
       i_time = Time.zone.parse (int_date + " " + int_time)
       logger.info("In add_interviews i = #{i} emp_id = #{emp_id}")
@@ -1855,6 +1856,7 @@ class ResumesController < ApplicationController
     int_time  = params[:interview_time]
     int_date  = params[:interview_date]
     int_focus = params[:interview_focus]
+    int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
 
     interview = Interview.find(int_id)
