@@ -221,6 +221,10 @@ class Employee < ActiveRecord::Base
     end
   end
 
+  def teams_email
+    self.login + "@mirafra2.onmicrosoft.com"
+  end
+
   def current_email
     employee = self
     while (employee.employee_status != "ACTIVE" && !employee.is_GM?)

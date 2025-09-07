@@ -1929,8 +1929,8 @@ class ResumesController < ApplicationController
     total_left_interviews = req_match.interviews.size
     if total_left_interviews == 0
       req_match.update!(:status => "SHORTLISTED")
-      flash_mesg += " Also there are no more interviews left for #{resume_name}. So we are marking this resume as \"SHORTLISTED\""
-      comment    += " Also marking resume as shortlisted as all interviews deleted."
+      flash_mesg += " There are no more interviews left for #{resume_name}. So we are marking this resume as \"SHORTLISTED\""
+      comment    += " Marking resume as shortlisted as all interviews deleted."
     end
     email_after_deleting_interview(interview, req_match.resume)
 
