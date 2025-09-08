@@ -2768,10 +2768,7 @@ class ResumesController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each { |mesg|
-        logger.info(mesg)
-        flash[:notice] = mesg.to_s.sub(/is invalid/, "")
-      }
+      flash[:notice] = object.errors.full_messages.join(", ")
     end
     redirect_back(fallback_location: root_path)
   end

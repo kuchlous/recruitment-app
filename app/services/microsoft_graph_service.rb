@@ -112,7 +112,7 @@ class MicrosoftGraphService
     []
   end
 
-  # Get calendar events for a specific user
+  # Get calendar events for a specific user (includes recurring meetings)
   def get_user_calendar_events(user_email, start_date = nil, end_date = nil)
     return [] unless @access_token && user_email.present?
 
@@ -120,23 +120,27 @@ class MicrosoftGraphService
     start_date ||= Date.current.beginning_of_month
     end_date ||= Date.current.end_of_month
 
+    # Use calendarView endpoint to get expanded recurring events
     query_params = {
-      '$select' => 'subject,start,end,location,attendees,body,organizer',
+      '$select' => 'subject,start,end,location,attendees,body,organizer,recurrence,isAllDay',
       '$orderby' => 'start/dateTime asc'
     }
 
-    # Add date filter if provided
-    if start_date && end_date
-      query_params['$filter'] = "start/dateTime ge '#{start_date.iso8601}' and start/dateTime le '#{end_date.iso8601}'"
-    end
+    # Format dates for calendarView (requires specific format)
+    # Convert local dates to UTC for Microsoft Graph
+    start_time = start_date.beginning_of_day.utc.iso8601
+    end_time = end_date.end_of_day.utc.iso8601
 
     response = self.class.get(
-      "/users/#{user_email}/events",
+      "/users/#{user_email}/calendarView",
       headers: {
         'Authorization' => "Bearer #{@access_token}",
         'Content-Type' => 'application/json'
       },
-      query: query_params
+      query: query_params.merge(
+        'startDateTime' => start_time,
+        'endDateTime' => end_time
+      )
     )
 
     if response.success?
