@@ -200,12 +200,11 @@ function createRadioBox(cell, name, id, value, is_selected)
   cell.appendChild(element);
 }
 
-function createLabel(cell, for_id, text)
-{
-  var label      = document.createElement("label");
-  label.htmlFor  = for_id;
-  label.appendChild(document.createTextNode(text));
-  cell.appendChild(label);
+function createLabel(cell, for_id, text) {
+  var label = jQuery("<label>")
+    .attr("for", for_id)
+    .text(text);
+  jQuery(cell).append(label);
 }
 
 function createHiddenElement(element, name, id, value)
@@ -339,175 +338,132 @@ function textBoxContentsOnBlur(id, elementType)
   }
 }
 
-// Adding interview schedule rows
-// Max number possible is 5
-total_interview_num = 0;
-index               = 0;
-total_interview_num_bkup = 0;
-function addInterviewRow(event,existing_interview_num, req_match_id, row_index, emp_ids, emp_names, time_array)
+function createLastRow(table, req_match_id, row_index) {
+
+  var last_row      = table.insertRow();
+  last_row.className = "float_right_with_10_padding";
+  var last_cell     = last_row.insertCell(0);
+  last_cell.className  = "manage_interviews_last_cell";
+
+  // Span1 for appending interview stage radio buttons/labels
+  var span1         = document.createElement('span');
+  span1.className   = "stage_span_for_border";
+  createRadioBox(span1, "interview_stage", "interview_stage_screening", "SCREENING", 0);
+  createLabel(span1, "interview_stage_screening", "Screening");
+  createRadioBox(span1, "interview_stage", "interview_stage_fullpanel", "FULLPANEL", 1);
+  createLabel(span1, "interview_stage_fullpanel", "Full Panel");
+  last_cell.appendChild(span1);
+
+  // Span1 for appending interview type radio buttons/labels
+  var span2         = document.createElement('span');
+  span2.className   = "type_span_for_border";
+  createRadioBox(span2, "interview_type", "interview_type_telephonic", "TELEPHONIC", 0);
+  createLabel(span2, "interview_type_telephonic", "Telephonic");
+  createRadioBox(span2, "interview_type", "interview_type_facetoface", "FACETOFACE", 1);
+  createLabel(span2, "interview_type_facetoface", "Face To Face");
+  last_cell.appendChild(span2);
+
+  // Two hidden elements created for passing req_match_id and index number(from where to start in controllers)
+  createHiddenElement(last_cell, "req_match_id", "req_match_id", req_match_id);
+  createHiddenElement(last_cell, "row_index",    "row_index",    row_index);
+
+  // Lastly, submit tag to submit the form
+  var submit  = document.createElement('input');
+  submit.type = "submit";
+  submit.value = "GO";
+  submit.className = "manage_interviews_cell_submit_button";
+
+  // Appending elements
+  last_cell.appendChild(submit);
+  last_row.appendChild(last_cell);
+}   
+
+function addInterviewRow(event, existing_interview_num, req_match_id, row_index, emp_ids, emp_names, time_array)
 {
   event.preventDefault();
-  if ( index == 0 )
-  {
-    total_interview_num = existing_interview_num;
-    total_interview_num_bkup = total_interview_num;
-  }
-  var error_message_div = document.getElementById("error_messages_div");
-  if ( total_interview_num < 5 )
-  {
-    var table          = document.getElementById("manage_interviews_table");
-    var row            = table.insertRow(total_interview_num + 2);
-    row.className      = "float_right";
-    var cell           = row.insertCell(0);
-    cell.className     = "manage_interviews_cell";
+  // Remove the row containing the clicked element
+  var add_row = event.target.parentNode.parentNode;
+  add_row.style.display = 'none';
 
-    // First element for ddl of employees
-    var select         = createDropDownList(cell, "interview_employee_name" + total_interview_num, "interview_employee_name" + total_interview_num, emp_ids, emp_names, "select_box_with_full_width");
-    createSpan(cell, 8);
+  var table = document.getElementById("manage_interviews_table");
 
-    createLabel(cell, "", "Interview Level");
-    createSpan(cell, 8);
+  var row            = table.insertRow();
+  row.className      = "float_right";
+  var cell           = row.insertCell();
+  cell.className     = "manage_interviews_cell";
 
-    // Interview level L1, L2, L3
-    var select = createDropDownList(cell, "interview_level_" + total_interview_num, "interview_level_" + total_interview_num, [1, 2, 3], ['L1', 'L2', 'L3'], '');
-    createSpan(cell, 8);
+  // First element for ddl of employees
+  createDropDownList(cell, "interview_employee_name", "interview_employee_name", emp_ids, emp_names, "select_box_with_full_width");
+  createSpan(cell, 8);
 
-    // Element for date input
-    var element2  = document.createElement("input");
-    element2.name = "interview_date" + total_interview_num;
-    element2.id   = "interview_date" + total_interview_num;
-    cell.appendChild(element2);
+  createLabel(cell, "interview_level", "Interview Level");
+  createSpan(cell, 8);
+
+  // Interview level L1, L2, L3
+  createDropDownList(cell, "interview_level", "interview_level", [1, 2, 3], ['L1', 'L2', 'L3'], '');
+  createSpan(cell, 8);
+
+  // Element for date input
+  var element2  = document.createElement("input");
+  element2.name = "interview_date";
+  element2.id   = "interview_date";
+  cell.appendChild(element2);
     
-    // Onclick event for image.(Poping up calendar)
-    $(function () {
-      $(element2).datepicker({
-        dateFormat: 'dd-mm-yy',
-        showOn: "button",
-        buttonImage: prepend_with_image_path + "/assets/calendar.gif",
-        buttonImageOnly: true,
-        buttonText: "Select date"
-      });
+  jQuery(function () {
+    $(element2).datepicker({
+      dateFormat: 'dd-mm-yy',
+      showOn: "button",
+      buttonImage: prepend_with_image_path + "/assets/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select date"
     });
+  });
     
-    createSpan(cell, 8);
+  createSpan(cell, 8);
 
-    // Fourth element for ddl of time slots
-    var select             = createDropDownList(cell, "time_slot" + total_interview_num, "time_slot" + total_interview_num, time_array, time_array, "select_box_with_low_width");
-    createSpan(cell, 8);
+  // Fourth element for ddl of time slots
+  var select             = createDropDownList(cell, "time_slot", "time_slot", time_array, time_array, "select_box_with_low_width");
+  createSpan(cell, 8);
 
-    var textarea           = document.createElement("textarea");
-    textarea.value         = "Enter focus";
-    textarea.name          = "interview_focus" + total_interview_num;
-    textarea.id            = "interview_focus" + total_interview_num;
-    textarea.className     = "focus_textarea";
-    // On focus prototype function
-    jQuery(textarea).bind("focus",
+  var textarea           = document.createElement("textarea");
+  textarea.value         = "Enter focus";
+  textarea.name          = "interview_focus";
+  textarea.id            = "interview_focus";
+  textarea.className     = "focus_textarea";
+  cell.appendChild(textarea);
+  // On focus prototype function
+  jQuery(textarea).bind("focus",
       function(textarea)
       {
         textBoxContentsOnFocus(this.id, 'Enter focus');
       }
-    );
+  );
     // On blur prototype function
-    jQuery(textarea).bind("blur",
+  jQuery(textarea).bind("blur",
       function(textarea)
       {
         textBoxContentsOnBlur(this.id, 'Enter focus');
       }
-    );
-    cell.appendChild(textarea);
+  );
+  cell.appendChild(textarea);
 
-    // Last element is for deleting the newly created row incase we do not want to use.
-    var link_element       = document.createElement("a");
-    link_element.innerHTML = "Delete";
-    link_element.style.cursor = "pointer";
-
-    // Onclick event for link. Removing the row here.
-    jQuery(link_element).bind("click",
-      function(link_element)
-      {
-        total_interview_num = total_interview_num - 1;
-        // Get the row number
-        var row_number = this.parentNode.parentNode.rowIndex;
-        row.remove();
-
-        var elements_ids = [ "interview_employee_name", "interview_date", "time_slot", "interview_focus" ];
-        for (i = row_number; i <= 4; i++ )
-        {
-          for ( j = 0; j < elements_ids.length; j++)
-          {
-            var element = document.getElementById(elements_ids[j] + i);
-            if ( element )
-            {
-              new_row_number = i - 1;
-              element.name = elements_ids[j] + new_row_number;
-              element.id   = elements_ids[j] + new_row_number;
-            }
-          }
-        }
-        // Hides the error message div if already displayed
-        document.getElementById("error_messages_div").style.visibility = "hidden";
-        if ( total_interview_num == 0)
-        {
-          // Delete ajax div here
-          table.parentNode.parentNode.remove();
-        }
-      }
-    );
-    cell.appendChild(link_element);
-
-    // If clicked first time on add interviews, then create an extra row at bottom of table
-    if ( index == 0 )
-    {
-      // Last Row created for radio buttons/labels and submit tag for adding interviews
-      var last_row      = table.insertRow(total_interview_num + 3);
-      last_row.className = "float_right_with_10_padding";
-      var last_cell     = last_row.insertCell(0);
-      last_cell.className  = "manage_interviews_last_cell";
-
-      // Span1 for appending interview stage radio buttons/labels
-      var span1         = document.createElement('span');
-      span1.className   = "stage_span_for_border";
-      createRadioBox(span1, "interview_stage", "interview_stage_screening", "SCREENING", 0);
-      createLabel(span1, "interview_stage_screening", "Screening");
-      createRadioBox(span1, "interview_stage", "interview_stage_fullpanel", "FULLPANEL", 1);
-      createLabel(span1, "interview_stage_fullpanel", "Full Panel");
-      last_cell.appendChild(span1);
-
-      // Span1 for appending interview type radio buttons/labels
-      var span2         = document.createElement('span');
-      span2.className   = "type_span_for_border";
-      createRadioBox(span2, "interview_type", "interview_type_telephonic", "TELEPHONIC", 0);
-      createLabel(span2, "interview_type_telephonic", "Telephonic");
-      createRadioBox(span2, "interview_type", "interview_type_facetoface", "FACETOFACE", 1);
-      createLabel(span2, "interview_type_facetoface", "Face To Face");
-      last_cell.appendChild(span2);
-
-      // Two hidden elements created for passing req_match_id and index number(from where to start in controllers)
-      createHiddenElement(last_cell, "req_match_id", "req_match_id", req_match_id);
-      createHiddenElement(last_cell, "row_index",    "row_index",    row_index);
-
-      // Lastly, submit tag to submit the form
-      var submit  = document.createElement('input');
-      submit.type = "submit";
-      submit.value = "GO";
-      submit.className = "manage_interviews_cell_submit_button";
-
-      // Appending elements
-      last_cell.appendChild(submit);
-      last_row.appendChild(last_cell);
+  // Last element is for deleting the newly created row incase we do not want to use.
+  var link_element       = document.createElement("a");
+  link_element.innerHTML = "Delete";
+  link_element.style.cursor = "pointer";
+  link_element.onclick = function() {
+    var table = this.closest('table');
+    if (table && table.rows.length >= 2) {
+      table.deleteRow(-1); // Remove last row
+      table.deleteRow(-1); // Remove second to last row
     }
+    add_row.style.display = 'block';
+  };
 
-    total_interview_num = total_interview_num + 1;
-    index               = index + 1;
-  }
-  else
-  {
-    // If schedule added rows will become greater than 5 then show message
-    error_message_div.innerHTML = "You can not add more than 5 schedules of an candidate";
-    error_message_div.style.visibility = "visible";
-    return false;
-  }
+  cell.appendChild(link_element);
+  createLastRow(table, req_match_id, row_index);
 }
+
 
 // Provide links to create portal/agencies if they are not present in current database
 function showReferrals(id_array, name_array, add_status_var)
@@ -765,7 +721,7 @@ function getInterviews(cur_element, req_match_id)
   // Get the form containing the current element using jQuery
   var form = jQuery(cur_element).closest('form');
   // Setting form action and method
-  form.attr("action", prepend_with_image_path + "/resumes/add_interviews");
+  form.attr("action", prepend_with_image_path + "/resumes/add_interview");
   form.attr("method", "POST");
 
   // Create "ajax_reuest_tr" Row
@@ -774,13 +730,11 @@ function getInterviews(cur_element, req_match_id)
   // Sending ajax request to get interviews
   // The interviews will replace innerHTML of the row created by addRow()
   jQuery.ajax({url: prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
-  type: 'POST',
-  success: function(transport)
-          {
-            document.getElementById("loader").style.display="none";
-          },
-    error: function(err)
-    {
+    type: 'POST',
+    success: function(transport) {
+      document.getElementById("loader").style.display="none";
+    },
+    error: function(err) {
       document.getElementById("loader").style.display="none";
       alert("Server was down while performing this action. Please contact administrators.");
     }
