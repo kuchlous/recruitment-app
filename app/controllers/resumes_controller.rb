@@ -1919,7 +1919,16 @@ class ResumesController < ApplicationController
 
     req_match.resume.add_resume_comment("INTERVIEW DELETED: " + comment, "INTERNAL", get_current_employee)
     flash[:notice] = flash_mesg
-    redirect_back(fallback_location: root_path)
+    
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: root_path) }
+      format.js { 
+        # For AJAX requests, reload the manage_interviews partial
+        @req_match = req_match
+        @interviews = @req_match.interviews
+        render 'delete_interview'
+      }
+    end
   end
 
   ####################################################################################################

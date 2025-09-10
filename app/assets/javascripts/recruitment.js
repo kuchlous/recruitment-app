@@ -338,130 +338,109 @@ function textBoxContentsOnBlur(id, elementType)
   }
 }
 
-function createLastRow(table, req_match_id, row_index) {
+function createLastRow($table, req_match_id) {
+  var $last_row = $('<tr>');
+  $table.append($last_row);
 
-  var last_row      = table.insertRow();
-  last_row.className = "float_right_with_10_padding";
-  var last_cell     = last_row.insertCell(0);
-  last_cell.className  = "manage_interviews_last_cell";
+  var $stage_cell = $('<td>');
+  $last_row.append($stage_cell);
+  var $screening_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_screening").attr("value", "SCREENING");
+  $stage_cell.append($screening_option);
+  var $screening_label = $('<label>').attr("for", "interview_stage_screening").text("Screening");
+  $stage_cell.append($screening_label);
 
-  // Span1 for appending interview stage radio buttons/labels
-  var span1         = document.createElement('span');
-  span1.className   = "stage_span_for_border";
-  createRadioBox(span1, "interview_stage", "interview_stage_screening", "SCREENING", 0);
-  createLabel(span1, "interview_stage_screening", "Screening");
-  createRadioBox(span1, "interview_stage", "interview_stage_fullpanel", "FULLPANEL", 1);
-  createLabel(span1, "interview_stage_fullpanel", "Full Panel");
-  last_cell.appendChild(span1);
+  var $fullpanel_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_fullpanel").attr("value", "FULLPANEL").attr("checked", true);
+  $stage_cell.append($fullpanel_option);
+  var $fullpanel_label = $('<label>').attr("for", "interview_stage_fullpanel").text("Full Panel");
+  $stage_cell.append($fullpanel_label);
 
-  // Span1 for appending interview type radio buttons/labels
-  var span2         = document.createElement('span');
-  span2.className   = "type_span_for_border";
-  createRadioBox(span2, "interview_type", "interview_type_telephonic", "TELEPHONIC", 0);
-  createLabel(span2, "interview_type_telephonic", "Telephonic");
-  createRadioBox(span2, "interview_type", "interview_type_facetoface", "FACETOFACE", 1);
-  createLabel(span2, "interview_type_facetoface", "Face To Face");
-  last_cell.appendChild(span2);
 
-  // Two hidden elements created for passing req_match_id and index number(from where to start in controllers)
-  createHiddenElement(last_cell, "req_match_id", "req_match_id", req_match_id);
-  createHiddenElement(last_cell, "row_index",    "row_index",    row_index);
+  var $type_cell = $('<td>');
+  $last_row.append($type_cell);
+  var $telephonic_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephonic").attr("value", "TELEPHONIC");
+  $type_cell.append($telephonic_option);
+  var $telephonic_label = $('<label>').attr("for", "interview_stage_telephonic").text("Telephonic");
+  $type_cell.append($telephonic_label);
 
-  // Lastly, submit tag to submit the form
-  var submit  = document.createElement('input');
-  submit.type = "submit";
-  submit.value = "GO";
-  submit.className = "manage_interviews_cell_submit_button";
+  var $facetoface_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_facetoface").attr("value", "FACETOFACE").attr("checked", true);
+  $type_cell.append($facetoface_option);
+  var $facetoface_label = $('<label>').attr("for", "interview_stage_facetoface").text("Face To Face");
+  $type_cell.append($facetoface_label);
 
-  // Appending elements
-  last_cell.appendChild(submit);
-  last_row.appendChild(last_cell);
+  var $hidden_element = $('<input>').attr("type", "hidden").attr("name", "req_match_id").attr("id", "req_match_id").attr("value", req_match_id);
+  $last_row.append($hidden_element);
+
+  var $submit = $('<input>').attr("type", "submit").attr("value", "GO").attr("class", "manage_interviews_cell_submit_button");
+  $last_row.append($submit);
 }   
 
-function addInterviewRow(event, existing_interview_num, req_match_id, row_index, emp_ids, emp_names, time_array)
+function addInterviewRow(event, req_match_id, emp_ids, emp_names, time_array)
 {
   event.preventDefault();
   // Remove the row containing the clicked element
-  var add_row = event.target.parentNode.parentNode;
-  add_row.style.display = 'none';
+  var $add_row = $(event.target).closest("tr");
+  $add_row.hide();
 
-  var table = document.getElementById("manage_interviews_table");
+  var $row = $('<tr>');
 
-  var row            = table.insertRow();
-  row.className      = "float_right";
-  var cell           = row.insertCell();
-  cell.className     = "manage_interviews_cell";
-
-  // First element for ddl of employees
-  createDropDownList(cell, "interview_employee_name", "interview_employee_name", emp_ids, emp_names, "select_box_with_full_width");
-  createSpan(cell, 8);
-
-  createLabel(cell, "interview_level", "Interview Level");
-  createSpan(cell, 8);
-
-  // Interview level L1, L2, L3
-  createDropDownList(cell, "interview_level", "interview_level", [1, 2, 3], ['L1', 'L2', 'L3'], '');
-  createSpan(cell, 8);
-
-  // Element for date input
-  var element2  = document.createElement("input");
-  element2.name = "interview_date";
-  element2.id   = "interview_date";
-  cell.appendChild(element2);
-    
-  jQuery(function () {
-    $(element2).datepicker({
-      dateFormat: 'dd-mm-yy',
-      showOn: "button",
-      buttonImage: prepend_with_image_path + "/assets/calendar.gif",
-      buttonImageOnly: true,
-      buttonText: "Select date"
-    });
+  var $td = $('<td>');
+  $row.append($td);
+  createDropDownListNew($td, "interview_employee_name", "interview_employee_name", emp_ids, emp_names, "form-control select-box");
+  
+  $td = $('<td>');
+  $row.append($td);
+  createDropDownListNew($td, "interview_level", "interview_level", [1, 2, 3], ['L1', 'L2', 'L3'], 'form-control select-box');
+  
+  $td = $('<td>');
+  $row.append($td);
+  var $date_input = $('<input>').attr("name", "interview_date").attr("type", "text").attr("id", "interview_date").addClass('form-control datepicker');
+  $date_input.datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "focus",
   });
-    
-  createSpan(cell, 8);
+  $td.append($date_input);
 
-  // Fourth element for ddl of time slots
-  var select             = createDropDownList(cell, "time_slot", "time_slot", time_array, time_array, "select_box_with_low_width");
-  createSpan(cell, 8);
+  $td = $('<td>');
+  $row.append($td);
+  var $time_select = createDropDownListNew($td, "time_slot", "time_slot", time_array, time_array, "form-control select-box-small");
+  $td.append($time_select);
 
-  var textarea           = document.createElement("textarea");
-  textarea.value         = "Enter focus";
-  textarea.name          = "interview_focus";
-  textarea.id            = "interview_focus";
-  textarea.className     = "focus_textarea";
-  cell.appendChild(textarea);
-  // On focus prototype function
-  jQuery(textarea).bind("focus",
-      function(textarea)
-      {
-        textBoxContentsOnFocus(this.id, 'Enter focus');
-      }
-  );
-    // On blur prototype function
-  jQuery(textarea).bind("blur",
-      function(textarea)
-      {
-        textBoxContentsOnBlur(this.id, 'Enter focus');
-      }
-  );
-  cell.appendChild(textarea);
-
-  // Last element is for deleting the newly created row incase we do not want to use.
-  var link_element       = document.createElement("a");
-  link_element.innerHTML = "Delete";
-  link_element.style.cursor = "pointer";
-  link_element.onclick = function() {
-    var table = this.closest('table');
-    if (table && table.rows.length >= 2) {
-      table.deleteRow(-1); // Remove last row
-      table.deleteRow(-1); // Remove second to last row
+  $td = $('<td>');
+  $row.append($td);
+  var $textarea = $('<textarea>').attr("name", "interview_focus").attr("id", "interview_focus").attr("class", "form-control focus_textarea");
+  $textarea.value = "Enter focus";
+  $textarea.on("focus",
+    function(textarea) {
+      textBoxContentsOnFocus(this.id, 'Enter focus');
     }
-    add_row.style.display = 'block';
-  };
+  );
+  $textarea.on("blur",
+    function(textarea) {
+      textBoxContentsOnBlur(this.id, 'Enter focus');
+    }
+  );
+  $td.append($textarea);
 
-  cell.appendChild(link_element);
-  createLastRow(table, req_match_id, row_index);
+  $td = $('<td>');
+  $row.append($td);
+  var $delete_link = $('<a>').attr("href", "");
+  $delete_link.text("Delete");
+  $delete_link.css("cursor", "pointer");
+  $delete_link.on("click", 
+    function() {
+      var $table = this.closest('table');
+      if ($table && $table.rows.length >= 2) {
+        $table.find("tr:last").remove();
+        $table.find("tr:last").remove();
+      }
+      $add_row.show();
+    }
+  );
+  $td.append($delete_link);
+
+  var $table = $("#manage_interviews_table");
+  $table.append($row);
+  createLastRow($table, req_match_id);
 }
 
 
@@ -713,29 +692,26 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
   }
 }
 
-// Send an ajax request
-// Replace the row with interviews
 function getInterviews(cur_element, req_match_id)
 {
-  document.getElementById("loader").style.display="flex";
-  // Get the form containing the current element using jQuery
-  var form = jQuery(cur_element).closest('form');
-  // Setting form action and method
+  $('#loader').show();
+  var $table = $(cur_element).closest('table');
+  var form = $(cur_element).closest('form');
   form.attr("action", prepend_with_image_path + "/resumes/add_interview");
   form.attr("method", "POST");
 
-  // Create "ajax_reuest_tr" Row
-  var elements = createRow(cur_element);
+  $('#ajax_request_tr').remove();
+  var $tr = $('<tr>').attr("id", "ajax_request_tr");
+  $tr.append($('<td>').attr("colspan", $table.find("td").length));
+  $table.append($tr);
 
-  // Sending ajax request to get interviews
-  // The interviews will replace innerHTML of the row created by addRow()
-  jQuery.ajax({url: prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
+  $.ajax({url: prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
     type: 'POST',
-    success: function(transport) {
-      document.getElementById("loader").style.display="none";
+    success: function(result) {
+      $('#loader').hide();
     },
     error: function(err) {
-      document.getElementById("loader").style.display="none";
+      $('#loader').hide();
       alert("Server was down while performing this action. Please contact administrators.");
     }
   });
