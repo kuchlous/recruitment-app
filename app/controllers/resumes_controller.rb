@@ -1790,14 +1790,18 @@ class ResumesController < ApplicationController
     int_stage = params[:interview_stage]
     int_type  = params[:interview_type]
     match     = ReqMatch.find(params[:req_match_id])
-    emp_id    = params[:interview_employee_name]
+    emp_name  = params[:interview_employee_name]
     int_time  = params[:time_slot]
     int_date  = params[:interview_date]
     int_focus = params[:interview_focus]
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
     i_time = Time.zone.parse (int_date + " " + int_time)
-    if emp_id
+    
+    # Look up employee by name
+    employee = Employee.find_by(name: emp_name, employee_status: "ACTIVE")
+    if employee
+      emp_id = employee.id
       interview = Interview.new(:employee_id    => emp_id,
                                 :interview_date => int_date,
                                 :interview_time => i_time,
@@ -1824,6 +1828,9 @@ class ResumesController < ApplicationController
         logger.warn(interview.errors.to_s)
         error_catching_and_flashing(interview)
       end
+    else
+      flash[:notice] = "Employee '#{emp_name}' not found or not active. Please select a valid employee."
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -1833,18 +1840,22 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def update_interview
     int_id    = params[:interview_id]
-    emp_id    = params[:interview_employee_name]
+    emp_name  = params[:interview_employee_name]
     int_time  = params[:interview_time]
     int_date  = params[:interview_date]
     int_focus = params[:interview_focus]
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
-
     interview = Interview.find(int_id)
-    is_save = interview.update(:employee_id    => emp_id,
+
+    # Look up employee by name
+    employee = Employee.find_by(name: emp_name, employee_status: "ACTIVE")
+    employee = interview.employee if employee.nil?
+
+    is_save = interview.update(:employee => employee,
                                 :interview_date => int_date,
                                 :interview_time => int_time,
-                                :focus          => int_focus,
+                                :focus => int_focus,
                                 :interview_level => interview_level
                               )
 

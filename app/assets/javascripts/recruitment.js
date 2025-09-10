@@ -266,18 +266,22 @@ function createLastRow($table, req_match_id) {
   $last_row.append($submit);
 }   
 
-function addInterviewRow(event, req_match_id, emp_ids, emp_names, time_array)
+function addInterviewRow(event, req_match_id, time_array)
 {
+  var $table = $("#manage_interviews_table");
   event.preventDefault();
+
   // Remove the row containing the clicked element
   var $add_row = $(event.target).closest("tr");
   $add_row.hide();
 
   var $row = $('<tr>');
+  $table.append($row);
 
   var $td = $('<td>');
   $row.append($td);
-  createDropDownListNew($td, "interview_employee_name", "interview_employee_name", emp_ids, emp_names, "form-control select-box");
+  var $employee_input = $('<input>').attr("name", "interview_employee_name").attr("type", "text").attr("id", "interview_employee_name").addClass('form-control employee-autocomplete').attr("placeholder", "Type employee name...");
+  $td.append($employee_input);
   
   $td = $('<td>');
   $row.append($td);
@@ -320,8 +324,8 @@ function addInterviewRow(event, req_match_id, emp_ids, emp_names, time_array)
   $delete_link.css("cursor", "pointer");
   $delete_link.on("click", 
     function() {
-      var $table = this.closest('table');
-      if ($table && $table.rows.length >= 2) {
+      var $table = $(this).closest('table');
+      if ($table && $table.length > 0 && $table.find('tr').length >= 2) {
         $table.find("tr:last").remove();
         $table.find("tr:last").remove();
       }
@@ -330,8 +334,10 @@ function addInterviewRow(event, req_match_id, emp_ids, emp_names, time_array)
   );
   $td.append($delete_link);
 
-  var $table = $("#manage_interviews_table");
-  $table.append($row);
+  
+  // Initialize autocomplete for the employee input after it's added to DOM
+  createEmployeeAutocomplete('#interview_employee_name');
+  
   createLastRow($table, req_match_id);
 }
 

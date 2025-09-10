@@ -22,12 +22,12 @@
            <tr class="<%= 'red' if i.status == 'DECLINED' %>">
              <td>
                <div class="interview-info">
-                 <span class="interview-type-badge">
-                   <% if i.itype && i.stage %>
-                     <%= i.stage.titleize %> - <%= i.itype.titleize %>
-                   <% end %>
-                 </span>
-                 <%= select_tag "interview_employee_name#{index}", options_for_select(Employee.get_employee_array_for_select, i.employee.id), :class => "form-control select-box" %>
+                 <div class="interview-name-row">
+                   <span class="interview-type-icons">
+                     <%= interview_type_icon(i.stage, i.itype) %>
+                   </span>
+                   <%= text_field_tag "interview_employee_name#{index}", i.employee.name, :class => "form-control employee-autocomplete", :placeholder => "Type employee name..." %>
+                 </div>
                </div>
              </td>
              <td>
@@ -54,7 +54,7 @@
          <% if @interviews.size < 5 %>
            <tr class="add-interview-row">
              <td colspan="6" class="text-center">
-               <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@req_match.id}, [ #{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], ['#{get_time_slot_array.join("', '")}']);", :class => "action-link success", :style => "font-weight: bold;" %>
+               <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@req_match.id}, ['#{get_time_slot_array.join("', '")}']);", :class => "action-link success", :style => "font-weight: bold;" %>
              </td>
            </tr>
          <% end %>
@@ -68,5 +68,10 @@
         showOn: "focus",
         buttonText: "Select date"
       });
+      
+  // Initialize autocomplete for all employee input fields
+  $('.employee-autocomplete').each(function() {
+    createEmployeeAutocomplete('#' + this.id);
+  });
 });
 </script> 

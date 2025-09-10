@@ -593,6 +593,60 @@
   font-weight: 600;
 }
 
+/* Interview Name Row */
+.interview-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Interview Type Icons */
+.interview-type-icons {
+  display: inline-block;
+  font-size: 16px;
+  vertical-align: middle;
+  line-height: 1;
+  cursor: help;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.interview-type-icons:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Enhanced tooltip styling */
+.interview-type-icons[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  margin-left: 8px;
+  min-width: max-content;
+}
+
+.interview-type-icons[title]:hover::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border: 4px solid transparent;
+  border-right-color: #333;
+  z-index: 1000;
+  margin-left: 4px;
+}
+
 /* Text center utility */
 .text-center {
   text-align: center;
