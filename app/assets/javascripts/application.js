@@ -198,4 +198,32 @@ function show_column_for_date_when_resume_moved_to_joining()
 
 console.log('Application.js loaded');
 
+// Bootstrap alert styled like alert_box
+function showBootstrapAlert(message, type) {
+  // Remove any existing alerts and background shader
+  jQuery('.bootstrap-alert, #background_shader').remove();
+  
+  // Create background shader (like the original alert_box)
+  var backgroundShader = '<div id="background_shader"></div>';
+  
+  // Create alert box styled like the original
+  var alertHtml = '<div class="bootstrap-alert">' +
+    message +
+    '<div class="alert-ok-button">' +
+    '<img src="' + prepend_with_image_path + '/assets/Ok.png" onclick="closeBootstrapAlert(); return false;">' +
+    '</div>' +
+    '</div>';
+  
+  // Add background shader and alert to body
+  jQuery('body').append(backgroundShader);
+  jQuery('body').append(alertHtml);
+  
+  // Auto-hide after 5 seconds
+  setTimeout(function() {
+    closeBootstrapAlert();
+  }, 5000);
+}
 
+function closeBootstrapAlert() {
+  jQuery('.bootstrap-alert, #background_shader').remove();
+}
