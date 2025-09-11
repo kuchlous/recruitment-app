@@ -1822,15 +1822,15 @@ class ResumesController < ApplicationController
         # Adding comment
         match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
 
-        flash[:notice] = "You have successfully added an interview"
+        flash[:success] = "Added interview Candidate: #{match.resume.name} Interviewer: #{interview.employee.name} Requirement: #{match.requirement.name}"
         redirect_back(fallback_location: root_path)
       else
         logger.warn(interview.errors.to_s)
-        flash[:error] = "Failed to add interview: #{interview.errors.full_messages.join(', ')}"
+        flash[:warning] = interview.errors.full_messages.join(", ")
         redirect_back(fallback_location: root_path)
       end
     else
-      flash[:warning] = "Employee '#{emp_name}' not found or not active. Please select a valid employee."
+      flash[:warning] = "#{emp_name.titleize} not found or not active. Please select a valid employee."
       redirect_back(fallback_location: root_path)
     end
   end
@@ -1864,23 +1864,15 @@ class ResumesController < ApplicationController
     resume    = match.resume
 
     if is_save
-      # Email for updating panels
       email_for_adding_panel(interview.employee, interview, resume)
-
-      # Sending email to req manager for notification
       notify_manager_for_panel(match.requirement, resume, interview.employee.name)
-
-      # Adding comment
       resume.add_resume_comment("UPDATING INTERVIEWS: Interview panel updated", "INTERNAL", get_current_employee)
-
-      # Flashing message
-      flash[:notice] = "You have successfully updated the interview details"
+      flash[:success] = "Updated interview Candidate: #{resume.name} Interviewer: #{interview.employee.name} Requirement: #{match.requirement.name}"
       redirect_back(fallback_location: root_path)
-    elsif interview.errors
-      flash[:error] = "Failed to update interview: #{interview.errors.full_messages.join(', ')}"
+    else
+      flash[:warning] = interview.errors.full_messages.join(", ")
       redirect_back(fallback_location: root_path)
     end
-
   end
 
   ####################################################################################################
@@ -1916,7 +1908,7 @@ class ResumesController < ApplicationController
     resume_name  = req_match.resume.name
 
     # Flash message to display by default
-    flash_mesg   = "You have successfully deleted the interview of #{emp_name} for #{resume_name}."
+    flash_mesg   = "Deleted interview Candidate: #{resume_name} Interviewer: #{emp_name} Requirement: #{req_match.requirement.name}"
 
     # Comment to be added
     comment      = "Deleted #{emp_name} from interview panel for #{req_match.requirement.name}."
@@ -1925,13 +1917,13 @@ class ResumesController < ApplicationController
     total_left_interviews = req_match.interviews.size
     if total_left_interviews == 0
       req_match.update!(:status => "SHORTLISTED")
-      flash_mesg += " There are no more interviews left for #{resume_name}. So we are marking this resume as \"SHORTLISTED\""
+      flash_mesg += " No more interviews left for #{resume_name}. Marked as \"SHORTLISTED\""
       comment    += " Marking resume as shortlisted as all interviews deleted."
     end
     email_after_deleting_interview(interview, req_match.resume)
 
     req_match.resume.add_resume_comment("INTERVIEW DELETED: " + comment, "INTERNAL", get_current_employee)
-    flash[:notice] = flash_mesg
+    flash[:success] = flash_mesg
     
     redirect_back(fallback_location: root_path)
   end

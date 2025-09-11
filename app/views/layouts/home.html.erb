@@ -63,11 +63,18 @@
         <% flash[:notice] = nil %>
       <% end %>
       
-      <% unless flash[:alert].nil? -%>
+      <% unless flash[:success].nil? -%>
         <script>
-          showBootstrapAlert('<%= j flash[:alert] %>', 'warning');
+          showBootstrapAlert('<%= j flash[:success] %>', 'success');
         </script>
-        <% flash[:alert] = nil %>
+        <% flash[:success] = nil %>
+      <% end %>
+
+      <% unless flash[:warning].nil? -%>
+        <script>
+          showBootstrapAlert('<%= j flash[:warning] %>', 'warning');
+        </script>
+        <% flash[:warning] = nil %>
       <% end %>
       
       <% unless flash[:error].nil? -%>

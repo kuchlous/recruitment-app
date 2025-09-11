@@ -1450,24 +1450,20 @@ function changeInterview(interview_id, index)
   emp_id    = jQuery("#interview_employee_name" + index).val();
   int_time  = jQuery("#time_slot" + index).val();
   int_date  = jQuery("#interview_date" + index).val();
-  int_focus = encodeURIComponent(jQuery("#interview_focus" + index).val());
+  int_focus = jQuery("#interview_focus" + index).val();
   interview_level = jQuery("#interview_level_" + index).val();
+  // Construct URL with parameters
+  var url = prepend_with_image_path + '/resumes/update_interview?' + 
+    'interview_id=' + interview_id + 
+    '&interview_employee_name=' + encodeURIComponent(emp_id) + 
+    '&interview_time=' + encodeURIComponent(int_time) + 
+    '&interview_date=' + encodeURIComponent(int_date) + 
+    '&interview_focus=' + encodeURIComponent(int_focus) +
+    '&interview_level=' + encodeURIComponent(interview_level);
 
-  // Creates Ajax request to update interview
-  jQuery.ajax({
-    url: prepend_with_image_path + '/resumes/update_interview?interview_id=' + interview_id + '&interview_employee_name=' + emp_id + '&interview_time=' + int_time + '&interview_date=' + int_date + '&interview_focus=' + int_focus + '&interview_level=' + interview_level,
-    type: 'POST',
-    success: function(transport)
-    {
-      document.getElementById("loader").style.display="none";
-    },
-    error: function (err) {
-      document.getElementById("loader").style.display="none";
-      alert("Server was down while performing this action. Please contact administrators.");
-    }
-  });
-  // To reload the page
-  window.location.reload();
+  // Redirect to the constructed URL
+  window.location.href = url;
+  return false;
 }
 
 function showHide(elem)
