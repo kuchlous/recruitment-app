@@ -1826,10 +1826,11 @@ class ResumesController < ApplicationController
         redirect_back(fallback_location: root_path)
       else
         logger.warn(interview.errors.to_s)
-        error_catching_and_flashing(interview)
+        flash[:error] = "Failed to add interview: #{interview.errors.full_messages.join(', ')}"
+        redirect_back(fallback_location: root_path)
       end
     else
-      flash[:notice] = "Employee '#{emp_name}' not found or not active. Please select a valid employee."
+      flash[:warning] = "Employee '#{emp_name}' not found or not active. Please select a valid employee."
       redirect_back(fallback_location: root_path)
     end
   end
@@ -1876,7 +1877,8 @@ class ResumesController < ApplicationController
       flash[:notice] = "You have successfully updated the interview details"
       redirect_back(fallback_location: root_path)
     elsif interview.errors
-      error_catching_and_flashing(interview)
+      flash[:error] = "Failed to update interview: #{interview.errors.full_messages.join(', ')}"
+      redirect_back(fallback_location: root_path)
     end
 
   end
@@ -2759,12 +2761,6 @@ class ResumesController < ApplicationController
     end
   end
 
-  def error_catching_and_flashing(object)
-    unless object.valid?
-      flash[:notice] = object.errors.full_messages.join(", ")
-    end
-    redirect_back(fallback_location: root_path)
-  end
 
   ####################################################################################################
   # FUNCTIONS   : Uniqify Forwards                                                                   #

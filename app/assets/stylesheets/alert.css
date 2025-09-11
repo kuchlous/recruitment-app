@@ -14,12 +14,45 @@
   font-size: 20pt;
   text-align: center;
   border: 5px solid #FFFFFF;
-  background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
+  border-color: #FFFFFF;
+  background: linear-gradient(135deg, rgb(129, 199, 132) 0%, rgb(102, 187, 106) 100%);
   padding: 20px;
   z-index: 100;
   display: table-cell;
   visibility: visible;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Alert Content Layout */
+.alert-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+
+.bootstrap-alert .alert-message {
+  flex: 1;
+  color: white;
+}
+
+/* Alert Type Variations */
+.bootstrap-alert.alert-success {
+  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+}
+
+.bootstrap-alert.alert-warning {
+  background: linear-gradient(135deg, #ffb74d 0%, #ffa726 100%);
+}
+
+.bootstrap-alert.alert-danger {
+  background: linear-gradient(135deg, #ef5350 0%, #e57373 100%);
+}
+
+.bootstrap-alert.alert-info {
+  background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
 }
 
 .bootstrap-alert .alert-ok-button {

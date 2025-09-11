@@ -229,7 +229,7 @@ function createEmployeeAutocomplete(selector, options) {
   });
 }
 
-// Bootstrap alert styled like alert_box
+// Bootstrap alert styled like alert_box with different types
 function showBootstrapAlert(message, type) {
   // Remove any existing alerts and background shader
   jQuery('.bootstrap-alert, #background_shader').remove();
@@ -237,9 +237,32 @@ function showBootstrapAlert(message, type) {
   // Create background shader (like the original alert_box)
   var backgroundShader = '<div id="background_shader"></div>';
   
-  // Create alert box styled like the original
-  var alertHtml = '<div class="bootstrap-alert">' +
-    message +
+  // Get alert type class
+  var alertClass = 'bootstrap-alert';
+  
+  switch(type) {
+    case 'success':
+      alertClass += ' alert-success';
+      break;
+    case 'warning':
+      alertClass += ' alert-warning';
+      break;
+    case 'danger':
+    case 'error':
+      alertClass += ' alert-danger';
+      break;
+    case 'info':
+      alertClass += ' alert-info';
+      break;
+    default:
+      alertClass += ' alert-success';
+  }
+  
+  // Create alert box with type-specific styling
+  var alertHtml = '<div class="' + alertClass + '">' +
+    '<div class="alert-content">' +
+    '<span class="alert-message">' + message + '</span>' +
+    '</div>' +
     '<div class="alert-ok-button">' +
     '<img src="' + prepend_with_image_path + '/assets/Ok.png" onclick="closeBootstrapAlert(); return false;">' +
     '</div>' +

@@ -326,35 +326,39 @@
          }
       %>
       <% unless matches.empty? %>
-        <table id="resume_list_table">
-          <tr class="header_row">
-            <td> Req Name/Forwarded to </td>
-            <td> Req Status   </td>
-            <td> Action   </td>
-          </tr>
-          <% matches.each do |m| %>
-            <tr class="<%= cycle('color_line_odd', 'color_line_even') %>">
-              <td>
-                <% if m.is_a?(ReqMatch) %>
-                  <%= requirement_link(m.requirement) %>
-                  <% status = "REQMATCH" %>
-                <% else %>
-                  <%= m.emp_forwarded_to.name %> <br />
-                  ( <%  m.requirements.each do |r| %>
-                    <%= r.name %>,
-                  <% end %> )
-                  <% status = "FORWARDED" %>
-                <% end %>
-              </td>
-              <td>
-                <%= m.status.titleize %>
-                <%= "(" + print_date(m.resume.joining_date) + ")" if m.status == "JOINING" %>
-              </td>
-              <td>
-                <%= get_actions_ddl(@resume, m, status) %>
-              </td>
+        <table id="resume_list_table" class="modern-table">
+          <thead>
+            <tr>
+              <th> Req Name/Forwarded to </th>
+              <th> Req Status   </th>
+              <th> Action   </th>
             </tr>
-          <% end %>
+          </thead>
+          <tbody>
+            <% matches.each do |m| %>
+              <tr>
+                <td class="table-cell-primary">
+                  <% if m.is_a?(ReqMatch) %>
+                    <%= requirement_link(m.requirement) %>
+                    <% status = "REQMATCH" %>
+                  <% else %>
+                    <%= m.emp_forwarded_to.name %> <br />
+                    ( <%  m.requirements.each do |r| %>
+                      <%= r.name %>,
+                    <% end %> )
+                    <% status = "FORWARDED" %>
+                  <% end %>
+                </td>
+                <td class="table-cell-secondary">
+                  <%= m.status.titleize %>
+                  <%= "(" + print_date(m.resume.joining_date) + ")" if m.status == "JOINING" %>
+                </td>
+                <td class="table-cell-secondary">
+                  <%= get_actions_ddl(@resume, m, status) %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
         </table>
       <% end %>
       <% @status    = "FORWARDED"

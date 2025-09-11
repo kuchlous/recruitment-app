@@ -262,8 +262,6 @@ function createLastRow($row, req_match_id) {
   var $hidden_element = $('<input>').attr("type", "hidden").attr("name", "req_match_id").attr("id", "req_match_id").attr("value", req_match_id);
   $last_row.append($hidden_element);
 
-  var $submit = $('<input>').attr("type", "submit").attr("value", "GO").attr("class", "manage_interviews_cell_submit_button");
-  $last_row.append($submit);
 }   
 
 function addInterviewRow(event, req_match_id, time_array)
@@ -319,20 +317,8 @@ function addInterviewRow(event, req_match_id, time_array)
 
   $td = $('<td>');
   $row.append($td);
-  var $delete_link = $('<a>').attr("href", "");
-  $delete_link.text("Delete");
-  $delete_link.css("cursor", "pointer");
-  $delete_link.on("click", 
-    function() {
-      var $table = $(this).closest('table');
-      if ($table && $table.length > 0 && $table.find('tr').length >= 2) {
-        $table.find("tr:last").remove();
-        $table.find("tr:last").remove();
-      }
-      $add_row.show();
-    }
-  );
-  $td.append($delete_link);
+  var $submit = $('<input>').attr("type", "submit").attr("value", "GO").attr("class", "manage_interviews_cell_submit_button");
+  $td.append($submit);
 
   
   // Initialize autocomplete for the employee input after it's added to DOM

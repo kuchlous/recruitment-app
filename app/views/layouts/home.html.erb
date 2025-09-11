@@ -62,6 +62,27 @@
         </script>
         <% flash[:notice] = nil %>
       <% end %>
+      
+      <% unless flash[:alert].nil? -%>
+        <script>
+          showBootstrapAlert('<%= j flash[:alert] %>', 'warning');
+        </script>
+        <% flash[:alert] = nil %>
+      <% end %>
+      
+      <% unless flash[:error].nil? -%>
+        <script>
+          showBootstrapAlert('<%= j flash[:error] %>', 'danger');
+        </script>
+        <% flash[:error] = nil %>
+      <% end %>
+      
+      <% unless flash[:info].nil? -%>
+        <script>
+          showBootstrapAlert('<%= j flash[:info] %>', 'info');
+        </script>
+        <% flash[:info] = nil %>
+      <% end %>
     </div>
   </body>
 </html>
