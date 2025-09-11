@@ -178,7 +178,7 @@ class Interview < ActiveRecord::Base
     return unless should_add_to_calendar?
 
     service = MicrosoftGraphService.new
-    event_id = service.create_calendar_event_for_user(employee.teams_email, self)
+    event_id = service.create_calendar_event_for_interview(self)
     if event_id
       update_column(:calendar_event_id, event_id)
       Rails.logger.info "Calendar event created for interview #{id} with event ID: #{event_id}"
@@ -193,7 +193,7 @@ class Interview < ActiveRecord::Base
     return unless calendar_event_id.present?
 
     service = MicrosoftGraphService.new
-    if service.update_calendar_event_for_user(employee.teams_email, calendar_event_id, self)
+    if service.update_calendar_event_for_interview(self, calendar_event_id)
       Rails.logger.info "Calendar event updated for interview #{id}"
     else
       Rails.logger.error "Failed to update calendar event for interview #{id}"
@@ -210,7 +210,7 @@ class Interview < ActiveRecord::Base
     return unless should_remove_from_calendar?
 
     service = MicrosoftGraphService.new
-    if service.delete_calendar_event_for_user(employee.teams_email, calendar_event_id)
+    if service.delete_calendar_event_for_interview(self, calendar_event_id)
       Rails.logger.info "Calendar event removed for interview #{id}"
     else
       Rails.logger.error "Failed to remove calendar event for interview #{id}"

@@ -7,14 +7,32 @@ class MicrosoftGraphService
     @access_token = get_app_access_token
   end
 
-  # Create a calendar event for a specific user
-  def create_calendar_event_for_user(user_email, interview)
-    return false unless @access_token && user_email.present?
+  # Create a calendar event for interview with ta_owner as organizer
+  def create_calendar_event_for_interview(interview)
+    return false unless @access_token
+
+    # Determine who should be the organizer (ta_owner if present, otherwise interviewer)
+    organizer = if interview.resume.ta_owner.present? && interview.resume.ta_owner.teams_email.present?
+                  interview.resume.ta_owner
+                elsif interview.employee.teams_email.present?
+                  interview.employee
+                else
+                  nil
+                end
+
+    return false unless organizer
 
     event_data = build_event_data(interview)
+    
+    # Log event data for debugging, especially for Teams meetings
+    if interview.itype == "TELEPHONIC"
+      Rails.logger.info "Creating Teams meeting for telephonic interview: #{interview.id}"
+      Rails.logger.info "Organizer: #{organizer.name} (#{organizer.teams_email})"
+      Rails.logger.info "Event data: #{event_data.to_json}"
+    end
     
     response = self.class.post(
-      "/users/#{user_email}/events",
+      "/users/#{organizer.teams_email}/events",
       headers: {
         'Authorization' => "Bearer #{@access_token}",
         'Content-Type' => 'application/json'
@@ -23,25 +41,49 @@ class MicrosoftGraphService
     )
 
     if response.success?
-      Rails.logger.info "Calendar event created for #{user_email}: #{response['id']}"
+      Rails.logger.info "Calendar event created for organizer #{organizer.name}: #{response['id']}"
+      if interview.itype == "TELEPHONIC" && response['onlineMeeting']
+        Rails.logger.info "Teams meeting created with join URL: #{response['onlineMeeting']['joinUrl']}"
+      end
       response['id'] # Return the event ID for storage
     else
-      Rails.logger.error "Failed to create calendar event for #{user_email}: #{response.body}"
+      Rails.logger.error "Failed to create calendar event for organizer #{organizer.name}"
+      Rails.logger.error "Response status: #{response.code}"
+      Rails.logger.error "Response body: #{response.body}"
+      Rails.logger.error "Request body that was sent: #{event_data.to_json}"
       false
     end
   rescue => e
-    Rails.logger.error "Exception creating calendar event for #{user_email}: #{e.message}"
+    Rails.logger.error "Exception creating calendar event for interview #{interview.id}: #{e.message}"
     false
   end
 
-  # Update a calendar event for a specific user
-  def update_calendar_event_for_user(user_email, event_id, interview)
-    return false unless @access_token && user_email.present? && event_id.present?
+  # Update a calendar event for interview with ta_owner as organizer
+  def update_calendar_event_for_interview(interview, event_id)
+    return false unless @access_token && event_id.present?
+
+    # Determine who should be the organizer (ta_owner if present, otherwise interviewer)
+    organizer = if interview.resume.ta_owner.present? && interview.resume.ta_owner.teams_email.present?
+                  interview.resume.ta_owner
+                elsif interview.employee.teams_email.present?
+                  interview.employee
+                else
+                  nil
+                end
+
+    return false unless organizer
 
     event_data = build_event_data(interview)
     
+    # Log event data for debugging, especially for Teams meetings
+    if interview.itype == "TELEPHONIC"
+      Rails.logger.info "Updating Teams meeting for telephonic interview: #{interview.id}"
+      Rails.logger.info "Organizer: #{organizer.name} (#{organizer.teams_email})"
+      Rails.logger.info "Event data: #{event_data.to_json}"
+    end
+    
     response = self.class.patch(
-      "/users/#{user_email}/events/#{event_id}",
+      "/users/#{organizer.teams_email}/events/#{event_id}",
       headers: {
         'Authorization' => "Bearer #{@access_token}",
         'Content-Type' => 'application/json'
@@ -50,23 +92,37 @@ class MicrosoftGraphService
     )
 
     if response.success?
-      Rails.logger.info "Calendar event updated for #{user_email}: #{event_id}"
+      Rails.logger.info "Calendar event updated for organizer #{organizer.name}: #{event_id}"
+      if interview.itype == "TELEPHONIC" && response['onlineMeeting']
+        Rails.logger.info "Teams meeting updated with join URL: #{response['onlineMeeting']['joinUrl']}"
+      end
       true
     else
-      Rails.logger.error "Failed to update calendar event for #{user_email}: #{response.body}"
+      Rails.logger.error "Failed to update calendar event for organizer #{organizer.name}: #{response.body}"
       false
     end
   rescue => e
-    Rails.logger.error "Exception updating calendar event for #{user_email}: #{e.message}"
+    Rails.logger.error "Exception updating calendar event for interview #{interview.id}: #{e.message}"
     false
   end
 
-  # Delete a calendar event for a specific user
-  def delete_calendar_event_for_user(user_email, event_id)
-    return false unless @access_token && user_email.present? && event_id.present?
+  # Delete a calendar event for interview with ta_owner as organizer
+  def delete_calendar_event_for_interview(interview, event_id)
+    return false unless @access_token && event_id.present?
+
+    # Determine who should be the organizer (ta_owner if present, otherwise interviewer)
+    organizer = if interview.resume.ta_owner.present? && interview.resume.ta_owner.teams_email.present?
+                  interview.resume.ta_owner
+                elsif interview.employee.teams_email.present?
+                  interview.employee
+                else
+                  nil
+                end
+
+    return false unless organizer
 
     response = self.class.delete(
-      "/users/#{user_email}/events/#{event_id}",
+      "/users/#{organizer.teams_email}/events/#{event_id}",
       headers: {
         'Authorization' => "Bearer #{@access_token}",
         'Content-Type' => 'application/json'
@@ -74,14 +130,14 @@ class MicrosoftGraphService
     )
 
     if response.success?
-      Rails.logger.info "Calendar event deleted for #{user_email}: #{event_id}"
+      Rails.logger.info "Calendar event deleted for organizer #{organizer.name}: #{event_id}"
       true
     else
-      Rails.logger.error "Failed to delete calendar event for #{user_email}: #{response.body}"
+      Rails.logger.error "Failed to delete calendar event for organizer #{organizer.name}: #{response.body}"
       false
     end
   rescue => e
-    Rails.logger.error "Exception deleting calendar event for #{user_email}: #{e.message}"
+    Rails.logger.error "Exception deleting calendar event for interview #{interview.id}: #{e.message}"
     false
   end
 
@@ -197,7 +253,7 @@ class MicrosoftGraphService
   end
 
   def build_event_data(interview)
-    {
+    event_data = {
       subject: "Interview - #{interview.resume.name} (#{interview.requirement.name})",
       body: {
         contentType: "HTML",
@@ -215,33 +271,61 @@ class MicrosoftGraphService
       isReminderOn: true,
       reminderMinutesBeforeStart: 15
     }
+
+    # Add Teams meeting for telephonic interviews
+    if interview.itype == "TELEPHONIC"
+      event_data[:isOnlineMeeting] = true
+      event_data[:onlineMeetingProvider] = "teamsForBusiness"
+    end
+
+    event_data
   end
 
   def build_event_content(interview)
-    <<~HTML
+    content = <<~HTML
       <h3>Interview Details</h3>
       <p><strong>Candidate:</strong> <a href="#{Rails.application.routes.url_helpers.resume_url(interview.resume.uniqid.name, host: APP_CONFIG['host_name'])}">#{interview.resume.name}</a></p>
       <p><strong>Position:</strong> #{interview.requirement.name}</p>
       <p><strong>Interviewer:</strong> #{interview.employee.name}</p>
+    HTML
+
+    # Add ta_owner information if present and different from interviewer
+    if interview.resume.ta_owner.present? && interview.resume.ta_owner != interview.employee
+      content += <<~HTML
+        <p><strong>TA Owner:</strong> #{interview.resume.ta_owner.name}</p>
+      HTML
+    end
+
+    content += <<~HTML
       <p><strong>Type:</strong> #{interview.interview_type}</p>
       <p><strong>Notes:</strong> #{interview.notes}</p>
     HTML
+
+    # Add Teams meeting information for telephonic interviews
+    if interview.itype == "TELEPHONIC"
+      content += <<~HTML
+        <br>
+        <h4>Teams Meeting</h4>
+        <p>This is a telephonic interview that will be conducted via Microsoft Teams. Please join the meeting at the scheduled time.</p>
+      HTML
+    end
+
+    content
   end
 
   def build_attendees(interview)
     attendees = []
     
-    # Add interviewer
-    if interview.employee.email.present?
+    # Add interviewer as attendee (not organizer)
+    if interview.employee.teams_email.present?
       attendees << {
         emailAddress: {
-          address: interview.employee.email,
+          address: interview.employee.teams_email,
           name: interview.employee.name
         },
         type: "required"
       }
     end
-
     attendees
   end
 end
