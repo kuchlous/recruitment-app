@@ -230,9 +230,9 @@ function textBoxContentsOnBlur(id, elementType)
   }
 }
 
-function createLastRow($table, req_match_id) {
+function createLastRow($row, req_match_id) {
   var $last_row = $('<tr>');
-  $table.append($last_row);
+  $row.after($last_row);
 
   var $stage_cell = $('<td>');
   $last_row.append($stage_cell);
@@ -274,9 +274,9 @@ function addInterviewRow(event, req_match_id, time_array)
   // Remove the row containing the clicked element
   var $add_row = $(event.target).closest("tr");
   $add_row.hide();
-
+  // Insert new row after the "Add Interviews" row
   var $row = $('<tr>');
-  $table.append($row);
+  $add_row.after($row);
 
   var $td = $('<td>');
   $row.append($td);
@@ -338,7 +338,7 @@ function addInterviewRow(event, req_match_id, time_array)
   // Initialize autocomplete for the employee input after it's added to DOM
   createEmployeeAutocomplete('#interview_employee_name');
   
-  createLastRow($table, req_match_id);
+  createLastRow($row, req_match_id);
 }
 
 
