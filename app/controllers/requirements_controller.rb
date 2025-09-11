@@ -33,7 +33,7 @@ class RequirementsController < ApplicationController
                     end
         
     if @requirements.size == 0
-      flash[:notice] = "You do not have any requirements on your name."
+      flash[:warning] = "You do not have any requirements on your name."
     end
   end 
 
@@ -66,10 +66,10 @@ class RequirementsController < ApplicationController
     respond_to do |format|
       if @requirement.save
         email_for_adding_requirement(@requirement)
-        flash[:notice] = "You have successfully created a requirement (#{@requirement.name})"
+        flash[:success] = "Created requirement: #{@requirement.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@requirement)
+        log_errors(@requirement)
         format.html { render :action => "new" }
       end
     end
@@ -109,11 +109,11 @@ class RequirementsController < ApplicationController
         # Need to releoad object from database as update does not
         # seem to change fields of @requirement
         update_forwards(old_owner, Requirement.find(params[:id]))
-        flash[:notice] = "You have successfully updated requirement (#{@requirement.name})"
+        flash[:success] = "Updated requirement: #{@requirement.name}"
         format.html { redirect_to :action => "index" }
       else
         logger.info("Did not update requirement")
-        error_catching_and_flashing(@requirement)
+        log_errors(@requirement)
         format.html { render :action => "edit" }
       end
     end
@@ -237,7 +237,7 @@ class RequirementsController < ApplicationController
                not to delete requirement name. However, if you really want to delete it
                then please ask your administrator"
     logger.info(message)
-    flash[:notice] = message
+    flash[:warning] = message
     redirect_back(fallback_location: root_path)
   end
 
@@ -251,9 +251,9 @@ class RequirementsController < ApplicationController
           req_closed_string += req.name+","
         end
       end
-      flash[:notice] = "You have successfully INACTIVATED requirement \'#{req_closed_string}\' "
+      flash[:success] = "Inactivated requirement: #{req_closed_string}"
     else
-      flash[:notice] = "Please select checkbox to INACTIVE requirements."
+      flash[:warning] = "Please select checkbox to INACTIVE requirements."
     end
     redirect_back(fallback_location: root_path)
   end
@@ -291,13 +291,6 @@ class RequirementsController < ApplicationController
   end
 
 private
-  def error_catching_and_flashing(object)
-    unless object.valid?
-      object.errors.each{ |mesg|
-        logger.info(mesg)
-      }
-    end
-  end
 
   def email_for_adding_requirement(req)
     Emailer.requirement(get_current_employee, req).deliver_now

@@ -25,10 +25,10 @@ class GroupsController < ApplicationController
     @group = Group.new(params.require(:group).permit!)
     respond_to do |format|
       if @group.save
-        flash[:notice] = "You have successfully created group (#{@group.name})"
+        flash[:success] = "Created group: #{@group.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@group)
+        log_errors(@group)
         format.html { render :action => "new" }
       end
     end
@@ -44,10 +44,10 @@ class GroupsController < ApplicationController
     @group = Group.find(params[:id])
     respond_to do |format|
       if @group.update_attributes(params.require(:group).permit!)
-        flash[:notice] = "You have successfully updated group (#{@group.name})"
+        flash[:success] = "Updated group: #{@group.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@group)
+        log_errors(@group)
         format.html { render :action => "edit" }
       end
     end
@@ -65,16 +65,8 @@ class GroupsController < ApplicationController
     message = "Deleting an department will cause major percussions. So it is advisable
                not to delete department. However, if you really want to delete it then
                please ask your administrator"
-    logger.info(message)
-    flash[:notice] = message
+    flash[:warning] = message
     redirect_back(fallback_location: root_path)
   end
 
-  def error_catching_and_flashing(object)
-    unless object.valid?
-      object.errors.each{ |mesg|
-        logger.info(mesg)
-      }
-    end
-  end
 end

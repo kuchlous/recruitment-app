@@ -58,7 +58,7 @@ require 'will_paginate/array'
     # logger.info("IP:" + request.headers["X-Real-IP"])
     @logged_employee  = get_current_employee
     if @logged_employee.nil? && params[:key] != "26a79dtu"
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home"
     elsif !@logged_employee.nil?
       logger.info("Employee: " + @logged_employee.name) 
@@ -73,7 +73,7 @@ require 'will_paginate/array'
   def check_for_HR_or_ADMIN(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless is_HR? || @logged_employee.is_ADMIN?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -81,7 +81,7 @@ require 'will_paginate/array'
   def check_for_ADMIN(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless @logged_employee.is_ADMIN?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -89,7 +89,7 @@ require 'will_paginate/array'
   def check_for_ADMIN_or_GM(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless @logged_employee.is_ADMIN? || @logged_employee.is_GM?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -97,7 +97,7 @@ require 'will_paginate/array'
   def check_for_HR_or_ADMIN_or_REQMANAGER(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -105,7 +105,7 @@ require 'will_paginate/array'
   def check_for_HR_or_ADMIN_or_REQMANAGER_or_BD(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -114,7 +114,7 @@ require 'will_paginate/array'
   def check_for_HR_or_ADMIN_or_REQMANAGER_or_PM(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless params[:key] == "26a79dtu" || is_HR? || @logged_employee.is_ADMIN? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -122,7 +122,7 @@ require 'will_paginate/array'
   def check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless params[:key] == "26a79dtu" || is_HR? || @logged_employee.is_BD? || @logged_employee.is_ADMIN? || @logged_employee.is_GM? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
-      flash[:notice] = msg
+      flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -364,6 +364,15 @@ require 'will_paginate/array'
   rescue => e
     log_view_error(e, { action: action_name, controller: controller_name, args: args })
     raise e
+  end
+
+  # Common error handling method for all controllers
+  def log_errors(object)
+    unless object.valid?
+      object.errors.each{ |mesg|
+        logger.info(mesg)
+      }
+    end
   end
 
 end

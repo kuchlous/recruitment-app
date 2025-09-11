@@ -23,11 +23,10 @@ class PortalsController < ApplicationController
     @portal = Portal.new(params.require(:portal).permit!)
     respond_to do |format|
       if @portal.save
-        flash[:notice] = "Please press F5 once if you are adding
-                          this portal in employee referral"
+        flash[:success] = "Created portal: #{@portal.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@portal)
+        log_errors(@portal)
         format.html { render :action => "new" }
       end
     end
@@ -41,21 +40,14 @@ class PortalsController < ApplicationController
     @portal = Portal.find(params[:id])
     respond_to do |format|
       if @portal.update_attributes(params.require(:portal).permit!)
-        flash[:notice] = "You have successfully updated portal (#{@portal.name})"
+        flash[:success] = "Updated portal: #{@portal.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@portal)
+        log_errors(@portal)
         format.html { render :action => "edit" }
       end
     end
   end
 
-  def error_catching_and_flashing(object)
-    unless object.valid?
-      object.errors.each{ |mesg|
-        logger.info(mesg)
-      }
-    end
-  end
 
 end

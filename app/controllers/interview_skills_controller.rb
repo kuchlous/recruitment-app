@@ -1,7 +1,7 @@
 class InterviewSkillsController < ApplicationController
     def create
         InterviewSkill.create(name:params[:skill])
-        flash[:notice] = "skill added succesfully."
+        flash[:success] = "skill added succesfully."
         redirect_back(fallback_location: root_path)
     end
     
@@ -9,7 +9,7 @@ class InterviewSkillsController < ApplicationController
         employee=Employee.find(params[:id])
         skill=InterviewSkill.find(params[:skill_id])
         employee.interview_skills.delete(skill)
-        flash[:notice] = "Interviewer deleted succesfully."
+        flash[:success] = "Interviewer deleted succesfully."
         redirect_back(fallback_location: root_path) 
     end
 
@@ -18,10 +18,10 @@ class InterviewSkillsController < ApplicationController
         employee=Employee.find_by_eid(eid)
         skill=InterviewSkill.find(params[:skill_id])
         if skill.interviewers.include?(employee)
-            flash[:notice] = "Interviewer already exists."
+            flash[:warning] = "Interviewer already exists."
         else
             employee.interview_skills.push(skill)
-            flash[:notice] = "Interviewer added succesfully."
+            flash[:success] = "Interviewer added succesfully."
         end
         redirect_back(fallback_location: root_path)     
     end

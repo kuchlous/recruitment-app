@@ -22,10 +22,10 @@ class DesignationsController < ApplicationController
     @designation = Designation.new(params.require(:designation).permit!)
     respond_to do |format|
       if @designation.save
-        flash[:notice] = "#{@designation.name} added successfully"
+        flash[:success] = "Added designation: #{@designation.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@designation)
+        log_errors(@designation)
         format.html { render :action => "new" }
       end
     end
@@ -39,21 +39,14 @@ class DesignationsController < ApplicationController
     @designation = Designation.find(params[:id])
     respond_to do |format|
       if @designation.update_attributes(params.require(:designation).permit!)
-        flash[:notice] = "#{@designation.name} updated successfully"
+        flash[:success] = "Updated designation: #{@designation.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@designation)
+        log_errors(@designation)
         format.html { render :action => "edit" }
       end
     end
   end
 
-  def error_catching_and_flashing(object)
-    unless object.valid?
-      object.errors.each{ |mesg|
-        logger.info(mesg)
-      }
-    end
-  end
 
 end

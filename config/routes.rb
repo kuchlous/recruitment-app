@@ -111,7 +111,7 @@ Rails.application.routes.draw do
   match 'resumes/show_all_not_accepted',to: 'resumes#show_all_not_accepted'                   , via: :get
   match 'resumes/delete_interview',to: 'resumes#delete_interview'                             , via: :get
 
-  match 'resumes/update_interview',to: 'resumes#update_interview'                                       , via: :post
+  match 'resumes/update_interview',to: 'resumes#update_interview'                                       , via: [:get, :post]
 
   match 'resumes/move_to_future',to: 'resumes#move_to_future'                                       , via: :post
   match 'resumes/update_joining',to: 'resumes#update_joining'                                       , via: :post

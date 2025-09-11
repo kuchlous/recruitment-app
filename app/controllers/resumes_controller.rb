@@ -46,7 +46,7 @@ class ResumesController < ApplicationController
       # Check if current employee should see CTC information
       @show_ctc = should_show_ctc?(@resume)
     else
-      flash[:notice]  = "No details available for this resume"
+      flash[:warning]  = "No details available for this resume"
       redirect_back(fallback_location: root_path)
     end
   end
@@ -74,11 +74,11 @@ class ResumesController < ApplicationController
         uniqid_name = resume_data['uniqid']
         redirect_to :controller => "resumes", :action => "show", :id => uniqid_name
       else
-        flash[:notice] = "No details available for this resume"
+        flash[:warning] = "No details available for this resume"
         redirect_back(fallback_location: root_path)
       end
     else
-      flash[:notice] = "No details available for this resume"
+      flash[:warning] = "No details available for this resume"
       redirect_back(fallback_location: root_path)
     end
   end
@@ -221,7 +221,7 @@ class ResumesController < ApplicationController
         else
           flash_mesg = "You have successfully uploaded resume"
         end
-        flash[:notice] = flash_mesg
+        flash[:success] = flash_mesg
         format.html { redirect_to :action => "new" }
       else
         @employees    = get_all_employees
@@ -304,7 +304,7 @@ class ResumesController < ApplicationController
       ta_owner = @resume.ta_owner
       Emailer.notify_ta_owner(ta_owner, get_current_employee, @resume, false).deliver_now if ta_owner.present?
 
-      flash[:notice]  = "You have successfully updated details of #{@resume.name}"
+      flash[:success]  = "Updated resume details: #{@resume.name}"
       redirect_to :action => "show", :id => @resume.uniqid.name
     else
       @resume.errors.full_messages { |mesg|
@@ -328,7 +328,7 @@ class ResumesController < ApplicationController
 
   def process_xls_and_zipped_resumes
     if params[:resume].nil?
-      flash[:notice] = "Please provide both excel file and zipped file for resumes."
+      flash[:warning] = "Please provide both excel file and zipped file for resumes."
       redirect_back(fallback_location: root_path)
     else
       status_file, message = Resume.upload_xls(params[:resume][:upload_xls], params[:resume][:upload_zipped_resume],
@@ -336,16 +336,16 @@ class ResumesController < ApplicationController
       if (message.nil?)
         send_file(status_file)
       elsif (/missing/.match(message))
-        flash[:notice] = "Please provide both excel file and zipped file for resumes."
+        flash[:warning] = "Please provide both excel file and zipped file for resumes."
         redirect_back(fallback_location: root_path)
       elsif (/excel/.match(message))
-        flash[:notice] = "Please provide only excel file"
+        flash[:warning] = "Please provide only excel file"
         redirect_back(fallback_location: root_path)
       elsif (/zip/.match(message))
-        flash[:notice] = "Please provide only zip file"
+        flash[:warning] = "Please provide only zip file"
         redirect_back(fallback_location: root_path)
       elsif (/No data/.match(message))
-        flash[:notice] = "Excel file does not have any data inside it. Please try uploading correct excel file."
+        flash[:warning] = "Excel file does not have any data inside it. Please try uploading correct excel file."
         redirect_back(fallback_location: root_path)
       end
     end
@@ -642,7 +642,7 @@ class ResumesController < ApplicationController
     # Adding Comments
     resume.add_resume_comment("FUTURE LIST: Moving to future list", "INTERNAL", get_current_employee)
 
-    flash[:notice] = "You have successfully moved #{resume.name} into future list"
+    flash[:success] = "Moved #{resume.name} to future list"
 
     redirect_back(fallback_location: root_path)
   end
@@ -683,7 +683,7 @@ class ResumesController < ApplicationController
       end
       @resumes = sort_resumes_by_date(@resumes)
     else
-      flash[:notice] = "You are not authorised to access this page."
+      flash[:warning] = "You are not authorised to access this page."
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -702,11 +702,11 @@ class ResumesController < ApplicationController
         @resumes    = sort_resumes_by_date(@resumes)
         render "resumes/recent.html.erb"
       else
-        flash[:notice] = "Please select start date and end date"
+        flash[:warning] = "Please select start date and end date"
         redirect_to :controller => "resumes", :action => "recent"
       end
     else
-      flash[:notice] = "You are not authorised to access this page."
+      flash[:warning] = "You are not authorised to access this page."
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
@@ -717,7 +717,7 @@ class ResumesController < ApplicationController
 
     # Adding Comments
     resume.add_resume_comment("MARK ACTIVE: Setting resume status as empty for further processing", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully activated #{resume.name} for processing"
+    flash[:success] = "Activated #{resume.name} for processing"
     redirect_back(fallback_location: root_path)
   end
 
@@ -725,12 +725,12 @@ class ResumesController < ApplicationController
     resume      = Resume.find(params[:resume_id])
     requirement = resume.req_for_decision
     if !requirement
-      flash[:notice] = "No matching requirement found for #{resume.name}"
+      flash[:warning] = "No matching requirement found for #{resume.name}"
       redirect_back(fallback_location: root_path)
       return
     end
     if !requirement.ta_leads.any?
-      flash[:notice] = "No TA leads found for requirement #{requirement.name}"
+      flash[:warning] = "No TA leads found for requirement #{requirement.name}"
       redirect_back(fallback_location: root_path)
       return
     end
@@ -738,7 +738,7 @@ class ResumesController < ApplicationController
     email_for_decision(resume, requirement, true, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for engineering decision", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.name} (Req Owner) for engineering decision, Req: #{requirement.name}"
+    flash[:success] = "Sent #{resume.name} to #{requirement.employee.name} (Req Owner) for engineering decision, Req: #{requirement.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -746,14 +746,14 @@ class ResumesController < ApplicationController
     resume      = Resume.find(params[:resume_id])
     requirement = resume.req_for_decision
     if !requirement
-      flash[:notice] = "No matching requirement found for #{resume.name}"
+      flash[:warning] = "No matching requirement found for #{resume.name}"
       redirect_back(fallback_location: root_path)
     end
 
     email_for_decision(resume, requirement, false, nil)
 
     resume.add_resume_comment("SENT FOR DECISION: Sending resume for decision", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have successfully sent #{resume.name} to #{requirement.employee.gm.name} (GM) for decision, req: #{requirement.name}"
+    flash[:success] = "Sent #{resume.name} to #{requirement.employee.gm.name} (GM) for decision, req: #{requirement.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -769,7 +769,7 @@ class ResumesController < ApplicationController
     # Adding Comments
     resume.add_resume_comment("REJECT ALL: Rejecting all forward/requirement matches.", "INTERNAL", get_current_employee)
 
-    flash[:notice] = "You have successfully rejected all forwards/req matches associated to this resume"
+    flash[:success] = "Rejected all forwards/req matches for #{resume.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -779,7 +779,7 @@ class ResumesController < ApplicationController
     Rails.cache.delete('joined')
     # Adding Comments 
     resume.add_resume_comment("NOT ACCEPTED: Candidate did not accept our offer.", "INTERNAL", get_current_employee)
-    flash[:notice] = "You have succesfully marked #{resume.name} as not accepted"
+    flash[:success] = "Marked #{resume.name} as not accepted"
     render body: nil
   end
 
@@ -857,8 +857,10 @@ class ResumesController < ApplicationController
       mesg   = Resume.create_reqs(resume, [req_id], comment, get_logged_employee, get_current_employee) 
     end
     # Flashing messages
-    logger.info(mesg)
-    flash[:notice] = mesg
+    if mesg
+     logger.info(mesg)
+     flash[:warning] = mesg
+    end
     redirect_back(fallback_location: root_path)
   end
 
@@ -977,7 +979,7 @@ class ResumesController < ApplicationController
                 :resume      => resume,
                 :ctype       => "HR",
                 :employee    => employee)
-    flash[:notice] = "We have added an HR comment"
+    flash[:success] = "Added HR comment for #{resume.name}"
     redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
   end
 
@@ -988,7 +990,7 @@ class ResumesController < ApplicationController
     resume.add_resume_comment(comment, "USER", get_current_employee)
     email_for_action(resume, "COMMENTED", comment, nil)
 
-    flash[:notice] = "We have added a comment"
+    flash[:success] = "Added comment for #{resume.name}"
     redirect_to :controller => "resumes", :action => "show", :id => resume.uniqid.name
   end
 
@@ -1022,12 +1024,12 @@ class ResumesController < ApplicationController
 
     overall_status = resume.overall_status
     if overall_status == "JOINING" || overall_status == "JOINED"
-      mesg = "This resume already marked as joining. So you can not mark joining two times on same resume."
+      flash[:warning] = "This resume already marked as joining. So you can not mark joining two times on same resume."
       comment = "ALREADY JOINED: already marked as joining/joined"
     else
       resume.update!(:joining_date => joining_date)
       match.update!(:status => status)
-      mesg = "You have succesfully added/updated the joining date(#{joining_date}) for #{resume.name}"
+      flash[:success] = "Added/updated the joining date(#{joining_date}) for #{resume.name}"
       comment = "JOINING: Marked Joining with no comments"
       email_for_joined(resume, "JOINING")
     end
@@ -1035,7 +1037,6 @@ class ResumesController < ApplicationController
 
     # Adding Comments 
     resume.add_resume_comment(comment, "INTERNAL", get_current_employee)
-    flash[:notice] = mesg
     render body: nil
   end
 
@@ -1054,7 +1055,7 @@ class ResumesController < ApplicationController
       end
       mesg = Resume.create_reqs(resume, req_ids, get_logged_employee, get_current_employee)
       resume.update_overall_status
-      flash[:notice] = mesg
+      flash[:success] = mesg
     end
     render body: nil
   end
@@ -1471,7 +1472,7 @@ class ResumesController < ApplicationController
      fill_resume_data(sheet, resumes)
      send_file_to_download(book, output)
    else
-     flash[:notice] = "You are not authorised to access this page"
+     flash[:warning] = "You are not authorised to access this page"
      redirect_back(fallback_location: root_path)
    end
   end
@@ -1679,12 +1680,12 @@ class ResumesController < ApplicationController
         feedback.employee = @current_employee
         feedback.resume   = resume
         feedback.save!
-        flash[:notice] = "We thank you for submitting the feedback about this resume"
+        flash[:success] = "Thank you for submitting feedback for #{resume.name}"
       end
       # Sending email about feedback
       email_for_feedback(resume, feedback, req)
     else
-      flash[:notice] = "Please select rating also"
+      flash[:warning] = "Please select rating also"
     end
 
     redirect_back(fallback_location: root_path)
@@ -1732,7 +1733,7 @@ class ResumesController < ApplicationController
 
     # Send mail when adding message
     email_for_add_message(m)
-    flash[:notice] = "Message sent successfully"
+    flash[:success] = "Message sent successfully"
     # After rendering this we do not need to create an js file for add_message
     # (add_message.js)
     render body: nil
@@ -1747,7 +1748,7 @@ class ResumesController < ApplicationController
       end
     end
 
-    flash[:notice] = "You have successfully deleted the selected messages"
+    flash[:success] = "Deleted selected messages"
     redirect_back(fallback_location: root_path)
   end
 
@@ -1768,7 +1769,7 @@ class ResumesController < ApplicationController
     # Send mail when replying
     email_for_add_message(m)
 
-    flash[:notice] = "Your message has been sent."
+    flash[:success] = "Message sent successfully"
     redirect_back(fallback_location: root_path)
   end
 
@@ -2721,7 +2722,7 @@ class ResumesController < ApplicationController
     gm_for_decision = requirement.employee.gm
     attachment, filetype, ext = resume.preferred_file
     if !attachment
-      flash[:notice] = "No resume to attach for #{resume.name}"
+      flash[:warning] = "No resume to attach for #{resume.name}"
       redirect_back(fallback_location: root_path)
     end
     attachment = Rails.root + attachment

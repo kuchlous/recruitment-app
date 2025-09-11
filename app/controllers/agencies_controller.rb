@@ -19,11 +19,10 @@ class AgenciesController < ApplicationController
     @agency = Agency.new(params.require(:agency).permit!)
     respond_to do |format|
       if @agency.save
-        flash[:notice] = "Please press F5 once if you are adding
-                          this agency in employee referral"
+        flash[:success] = "Created agency: #{@agency.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@agency)
+        log_errors(@agency)
         format.html { render :action => "new" }
       end
     end
@@ -37,10 +36,10 @@ class AgenciesController < ApplicationController
     @agency = Agency.find(params[:id])
     respond_to do |format|
       if @agency.update_attributes(params.require(:agency).permit!)
-        flash[:notice] = "You have successfully updated portal (#{@agency.name})"
+        flash[:success] = "Updated agency: #{@agency.name}"
         format.html { redirect_to :action => "index" }
       else
-        error_catching_and_flashing(@agency)
+        log_errors(@agency)
         format.html { render :action => "edit" }
       end
     end
@@ -50,16 +49,8 @@ class AgenciesController < ApplicationController
     message = "Deleting an agency will cause major percussions.
                So it is advisable not to delete agency. However,
                if you really want to delete it then please ask your administrator"
-    logger.info(message)
-    flash[:notice] = message
+    flash[:warning] = message
     redirect_back(fallback_location: root_path)
   end
 
-  def error_catching_and_flashing(object)
-    unless object.valid?
-      object.errors.each{ |mesg|
-        logger.info(mesg)
-      }
-    end
-  end
 end

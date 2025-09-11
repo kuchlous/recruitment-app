@@ -60,7 +60,7 @@ class EmployeesController < ApplicationController
     e.n_interviews_per_week = params[:n_interviews_per_week] if params[:n_interviews_per_week]
     e.preferred_day_and_time = params[:preferred_day_and_time] if params[:preferred_day_and_time]
     e.save
-    flash[:notice] = "Interview slot successfully updated for #{e.name}"
+    flash[:success] = "Updated interview slot for #{e.name}"
     redirect_back(fallback_location: root_path)
   end
 
@@ -80,7 +80,7 @@ class EmployeesController < ApplicationController
         end
         employee = Employee.find_by_login(params[:login].to_s)
         if (!employee)
-          flash[:notice] = "Your name is not in the recruitment system.
+          flash[:warning] = "Your name is not in the recruitment system.
                             Please contact your manager to add your name to the system"
           redirect_to :controller => "home", :action => "index"
         else
@@ -88,7 +88,7 @@ class EmployeesController < ApplicationController
             remote_ip = request.remote_ip
             if (is_outside_ip(remote_ip) && !employee.can_access_remote?) 
               logger.info("#{employee.name} tried to access remotely.")
-              flash[:notice] = "You can not login to recruitment account remotely."
+              flash[:warning] = "You can not login to recruitment account remotely."
               redirect_to :controller => "home", :action => "index"
             else
               logger.info("Succesfully logged in #{employee.id}")
@@ -98,7 +98,7 @@ class EmployeesController < ApplicationController
             end
           else
             logger.info("#{employee.name} is inactivated.")
-            flash[:notice] = "You can not login to your recruitment account because
+            flash[:warning] = "You can not login to your recruitment account because
                               your account has been set to inactivated.
                               Please contact your manager"
 
@@ -106,7 +106,7 @@ class EmployeesController < ApplicationController
           end
         end
       else
-        flash[:notice] = "Your name is not in the recruitment system.
+        flash[:warning] = "Your name is not in the recruitment system.
                           Please contact your manager to add your name to the system"
         redirect_to :controller => "home", :action => "index"
       end
@@ -114,7 +114,7 @@ class EmployeesController < ApplicationController
 
     rescue Net::IMAP::NoResponseError => e
       logger.info("Please provide mirafra mail username and password.");
-      flash[:notice] = "Please provide mirafra mail username and password."
+      flash[:warning] = "Please provide mirafra mail username and password."
       redirect_to :controller => "home", :action => "index"
 
   end
@@ -133,7 +133,7 @@ class EmployeesController < ApplicationController
       if (employee && employee.provides_visibility_to?(get_logged_employee))
         set_current_employee(employee.id)
       else
-        flash[:notice] = "You can not work on behalf of this employee."
+        flash[:warning] = "You can not work on behalf of this employee."
       end
     end
     redirect_to :controller => "home", :action => "actions_page"

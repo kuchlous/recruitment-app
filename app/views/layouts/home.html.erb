@@ -56,12 +56,6 @@
           </tbody>
         </table>
       </div>
-      <% unless flash[:notice].nil? -%>
-        <script>
-          showBootstrapAlert('<%= j flash[:notice] %>', 'success');
-        </script>
-        <% flash[:notice] = nil %>
-      <% end %>
       
       <% unless flash[:success].nil? -%>
         <script>
