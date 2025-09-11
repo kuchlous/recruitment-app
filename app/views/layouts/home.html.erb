@@ -57,15 +57,11 @@
         </table>
       </div>
       <% unless flash[:notice].nil? -%>
-        <div id="alert_box">
-          <%= flash[:notice] %>
-          <div align="center" style="margin-top: 20px;">
-            <%= image_submit_tag("Ok.png", :onclick => "closeBox('alert_box'); return false;") %>
-          </div>
-        </div>
+        <script>
+          showBootstrapAlert('<%= j flash[:notice] %>', 'success');
+        </script>
         <% flash[:notice] = nil %>
       <% end %>
-      <div id="background_shader" style="opacity: 0.5; filter:alpha(opacity=40); display: block;"> </div>
     </div>
   </body>
 </html>

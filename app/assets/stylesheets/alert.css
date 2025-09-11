@@ -1,0 +1,43 @@
+/* ==========================================================
+   Alert Box Styling
+   Description - Styling for Bootstrap alert notifications that match the website's green theme
+   ========================================================== */
+
+/* Bootstrap Alert Styling (matching website theme) */
+.bootstrap-alert {
+  position: absolute;
+  width: 500px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 20pt;
+  text-align: center;
+  border: 5px solid #FFFFFF;
+  background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
+  padding: 20px;
+  z-index: 100;
+  display: table-cell;
+  visibility: visible;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.bootstrap-alert .alert-ok-button {
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+/* Background shader for alert overlay */
+#background_shader {
+  background-color: #000000;
+  border-color: #000000;
+  display: block;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  visibility: visible;
+  opacity: 0.5;
+}

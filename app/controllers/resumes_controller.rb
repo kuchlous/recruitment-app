@@ -1786,63 +1786,51 @@ class ResumesController < ApplicationController
   # FUNCTIONS   : Add Interviews                                                                     #
   # DESCRIPTION : Function to be used to add more interviews to a req match                          #
   ####################################################################################################
-  def add_interviews
-    emp_added_for_interviews = []
-    row_index = params[:row_index].to_i 
+  def add_interview
     int_stage = params[:interview_stage]
     int_type  = params[:interview_type]
     match     = ReqMatch.find(params[:req_match_id])
+    emp_name  = params[:interview_employee_name]
+    int_time  = params[:time_slot]
+    int_date  = params[:interview_date]
+    int_focus = params[:interview_focus]
+    int_focus = "" if int_focus == "Enter focus"
+    interview_level = params[:interview_level]
+    i_time = Time.zone.parse (int_date + " " + int_time)
+    
+    # Look up employee by name
+    employee = Employee.find_by(name: emp_name, employee_status: "ACTIVE")
+    if employee
+      emp_id = employee.id
+      interview = Interview.new(:employee_id    => emp_id,
+                                :interview_date => int_date,
+                                :interview_time => i_time,
+                                :stage          => int_stage,
+                                :itype          => int_type,
+                                :focus          => int_focus,
+                                :req_match      => match,
+                                :interview_level => interview_level)
+      if interview.save
+        # Scheduled only when interview get saved
+        match.update!(:status => "SCHEDULED")
 
-    for i in row_index..row_index
-      emp_id    = params["interview_employee_name#{i}".to_sym]
-      int_time  = params["time_slot#{i}".to_sym]
-      int_date  = params["interview_date#{i}"]
-      int_focus = params["interview_focus#{i}".to_sym]
-      int_focus = "" if int_focus == "Enter focus"
-      interview_level = params["interview_level_#{i}"]
-      i_time = Time.zone.parse (int_date + " " + int_time)
-      logger.info("In add_interviews i = #{i} emp_id = #{emp_id}")
-      if emp_id
-        interview = Interview.new(:employee_id    => emp_id,
-                                  :interview_date => int_date,
-                                  :interview_time => i_time,
-                                  :stage          => int_stage,
-                                  :itype          => int_type,
-                                  :focus          => int_focus,
-                                  :req_match_id   => match.id,
-                                  :interview_level => interview_level)
-        is_save = interview.save
-        if is_save
-          
-          # Scheduled only when interview get saved
-          match.update!(:status => "SCHEDULED")
+        email_for_adding_panel(interview.employee, interview, match.resume)
 
-          # Adding employees to an array for comments
-          employee  = interview.employee
-          emp_added_for_interviews << employee.name
-  
-          # Sending emails to added panels
-          email_for_adding_panel(employee, interview, match.resume)
+        # Sending email to req manager for notification
+        notify_manager_for_panel(match.requirement, match.resume, interview.employee.name)
 
-        end
+        # Adding comment
+        match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
+
+        flash[:notice] = "You have successfully added an interview"
+        redirect_back(fallback_location: root_path)
+      else
+        logger.warn(interview.errors.to_s)
+        error_catching_and_flashing(interview)
       end
-    end
-
-    if is_save
-      # Sending email to req manager for notification
-      notify_manager_for_panel(match.requirement, match.resume, emp_added_for_interviews.join(", "))
-
-      # Adding comment
-      match.resume.add_resume_comment("ADDING INTERVIEWS FOR: #{emp_added_for_interviews.join(", ")} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
-
-      flash[:notice] = "You have successfully added interview panel"
+    else
+      flash[:notice] = "Employee '#{emp_name}' not found or not active. Please select a valid employee."
       redirect_back(fallback_location: root_path)
-    elsif interview.errors
-      logger.warn(interview.errors.to_s)
-      error_catching_and_flashing(interview)
-
-      # Adding comment
-      match.resume.add_resume_comment("OVERLAPPING INTERVIEWS DATE/TIME: #{emp_added_for_interviews.join(", ")} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
     end
   end
 
@@ -1852,18 +1840,22 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def update_interview
     int_id    = params[:interview_id]
-    emp_id    = params[:interview_employee_name]
+    emp_name  = params[:interview_employee_name]
     int_time  = params[:interview_time]
     int_date  = params[:interview_date]
     int_focus = params[:interview_focus]
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
-
     interview = Interview.find(int_id)
-    is_save = interview.update(:employee_id    => emp_id,
+
+    # Look up employee by name
+    employee = Employee.find_by(name: emp_name, employee_status: "ACTIVE")
+    employee = interview.employee if employee.nil?
+
+    is_save = interview.update(:employee => employee,
                                 :interview_date => int_date,
                                 :interview_time => int_time,
-                                :focus          => int_focus,
+                                :focus => int_focus,
                                 :interview_level => interview_level
                               )
 
@@ -1938,6 +1930,7 @@ class ResumesController < ApplicationController
 
     req_match.resume.add_resume_comment("INTERVIEW DELETED: " + comment, "INTERNAL", get_current_employee)
     flash[:notice] = flash_mesg
+    
     redirect_back(fallback_location: root_path)
   end
 
@@ -2768,10 +2761,7 @@ class ResumesController < ApplicationController
 
   def error_catching_and_flashing(object)
     unless object.valid?
-      object.errors.each { |mesg|
-        logger.info(mesg)
-        flash[:notice] = mesg.to_s.sub(/is invalid/, "")
-      }
+      flash[:notice] = object.errors.full_messages.join(", ")
     end
     redirect_back(fallback_location: root_path)
   end

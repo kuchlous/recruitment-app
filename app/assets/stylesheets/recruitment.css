@@ -79,50 +79,6 @@ table
 }
 
 /* ==========================================================
-    Styling Rules - Popup Information Boxes
-    Description   - These popup boxes act as a medium to convey information
-                    messages/errors to the user. When they appear the transparency
-                    of the rest of the content gets reduced in the background.
-   ========================================================== */
-#alert_box
-{
-  position:         absolute;
-  width:            500px;
-  left:             0;
-  top:              -400px;
-  color:            white;
-  font-size:        20pt;
-  text-align:       center;
-  border:           5px solid #FFFFFF;
-  background-color: #146EB4;
-  padding:          20px;
-  z-index:          100;
-  display:          table-cell;
-  visibility:       hidden;
-}
-
-/* ==========================================================
-   Styling Rules - Background Shader
-   Description   - This is the background that is made visible when the alert,
-                   information or error boxes appear in the foreground. This
-                   is done to de-emphasise the contents that are present in the
-                   background.
-   ========================================================== */
-#background_shader
-{
-  background-color: #000000;
-  border-color:     #000000;
-  display:          none;
-  height:           100%;
-  left:             0;
-  position:         fixed;
-  top:              0;
-  width:            100%;
-  z-index:          50;
-  visibility:       hidden;
-}
-
-/* ==========================================================
    Styling Rules - Layout div
    Description   - This is for the stylings of the layout div which will be rendered
                    in the layouts page.

@@ -1,53 +1,77 @@
 <td colspan="10" class="align_right">
-  <table id="manage_interviews_table">
-    <tr class="float_right_with_10_padding">
-      <td style="border: none;">
-        <%= link_to image_tag("RedCross.png", :size => "22x22"), "", :onclick =>"deleteAjaxRequestTr('ajax_request_tr');" %>
-      </td>
-    </tr>
-    <% index = 0
-       req_match_id = @req_match.id
-       @interviews.each do |i|
-         req_match_id = i.req_match.id %>
-         <% if i.status == "DECLINED" %>
-           <tr class="red">
-         <% else %>
-           <tr class="float_right_with_no_padding">
+  <div class="interview-management-header">
+    <h3>Manage Interviews</h3>
+    <div class="table-actions">
+      <%= link_to image_tag("RedCross.png", :size => "22x22"), "", :onclick =>"deleteAjaxRequestTr('ajax_request_tr');", :class => "action-link danger", :title => "Close" %>
+    </div>
+  </div>
+  
+  <table id="manage_interviews_table" class="modern-table">
+    <thead>
+      <tr>
+        <th>Interviewer</th>
+        <th>Level</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Focus</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @interviews.each_with_index do |i, index| %>
+           <tr class="<%= 'red' if i.status == 'DECLINED' %>">
+             <td>
+               <div class="interview-info">
+                 <div class="interview-name-row">
+                   <span class="interview-type-icons">
+                     <%= interview_type_icon(i.stage, i.itype) %>
+                   </span>
+                   <%= text_field_tag "interview_employee_name#{index}", i.employee.name, :class => "form-control employee-autocomplete", :placeholder => "Type employee name..." %>
+                 </div>
+               </div>
+             </td>
+             <td>
+               <%= select_tag "interview_level_#{index}", options_for_select(Interview.get_level_for_select, i.interview_level), :class => "form-control select-box-small" %>
+             </td>
+             <td>
+               <input type="text" class="datepicker form-control" id=<%="interview_date#{index}"%> value=<%= (i.interview_date).strftime("%d-%m-%Y") %>>
+             </td>
+             <td>
+               <%= select_tag "time_slot#{index}", options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]), :class => "form-control select-box-small" %>
+             </td>
+             <td>
+               <%= text_area_tag "interview_focus#{index}", i.focus, :class => "form-control focus-textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');", :rows => 2 %>
+             </td>
+             <td>
+               <div class="table-actions">
+                 <%= link_to "Delete", host: APP_CONFIG['host_name'], controller: "resumes",:action => "delete_interview", :id => i.id, :class => "action-link danger" %>
+                 <span class="action-separator">|</span>
+                 <%= link_to "Update", "", :onClick=> "changeInterview(#{i.id}, #{index});", :class => "action-link success" %>
+               </div>
+             </td>
+           </tr>
          <% end %>
-           <td class="manage_interviews_cell">
-             <span class="bold" style="font-size: 10px;">
-               <% if i.itype && i.stage %>
-                 ( <%= i.stage.titleize %> - <%= i.itype.titleize %> )
-               <% end %>
-             </span>
-             <%= select_tag "interview_employee_name#{index}", options_for_select(Employee.get_employee_array_for_select, i.employee.id), :class => "select_box_with_full_width" %> - 
-             Interview Level - <%= select_tag "interview_level_#{index}", options_for_select(Interview.get_level_for_select, i.interview_level) %> - 
-             <input type="text" class="datepicker" id=<%="interview_date#{index}"%> value=<%= (i.interview_date).strftime("%d-%m-%Y") %>> - 
-             <%= select_tag "time_slot#{index}", options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]), :class => "select_box_with_low_width" %> - 
-             <%= text_area_tag "interview_focus#{index}", i.focus, :class => "focus_textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');" %>
-             <%= link_to "Delete", host: APP_CONFIG['host_name'], controller: "resumes",:action => "delete_interview", :id => i.id %> |
-             <%= link_to "Update", "", :onClick=> "changeInterview(#{i.id}, #{index});" %>
-           </td>
-         </tr>
-         <% index = index + 1 %>
-       <% end %>
-       <% if @interviews.size < 5 %>
-         <tr class="float_right_with_10_padding">
-           <td class="manage_interviews_cell" style="border: none;">
-             <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@interviews.size}, #{req_match_id}, #{index}, [ #{all_record_ids("Employee").join(", ")}], ['#{all_record_names("Employee").join("', '")}'], ['#{get_time_slot_array.join("', '")}']);", :style => "color: green; font-weight: bold;" %>
-           </td>
-         </tr>
-       <% end %>
+         <% if @interviews.size < 5 %>
+           <tr class="add-interview-row">
+             <td colspan="6" class="text-center">
+               <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@req_match.id}, ['#{get_time_slot_array.join("', '")}']);", :class => "action-link success", :style => "font-weight: bold;" %>
+             </td>
+           </tr>
+         <% end %>
+    </tbody>
   </table>
 </td>
 <script>
   $(function() {
   $('.datepicker').datepicker({
         dateFormat: 'dd-mm-yy',
-        showOn: "button",
-        buttonImage: prepend_with_image_path + "/assets/calendar.gif",
-        buttonImageOnly: true,
+        showOn: "focus",
         buttonText: "Select date"
       });
+      
+  // Initialize autocomplete for all employee input fields
+  $('.employee-autocomplete').each(function() {
+    createEmployeeAutocomplete('#' + this.id);
+  });
 });
 </script> 

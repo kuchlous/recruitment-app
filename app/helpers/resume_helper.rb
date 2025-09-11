@@ -8,6 +8,37 @@ module ResumeHelper
     return r
   end
 
+  def interview_type_icon(stage, itype)
+    return "" unless stage && itype
+    
+    stage_icon = case stage.upcase
+    when "SCREENING"
+      "🔍" # Magnifying glass for screening
+    when "FULL PANEL"
+      "👥" # People icon for full panel
+    else
+      "📋" # Default clipboard icon
+    end
+    
+    itype_icon = case itype.upcase
+    when "TELEPHONIC"
+      "📞" # Phone icon for telephonic
+    when "FACETOFACE"
+      "🤝" # Handshake icon for face to face
+    else
+      "💼" # Default briefcase icon
+    end
+    
+    content_tag(:span, "#{stage_icon} #{itype_icon}", 
+                class: "interview-type-icons", 
+                title: "#{stage.titleize} - #{itype.titleize}",
+                data: { 
+                  toggle: "tooltip", 
+                  placement: "right",
+                  html: "true"
+                })
+  end
+
   def sort_interviews_in_display_order(matches)
     matches.sort_by { |r| [r.get_display_interview_date ? r.get_display_interview_date : Date.today ] }
   end
