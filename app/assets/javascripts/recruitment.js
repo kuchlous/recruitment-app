@@ -601,7 +601,7 @@ function getInterviews(cur_element, req_match_id)
   $('#ajax_request_tr').remove();
   var $tr = $('<tr>').attr("id", "ajax_request_tr");
   $tr.append($('<td>').attr("colspan", $table.find("td").length));
-  $table.append($tr);
+  $(cur_element).closest('tr').after($tr);
 
   $.ajax({url: prepend_with_image_path + "/resumes/manage_interviews?req_match_id=" + req_match_id,
     type: 'POST',
