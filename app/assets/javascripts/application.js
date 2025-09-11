@@ -212,7 +212,7 @@ function createEmployeeAutocomplete(selector, options) {
   $(selector).autocomplete({
     source: function(request, response) {
       $.ajax({
-        url: '/employees/autocomplete_employees',
+        url: prepend_with_image_path + '/employees/autocomplete_employees',
         dataType: 'json',
         data: {
           query: request.term
