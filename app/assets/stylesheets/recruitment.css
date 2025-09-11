@@ -1340,6 +1340,12 @@ ul
   background-color: #FF6666;
 }
 
+/* More specific rule for table rows to override table CSS */
+.modern-table tbody tr.red,
+.modern-table tr.red {
+  background-color: #FF6666 !important;
+}
+
 .pink
 {
   background-color: pink;
