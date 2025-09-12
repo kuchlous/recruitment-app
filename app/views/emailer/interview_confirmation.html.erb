@@ -1,0 +1,48 @@
+<% if @is_telephonic %>
+  <p>Dear <%= @candidate.name %></p>
+  
+  <p>Thank you for your application and interest in Mirafra. We are pleased to confirm your interview as below:</p>
+  
+  <h3>Interview Details:</h3>
+  <p><strong>Date:</strong> <%= @formatted_date %></p>
+  <p><strong>Time:</strong> <%= @formatted_time %></p>
+  <p><strong>Mode:</strong> <%= @mode %></p>
+  <% if @interview.teams_meeting_url.present? %>
+    <p><strong>Meeting link:</strong> <a href="<%= @interview.teams_meeting_url %>"><%= @interview.teams_meeting_url %></a></p>
+  <% end %>
+  
+  <h3>Interview checklist</h3>
+  <ul>
+    <li>Please ensure that you join the interview using a PC or laptop (not a mobile device) with stable high-speed internet connection.</li>
+    <li>Keep your camera ON during the session.</li>
+    <li>Be prepared to share your full screen if requested.</li>
+  </ul>
+  
+  <p>Kindly confirm your availability, and please feel free to reach out if you have any questions regarding this.</p>
+  
+  <p>We look forward to speaking with you.</p>
+  
+  <p>Best regards,<br>
+  <%= @ta_owner&.name || "Mirafra Technologies" %><br>
+  <%= @ta_owner&.email || "hr@mirafra.com" %></p>
+
+<% else %>
+  <p>Dear <%= @candidate.name %></p>
+  
+  <p>Thank you for your application and interest in Mirafra. We are pleased to confirm your interview as below:</p>
+  
+  <h3>Interview Details:</h3>
+  <p><strong>Date:</strong> <%= @formatted_date %></p>
+  <p><strong>Time:</strong> <%= @formatted_time %></p>
+  <p><strong>Mode:</strong> <%= @mode %></p>
+  <p><strong>Address:</strong> Mirafra Technologies Pvt Ltd. (Akshay Tech Park, #72 & 73, 2nd Floor, Whitefield, Bangalore, 560066.) <a href="https://goo.gl/maps/b4akd74dhZQ2">https://goo.gl/maps/b4akd74dhZQ2</a></p>
+  <p><strong>Contact Person:</strong> <%= @ta_owner&.name || "Mirafra Technologies" %></p>
+  
+  <p>Kindly confirm your availability, and please feel free to reach out if you have any questions regarding this.</p>
+  
+  <p>We look forward to meet you.</p>
+  
+  <p>Best regards,<br>
+  <%= @ta_owner&.name || "Mirafra Technologies" %><br>
+  <%= @ta_owner&.email || "hr@mirafra.com" %></p>
+<% end %>

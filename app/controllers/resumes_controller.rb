@@ -1820,6 +1820,9 @@ class ResumesController < ApplicationController
         # Sending email to req manager for notification
         notify_manager_for_panel(match.requirement, match.resume, interview.employee.name)
 
+        # Send interview confirmation email to candidate
+        Emailer.interview_confirmation(interview).deliver_now
+
         # Adding comment
         match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
 

@@ -51,6 +51,31 @@ class Emailer < ApplicationMailer
     mail(to: ta_owner.email, subject: subject)
   end
 
+  def interview_confirmation(interview)
+    @interview = interview
+    @candidate = interview.resume
+    @ta_owner = interview.resume.ta_owner
+    @requirement = interview.requirement
+    
+    # Format date as DD/MM/YY
+    @formatted_date = interview.interview_date.strftime("%d/%m/%y")
+    @formatted_time = interview.interview_time.strftime("%I:%M %p")
+    
+    # Determine subject and mode based on interview type
+    if interview.itype == "TELEPHONIC"
+      subject = "Interview confirmation | #{@candidate.name} - Mirafra Technologies"
+      @mode = "MS Teams (VCON/TCON) OR Telephonic"
+      @is_telephonic = true
+    else
+      subject = "F2F Interview confirmation | #{@candidate.name} - Mirafra Technologies"
+      @mode = "Face to Face"
+      @is_telephonic = false
+    end
+
+    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
+    # mail(to: @candidate.email, subject: subject)
+  end
+
   def panel(mail_to, interview, resume)
     subject = 'Added to interview panel'
     recipients = [ mail_to.email ]

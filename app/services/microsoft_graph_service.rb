@@ -43,7 +43,10 @@ class MicrosoftGraphService
     if response.success?
       Rails.logger.info "Calendar event created for organizer #{organizer.name}: #{response['id']}"
       if interview.itype == "TELEPHONIC" && response['onlineMeeting']
-        Rails.logger.info "Teams meeting created with join URL: #{response['onlineMeeting']['joinUrl']}"
+        teams_url = response['onlineMeeting']['joinUrl']
+        Rails.logger.info "Teams meeting created with join URL: #{teams_url}"
+        # Store the Teams meeting URL in the interview
+        interview.update_column(:teams_meeting_url, teams_url)
       end
       response['id'] # Return the event ID for storage
     else
@@ -94,7 +97,10 @@ class MicrosoftGraphService
     if response.success?
       Rails.logger.info "Calendar event updated for organizer #{organizer.name}: #{event_id}"
       if interview.itype == "TELEPHONIC" && response['onlineMeeting']
-        Rails.logger.info "Teams meeting updated with join URL: #{response['onlineMeeting']['joinUrl']}"
+        teams_url = response['onlineMeeting']['joinUrl']
+        Rails.logger.info "Teams meeting updated with join URL: #{teams_url}"
+        # Update the Teams meeting URL in the interview
+        interview.update_column(:teams_meeting_url, teams_url)
       end
       true
     else
