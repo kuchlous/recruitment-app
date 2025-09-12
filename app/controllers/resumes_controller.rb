@@ -1815,18 +1815,18 @@ class ResumesController < ApplicationController
         # Scheduled only when interview get saved
         match.update!(:status => "SCHEDULED")
 
-        email_for_adding_panel(interview.employee, interview, match.resume)
-
         # Sending email to req manager for notification
         notify_manager_for_panel(match.requirement, match.resume, interview.employee.name)
 
-        # Send interview confirmation email to candidate
-
         if interview.employee.group.name.include?("HWE")
+          # For HWE employees, send interviewer notification email
           Emailer.interview_confirmation(interview).deliver_now
+          Emailer.hwe_interviewer_notification(interview).deliver_now
+        else
+          # For other employees, use the standard panel email
+          email_for_adding_panel(interview.employee, interview, match.resume)
         end
 
-        # Adding comment
         match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
 
         flash[:success] = "Added interview Candidate: #{match.resume.name} Interviewer: #{interview.employee.name} Requirement: #{match.requirement.name}"

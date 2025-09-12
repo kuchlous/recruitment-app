@@ -73,7 +73,32 @@ class Emailer < ApplicationMailer
     end
 
     mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # mail(to: @candidate.email, subject: subject)
+    # mail(to: [@candidate.email, @ta_owner.email], subject: subject)
+  end
+
+  def hwe_interviewer_notification(interview)
+    @interview = interview
+    @candidate = interview.resume
+    @ta_owner = interview.resume.ta_owner
+    @requirement = interview.requirement
+    @interviewer = interview.employee
+    
+    # Format date as DD/MM/YY
+    @formatted_date = interview.interview_date.strftime("%d/%m/%y")
+    @formatted_time = interview.interview_time.strftime("%I:%M %p")
+    
+    # Determine subject and mode based on interview type
+    if interview.itype == "TELEPHONIC"
+      subject = "Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
+      @mode = "MS Teams (VCON/TCON) OR Telephonic"
+      @is_telephonic = true
+    else
+      subject = "F2F Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
+      @mode = "Face to Face"
+      @is_telephonic = false
+    end
+
+    mail(to: @interviewer.email, subject: subject)
   end
 
   def panel(mail_to, interview, resume)
