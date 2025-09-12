@@ -22,7 +22,7 @@ class Interview < ActiveRecord::Base
   delegate :resume, :requirement, to: :req_match, allow_nil: true
 
   def is_hwe_employee?
-    employee.group.present? && employee.group.name.include?("HWE")
+    employee.group.present? && (employee.group.name.include?("HWE") || employee.group.name.include?("PROMOTER"))
   end
 
   def self.get_level_for_select
