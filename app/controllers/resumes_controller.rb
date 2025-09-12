@@ -1821,7 +1821,10 @@ class ResumesController < ApplicationController
         notify_manager_for_panel(match.requirement, match.resume, interview.employee.name)
 
         # Send interview confirmation email to candidate
-        Emailer.interview_confirmation(interview).deliver_now
+
+        if interview.employee.group.name.include?("HWE")
+          Emailer.interview_confirmation(interview).deliver_now
+        end
 
         # Adding comment
         match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
