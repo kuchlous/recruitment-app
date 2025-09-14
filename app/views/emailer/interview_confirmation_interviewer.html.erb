@@ -4,7 +4,7 @@
   <p>You have been scheduled for an interview as below:</p>
   
   <h3>Interview Details:</h3>
-  <p><strong>Candidate:</strong> <%= @candidate.name %></p>
+  <p><strong>Candidate:</strong> <a href="<%= url_for(:protocol => "https", :controller => "resumes", :action => "show", :id => @candidate.uniqid.name) %>"><%= @candidate.name %></a></p>
   <p><strong>Position:</strong> <%= @requirement.name %></p>
   <p><strong>Date:</strong> <%= @formatted_date %></p>
   <p><strong>Time:</strong> <%= @formatted_time %></p>
@@ -12,6 +12,11 @@
   <% if @interview.teams_meeting_url.present? %>
     <p><strong>Meeting link:</strong> <a href="<%= @interview.teams_meeting_url %>"><%= @interview.teams_meeting_url %></a></p>
   <% end %>
+
+  <p> Requesting you to share your feedback after the interview, as your inputs
+  are highly valuable in assessing the candidate. </p>
+
+  <p>Please inform in advance if there are any changes in your availability</p>
   
   <p>Best regards,<br>
   <%= @ta_owner&.name || "Mirafra Technologies" %><br>
@@ -23,16 +28,17 @@
   <p>You have been scheduled for an interview as below:</p>
   
   <h3>Interview Details:</h3>
-  <p><strong>Candidate:</strong> <%= @candidate.name %></p>
+  <p><strong>Candidate:</strong> <a href="<%= url_for(:protocol => "https", :controller => "resumes", :action => "show", :id => @candidate.uniqid.name) %>"><%= @candidate.name %></a></p>
   <p><strong>Position:</strong> <%= @requirement.name %></p>
   <p><strong>Date:</strong> <%= @formatted_date %></p>
   <p><strong>Time:</strong> <%= @formatted_time %></p>
   <p><strong>Mode:</strong> <%= @mode %></p>
-  <p><strong>Address:</strong> Mirafra Technologies Pvt Ltd. (Akshay Tech Park, #72 & 73, 2nd Floor, Whitefield, Bangalore, 560066.) <a href="https://goo.gl/maps/b4akd74dhZQ2">https://goo.gl/maps/b4akd74dhZQ2</a></p>
-  <p><strong>Contact Person:</strong> <%= @ta_owner&.name || "Mirafra Technologies" %></p>
   
-  <p>Please be available at the scheduled time. If you have any questions, please reach out to the TA owner.</p>
-  
+ <p> Requesting you to share your feedback after the interview, as your inputs
+  are highly valuable in assessing the candidate. </p>
+
+  <p>Please inform in advance if there are any changes in your availability</p>
+ 
   <p>Best regards,<br>
   <%= @ta_owner&.name || "Mirafra Technologies" %><br>
   <%= @ta_owner&.email || "hr@mirafra.com" %></p>

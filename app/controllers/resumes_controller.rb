@@ -1817,14 +1817,12 @@ class ResumesController < ApplicationController
 
         # Sending email to req manager for notification
         notify_manager_for_panel(match.requirement, match.resume, interview.employee.name)
+        email_for_adding_panel(interview.employee, interview, match.resume)
 
+        # Testing for HWE employees
         if interview.employee.group.name.include?("HWE")
-          # For HWE employees, send interviewer notification email
-          Emailer.interview_confirmation(interview).deliver_now
-          Emailer.hwe_interviewer_notification(interview).deliver_now
-        else
-          # For other employees, use the standard panel email
-          email_for_adding_panel(interview.employee, interview, match.resume)
+          Emailer.interview_confirmation_candidate(interview).deliver_now
+          Emailer.interview_confirmation_interviewer(interview).deliver_now
         end
 
         match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
@@ -1873,6 +1871,13 @@ class ResumesController < ApplicationController
     if is_save
       email_for_adding_panel(interview.employee, interview, resume)
       notify_manager_for_panel(match.requirement, resume, interview.employee.name)
+      
+      # Send reschedule email to candidate and interviewer
+      if interview.employee.group.name.include?("HWE")
+        Emailer.interview_reschedule_candidate(interview).deliver_now
+        Emailer.interview_reschedule_interviewer(interview).deliver_now
+      end
+      
       resume.add_resume_comment("UPDATING INTERVIEWS: Interview panel updated", "INTERNAL", get_current_employee)
       flash[:success] = "Updated interview Candidate: #{resume.name} Interviewer: #{interview.employee.name} Requirement: #{match.requirement.name}"
       redirect_back(fallback_location: root_path)
@@ -1928,6 +1933,11 @@ class ResumesController < ApplicationController
       comment    += " Marking resume as shortlisted as all interviews deleted."
     end
     email_after_deleting_interview(interview, req_match.resume)
+    
+    # Send cancellation email to candidate
+    if interview.employee.group.name.include?("HWE")
+      Emailer.interview_cancellation_candidate(interview).deliver_now
+    end
 
     req_match.resume.add_resume_comment("INTERVIEW DELETED: " + comment, "INTERNAL", get_current_employee)
     flash[:success] = flash_mesg

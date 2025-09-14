@@ -1,0 +1,26 @@
+<p>Dear <%= @interviewer.name %></p>
+
+<p>I would like to inform you that the interview for <a href="<%= url_for(:protocol => "https", :controller => "resumes", :action => "show", :id => @candidate.uniqid.name) %>"><%= @candidate.name %></a> has been rescheduled.</p>
+
+<p>The updated interview details are as follows:</p>
+
+<ul>
+  <li><strong>Candidate:</strong> <a href="<%= url_for(:protocol => "https", :controller => "resumes", :action => "show", :id => @candidate.uniqid.name) %>"><%= @candidate.name %></a></li>
+  <li><strong>Position:</strong> <%= @requirement.name %></li>
+  <li><strong>Date:</strong> <%= @formatted_date %></li>
+  <li><strong>Time:</strong> <%= @formatted_time %></li>
+  <li><strong>Mode:</strong> <%= @mode %></li>
+  <% if @is_telephonic && @interview.teams_meeting_url.present? %>
+    <li><strong>Meeting Link:</strong> <a href="<%= @interview.teams_meeting_url %>"><%= @interview.teams_meeting_url %></a></li>
+  <% end %>
+</ul>
+
+<p>Please confirm your availability for the revised schedule.</p>
+
+<p>Requesting you to share your feedback after the interview, as your inputs are highly valuable in assessing the candidate.</p>
+
+<p>Please inform in advance if there are any changes in your availability</p>
+
+<p>Thanks & Regards<br>
+<%= @ta_owner&.name || "Mirafra Technologies" %><br>
+Mirafra Technologies Pvt. Ltd</p>

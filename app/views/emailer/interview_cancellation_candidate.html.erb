@@ -1,0 +1,12 @@
+<p>Dear <%= @candidate.name %></p>
+
+<p>Hope this message finds you well. I am writing to inform you that your scheduled interview on <%= @formatted_date %> at <%= @formatted_time %> has been cancelled due to unforeseen reason.</p>
+
+<p>I sincerely apologize any inconvenience this may cause and will be in touch to reschedule at a mutually convenient time.</p>
+
+<p>Thank you for your understanding.</p>
+
+<p>Thanks & Regards<br>
+<%= @ta_owner&.name || "Mirafra Technologies" %><br>
+<%= @ta_owner&.email || "hr@mirafra.com" %><br>
+Mirafra Technologies Pvt. Ltd</p>

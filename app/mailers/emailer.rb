@@ -51,7 +51,7 @@ class Emailer < ApplicationMailer
     mail(to: ta_owner.email, subject: subject)
   end
 
-  def interview_confirmation(interview)
+  def interview_confirmation_candidate(interview)
     @interview = interview
     @candidate = interview.resume
     @ta_owner = interview.resume.ta_owner
@@ -73,10 +73,11 @@ class Emailer < ApplicationMailer
     end
 
     mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # mail(to: [@candidate.email, @ta_owner.email], subject: subject)
+    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    # mail(to: @candidate.email, cc: cc_recipients, subject: subject)
   end
 
-  def hwe_interviewer_notification(interview)
+  def interview_confirmation_interviewer(interview)
     @interview = interview
     @candidate = interview.resume
     @ta_owner = interview.resume.ta_owner
@@ -97,8 +98,81 @@ class Emailer < ApplicationMailer
       @mode = "Face to Face"
       @is_telephonic = false
     end
+    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
+    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    # mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
+  end
 
-    mail(to: @interviewer.email, subject: subject)
+  def interview_cancellation_candidate(interview)
+    @interview = interview
+    @candidate = interview.resume
+    @ta_owner = interview.resume.ta_owner
+    @requirement = interview.requirement
+    
+    # Format date as DD/MM/YY
+    @formatted_date = interview.interview_date.strftime("%d/%m/%y")
+    @formatted_time = interview.interview_time.strftime("%I:%M %p")
+    
+    subject = "Update on Your Interview - Mirafra Technologies"
+    
+    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
+    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    # mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+  end
+
+  def interview_reschedule_candidate(interview)
+    @interview = interview
+    @candidate = interview.resume
+    @ta_owner = interview.resume.ta_owner
+    @requirement = interview.requirement
+    
+    # Format date as DD/MM/YY
+    @formatted_date = interview.interview_date.strftime("%d/%m/%y")
+    @formatted_time = interview.interview_time.strftime("%I:%M %p")
+    
+    # Determine mode based on interview type
+    if interview.itype == "TELEPHONIC"
+      @mode = "MS Teams (VCON/TCON) OR Telephonic"
+      @is_telephonic = true
+    else
+      @mode = "Face to Face"
+      @is_telephonic = false
+    end
+    
+    subject = "Rescheduled Interview - Mirafra Technologies"
+    
+    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
+    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    # mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+  end
+
+  def interview_reschedule_interviewer(interview)
+    @interview = interview
+    @candidate = interview.resume
+    @ta_owner = interview.resume.ta_owner
+    @requirement = interview.requirement
+    @interviewer = interview.employee
+    
+    # Format date as DD/MM/YY
+    @formatted_date = interview.interview_date.strftime("%d/%m/%y")
+    @formatted_time = interview.interview_time.strftime("%I:%M %p")
+    
+    # Determine mode based on interview type
+    if interview.itype == "TELEPHONIC"
+      @mode = "MS Teams (VCON/TCON) OR Telephonic"
+      @is_telephonic = true
+    else
+      @mode = "Face to Face"
+      @is_telephonic = false
+    end
+    
+    subject = "Interview Rescheduled | #{@candidate.name} - Mirafra Technologies"
+    
+    # Set recipients - interviewer as primary, ta_owner as CC
+    recipients = [@interviewer.email]
+    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    
+    mail(to: recipients, cc: cc_recipients, subject: subject)
   end
 
   def panel(mail_to, interview, resume)

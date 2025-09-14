@@ -1,0 +1,20 @@
+<p>Dear <%= @candidate.name %></p>
+
+<p>I would like to inform you that your interview has been rescheduled.</p>
+
+<p>The updated interview details are as follows:</p>
+
+<ul>
+  <li><strong>Date:</strong> <%= @formatted_date %></li>
+  <li><strong>Time:</strong> <%= @formatted_time %></li>
+  <li><strong>Mode:</strong> <%= @mode %></li>
+  <% if @is_telephonic && @interview.teams_meeting_url.present? %>
+    <li><strong>Meeting Link:</strong> <a href="<%= @interview.teams_meeting_url %>"><%= @interview.teams_meeting_url %></a></li>
+  <% end %>
+</ul>
+
+<p>Please confirm your availability for the revised schedule.</p>
+
+<p>Thanks & Regards<br>
+<%= @ta_owner&.name || "Mirafra Technologies" %><br>
+Mirafra Technologies Pvt. Ltd</p>
