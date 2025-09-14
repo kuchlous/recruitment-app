@@ -128,4 +128,26 @@ module ResumeHelper
     logger.info(feedback_avg)
     return (feedbacks.size == 0) ? 0 : (feedback_avg.to_f/(feedbacks.size)).round(2)
   end
+
+  def format_truncated_text_with_tooltip(text, max_items = 3)
+    return "" if text.blank?
+    
+    items_list = text.split(',').map(&:strip)
+    
+    if items_list.length <= max_items
+      return text
+    end
+    
+    first_items = items_list.first(max_items).join(', ')
+    
+    content_tag(:span, 
+                first_items, 
+                title: text,
+                data: { 
+                  toggle: "tooltip", 
+                  placement: "top",
+                  html: "true"
+                },
+                class: "truncated-text-with-tooltip")
+  end
 end

@@ -10,3 +10,7 @@
   max-width: 500px;
   white-space: normal;
 }
+
+.truncated-text-with-tooltip {
+  cursor: help;
+}

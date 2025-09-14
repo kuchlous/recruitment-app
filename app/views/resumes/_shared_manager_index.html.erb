@@ -32,7 +32,7 @@
             <td class="table-cell-primary"> <%= resume_link(resume) %>  </td>
             <% year, month = resume.get_current_experience %>
             <td class="table-cell-secondary"> <%= "#{year}-#{month}" %> </td>
-            <td class="table-cell-secondary"> <%= resume.skills %> </td>
+            <td class="table-cell-secondary"> <%= format_truncated_text_with_tooltip(resume.skills, 3) %> </td>
             <td class="table-cell-secondary"> <%= resume.notice %> </td>
             <td class="table-cell-secondary">
               <% manual_status = resume.manual_status %>
