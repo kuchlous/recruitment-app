@@ -7,7 +7,7 @@ namespace :interview do
   task :reminder_for_feedback => :environment do
 
     # Get all interviews conducted in last 3 days
-    interviews = Interview.where(interview_date: 3.days.ago..Date.today)
+    interviews = Interview.where(interview_date: 4.days.ago..1.day.ago)
 
     # Send feedback reminder to panel members for each interview
     interviews.each do |interview|
