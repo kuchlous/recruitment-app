@@ -15,7 +15,6 @@ class Interview < ActiveRecord::Base
   # Calendar integration
   after_create :add_to_calendar, if: :should_add_to_calendar? && :is_hwe_employee?
   after_update :update_calendar_event, if: :should_update_calendar? && :is_hwe_employee?
-  after_update :remove_calendar_on_decline, if: :status_changed_to_declined? && :is_hwe_employee?
   after_destroy :remove_from_calendar, if: :should_remove_from_calendar? && :is_hwe_employee?
 
   # Delegate to get resume and requirement through req_match
@@ -125,6 +124,12 @@ class Interview < ActiveRecord::Base
       calendar_events.each do |event|
         next unless event['start'] && event['end']
         
+        # Skip cancelled meetings
+        if event['isCancelled'] == true
+          Rails.logger.info "Skipping cancelled meeting: #{event['subject']}"
+          next
+        end
+        
         # Skip checking overlap with self (current interview's calendar event)
         if calendar_event_id.present? && event['id'] == calendar_event_id
           Rails.logger.info "Skipping overlap check with self (event ID: #{event['id']})"
@@ -217,18 +222,5 @@ class Interview < ActiveRecord::Base
     end
   rescue => e
     Rails.logger.error "Exception removing calendar event for interview #{id}: #{e.message}"
-  end
-
-  # Check if status changed to DECLINED
-  def status_changed_to_declined?
-    saved_change_to_status? && status == "DECLINED"
-  end
-
-  # Remove calendar event when interview is declined
-  def remove_calendar_on_decline
-    return unless should_remove_from_calendar?
-
-    Rails.logger.info "Interview #{id} status changed to DECLINED, removing from calendar"
-    remove_from_calendar
   end
 end
