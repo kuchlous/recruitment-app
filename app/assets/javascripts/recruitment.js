@@ -238,26 +238,36 @@ function createLastRow($row, req_match_id) {
   $last_row.append($stage_cell);
   var $screening_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_screening").attr("value", "SCREENING");
   $stage_cell.append($screening_option);
-  var $screening_label = $('<label>').attr("for", "interview_stage_screening").text("Screening");
+  var $screening_label = $('<label>').attr("for", "interview_stage_screening").text("Screening").addClass("radio-label-spaced");
   $stage_cell.append($screening_label);
 
   var $fullpanel_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_fullpanel").attr("value", "FULLPANEL").attr("checked", true);
   $stage_cell.append($fullpanel_option);
-  var $fullpanel_label = $('<label>').attr("for", "interview_stage_fullpanel").text("Full Panel");
+  var $fullpanel_label = $('<label>').attr("for", "interview_stage_fullpanel").text("Full Panel").addClass("radio-label-spaced");
   $stage_cell.append($fullpanel_label);
 
 
   var $type_cell = $('<td>');
   $last_row.append($type_cell);
-  var $telephonic_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephonic").attr("value", "TELEPHONIC");
-  $type_cell.append($telephonic_option);
-  var $telephonic_label = $('<label>').attr("for", "interview_stage_telephonic").text("Telephonic");
-  $type_cell.append($telephonic_label);
-
   var $facetoface_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_facetoface").attr("value", "FACETOFACE").attr("checked", true);
   $type_cell.append($facetoface_option);
-  var $facetoface_label = $('<label>').attr("for", "interview_stage_facetoface").text("Face To Face");
+  var $facetoface_label = $('<label>').attr("for", "interview_stage_facetoface").text("Face To Face").addClass("radio-label-spaced");
   $type_cell.append($facetoface_label);
+
+  var $telephonic_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephonic").attr("value", "TELECONF");
+  $type_cell.append($telephonic_option);
+  var $telephonic_label = $('<label>').attr("for", "interview_stage_telephonic").text("Telephone Conf.").addClass("radio-label-spaced");
+  $type_cell.append($telephonic_label);
+
+  var $videoconf_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_videoconf").attr("value", "VIDEOCONF");
+  $type_cell.append($videoconf_option);
+  var $videoconf_label = $('<label>').attr("for", "interview_stage_videoconf").text("Video Conf.").addClass("radio-label-spaced");
+  $type_cell.append($videoconf_label);
+
+  var $telephone_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephone").attr("value", "TELEPHONE");
+  $type_cell.append($telephone_option);
+  var $telephone_label = $('<label>').attr("for", "interview_stage_telephone").text("Telephone").addClass("radio-label-spaced");
+  $type_cell.append($telephone_label);
 
   var $hidden_element = $('<input>').attr("type", "hidden").attr("name", "req_match_id").attr("id", "req_match_id").attr("value", req_match_id);
   $last_row.append($hidden_element);

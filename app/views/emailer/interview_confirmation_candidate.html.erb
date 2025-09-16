@@ -1,4 +1,4 @@
-<% if @is_telephonic %>
+<% if @is_teams_conf %>
   <p>Dear <%= @candidate.name %></p>
   
   <p>Thank you for your application and interest in Mirafra. We are pleased to confirm your interview as below:</p>
@@ -14,7 +14,11 @@
   <h3>Interview checklist</h3>
   <ul>
     <li>Please ensure that you join the interview using a PC or laptop (not a mobile device) with stable high-speed internet connection.</li>
-    <li>Keep your camera ON during the session.</li>
+    <%if @mode == "MS Teams Video" %>
+     <li>Keep your camera ON during the session.</li>
+    <% else %>
+     <li>Be prepared to switch on your camera if requested.</li>
+    <% end %>
     <li>Be prepared to share your full screen if requested.</li>
   </ul>
   
@@ -26,6 +30,24 @@
   <%= @ta_owner&.name || "Mirafra Technologies" %><br>
   <%= @ta_owner&.email || "hr@mirafra.com" %></p>
 
+<%elsif @mode == "Telephone" %>
+  <p>Dear <%= @candidate.name %></p>
+  
+  <p>Thank you for your application and interest in Mirafra. We are pleased to confirm your interview as below:</p>
+  
+  <h3>Interview Details:</h3>
+  <p><strong>Date:</strong> <%= @formatted_date %></p>
+  <p><strong>Time:</strong> <%= @formatted_time %></p>
+  <p><strong>Mode:</strong> <%= @mode %></p>
+
+  <p>Please confirm your availability and reach out if you have any questions regarding this.</p>
+  <p>Kindly contact if you do not receive a call with-in 5-10 minutes of the scheduled time.</p>
+  
+  <p>We look forward to speaking with you.</p>
+  
+  <p>Best regards,<br>
+  <%= @ta_owner&.name || "Mirafra Technologies" %><br>
+  <%= @ta_owner&.email || "hr@mirafra.com" %></p>
 <% else %>
   <p>Dear <%= @candidate.name %></p>
   

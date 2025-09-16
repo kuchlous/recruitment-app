@@ -648,4 +648,9 @@ select.form-control option {
   margin-bottom: 5px;
 }
 
+/* Radio Button Labels */
+.radio-label-spaced {
+  margin-right: 15px;
+}
+
 /* Form Submit Buttons */
