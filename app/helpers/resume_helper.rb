@@ -25,8 +25,10 @@ module ResumeHelper
       "🎧" # Headphones icon for telephonic
     when "FACETOFACE"
       "🤝" # Handshake icon for face to face
-    when "VIDEOCONF"
+    when "VIDEOCONF" 
       "🖥️" # Screen icon for video conference
+    when "TELEPHONIC"
+      "🖥️" # Screen icon for telephonic for backward compatibility
     when "TELEPHONE"
       "☎️" # Telephone icon for telephone
     else
