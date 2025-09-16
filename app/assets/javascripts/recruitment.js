@@ -235,6 +235,7 @@ function createLastRow($row, req_match_id) {
   $row.after($last_row);
 
   var $stage_cell = $('<td>');
+  $stage_cell.attr("colspan", "2");
   $last_row.append($stage_cell);
   var $screening_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_screening").attr("value", "SCREENING");
   $stage_cell.append($screening_option);
@@ -248,6 +249,7 @@ function createLastRow($row, req_match_id) {
 
 
   var $type_cell = $('<td>');
+  $type_cell.attr("colspan", "4");
   $last_row.append($type_cell);
   var $facetoface_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_facetoface").attr("value", "FACETOFACE").attr("checked", true);
   $type_cell.append($facetoface_option);
