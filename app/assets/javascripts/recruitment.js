@@ -249,15 +249,25 @@ function createLastRow($row, req_match_id) {
 
   var $type_cell = $('<td>');
   $last_row.append($type_cell);
-  var $telephonic_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephonic").attr("value", "TELEPHONIC");
+  var $telephonic_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephonic").attr("value", "TELECONF");
   $type_cell.append($telephonic_option);
-  var $telephonic_label = $('<label>').attr("for", "interview_stage_telephonic").text("Telephonic");
+  var $telephonic_label = $('<label>').attr("for", "interview_stage_telephonic").text("Telephone Conf.");
   $type_cell.append($telephonic_label);
 
   var $facetoface_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_facetoface").attr("value", "FACETOFACE").attr("checked", true);
   $type_cell.append($facetoface_option);
   var $facetoface_label = $('<label>').attr("for", "interview_stage_facetoface").text("Face To Face");
   $type_cell.append($facetoface_label);
+
+  var $videoconf_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_videoconf").attr("value", "VIDEOCONF");
+  $type_cell.append($videoconf_option);
+  var $videoconf_label = $('<label>').attr("for", "interview_stage_videoconf").text("Video Conf.");
+  $type_cell.append($videoconf_label);
+
+  var $telephone_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephone").attr("value", "TELEPHONE");
+  $type_cell.append($telephone_option);
+  var $telephone_label = $('<label>').attr("for", "interview_stage_telephone").text("Telephone");
+  $type_cell.append($telephone_label);
 
   var $hidden_element = $('<input>').attr("type", "hidden").attr("name", "req_match_id").attr("id", "req_match_id").attr("value", req_match_id);
   $last_row.append($hidden_element);

@@ -25,8 +25,8 @@ class MicrosoftGraphService
     event_data = build_event_data(interview)
     
     # Log event data for debugging, especially for Teams meetings
-    if interview.itype == "TELEPHONIC"
-      Rails.logger.info "Creating Teams meeting for telephonic interview: #{interview.id}"
+    if interview.is_teams_conf?
+      Rails.logger.info "Creating Teams meeting for #{interview.itype.downcase} interview: #{interview.id}"
       Rails.logger.info "Organizer: #{organizer.name} (#{organizer.teams_email})"
       Rails.logger.info "Event data: #{event_data.to_json}"
     end
@@ -42,7 +42,7 @@ class MicrosoftGraphService
 
     if response.success?
       Rails.logger.info "Calendar event created for organizer #{organizer.name}: #{response['id']}"
-      if interview.itype == "TELEPHONIC" && response['onlineMeeting']
+      if interview.is_teams_conf? && response['onlineMeeting']
         teams_url = response['onlineMeeting']['joinUrl']
         Rails.logger.info "Teams meeting created with join URL: #{teams_url}"
         # Store the Teams meeting URL in the interview
@@ -79,8 +79,8 @@ class MicrosoftGraphService
     event_data = build_event_data(interview)
     
     # Log event data for debugging, especially for Teams meetings
-    if interview.itype == "TELEPHONIC"
-      Rails.logger.info "Updating Teams meeting for telephonic interview: #{interview.id}"
+    if interview.is_teams_conf?
+      Rails.logger.info "Updating Teams meeting for #{interview.itype.downcase} interview: #{interview.id}"
       Rails.logger.info "Organizer: #{organizer.name} (#{organizer.teams_email})"
       Rails.logger.info "Event data: #{event_data.to_json}"
     end
@@ -96,7 +96,7 @@ class MicrosoftGraphService
 
     if response.success?
       Rails.logger.info "Calendar event updated for organizer #{organizer.name}: #{event_id}"
-      if interview.itype == "TELEPHONIC" && response['onlineMeeting']
+      if interview.is_teams_conf? && response['onlineMeeting']
         teams_url = response['onlineMeeting']['joinUrl']
         Rails.logger.info "Teams meeting updated with join URL: #{teams_url}"
         # Update the Teams meeting URL in the interview
@@ -278,8 +278,8 @@ class MicrosoftGraphService
       reminderMinutesBeforeStart: 15
     }
 
-    # Add Teams meeting for telephonic interviews
-    if interview.itype == "TELEPHONIC"
+    # Add Teams meeting for telephonic and video interviews
+    if interview.is_teams_conf?
       event_data[:isOnlineMeeting] = true
       event_data[:onlineMeetingProvider] = "teamsForBusiness"
     end
@@ -307,8 +307,8 @@ class MicrosoftGraphService
       <p><strong>Notes:</strong> #{interview.notes}</p>
     HTML
 
-    # Add Teams meeting information for telephonic interviews
-    if interview.itype == "TELEPHONIC"
+    # Add Teams meeting information for telephonic and video interviews
+    if interview.is_teams_conf?
       content += <<~HTML
         <br>
         <h4>Teams Meeting</h4>

@@ -58,6 +58,25 @@ class Interview < ActiveRecord::Base
     focus.present? ? focus : ""
   end
 
+  def is_teams_conf?
+    # Determine if this interview type should use Teams conference
+    itype == "TELECONF" || itype == "VIDEOCONF"
+  end
+
+  def mode
+    # Determine the display mode for this interview type
+    case itype
+    when "TELECONF"
+      "MS Teams Audio"
+    when "VIDEOCONF"
+      "MS Teams Video"
+    when "TELEPHONE"
+      "Telephone"
+    else
+      "Face to Face"
+    end
+  end
+
   def scheduled_at
     return nil unless interview_date && interview_time
     

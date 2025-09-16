@@ -21,10 +21,14 @@ module ResumeHelper
     end
     
     itype_icon = case itype.upcase
-    when "TELEPHONIC"
-      "📞" # Phone icon for telephonic
+    when "TELECONF"
+      "🎧" # Headphones icon for telephonic
     when "FACETOFACE"
       "🤝" # Handshake icon for face to face
+    when "VIDEOCONF"
+      "🖥️" # Screen icon for video conference
+    when "TELEPHONE"
+      "☎️" # Telephone icon for telephone
     else
       "💼" # Default briefcase icon
     end

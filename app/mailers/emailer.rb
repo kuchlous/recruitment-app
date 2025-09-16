@@ -61,16 +61,11 @@ class Emailer < ApplicationMailer
     @formatted_date = interview.interview_date.strftime("%d/%m/%y")
     @formatted_time = interview.interview_time.strftime("%I:%M %p")
     
-    # Determine subject and mode based on interview type
-    if interview.itype == "TELEPHONIC"
-      subject = "Interview confirmation | #{@candidate.name} - Mirafra Technologies"
-      @mode = "MS Teams (VCON/TCON) OR Telephonic"
-      @is_telephonic = true
-    else
-      subject = "F2F Interview confirmation | #{@candidate.name} - Mirafra Technologies"
-      @mode = "Face to Face"
-      @is_telephonic = false
-    end
+    # Determine subject based on interview type
+    subject = "Interview confirmation | #{@candidate.name} - Mirafra Technologies"
+    
+    @mode = interview.mode
+    @is_teams_conf = interview.is_teams_conf?
 
     mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
     # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
@@ -88,16 +83,20 @@ class Emailer < ApplicationMailer
     @formatted_date = interview.interview_date.strftime("%d/%m/%y")
     @formatted_time = interview.interview_time.strftime("%I:%M %p")
     
-    # Determine subject and mode based on interview type
-    if interview.itype == "TELEPHONIC"
-      subject = "Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
-      @mode = "MS Teams (VCON/TCON) OR Telephonic"
-      @is_telephonic = true
+    # Determine subject based on interview type
+    if interview.itype == "TELECONF"
+      subject = "Teams Phone Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
+    elsif interview.itype == "VIDEOCONF"
+      subject = "Teams Video Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
+    elsif interview.itype == "TELEPHONE"
+      subject = "Phone Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
     else
       subject = "F2F Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
-      @mode = "Face to Face"
-      @is_telephonic = false
     end
+    
+    @mode = interview.mode
+    @is_teams_conf = interview.is_teams_conf?
+
     mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
     # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
     # mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
@@ -130,14 +129,8 @@ class Emailer < ApplicationMailer
     @formatted_date = interview.interview_date.strftime("%d/%m/%y")
     @formatted_time = interview.interview_time.strftime("%I:%M %p")
     
-    # Determine mode based on interview type
-    if interview.itype == "TELEPHONIC"
-      @mode = "MS Teams (VCON/TCON) OR Telephonic"
-      @is_telephonic = true
-    else
-      @mode = "Face to Face"
-      @is_telephonic = false
-    end
+    @mode = interview.mode
+    @is_teams_conf = interview.is_teams_conf?
     
     subject = "Rescheduled Interview - Mirafra Technologies"
     
@@ -157,22 +150,14 @@ class Emailer < ApplicationMailer
     @formatted_date = interview.interview_date.strftime("%d/%m/%y")
     @formatted_time = interview.interview_time.strftime("%I:%M %p")
     
-    # Determine mode based on interview type
-    if interview.itype == "TELEPHONIC"
-      @mode = "MS Teams (VCON/TCON) OR Telephonic"
-      @is_telephonic = true
-    else
-      @mode = "Face to Face"
-      @is_telephonic = false
-    end
+    @mode = interview.mode
+    @is_teams_conf = interview.is_teams_conf?
     
     subject = "Interview Rescheduled | #{@candidate.name} - Mirafra Technologies"
     
-    # Set recipients - interviewer as primary, ta_owner as CC
-    recipients = [@interviewer.email]
-    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    
-    mail(to: recipients, cc: cc_recipients, subject: subject)
+    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
+    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    # mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
   end
 
   def panel(mail_to, interview, resume)

@@ -8,7 +8,7 @@
   <li><strong>Date:</strong> <%= @formatted_date %></li>
   <li><strong>Time:</strong> <%= @formatted_time %></li>
   <li><strong>Mode:</strong> <%= @mode %></li>
-  <% if @is_telephonic && @interview.teams_meeting_url.present? %>
+  <% if @is_teams_conf && @interview.teams_meeting_url.present? %>
     <li><strong>Meeting Link:</strong> <a href="<%= @interview.teams_meeting_url %>"><%= @interview.teams_meeting_url %></a></li>
   <% end %>
 </ul>
