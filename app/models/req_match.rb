@@ -53,7 +53,7 @@ class ReqMatch < ActiveRecord::Base
   end
 
   def incr_resume_req_match_count
-    logger.info("ReqMatch: In incr_resume_req_match_count")
+    self.resume.status = ""
     self.resume.nreq_matches += 1
     self.resume.save
   end

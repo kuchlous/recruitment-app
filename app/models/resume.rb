@@ -557,6 +557,9 @@ class Resume < ActiveRecord::Base
         mesg = "This resume has already been forwarded for the requirement(s)"
       end
     end
+    # Set status to uninitialized so that overall status is calculated correctly
+    resume.status = ""
+    resume.save
     resume.update_overall_status
     mesg
   end
