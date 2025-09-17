@@ -130,7 +130,7 @@ class Resume < ActiveRecord::Base
   end
 
   def calculate_overall_status
-    return self.status.titleize if self.status != ""
+    return self.status.upcase if self.status != ""
 
     status_array = []
     self.req_matches.each do |match|
