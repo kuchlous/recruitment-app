@@ -67,9 +67,8 @@ class Emailer < ApplicationMailer
     @mode = interview.mode
     @is_teams_conf = interview.is_teams_conf?
 
-    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    # mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    mail(to: @candidate.email, cc: cc_recipients, subject: subject)
   end
 
   def interview_confirmation_interviewer(interview)
@@ -83,23 +82,13 @@ class Emailer < ApplicationMailer
     @formatted_date = interview.interview_date.strftime("%d/%m/%y")
     @formatted_time = interview.interview_time.strftime("%I:%M %p")
     
-    # Determine subject based on interview type
-    if interview.itype == "TELECONF"
-      subject = "Teams Phone Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
-    elsif interview.itype == "VIDEOCONF"
-      subject = "Teams Video Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
-    elsif interview.itype == "TELEPHONE"
-      subject = "Phone Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
-    else
-      subject = "F2F Interview Scheduled | #{@candidate.name} - Mirafra Technologies"
-    end
+    subject = "Interview Scheduled | #{@candidate.name}"
     
     @mode = interview.mode
     @is_teams_conf = interview.is_teams_conf?
 
-    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    # mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
+    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
   end
 
   def interview_cancellation_candidate(interview)
@@ -114,9 +103,8 @@ class Emailer < ApplicationMailer
     
     subject = "Update on Your Interview - Mirafra Technologies"
     
-    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    # mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    mail(to: @candidate.email, cc: cc_recipients, subject: subject)
   end
 
   def interview_reschedule_candidate(interview)
@@ -134,9 +122,8 @@ class Emailer < ApplicationMailer
     
     subject = "Rescheduled Interview - Mirafra Technologies"
     
-    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    # mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    mail(to: @candidate.email, cc: cc_recipients, subject: subject)
   end
 
   def interview_reschedule_interviewer(interview)
@@ -155,9 +142,8 @@ class Emailer < ApplicationMailer
     
     subject = "Interview Rescheduled | #{@candidate.name} - Mirafra Technologies"
     
-    mail(to: ["ridhima@mirafra.com", "alokk@mirafra.com"], subject: subject)
-    # cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    # mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
+    cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
+    mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
   end
 
   def panel(mail_to, interview, resume)

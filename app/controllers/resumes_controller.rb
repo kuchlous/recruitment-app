@@ -1817,12 +1817,13 @@ class ResumesController < ApplicationController
 
         # Sending email to req manager for notification
         notify_manager_for_panel(match.requirement, match.resume, interview.employee.name)
-        email_for_adding_panel(interview.employee, interview, match.resume)
 
         # Testing for HWE employees
         if interview.employee.group.name.include?("HWE")
           Emailer.interview_confirmation_candidate(interview).deliver_now
           Emailer.interview_confirmation_interviewer(interview).deliver_now
+        else
+          email_for_adding_panel(interview.employee, interview, match.resume)
         end
 
         match.resume.add_resume_comment("ADDING INTERVIEW FOR: #{interview.employee.name} for requirement #{match.requirement.name}", "INTERNAL", get_current_employee)
@@ -1869,13 +1870,14 @@ class ResumesController < ApplicationController
     resume    = match.resume
 
     if is_save
-      email_for_adding_panel(interview.employee, interview, resume)
       notify_manager_for_panel(match.requirement, resume, interview.employee.name)
       
       # Send reschedule email to candidate and interviewer
       if interview.employee.group.name.include?("HWE")
         Emailer.interview_reschedule_candidate(interview).deliver_now
         Emailer.interview_reschedule_interviewer(interview).deliver_now
+      else
+        email_for_adding_panel(interview.employee, interview, resume)
       end
       
       resume.add_resume_comment("UPDATING INTERVIEWS: Interview panel updated", "INTERNAL", get_current_employee)
