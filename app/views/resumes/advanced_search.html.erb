@@ -9,7 +9,7 @@
       <div class="form-group">
         <label for="search">Search Pattern</label>
         <%= text_field_tag :search, nil, class: "form-control", id: "search_input", placeholder: "Enter search keywords" %>
-        <%= hidden_field_tag :requirement_id, nil, id: "requirement_id_input" %>
+        <%= hidden_field_tag :search_requirement_id, nil, id: "search_requirement_id_input" %>
         <div class="search-type mt-2 d-flex flex-wrap">
           <%= radio_button_tag :search_type, "keyword", true, class: "form-check-input me-1",
               onclick: "updateSearchInput('keyword', 'Enter search keywords');" %>
@@ -82,8 +82,9 @@
           <%= select_tag "status", options_for_select(Resume.get_resume_statuses), class: "form-control" %>
         </div>
         <div class="form-group">
-          <label for="requirement">Requirement</label>
-          <%= select_tag "requirement", options_for_select(Requirement.get_all_requirement_array_for_select), class: "form-control" %>
+          <label for="requirement_filter">Requirement</label>
+          <%= text_field_tag :requirement_filter, nil, class: "form-control", id: "requirement_input", placeholder: "Type requirement name to search..." %>
+          <%= hidden_field_tag :filter_requirement_id, nil, id: "filter_requirement_id_hidden" %>
         </div>
       </div>
       
@@ -121,42 +122,24 @@
 <script>
 let currentSearchType = 'keyword';
 
-function updateSearchInput(searchType, placeholder) {
-  const searchInput = document.getElementById('search_input');
-  const requirementIdInput = document.getElementById('requirement_id_input');
-  
-  currentSearchType = searchType;
-  searchInput.placeholder = placeholder;
-  
-  // Clear the input and requirement ID when switching types
-  searchInput.value = '';
-  requirementIdInput.value = '';
-  
-  // Destroy existing autocomplete if it exists
-  if (searchInput.hasAttribute('data-autocomplete-initialized')) {
-    $(searchInput).autocomplete('destroy');
-    searchInput.removeAttribute('data-autocomplete-initialized');
-  }
-  
-  // Initialize autocomplete for requirement search
-  if (searchType === 'requirement') {
-    initializeRequirementAutocomplete();
-  }
-}
-
-function initializeRequirementAutocomplete() {
-  const searchInput = document.getElementById('search_input');
-  
+// Common autocomplete initialization function
+function initializeAutocomplete(inputElement, options) {
   // Check if jQuery UI autocomplete is available
   if (typeof $.fn.autocomplete === 'undefined') {
     console.error('jQuery UI autocomplete plugin is not loaded');
     return;
   }
   
-  $(searchInput).autocomplete({
+  // Destroy existing autocomplete if it exists
+  if (inputElement.hasAttribute('data-autocomplete-initialized')) {
+    $(inputElement).autocomplete('destroy');
+    inputElement.removeAttribute('data-autocomplete-initialized');
+  }
+  
+  $(inputElement).autocomplete({
     source: function(request, response) {
       $.ajax({
-        url: prepend_with_image_path + "/requirements/autocomplete_requirements",
+        url: options.url,
         dataType: "json",
         data: {
           query: request.term
@@ -174,23 +157,54 @@ function initializeRequirementAutocomplete() {
     },
     minLength: 2,
     select: function(event, ui) {
-      // Set the requirement ID directly from the autocomplete response
-      if (ui.item.id) {
-        $("#requirement_id_input").val(ui.item.id);
+      if (options.onSelect) {
+        options.onSelect(ui);
       }
     }
   });
   
-  searchInput.setAttribute('data-autocomplete-initialized', 'true');
+  inputElement.setAttribute('data-autocomplete-initialized', 'true');
 }
 
-// Also handle Turbolinks page loads
-// $(document).on('turbolinks:load', function() {
-  // Ensure jQuery UI is loadedkkkk
-  // if (typeof $.fn.autocomplete !== 'undefined') {
-//    console.log('jQuery UI autocomplete is available');
-//  } else {
-//    console.warn('jQuery UI autocomplete is not available');
-//  }
-//});
+function updateSearchInput(searchType, placeholder) {
+  const searchInput = document.getElementById('search_input');
+  const searchRequirementIdInput = document.getElementById('search_requirement_id_input');
+  
+  currentSearchType = searchType;
+  searchInput.placeholder = placeholder;
+  
+  // Clear the input and requirement ID when switching types
+  searchInput.value = '';
+  searchRequirementIdInput.value = '';
+  
+  // Initialize autocomplete for requirement search
+  if (searchType === 'requirement') {
+    initializeAutocomplete(searchInput, {
+      url: prepend_with_image_path + "/requirements/autocomplete_requirements",
+      onSelect: function(ui) {
+        if (ui.item.id) {
+          $("#search_requirement_id_input").val(ui.item.id);
+        }
+      }
+    });
+  }
+}
+
+// Initialize requirement autocomplete on page load
+$(document).ready(function() {
+  initializeRequirementFieldAutocomplete();
+});
+
+function initializeRequirementFieldAutocomplete() {
+  const requirementInput = document.getElementById('requirement_input');
+  
+  initializeAutocomplete(requirementInput, {
+    url: prepend_with_image_path + "/requirements/autocomplete_requirements",
+    onSelect: function(ui) {
+      if (ui.item.id) {
+        $("#filter_requirement_id_hidden").val(ui.item.id);
+      }
+    }
+  });
+}
 </script>
