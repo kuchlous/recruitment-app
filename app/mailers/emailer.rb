@@ -68,7 +68,8 @@ class Emailer < ApplicationMailer
     @is_teams_conf = interview.is_teams_conf?
 
     cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+    from_address = @ta_owner&.email || 'recruitment-no-reply@mirafra.com'
+    mail(to: @candidate.email, cc: cc_recipients, subject: subject, from: from_address)
   end
 
   def interview_confirmation_interviewer(interview)
@@ -88,7 +89,8 @@ class Emailer < ApplicationMailer
     @is_teams_conf = interview.is_teams_conf?
 
     cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
+    from_address = @ta_owner&.email || 'recruitment-no-reply@mirafra.com'
+    mail(to: @interviewer.email, cc: cc_recipients, subject: subject, from: from_address)
   end
 
   def interview_cancellation_candidate(interview)
@@ -104,7 +106,8 @@ class Emailer < ApplicationMailer
     subject = "Update on Your Interview - Mirafra Technologies"
     
     cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+    from_address = @ta_owner&.email || 'recruitment-no-reply@mirafra.com'
+    mail(to: @candidate.email, cc: cc_recipients, subject: subject, from: from_address)
   end
 
   def interview_reschedule_candidate(interview)
@@ -123,7 +126,8 @@ class Emailer < ApplicationMailer
     subject = "Rescheduled Interview - Mirafra Technologies"
     
     cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    mail(to: @candidate.email, cc: cc_recipients, subject: subject)
+    from_address = @ta_owner&.email || 'recruitment-no-reply@mirafra.com'
+    mail(to: @candidate.email, cc: cc_recipients, subject: subject, from: from_address)
   end
 
   def interview_reschedule_interviewer(interview)
@@ -143,7 +147,8 @@ class Emailer < ApplicationMailer
     subject = "Interview Rescheduled | #{@candidate.name} - Mirafra Technologies"
     
     cc_recipients = @ta_owner&.email ? [@ta_owner.email] : []
-    mail(to: @interviewer.email, cc: cc_recipients, subject: subject)
+    from_address = @ta_owner&.email || 'recruitment-no-reply@mirafra.com'
+    mail(to: @interviewer.email, cc: cc_recipients, subject: subject, from: from_address)
   end
 
   def panel(mail_to, interview, resume)
