@@ -2216,6 +2216,15 @@ class ResumesController < ApplicationController
         # Fallback to regular search on error
         @results = []
       end
+    elsif params[:search_type] == 'skills'
+      # Skills-only search: Search only in the skills field
+      @results = Resume.search(search_query, 
+                              fields: ['skills'],
+                              match: :word_start,
+                              where: where_conditions,
+                              exclude: exclude_terms,
+                              page: params[:page], 
+                              per_page: get_per_page)
     else
       # Regular keyword or phrase search
       @results = Resume.search(search_query, 

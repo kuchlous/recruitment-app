@@ -25,7 +25,11 @@
           
           <%= radio_button_tag :search_type, "requirement", false, class: "form-check-input me-1",
               onclick: "updateSearchInput('requirement', 'Type requirement name to search...');" %>
-          <%= label_tag :search_type_requirement, "Requirement Match", class: "form-check-label" %>
+          <%= label_tag :search_type_requirement, "Requirement Match", class: "form-check-label me-3" %>
+          
+          <%= radio_button_tag :search_type, "skills", false, class: "form-check-input me-1",
+              onclick: "updateSearchInput('skills', 'Enter skills to search for...');" %>
+          <%= label_tag :search_type_skills, "Skills Only", class: "form-check-label" %>
         </div>
       </div>
       
