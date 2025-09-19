@@ -150,7 +150,7 @@
               </div>
             <% end %>
             
-            <% ["Hold", "Yto", "Offered", "Joining"].each do |status| %>
+            <% ["Hold", "Yto", "Offered", "Joining", "HAC"].each do |status| %>
               <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
                 <div class="stat-card">
                   <div class="stat-number">

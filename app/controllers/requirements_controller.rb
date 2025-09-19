@@ -139,6 +139,7 @@ class RequirementsController < ApplicationController
       @offered     = @requirement.offered
       @joining     = @requirement.joining
       @hold        = @requirement.hold
+      @hac         = @requirement.hac
       @yto         = @requirement.yto
 
       respond_to do |format|
@@ -194,6 +195,10 @@ class RequirementsController < ApplicationController
     elsif @status    == "Completed-L2"
       @matches       = req.completed_l2
       @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
+    elsif @status    == "HAC"
+      @matches       = req.hac
       @render        = "interview_table"
       @is_req_match  = 1
     elsif @status    == "Rejected"

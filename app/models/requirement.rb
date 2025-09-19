@@ -162,6 +162,10 @@ class Requirement < ActiveRecord::Base
     self.req_matches.where(status: "OFFERED")
   end
 
+  def hac
+    self.req_matches.where(status: "HAC")
+  end
+
   def joining
     self.req_matches.joins(:resume).where(status: "JOINING").where(resumes: {overall_status: "JOINING"})
   end
