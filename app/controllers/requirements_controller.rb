@@ -131,6 +131,10 @@ class RequirementsController < ApplicationController
       @forwarded   = @requirement.open_forwards
       @shortlisted = @requirement.shortlists
       @scheduled   = @requirement.scheduled
+      @scheduled_l1 = @requirement.scheduled_l1
+      @scheduled_l2 = @requirement.scheduled_l2
+      @completed_l1 = @requirement.completed_l1
+      @completed_l2 = @requirement.completed_l2
       @rejected    = @requirement.rejected
       @offered     = @requirement.offered
       @joining     = @requirement.joining
@@ -169,6 +173,26 @@ class RequirementsController < ApplicationController
       @after_shortlist_page  = true
     elsif @status    == "Scheduled"
       @matches       = req.scheduled
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
+    elsif @status    == "Scheduled-L1"
+      @matches       = req.scheduled_l1
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
+    elsif @status    == "Scheduled-L2"
+      @matches       = req.scheduled_l2
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
+    elsif @status    == "Completed-L1"
+      @matches       = req.completed_l1
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
+    elsif @status    == "Completed-L2"
+      @matches       = req.completed_l2
       @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
       @render        = "interview_table"
       @is_req_match  = 1

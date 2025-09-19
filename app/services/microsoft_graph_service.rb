@@ -270,7 +270,7 @@ class MicrosoftGraphService
         timeZone: "UTC"
       },
       end: {
-        dateTime: (interview.scheduled_at + 1.hour).iso8601,
+        dateTime: (interview.scheduled_at + (interview.duration || 60).minutes).iso8601,
         timeZone: "UTC"
       },
       attendees: build_attendees(interview),

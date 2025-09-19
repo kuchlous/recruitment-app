@@ -313,6 +313,11 @@ function addInterviewRow(event, req_match_id, time_array)
 
   $td = $('<td>');
   $row.append($td);
+  var $duration_select = createDropDownListNew($td, "duration", "duration", [30, 45, 60, 90, 120], ['30 min', '45 min', '60 min', '90 min', '120 min'], "form-control select-box-small");
+  $td.append($duration_select);
+
+  $td = $('<td>');
+  $row.append($td);
   var $textarea = $('<textarea>').attr("name", "interview_focus").attr("id", "interview_focus").attr("class", "form-control focus_textarea");
   $textarea.value = "Enter focus";
   $textarea.on("focus",
@@ -1464,6 +1469,7 @@ function changeInterview(interview_id, index)
   int_date  = jQuery("#interview_date" + index).val();
   int_focus = jQuery("#interview_focus" + index).val();
   interview_level = jQuery("#interview_level_" + index).val();
+  duration = jQuery("#duration" + index).val();
   // Construct URL with parameters
   var url = prepend_with_image_path + '/resumes/update_interview?' + 
     'interview_id=' + interview_id + 
@@ -1471,7 +1477,8 @@ function changeInterview(interview_id, index)
     '&interview_time=' + encodeURIComponent(int_time) + 
     '&interview_date=' + encodeURIComponent(int_date) + 
     '&interview_focus=' + encodeURIComponent(int_focus) +
-    '&interview_level=' + encodeURIComponent(interview_level);
+    '&interview_level=' + encodeURIComponent(interview_level) +
+    '&duration=' + encodeURIComponent(duration);
 
   // Redirect to the constructed URL
   window.location.href = url;

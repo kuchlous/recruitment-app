@@ -108,7 +108,49 @@
           </div>
           
           <div class="stats-container">
-            <% ["Forwarded", "Shortlisted", "Scheduled", "Hold", "Yto", "Offered", "Joining"].each do |status| %>
+            <% ["Forwarded", "Shortlisted"].each do |status| %>
+              <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
+                <div class="stat-card">
+                  <div class="stat-number">
+                    <%= instance_variable_get("@#{status.downcase}").size %>
+                  </div>
+                  <div class="stat-label"><%= status %></div>
+                </div>
+              <% end %>
+            <% end %>
+            
+            <!-- Scheduled L1 -->
+            <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Scheduled-L1"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @scheduled_l1.size %></div>
+                <div class="stat-label">Scheduled-L1</div>
+              </div>
+            <% end %>
+            <!-- Completed L1 -->
+            <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Completed-L1"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @completed_l1.size %></div>
+                <div class="stat-label">Completed-L1</div>
+              </div>
+            <% end %>
+            
+             
+            <!-- Scheduled L2 -->
+            <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Scheduled-L2"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @scheduled_l2.size %></div>
+                <div class="stat-label">Scheduled-L2</div>
+              </div>
+            <% end %>
+           <!-- Completed L2 -->
+            <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Completed-L2"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @completed_l2.size %></div>
+                <div class="stat-label">Completed-L2</div>
+              </div>
+            <% end %>
+            
+            <% ["Hold", "Yto", "Offered", "Joining"].each do |status| %>
               <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
                 <div class="stat-card">
                   <div class="stat-number">
@@ -120,7 +162,7 @@
             <% end %>
             
             <% if get_current_employee.is_ADMIN? %>
-              <%= link_to url_for(:controller => "resumes", :action => "export_as_xls_requirement_for_rejected", :requirement_id => @requirement.id, :for_status => "Rejected"), class: "stat-link", data: {turbolinks: false} do %>
+              <%= link_to url_for(:controller => "resumes", :action => "export_as_xls_requirement_for_status", :requirement_id => @requirement.id, :status => "REJECTED"), class: "stat-link", data: {turbolinks: false} do %>
                 <div class="stat-card">
                   <div class="stat-number"><%= @rejected.size %></div>
                   <div class="stat-label">Rejected</div>

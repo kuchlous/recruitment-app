@@ -56,14 +56,7 @@ Rails.application.routes.draw do
   match 'employees/list_my_employees',to: 'employees#list_my_employees'          , via: :get
   match 'employees/change_to',to: 'employees#change_to'                          , via: :get
   match 'resumes/export_as_xls_requirement',to:'resumes#export_as_xls_requirement' , via: :get
-  match 'resumes/export_as_xls_requirement_for_shortlisted',to: 'resumes#export_as_xls_requirement_for_shortlisted', via: :get
-  match 'resumes/export_as_xls_requirement_for_forwarded',to: 'resumes#export_as_xls_requirement_for_forwarded'      , via: :get
-  match 'resumes/export_as_xls_requirement_for_offered',to: 'resumes#export_as_xls_requirement_for_offered'        , via: :get 
-  match 'resumes/export_as_xls_requirement_for_yto',to: 'resumes#export_as_xls_requirement_for_yto'                , via: :get 
-  match 'resumes/export_as_xls_requirement_for_scheduled',to: 'resumes#export_as_xls_requirement_for_scheduled'    , via: :get
-  match 'resumes/export_as_xls_requirement_for_rejected',to: 'resumes#export_as_xls_requirement_for_rejected'      , via: :get
-  match 'resumes/export_as_xls_requirement_for_hold',to: 'resumes#export_as_xls_requirement_for_hold'              , via: :get
-  match 'resumes/export_as_xls_requirement_for_joining',to: 'resumes#export_as_xls_requirement_for_joining'        , via: :get
+  match 'resumes/export_as_xls_requirement_for_status', to: 'resumes#export_as_xls_requirement_for_status', via: :get
   match 'resumes/xport_as_xls_all_uploaded_resumes',to: 'resumes#export_as_xls_all_uploaded_resumes'               , via: :get  
   match 'resumes/joined',to: 'resumes#joined'                , via: :get
   match 'resumes/upload_document',to: 'resumes#upload_document'         , via: :post

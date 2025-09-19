@@ -96,6 +96,56 @@ class Requirement < ActiveRecord::Base
     self.req_matches.joins(:resume).where(status: "SCHEDULED").where.not(resumes: {overall_status: "FUTURE"})
   end
 
+  def scheduled_l1
+    # Get req_matches with L1 interviews that don't have any L2 interviews
+    l1_req_match_ids = self.req_matches.joins(:resume, :interviews)
+                                    .where(status: "SCHEDULED")
+                                    .where.not(resumes: {overall_status: "FUTURE"})
+                                    .where(interviews: {interview_level: 1})
+                                    .where("interviews.interview_date >= ?", Date.current)
+                                    .pluck(:id)
+    
+    l2_req_match_ids = self.req_matches.joins(:interviews)
+                                    .where(interviews: {interview_level: 2})
+                                    .pluck(:id)
+    
+    # Return L1 req_matches that don't have L2 interviews
+    self.req_matches.where(id: l1_req_match_ids - l2_req_match_ids)
+  end
+
+  def scheduled_l2
+    self.req_matches.joins(:resume, :interviews)
+                   .where(status: "SCHEDULED")
+                   .where.not(resumes: {overall_status: "FUTURE"})
+                   .where(interviews: {interview_level: 2})
+                   .where("interviews.interview_date >= ?", Date.current)
+  end
+
+  def completed_l1
+    # Get req_matches with L1 interviews that don't have any L2 interviews
+    l1_req_match_ids = self.req_matches.joins(:resume, :interviews)
+                                    .where(status: "SCHEDULED")
+                                    .where.not(resumes: {overall_status: "FUTURE"})
+                                    .where(interviews: {interview_level: 1})
+                                    .where("interviews.interview_date < ?", Date.current)
+                                    .pluck(:id)
+    
+    l2_req_match_ids = self.req_matches.joins(:interviews)
+                                    .where(interviews: {interview_level: 2})
+                                    .pluck(:id)
+    
+    # Return L1 req_matches that don't have L2 interviews
+    self.req_matches.where(id: l1_req_match_ids - l2_req_match_ids)
+  end
+
+  def completed_l2
+    self.req_matches.joins(:resume, :interviews)
+                   .where(status: "SCHEDULED")
+                   .where.not(resumes: {overall_status: "FUTURE"})
+                   .where(interviews: {interview_level: 2})
+                   .where("interviews.interview_date < ?", Date.current)
+  end
+
   def rejected
     self.req_matches.where(status: "REJECTED")
   end

@@ -13,6 +13,7 @@
         <th>Level</th>
         <th>Date</th>
         <th>Time</th>
+        <th>Duration</th>
         <th>Focus</th>
         <th>Actions</th>
       </tr>
@@ -38,6 +39,9 @@
              </td>
              <td>
                <%= select_tag "time_slot#{index}", options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]), :class => "form-control select-box-small" %>
+             </td>
+             <td>
+               <%= select_tag "duration#{index}", options_for_select([['30 min', 30], ['45 min', 45], ['60 min', 60], ['90 min', 90], ['120 min', 120]], i.duration || 60), :class => "form-control select-box-small" %>
              </td>
              <td>
                <%= text_area_tag "interview_focus#{index}", i.focus, :class => "form-control focus-textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');", :rows => 2 %>

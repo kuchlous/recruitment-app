@@ -1362,24 +1362,15 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
-  # FUNCTION    : create_xls_sheet_and_get_matches                                                   #
-  # DESCRIPTION : Create the excel sheet and find the req matches related to the requirement         #
+  # FUNCTION    : create_xls_sheet_for_requirement                                                   #
+  # DESCRIPTION : Create the excel sheet for a requirement with given status                         #
   ####################################################################################################
-  def create_xls_sheet_and_get_matches(for_status)
-    requirement                 = Requirement.find(params[:requirement_id])
+  def create_xls_sheet_for_requirement(status)
     Spreadsheet.client_encoding = 'UTF-8'
-    book                        = Spreadsheet::Workbook.new
-    sheet                       = book.create_worksheet :name => for_status
-    output                      = "#{Rails.root}/tmp/requirement_"  + for_status.downcase + "_status_#{requirement.name.gsub(/[& -\/\\]/, '_')}.xls"
-    unless for_status == "JOINING"
-      req_forwards              = requirement.forwards
-      req_forwards              += requirement.req_matches
-      forwards                  = req_forwards.find_all { |f| f.status     == for_status }
-    else
-      req_forwards              = requirement.req_matches
-      forwards                  = req_forwards
-    end
-    [ sheet, book, output, forwards ]
+    book = Spreadsheet::Workbook.new
+    sheet = book.create_worksheet :name => status
+    output = "#{Rails.root}/tmp/requirement_#{status.downcase}_status_#{requirement.name.gsub(/[& -\/\\]/, '_')}.xls"
+    [ sheet, book, output ]
   end
 
   def send_file_to_download(book, output)
@@ -1388,75 +1379,48 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
-  # FUNCTION    : export_as_xls_requirement_for_shortlisted etc....                                  #
+  # FUNCTION    : export_as_xls_requirement_for_status                                                #
   # DESCRIPTION : Function for dumping requirement specific status into an excel file.               #
-  #               E.g. If you want only shorlisted status of requirement A.                          #
+  #               Unified method to handle all status types.                                         #
   ####################################################################################################
-  def export_as_xls_requirement_for_shortlisted
-    sheet, book, output, shortlist_matches = create_xls_sheet_and_get_matches("SHORTLISTED")
-    fill_forwarded_shortlisted_data(sheet, shortlist_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_forwarded
-    sheet, book, output, forward_matches   = create_xls_sheet_and_get_matches("FORWARDED")
-    fill_forwarded_shortlisted_data(sheet, forward_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_offered
-    sheet, book, output, offered_matches   = create_xls_sheet_and_get_matches("OFFERED")
-    fill_offered_data(sheet, offered_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_yto
-    sheet, book, output, yto_matches   = create_xls_sheet_and_get_matches("YTO")
-    fill_offered_data(sheet, yto_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_scheduled
-    sheet, book, output, scheduled_matches   = create_xls_sheet_and_get_matches("SCHEDULED")
-    fill_interview_data(sheet, scheduled_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_rejected
-    sheet, book, output, rejected_matches   = create_xls_sheet_and_get_matches("REJECTED")
-    fill_forwarded_shortlisted_data(sheet, rejected_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_hold
-    sheet, book, output, hold_matches   = create_xls_sheet_and_get_matches("HOLD")
-    fill_forwarded_shortlisted_data(sheet, hold_matches)
-    send_file_to_download(book, output)
-  end
-
-  def export_as_xls_requirement_for_joining
-    sheet, book, output, join_matches   = create_xls_sheet_and_get_matches("JOINING")
-    joining_matches             = join_matches.find_all { |f| f.status           == "JOINING" && f.resume.status    != "JOINED" &&
-                                                              f.resume.status    != "NOT JOINED" }
-
-    joined_matches              = join_matches.find_all { |f| f.resume.status == "JOINED" }
-    joined_matches              = uniqify_forwards(joined_matches)
-    joined_resumes              = []
-    joined_matches.each do |m|
-      joined_resumes   << m.resume
+  def export_as_xls_requirement_for_status
+    status = params[:status]&.upcase
+    requirement = Requirement.find(params[:requirement_id])
+    
+    # Validate status parameter
+    valid_statuses = %w[FORWARDED SHORTLISTED SCHEDULED SCHEDULED-L1 SCHEDULED-L2 COMPLETED-L1 COMPLETED-L2 REJECTED HOLD YTO OFFERED JOINING]
+    unless valid_statuses.include?(status)
+      flash[:error] = "Invalid status. Valid statuses are: #{valid_statuses.join(', ')}"
+      redirect_back(fallback_location: root_path)
+      return
     end
 
-    not_joined_matches          = join_matches.find_all { |f| f.resume.status == "NOT JOINED" }
-    not_joined_matches          = uniqify_forwards(not_joined_matches)
-    not_joined_resumes          = []
-    not_joined_matches.each do |m|
-      not_joined_resumes  << m.resume
-    end
+    sheet, book, output = create_xls_sheet_for_requirement(status)
 
-    fill_joining_data(sheet, joining_matches, joined_resumes, not_joined_resumes)
+    if status == "JOINING"
+      joining_matches, joined_resumes, not_joined_resumes = get_joining_data
+      fill_joining_data(sheet, joining_matches, joined_resumes, not_joined_resumes)
+    elsif %w[SCHEDULED-L1 SCHEDULED-L2 COMPLETED-L1 COMPLETED-L2].include?(status)
+      # Handle new scheduled status buckets
+      matches = get_scheduled_matches_for_status(requirement, status)
+      fill_interview_data(sheet, matches)
+    else
+      req_forwards = requirement.forwards + requirement.req_matches
+      matches = req_forwards.find_all { |f| f.status == status }
+      
+      case status
+      when "FORWARDED", "SHORTLISTED", "REJECTED", "HOLD"
+        fill_forwarded_shortlisted_data(sheet, matches)
+      when "OFFERED", "YTO"
+        fill_offered_data(sheet, matches)
+      when "SCHEDULED"
+        fill_interview_data(sheet, matches)
+      end
+    end
     send_file_to_download(book, output)
   end
 
+  
   ####################################################################################################
   # FUNCTION    : export_as_xls_requirement                                                          #
   # DESCRIPTION : Function for dumping all requirement status into an excel file.                    #
@@ -1797,6 +1761,7 @@ class ResumesController < ApplicationController
     int_focus = params[:interview_focus]
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
+    duration = params[:duration] || 60
     i_time = Time.zone.parse (int_date + " " + int_time)
     
     # Look up employee by name
@@ -1810,7 +1775,8 @@ class ResumesController < ApplicationController
                                 :itype          => int_type,
                                 :focus          => int_focus,
                                 :req_match      => match,
-                                :interview_level => interview_level)
+                                :interview_level => interview_level,
+                                :duration       => duration.to_i)
       if interview.save
         # Scheduled only when interview get saved
         match.update!(:status => "SCHEDULED")
@@ -1853,6 +1819,7 @@ class ResumesController < ApplicationController
     int_focus = params[:interview_focus]
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
+    duration = params[:duration] || 60
     interview = Interview.find(int_id)
 
     # Look up employee by name
@@ -1863,7 +1830,8 @@ class ResumesController < ApplicationController
                                 :interview_date => int_date,
                                 :interview_time => int_time,
                                 :focus => int_focus,
-                                :interview_level => interview_level
+                                :interview_level => interview_level,
+                                :duration => duration.to_i
                               )
 
     match     = interview.req_match
@@ -1895,8 +1863,11 @@ class ResumesController < ApplicationController
   #               delete/add interviews for a req match.                                             #
   ####################################################################################################
   def manage_interviews
+    logger.info("Params: #{params.inspect}")
     @req_match  = ReqMatch.find(params[:req_match_id])
+    logger.info("Req Match: #{@req_match.inspect}")
     @interviews = @req_match.interviews
+    logger.info("Interviews: #{@interviews.inspect}")
 
     respond_to do |format|
       format.js
@@ -2443,6 +2414,38 @@ class ResumesController < ApplicationController
     else
       return istatus
     end
+  end
+
+  def get_scheduled_matches_for_status(requirement, status)
+    case status
+    when "SCHEDULED-L1"
+      requirement.scheduled_l1
+    when "SCHEDULED-L2"
+      requirement.scheduled_l2
+    when "COMPLETED-L1"
+      requirement.completed_l1
+    when "COMPLETED-L2"
+      requirement.completed_l2
+    else
+      []
+    end
+  end
+
+  def get_joining_data
+    requirement = Requirement.find(params[:requirement_id])
+    
+    join_matches = requirement.req_matches
+    joining_matches = join_matches.find_all { |f| f.status == "JOINING" && f.resume.status != "JOINED" && f.resume.status != "NOT JOINED" }
+    
+    joined_matches = join_matches.find_all { |f| f.resume.status == "JOINED" }
+    joined_matches = uniqify_forwards(joined_matches)
+    joined_resumes = joined_matches.map(&:resume)
+    
+    not_joined_matches = join_matches.find_all { |f| f.resume.status == "NOT JOINED" }
+    not_joined_matches = uniqify_forwards(not_joined_matches)
+    not_joined_resumes = not_joined_matches.map(&:resume)
+
+    [ joining_matches, joined_resumes, not_joined_resumes ]
   end
 
   def fill_joining_data(sheet, joining_matches, joined_resumes, not_joined_resumes)

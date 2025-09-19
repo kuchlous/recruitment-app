@@ -7,6 +7,8 @@ class Interview < ActiveRecord::Base
 
   validates_presence_of :employee_id
   validates_presence_of :interview_date
+  validates_presence_of :duration
+  validates_numericality_of :duration, greater_than_or_equal_to: 15, less_than_or_equal_to: 480, message: "must be between 15 and 480 minutes"
   #uncomment later
   validate :overlapping_interviews
   validate :date_should_not_be_less_than_current_date
@@ -101,13 +103,29 @@ class Interview < ActiveRecord::Base
   private
 
   def check_database_overlaps
+    return unless self.interview_date && self.interview_time && self.duration
+    
+    interview_start = self.scheduled_at
+    interview_end = interview_start + self.duration.minutes
+    
     overlapping_interviews = self.employee.interviews
       .where.not(id: self.id) # Exclude current interview if updating
-      .where(interview_date: self.interview_date, interview_time: self.interview_time)
+      .where(interview_date: self.interview_date)
+      .where.not(interview_time: nil)
     
-    if overlapping_interviews.exists?
-      msg = "There is already an interview request for #{self.employee.name.titleize} with this date/time"
-      errors.add(:base, :save_error, message: msg)
+    overlapping_interviews.each do |other_interview|
+      other_start = other_interview.scheduled_at
+      # Use 60 minutes as default duration if missing
+      other_duration = other_interview.duration || 60
+
+      other_end = other_start + other_duration.minutes
+      
+      # Check if there's any overlap
+      if (interview_start < other_end) && (interview_end > other_start)
+        msg = "There is already an interview request for #{self.employee.name.titleize} that overlaps with this time slot"
+        errors.add(:base, :save_error, message: msg)
+        break
+      end
     end
   end
 
@@ -136,9 +154,9 @@ class Interview < ActiveRecord::Base
       end
       # Check for time conflicts
       interview_start = self.scheduled_at
-      interview_end = interview_start + 1.hour
+      interview_end = interview_start + (self.duration || 60).minutes
       
-      Rails.logger.info "Interview time range (UTC): #{interview_start.iso8601} to #{interview_end.iso8601}"
+      Rails.logger.info "Interview time range (UTC): #{interview_start.iso8601} to #{interview_end.iso8601} (duration: #{self.duration} minutes)"
       
       calendar_events.each do |event|
         next unless event['start'] && event['end']
@@ -193,6 +211,7 @@ class Interview < ActiveRecord::Base
     calendar_event_id.present? && 
     (saved_change_to_interview_date? || 
      saved_change_to_interview_time? || 
+     saved_change_to_duration? ||
      saved_change_to_itype? || 
      saved_change_to_focus? ||
      saved_change_to_stage?)
