@@ -170,6 +170,14 @@ class Requirement < ActiveRecord::Base
     self.req_matches.joins(:resume).where(status: "JOINING").where(resumes: {overall_status: "JOINING"})
   end
 
+  def not_joined
+    self.req_matches.joins(:resume).where(status: "NOT JOINED").where(resumes: {overall_status: "NOT JOINED"})
+  end
+
+  def not_accepted
+    self.req_matches.joins(:resume).where(status: "N_ACCEPTED").where(resumes: {overall_status: "N_ACCEPTED"})
+  end
+
   def Requirement.open_requirements
     Requirement.all.where(status: "OPEN")
   end

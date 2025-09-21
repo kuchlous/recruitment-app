@@ -19,12 +19,10 @@ class Emailer < ApplicationMailer
     mail(to: recipients, subject: subject)
   end
 
-  def joined(resume, mail_to, status)
+  def joined(resume, recipients, status)
     subject = 'Referral ' + status
-    recipients = [ mail_to.email ]
     recipients << resume.ta_owner.email if resume.ta_owner.present?
 
-    @to_employee    = mail_to
     @resume         = resume
     @status         = status
     mail(to: recipients, subject: subject)

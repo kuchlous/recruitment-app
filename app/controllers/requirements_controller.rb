@@ -138,6 +138,8 @@ class RequirementsController < ApplicationController
       @rejected    = @requirement.rejected
       @offered     = @requirement.offered
       @joining     = @requirement.joining
+      @not_joined  = @requirement.not_joined
+      @not_accepted = @requirement.not_accepted
       @hold        = @requirement.hold
       @hac         = @requirement.hac
       @yto         = @requirement.yto
@@ -225,6 +227,14 @@ class RequirementsController < ApplicationController
       @matches       = req.joining
       @render        = "joining_offered_hold_form"
       @join_on_req_page  = 1
+      @is_req_match  = 1
+    elsif @status    == "Not Joined"
+      @matches       = req.not_joined
+      @render        = "manager_index"
+      @is_req_match  = 1
+    elsif @status    == "Not Accepted"
+      @matches       = req.not_accepted
+      @render        = "manager_index"
       @is_req_match  = 1
     end
 

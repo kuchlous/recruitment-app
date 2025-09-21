@@ -2696,19 +2696,16 @@ class ResumesController < ApplicationController
   end
 
   def email_for_joined(resume, status = "")
-    Emailer.joined(resume, get_current_employee, status).deliver_now
+    recipients = [get_current_employee.email]
+    recipients << get_finance_email
+    recipients << get_sysadmin_email
     if (resume.referral_type == "EMPLOYEE")
       referer = Employee.find(resume.referral_id)
-      if (referer.employee_status == "ACTIVE")
-        Emailer.joined(resume, referer, status).deliver_now
+      if referer.employee_status == "ACTIVE"
+        recipients << referer.email
       end
-      Emailer.joined(resume, get_finance_employee, status).deliver_now
-      Emailer.joined(resume, get_sysadmin_employee, status).deliver_now
     end
-    if (resume.referral_type == "AGENCY")
-      Emailer.joined(resume, get_finance_employee, status).deliver_now
-      Emailer.joined(resume, get_sysadmin_employee, status).deliver_now
-    end
+    Emailer.joined(resume, recipients, status).deliver_now
   end
 
   def email_for_action(resume, status, comment, requirement)

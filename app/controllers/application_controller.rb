@@ -22,23 +22,23 @@ require 'will_paginate/array'
   end
 
   def get_logged_employee
-    employee = Employee.find_by_id(session[:logged_employee_id])
+    Employee.find_by_id(session[:logged_employee_id])
   end
 
   def set_logged_employee(id)
     session[:logged_employee_id] = id
   end
 
-  def get_finance_employee
-    Employee.find_by_name("Sobhanadri V")
+  def get_finance_email
+    'finance@mirafra.com'
   end
 
-  def get_sysadmin_employee
-    Employee.find_by_email("somu@mirafra.com")
+  def get_sysadmin_email
+    'somu@mirafra.com'
   end
 
-  def get_HR_employee
-    Employee.find_by_emai("shailesh@mirafra.com")
+  def get_HR_email
+    "hr@mirafra.com"
   end
 
   def set_current_employee(id)
@@ -49,7 +49,7 @@ require 'will_paginate/array'
     if (session[:current_employee_id] == nil)
       session[:current_employee_id] = session[:logged_employee_id]
     end
-    employee = Employee.find_by_id(session[:current_employee_id])
+    Employee.find_by_id(session[:current_employee_id])
   end
 
   def check_for_login(msg = "Please login to your account first")
