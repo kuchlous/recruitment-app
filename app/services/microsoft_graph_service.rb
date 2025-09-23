@@ -3,7 +3,8 @@ class MicrosoftGraphService
   
   base_uri 'https://graph.microsoft.com/v1.0'
   
-  def initialize
+  def initialize(group = nil)
+    @group = group
     @access_token = get_app_access_token
   end
 
@@ -235,19 +236,31 @@ class MicrosoftGraphService
 
   private
 
+  def get_credentials_for_group
+    # Use SWE credentials if group name contains "SWE", otherwise use HWE credentials
+    if @group&.name&.include?("SWE")
+      [APP_CONFIG['microsoft_client_id_swe'], APP_CONFIG['microsoft_client_secret_swe']]
+    else
+      [APP_CONFIG['microsoft_client_id'], APP_CONFIG['microsoft_client_secret']]
+    end
+  end
+
   def get_app_access_token
+    # Determine which credentials to use based on group
+    client_id, client_secret = get_credentials_for_group
+
     response = self.class.post(
       "https://login.microsoftonline.com/#{APP_CONFIG['microsoft_tenant_id']}/oauth2/v2.0/token",
       body: {
-        client_id: APP_CONFIG['microsoft_client_id'],
-        client_secret: APP_CONFIG['microsoft_client_secret'],
+        client_id: client_id,
+        client_secret: client_secret,
         scope: 'https://graph.microsoft.com/.default',
         grant_type: 'client_credentials'
       }
     )
 
     if response.success?
-      Rails.logger.info "Successfully obtained Microsoft Graph access token"
+      Rails.logger.info "Successfully obtained Microsoft Graph access token for group: #{@group&.name || 'default'}"
       response['access_token']
     else
       Rails.logger.error "Failed to get Microsoft Graph access token: #{response.body}"

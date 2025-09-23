@@ -15,16 +15,12 @@ class Interview < ActiveRecord::Base
   scope :next_week, -> { where("interview_date >= ? AND interview_date <= ?", Date.today,Date.today+1.week).count }
 
   # Calendar integration
-  after_create :add_to_calendar, if: :should_add_to_calendar? && :is_hwe_employee?
-  after_update :update_calendar_event, if: :should_update_calendar? && :is_hwe_employee?
-  after_destroy :remove_from_calendar, if: :should_remove_from_calendar? && :is_hwe_employee?
+  after_create :add_to_calendar, if: :should_add_to_calendar?
+  after_update :update_calendar_event, if: :should_update_calendar?
+  after_destroy :remove_from_calendar, if: :should_remove_from_calendar?
 
   # Delegate to get resume and requirement through req_match
   delegate :resume, :requirement, to: :req_match, allow_nil: true
-
-  def is_hwe_employee?
-    employee.group.present? && (employee.group.name.include?("HWE") || employee.group.name.include?("PROMOTER"))
-  end
 
   def self.get_level_for_select
     level_array = []
@@ -40,9 +36,7 @@ class Interview < ActiveRecord::Base
       check_database_overlaps
       
       # Check Microsoft Teams calendar for overlapping events
-      if is_hwe_employee?
-        check_calendar_overlaps
-      end
+      check_calendar_overlaps
     end
   end
 
@@ -136,7 +130,7 @@ class Interview < ActiveRecord::Base
     Rails.logger.info "Interview date: #{self.interview_date}"
     Rails.logger.info "Interview time: #{self.interview_time}"
     begin
-      service = MicrosoftGraphService.new
+      service = MicrosoftGraphService.new(employee.group)
       
       # Get calendar events for the interview date
       start_date = self.interview_date.beginning_of_day
@@ -220,7 +214,7 @@ class Interview < ActiveRecord::Base
   def add_to_calendar
     return unless should_add_to_calendar?
 
-    service = MicrosoftGraphService.new
+    service = MicrosoftGraphService.new(employee.group)
     event_id = service.create_calendar_event_for_interview(self)
     if event_id
       update_column(:calendar_event_id, event_id)
@@ -235,7 +229,7 @@ class Interview < ActiveRecord::Base
   def update_calendar_event
     return unless calendar_event_id.present?
 
-    service = MicrosoftGraphService.new
+    service = MicrosoftGraphService.new(employee.group)
     if service.update_calendar_event_for_interview(self, calendar_event_id)
       Rails.logger.info "Calendar event updated for interview #{id}"
     else
@@ -252,7 +246,7 @@ class Interview < ActiveRecord::Base
   def remove_from_calendar
     return unless should_remove_from_calendar?
 
-    service = MicrosoftGraphService.new
+    service = MicrosoftGraphService.new(employee.group)
     if service.delete_calendar_event_for_interview(self, calendar_event_id)
       Rails.logger.info "Calendar event removed for interview #{id}"
     else
