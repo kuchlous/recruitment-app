@@ -97,11 +97,12 @@ class Requirement < ActiveRecord::Base
   end
 
   def scheduled_l1
-    # Get req_matches with L1 interviews that don't have any L2 interviews
+    # Get req_matches with L1 interviews that don't have feedback and don't have L2 interviews
     l1_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 1})
-                                    .where("interviews.interview_date >= ?", Date.current)
+                                    .left_joins(interviews: :feedbacks)
+                                    .where(feedbacks: {id: nil})
                                     .pluck(:id)
     
     l2_req_match_ids = self.req_matches.joins(:interviews)
@@ -116,18 +117,19 @@ class Requirement < ActiveRecord::Base
     l2_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 2})
-                                    .where("interviews.interview_date >= ?", Date.current)
+                                    .left_joins(interviews: :feedbacks)
+                                    .where(feedbacks: {id: nil})
                                     .pluck(:id)
     
     self.req_matches.where(id: l2_req_match_ids)
   end
 
   def completed_l1
-    # Get req_matches with L1 interviews that don't have any L2 interviews
+    # Get req_matches with L1 interviews that have feedback and don't have L2 interviews
     l1_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 1})
-                                    .where("interviews.interview_date < ?", Date.current)
+                                    .joins(interviews: :feedbacks)
                                     .pluck(:id)
     
     l2_req_match_ids = self.req_matches.joins(:interviews)
@@ -142,7 +144,7 @@ class Requirement < ActiveRecord::Base
     l2_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 2})
-                                    .where("interviews.interview_date < ?", Date.current)
+                                    .joins(interviews: :feedbacks)
                                     .pluck(:id)
     
     self.req_matches.where(id: l2_req_match_ids)
