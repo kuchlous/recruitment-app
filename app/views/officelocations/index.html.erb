@@ -1,0 +1,58 @@
+<div class="table-container">
+  <div class="table-header">
+    <div>
+      <h2>Office Locations</h2>
+    </div>
+    <div class="add_link">
+      <%= link_to new_officelocation_path, title: "Add New Office Location" do %>
+        <span style="font-size: 18px;">➕</span>
+      <% end %>
+    </div>
+  </div>
+  
+  <% if @officelocations.any? %>
+    <table class="modern-table">
+      <thead>
+        <tr class="header_row">
+          <td>Name</td>
+          <td>Address</td>
+          <td>City</td>
+          <td>State</td>
+          <td>Pincode</td>
+          <td>Full Address</td>
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        <% @officelocations.each do |location| %>
+          <tr class="<%= cycle('white', 'yellow') %>">
+            <td class="table-cell-primary"><%= location.name %></td>
+            <td><%= location.address %></td>
+            <td><%= location.city %></td>
+            <td><%= location.state %></td>
+            <td><%= location.pincode %></td>
+            <td class="table-cell-secondary"><%= location.full_address %></td>
+            <td>
+              <%= link_to edit_officelocation_path(location), title: "Edit Office Location" do %>
+                <%= image_tag "edit.svg", alt: "Edit", size: "20x20", class: "action-icon" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <div class="table-footer">
+      <div class="table-info">
+        <strong>Total Locations:</strong> <%= @officelocations.count %>
+      </div>
+    </div>
+  <% else %>
+    <div class="table-empty">
+      <div class="empty-icon">📍</div>
+      <h4>No Office Locations Found</h4>
+      <p>There are currently no office locations configured in the system.</p>
+    </div>
+  <% end %>
+</div>
+

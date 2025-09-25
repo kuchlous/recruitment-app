@@ -3,6 +3,7 @@ class Interview < ActiveRecord::Base
   # belongs_to :requirement
   belongs_to :req_match
   belongs_to :employee
+  belongs_to :officelocation, optional: true
   has_many :feedbacks, dependent: :destroy
 
   validates_presence_of :employee_id
@@ -73,6 +74,10 @@ class Interview < ActiveRecord::Base
     end
   end
 
+  def face_to_face_interview?
+    itype.blank? || itype == "F2F" || (itype != "TELECONF" && itype != "VIDEOCONF" && itype != "TELEPHONE")
+  end
+
   def scheduled_at
     return nil unless interview_date && interview_time
     
@@ -92,6 +97,10 @@ class Interview < ActiveRecord::Base
     
     # Return as UTC datetime (matches Microsoft Graph timezone)
     utc_datetime.utc
+  end
+
+  def self.available_office_locations
+    Officelocation.all.map { |location| [location.display_name, location.id] }
   end
 
   private

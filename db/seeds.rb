@@ -59,3 +59,7 @@ Uniqid.insert_all([
   {id: 2, name: "harika", created_at: "2025-07-17 14:57:41", updated_at: "2025-07-17 14:57:41"},
   {id: 3, name: "karini_j", created_at: "2025-07-17 15:22:34", updated_at: "2025-07-17 15:22:34"}
 ])
+Officelocation.insert_all([
+  {id: 1, name: "BLR-WHITEFIELD", address: "Akshay Tech Park", city: "Bangalore", state: "Karnataka", pincode: "560066", created_at: "2025-01-27 00:00:00", updated_at: "2025-01-27 00:00:00"},
+  {id: 2, name: "Hyderabad", address: "Jubilee Hills", city: "Hyderabad", state: "Telangana", pincode: "200245", created_at: "2025-01-27 00:00:00", updated_at: "2025-01-27 00:00:00"}
+])

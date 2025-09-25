@@ -57,7 +57,11 @@
   <p><strong>Date:</strong> <%= @formatted_date %></p>
   <p><strong>Time:</strong> <%= @formatted_time %></p>
   <p><strong>Mode:</strong> <%= @mode %></p>
-  <p><strong>Address:</strong> Mirafra Technologies Pvt Ltd. (Akshay Tech Park, #72 & 73, 2nd Floor, Whitefield, Bangalore, 560066.) <a href="https://goo.gl/maps/b4akd74dhZQ2">https://goo.gl/maps/b4akd74dhZQ2</a></p>
+  <% if @interview.face_to_face_interview? && @interview.officelocation.present? %>
+    <p><strong>Location:</strong> <%= @interview.officelocation.name %> - <%= @interview.officelocation.full_address %></p>
+  <% elsif @interview.face_to_face_interview? %>
+    <p><strong>Address:</strong> Mirafra Technologies Pvt Ltd. (Akshay Tech Park, #72 & 73, 2nd Floor, Whitefield, Bangalore, 560066.) <a href="https://goo.gl/maps/b4akd74dhZQ2">https://goo.gl/maps/b4akd74dhZQ2</a></p>
+  <% end %>
   <p><strong>Contact Person:</strong> <%= @ta_owner&.name || "Mirafra Technologies" %></p>
   
   <p>Kindly confirm your availability, and please feel free to reach out if you have any questions regarding this.</p>

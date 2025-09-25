@@ -14,6 +14,7 @@
         <th>Date</th>
         <th>Time</th>
         <th>Duration</th>
+        <th>Office Location</th>
         <th>Focus</th>
         <th>Actions</th>
       </tr>
@@ -42,6 +43,13 @@
              </td>
              <td>
                <%= select_tag "duration#{index}", options_for_select([['30 min', 30], ['45 min', 45], ['60 min', 60], ['90 min', 90], ['120 min', 120]], i.duration || 60), :class => "form-control select-box-small" %>
+             </td>
+             <td>
+               <% if i.face_to_face_interview? %>
+                 <%= select_tag "officelocation_id#{index}", options_for_select([['Select Office Location', '']] + Interview.available_office_locations, i.officelocation_id), :class => "form-control select-box-small office-location-select" %>
+               <% else %>
+                 <span class="text-muted">N/A</span>
+               <% end %>
              </td>
              <td>
                <%= text_area_tag "interview_focus#{index}", i.focus, :class => "form-control focus-textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');", :rows => 2 %>
@@ -77,5 +85,9 @@
   $('.employee-autocomplete').each(function() {
     createEmployeeAutocomplete('#' + this.id);
   });
+  
+  // Make office locations available to JavaScript
+  window.officeLocations = <%= raw Interview.available_office_locations.to_json %>;
+  
 });
 </script> 

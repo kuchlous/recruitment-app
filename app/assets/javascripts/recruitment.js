@@ -274,6 +274,14 @@ function createLastRow($row, req_match_id) {
   var $hidden_element = $('<input>').attr("type", "hidden").attr("name", "req_match_id").attr("id", "req_match_id").attr("value", req_match_id);
   $last_row.append($hidden_element);
 
+  // Add event listeners to radio buttons for office location toggle
+  $last_row.find('input[name="interview_type"]').on('change', function() {
+    var $row = $(this).closest('tr');
+    toggleOfficeLocationField($row, $(this).val());
+  });
+  // Initially show office location for face-to-face (default selection)
+  var defaultType = $last_row.find('input[name="interview_type"]:checked').val();
+  toggleOfficeLocationField($last_row, defaultType);
 }   
 
 function addInterviewRow(event, req_match_id, time_array)
@@ -318,6 +326,23 @@ function addInterviewRow(event, req_match_id, time_array)
 
   $td = $('<td>');
   $row.append($td);
+  var $office_location_select = $('<select>').attr("name", "officelocation_id").attr("id", "officelocation_id").addClass("form-control select-box-small office-location-select");
+  $office_location_select.append($('<option>').attr("value", "").text("Select Office Location"));
+  
+  // Populate office locations from database
+  if (typeof window.officeLocations !== 'undefined') {
+    window.officeLocations.forEach(function(location) {
+      $office_location_select.append($('<option>').attr("value", location[1]).text(location[0]));
+    });
+  }
+  
+  $td.append($office_location_select);
+  // Initially show N/A (will be changed based on interview type)
+  $office_location_select.hide();
+  $td.append('<span class="text-muted">N/A</span>');
+
+  $td = $('<td>');
+  $row.append($td);
   var $textarea = $('<textarea>').attr("name", "interview_focus").attr("id", "interview_focus").attr("class", "form-control focus_textarea");
   $textarea.value = "Enter focus";
   $textarea.on("focus",
@@ -342,8 +367,31 @@ function addInterviewRow(event, req_match_id, time_array)
   createEmployeeAutocomplete('#interview_employee_name');
   
   createLastRow($row, req_match_id);
+  
 }
 
+// Function to toggle office location field visibility based on interview type
+function toggleOfficeLocationField($row, interviewType) {
+  // Find the previous row that contains the office location cell (interview data row)
+  var $interviewDataRow = $row.prev('tr');
+  var $officeLocationCell = $interviewDataRow.find('td').eq(5); // Office location is the 6th column (0-indexed)
+  var $officeLocationSelect = $officeLocationCell.find('.office-location-select');
+  
+  if (interviewType === 'TELECONF' || interviewType === 'VIDEOCONF' || interviewType === 'TELEPHONE') {
+    // Show N/A for non-face-to-face interviews
+    $officeLocationCell.show();
+    $officeLocationSelect.hide();
+    if ($officeLocationCell.find('.text-muted').length === 0) {
+      $officeLocationCell.append('<span class="text-muted">N/A</span>');
+    }
+  } else {
+    // Show office location dropdown for face-to-face interviews
+    $officeLocationCell.show();
+    $officeLocationSelect.show();
+    $officeLocationSelect.prop('disabled', false);
+    $officeLocationCell.find('.text-muted').remove();
+  }
+}
 
 // Provide links to create portal/agencies if they are not present in current database
 function showReferrals(id_array, name_array, add_status_var)
@@ -1470,6 +1518,7 @@ function changeInterview(interview_id, index)
   int_focus = jQuery("#interview_focus" + index).val();
   interview_level = jQuery("#interview_level_" + index).val();
   duration = jQuery("#duration" + index).val();
+  officelocation_id = jQuery("#officelocation_id" + index).val();
   // Construct URL with parameters
   var url = prepend_with_image_path + '/resumes/update_interview?' + 
     'interview_id=' + interview_id + 
@@ -1478,7 +1527,8 @@ function changeInterview(interview_id, index)
     '&interview_date=' + encodeURIComponent(int_date) + 
     '&interview_focus=' + encodeURIComponent(int_focus) +
     '&interview_level=' + encodeURIComponent(interview_level) +
-    '&duration=' + encodeURIComponent(duration);
+    '&duration=' + encodeURIComponent(duration) +
+    '&officelocation_id=' + encodeURIComponent(officelocation_id);
 
   // Redirect to the constructed URL
   window.location.href = url;

@@ -13,6 +13,9 @@
   <% if @is_teams_conf && @interview.teams_meeting_url.present? %>
     <li><strong>Meeting Link:</strong> <a href="<%= @interview.teams_meeting_url %>"><%= @interview.teams_meeting_url %></a></li>
   <% end %>
+  <% if @interview.face_to_face_interview? && @interview.officelocation.present? %>
+    <li><strong>Location:</strong> <%= @interview.officelocation.name %> - <%= @interview.officelocation.full_address %></li>
+  <% end %>
 </ul>
 
 <p>Please confirm your availability for the revised schedule.</p>

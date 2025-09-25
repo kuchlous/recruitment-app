@@ -136,6 +136,7 @@ Rails.application.routes.draw do
   resources :agencies
   resources :groups
   resources :designations
+  resources :officelocations, only: [:index, :new, :create, :edit, :update]
   resources :requirements do
     member do
       get :suggested_resumes

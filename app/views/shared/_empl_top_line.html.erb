@@ -74,6 +74,9 @@
           <% if is_ADMIN? || is_GM? %>
             <%= link_to "Summaries",             {  :controller => "home", :action => "summaries"}, :class => "secondary_action" %>
           <% end %>
+          <% if is_HR_ADMIN? %>
+            <%= link_to "Office Locations",      {  :controller => "officelocations", :action => "index"}, :class => "secondary_action" %>
+          <% end %>
         </div>
       <% end %>
     </div>

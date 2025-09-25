@@ -1,0 +1,45 @@
+<%= form_with(model: @officelocation, local: true, class: "modern-form") do |form| %>
+  <% if @officelocation.errors.any? %>
+    <div class="error-messages">
+      <h3><%= pluralize(@officelocation.errors.count, "error") %> prohibited this office location from being saved:</h3>
+      <ul>
+        <% @officelocation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-section">
+    <div class="form-group">
+      <%= form.label :name, "Office Name" %>
+      <%= form.text_field :name, class: "form-control", placeholder: "e.g., BLR-WHITEFIELD, Hyderabad", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :address, "Address" %>
+      <%= form.text_area :address, class: "form-control", rows: 3, placeholder: "e.g., Akshay Tech Park, #72 & 73, 2nd Floor" %>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <%= form.label :city, "City" %>
+        <%= form.text_field :city, class: "form-control", placeholder: "e.g., Bangalore" %>
+      </div>
+      <div class="form-group">
+        <%= form.label :state, "State" %>
+        <%= form.text_field :state, class: "form-control", placeholder: "e.g., Karnataka" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :pincode, "Pincode" %>
+      <%= form.text_field :pincode, class: "form-control", placeholder: "e.g., 560066" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit submit_text, class: "btn btn-primary" %>
+    <%= link_to "Cancel", officelocations_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

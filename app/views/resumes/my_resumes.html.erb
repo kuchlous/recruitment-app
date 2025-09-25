@@ -5,44 +5,42 @@
   </div>
   
   <% if @resumes.size > 0 %>
-    <div class="table-responsive">
-      <table class="modern-table sortable">
-        <thead>
+    <table class="modern-table sortable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Upload Date</th>
+          <th>Overall Status</th>
+          <th>Recent Activity On</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @resumes.each do |resume| %>
           <tr>
-            <th>Name</th>
-            <th>Upload Date</th>
-            <th>Overall Status</th>
-            <th>Recent Activity On</th>
-            <th>Phone Number</th>
-            <th>Email</th>
+            <td class="table-cell-primary" title="<%= resume.name %>">
+              <%= resume_link(resume) %>
+            </td>
+            <td class="table-cell-secondary">
+              <%= print_date(resume.created_at) %>
+            </td>
+            <td class="table-cell-secondary">
+              <%= resume.overall_status %>
+            </td>
+            <td class="table-cell-secondary">
+              <%= print_date(resume.change_date) %>
+            </td>
+            <td class="table-cell-truncated" title="<%= resume.phone %>">
+              <%= resume.phone %>
+            </td>
+            <td class="table-cell-truncated" title="<%= resume.email %>">
+              <%= resume.email %>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          <% @resumes.each do |resume| %>
-            <tr>
-              <td class="table-cell-primary" title="<%= resume.name %>">
-                <%= resume_link(resume) %>
-              </td>
-              <td class="table-cell-secondary">
-                <%= print_date(resume.created_at) %>
-              </td>
-              <td class="table-cell-secondary">
-                <%= resume.overall_status %>
-              </td>
-              <td class="table-cell-secondary">
-                <%= print_date(resume.change_date) %>
-              </td>
-              <td class="table-cell-truncated" title="<%= resume.phone %>">
-                <%= resume.phone %>
-              </td>
-              <td class="table-cell-truncated" title="<%= resume.email %>">
-                <%= resume.email %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+        <% end %>
+      </tbody>
+    </table>
   <% else %>
     <div class="table-empty">
       <div class="empty-icon">📄</div>

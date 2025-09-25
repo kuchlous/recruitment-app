@@ -1762,6 +1762,7 @@ class ResumesController < ApplicationController
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
+    officelocation_id = params[:officelocation_id]
     i_time = Time.zone.parse (int_date + " " + int_time)
     
     # Look up employee by name
@@ -1776,7 +1777,8 @@ class ResumesController < ApplicationController
                                 :focus          => int_focus,
                                 :req_match      => match,
                                 :interview_level => interview_level,
-                                :duration       => duration.to_i)
+                                :duration       => duration.to_i,
+                                :officelocation_id => officelocation_id)
       if interview.save
         # Scheduled only when interview get saved
         match.update!(:status => "SCHEDULED")
@@ -1815,6 +1817,7 @@ class ResumesController < ApplicationController
     int_focus = "" if int_focus == "Enter focus"
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
+    officelocation_id = params[:officelocation_id]
     interview = Interview.find(int_id)
 
     # Look up employee by name
@@ -1826,7 +1829,8 @@ class ResumesController < ApplicationController
                                 :interview_time => int_time,
                                 :focus => int_focus,
                                 :interview_level => interview_level,
-                                :duration => duration.to_i
+                                :duration => duration.to_i,
+                                :officelocation_id => officelocation_id
                               )
 
     match     = interview.req_match
