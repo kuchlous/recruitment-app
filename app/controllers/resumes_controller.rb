@@ -1161,18 +1161,12 @@ class ResumesController < ApplicationController
   #               Also, Interviews are sorted based upon the time.                                   #
   ####################################################################################################
   def interview_requests
-    # SQL sort on dates does not seem to work well. Sort first by date
-    # then by time. Note that seconds_since_midnight is necessary as time
-    # comparison does not work well otherwise.
-    all_interviews    = get_current_employee.interviews.sort_by { |i| [i.interview_date ? i.interview_date : Date.today, i.interview_time.seconds_since_midnight] }
-  
-    @interview_requests      = []
-    all_interviews.each do |interview|
-      if interview.req_match.status == "SCHEDULED"
-        @interview_requests << interview
-      end
-    end
-    @interview_requests = @interview_requests.uniq
+    # Filter interviews by req_match status in SQL and sort by date and time
+    @interview_requests = get_current_employee.interviews
+                                              .joins(:req_match)
+                                              .where(req_matches: { status: "SCHEDULED" })
+                                              .order(:interview_date, :interview_time)
+                                              .uniq
   end
 
   ####################################################################################################
