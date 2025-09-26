@@ -222,7 +222,11 @@ class Employee < ActiveRecord::Base
   end
 
   def teams_email
-    self.login + "@mirafra2.onmicrosoft.com"
+    if self.group.name.include?('SWE')
+      self.login + "@mirafra.onmicrosoft.com"
+    else
+      self.login + "@mirafra2.onmicrosoft.com"
+    end
   end
 
   def current_email

@@ -185,7 +185,7 @@ class MicrosoftGraphService
 
     # Use calendarView endpoint to get expanded recurring events
     query_params = {
-      '$select' => 'subject,start,end,location,attendees,body,organizer,recurrence,isAllDay',
+      '$select' => 'subject,start,end,location,attendees,body,organizer,recurrence,isAllDay,isCancelled',
       '$orderby' => 'start/dateTime asc'
     }
 
@@ -239,18 +239,18 @@ class MicrosoftGraphService
   def get_credentials_for_group
     # Use SWE credentials if group name contains "SWE", otherwise use HWE credentials
     if @group&.name&.include?("SWE")
-      [APP_CONFIG['microsoft_client_id_swe'], APP_CONFIG['microsoft_client_secret_swe']]
+      [APP_CONFIG['microsoft_client_id_swe'], APP_CONFIG['microsoft_client_secret_swe'], APP_CONFIG['microsoft_tenant_id_swe']]
     else
-      [APP_CONFIG['microsoft_client_id'], APP_CONFIG['microsoft_client_secret']]
+      [APP_CONFIG['microsoft_client_id'], APP_CONFIG['microsoft_client_secret'], APP_CONFIG['microsoft_tenant_id']]
     end
   end
 
   def get_app_access_token
     # Determine which credentials to use based on group
-    client_id, client_secret = get_credentials_for_group
+    client_id, client_secret, tenant_id = get_credentials_for_group
 
     response = self.class.post(
-      "https://login.microsoftonline.com/#{APP_CONFIG['microsoft_tenant_id']}/oauth2/v2.0/token",
+      "https://login.microsoftonline.com/#{tenant_id}/oauth2/v2.0/token",
       body: {
         client_id: client_id,
         client_secret: client_secret,
