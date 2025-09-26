@@ -133,8 +133,10 @@ class RequirementsController < ApplicationController
       @scheduled   = @requirement.scheduled
       @scheduled_l1 = @requirement.scheduled_l1
       @scheduled_l2 = @requirement.scheduled_l2
+      @scheduled_l3 = @requirement.scheduled_l3
       @completed_l1 = @requirement.completed_l1
       @completed_l2 = @requirement.completed_l2
+      @completed_l3 = @requirement.completed_l3
       @rejected    = @requirement.rejected
       @offered     = @requirement.offered
       @joining     = @requirement.joining
@@ -189,6 +191,11 @@ class RequirementsController < ApplicationController
       @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
       @render        = "interview_table"
       @is_req_match  = 1
+    elsif @status    == "Scheduled-L3"
+      @matches       = req.scheduled_l3
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
     elsif @status    == "Completed-L1"
       @matches       = req.completed_l1
       @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
@@ -196,6 +203,11 @@ class RequirementsController < ApplicationController
       @is_req_match  = 1
     elsif @status    == "Completed-L2"
       @matches       = req.completed_l2
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render        = "interview_table"
+      @is_req_match  = 1
+    elsif @status    == "Completed-L3"
+      @matches       = req.completed_l3
       @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
       @render        = "interview_table"
       @is_req_match  = 1

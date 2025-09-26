@@ -150,6 +150,21 @@
               </div>
             <% end %>
             
+            <!-- Scheduled L3 -->
+            <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Scheduled-L3"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @scheduled_l3.size %></div>
+                <div class="stat-label">Scheduled-L3</div>
+              </div>
+            <% end %>
+            <!-- Completed L3 -->
+            <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Completed-L3"), class: "stat-link" do %>
+              <div class="stat-card">
+                <div class="stat-number"><%= @completed_l3.size %></div>
+                <div class="stat-label">Completed-L3</div>
+              </div>
+            <% end %>
+            
             <% ["Hold", "Yto", "Offered", "Joining", "HAC", "Not Joined", "Not Accepted"].each do |status| %>
               <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
                 <div class="stat-card">

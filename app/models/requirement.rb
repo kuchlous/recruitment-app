@@ -97,7 +97,7 @@ class Requirement < ActiveRecord::Base
   end
 
   def scheduled_l1
-    # Get req_matches with L1 interviews that don't have feedback and don't have L2 interviews
+    # Get req_matches with L1 interviews that don't have feedback and don't have L2 or L3 interviews
     l1_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 1})
@@ -105,15 +105,16 @@ class Requirement < ActiveRecord::Base
                                     .where(feedbacks: {id: nil})
                                     .pluck(:id)
     
-    l2_req_match_ids = self.req_matches.joins(:interviews)
-                                    .where(interviews: {interview_level: 2})
-                                    .pluck(:id)
+    higher_level_req_match_ids = self.req_matches.joins(:interviews)
+                                               .where(interviews: {interview_level: [2, 3]})
+                                               .pluck(:id)
     
-    # Return L1 req_matches that don't have L2 interviews
-    self.req_matches.where(id: l1_req_match_ids - l2_req_match_ids)
+    # Return L1 req_matches that don't have L2 or L3 interviews
+    self.req_matches.where(id: l1_req_match_ids - higher_level_req_match_ids)
   end
 
   def scheduled_l2
+    # Get req_matches with L2 interviews that don't have feedback and don't have L3 interviews
     l2_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 2})
@@ -121,33 +122,65 @@ class Requirement < ActiveRecord::Base
                                     .where(feedbacks: {id: nil})
                                     .pluck(:id)
     
-    self.req_matches.where(id: l2_req_match_ids)
+    l3_req_match_ids = self.req_matches.joins(:interviews)
+                                    .where(interviews: {interview_level: 3})
+                                    .pluck(:id)
+    
+    # Return L2 req_matches that don't have L3 interviews
+    self.req_matches.where(id: l2_req_match_ids - l3_req_match_ids)
+  end
+
+  def scheduled_l3
+    l3_req_match_ids = self.req_matches.joins(:resume, :interviews)
+                                    .where(status: "SCHEDULED")
+                                    .where(interviews: {interview_level: 3})
+                                    .left_joins(interviews: :feedbacks)
+                                    .where(feedbacks: {id: nil})
+                                    .pluck(:id)
+    
+    self.req_matches.where(id: l3_req_match_ids)
   end
 
   def completed_l1
-    # Get req_matches with L1 interviews that have feedback and don't have L2 interviews
+    # Get req_matches with L1 interviews that have feedback and don't have L2 or L3 interviews
     l1_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 1})
                                     .joins(interviews: :feedbacks)
                                     .pluck(:id)
     
-    l2_req_match_ids = self.req_matches.joins(:interviews)
-                                    .where(interviews: {interview_level: 2})
-                                    .pluck(:id)
+    higher_level_req_match_ids = self.req_matches.joins(:interviews)
+                                               .where(interviews: {interview_level: [2, 3]})
+                                               .pluck(:id)
     
-    # Return L1 req_matches that don't have L2 interviews
-    self.req_matches.where(id: l1_req_match_ids - l2_req_match_ids)
+    # Return L1 req_matches that don't have L2 or L3 interviews
+    self.req_matches.where(id: l1_req_match_ids - higher_level_req_match_ids)
   end
 
   def completed_l2
+    # Get req_matches with L2 interviews that have feedback and don't have L3 interviews
     l2_req_match_ids = self.req_matches.joins(:resume, :interviews)
                                     .where(status: "SCHEDULED")
                                     .where(interviews: {interview_level: 2})
                                     .joins(interviews: :feedbacks)
                                     .pluck(:id)
     
-    self.req_matches.where(id: l2_req_match_ids)
+    l3_req_match_ids = self.req_matches.joins(:interviews)
+                                    .where(interviews: {interview_level: 3})
+                                    .pluck(:id)
+    
+    # Return L2 req_matches that don't have L3 interviews
+    self.req_matches.where(id: l2_req_match_ids - l3_req_match_ids)
+  end
+
+  def completed_l3
+    l3_req_match_ids = self.req_matches.joins(:resume, :interviews)
+                                    .where(status: "SCHEDULED")
+                                    .where(interviews: {interview_level: 3})
+                                    .joins(interviews: :feedbacks)
+                                    .pluck(:id)
+    
+    self.req_matches.where(id: l3_req_match_ids)
   end
 
   def rejected
