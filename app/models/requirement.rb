@@ -215,6 +215,10 @@ class Requirement < ActiveRecord::Base
     self.req_matches.joins(:resume).where(status: "N_ACCEPTED").where(resumes: {overall_status: "N_ACCEPTED"})
   end
 
+  def eng_select
+    self.req_matches.where(status: "ENG_SELECT")
+  end
+
   def Requirement.open_requirements
     Requirement.all.where(status: "OPEN")
   end

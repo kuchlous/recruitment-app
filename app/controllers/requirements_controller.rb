@@ -145,6 +145,7 @@ class RequirementsController < ApplicationController
       @hold        = @requirement.hold
       @hac         = @requirement.hac
       @yto         = @requirement.yto
+      @eng_select  = @requirement.eng_select
 
       respond_to do |format|
         format.html
@@ -246,6 +247,10 @@ class RequirementsController < ApplicationController
       @is_req_match  = 1
     elsif @status    == "Not Accepted"
       @matches       = req.not_accepted
+      @render        = "manager_index"
+      @is_req_match  = 1
+    elsif @status    == "Eng Select"
+      @matches       = req.eng_select
       @render        = "manager_index"
       @is_req_match  = 1
     end

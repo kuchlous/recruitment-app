@@ -56,9 +56,8 @@
              </td>
              <td>
                <div class="table-actions">
-                 <%= link_to "Delete", host: APP_CONFIG['host_name'], controller: "resumes",:action => "delete_interview", :id => i.id, :class => "action-link danger" %>
-                 <span class="action-separator">|</span>
-                 <%= link_to "Update", "", :onClick=> "changeInterview(#{i.id}, #{index});", :class => "action-link success" %>
+                 <%= link_to image_tag("RedCross.png", :size => "20x20"), { host: APP_CONFIG['host_name'], controller: "resumes", action: "delete_interview", id: i.id }, { class: "action-link danger", title: "Delete Interview", data: { toggle: "tooltip", placement: "top" } } %>
+                 <%= link_to image_tag("GoIcon.gif", :size => "20x20"), "", :onClick=> "changeInterview(#{i.id}, #{index});", :class => "action-link success", :title => "Update Interview", :data => { toggle: "tooltip", placement: "top" } %>
                </div>
              </td>
            </tr>
@@ -88,6 +87,9 @@
   
   // Make office locations available to JavaScript
   window.officeLocations = <%= raw Interview.available_office_locations.to_json %>;
+  
+  // Initialize tooltips
+  $('[data-toggle="tooltip"]').tooltip();
   
 });
 </script> 
