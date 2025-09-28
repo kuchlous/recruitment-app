@@ -29,7 +29,7 @@ class RequirementsController < ApplicationController
     @requirements = if status == "ANY"
                       get_current_employee.requirements
                     else
-                      get_current_employee.requirements.select { |req| req.status == status }
+                      get_current_employee.requirements.where(status: status)
                     end
         
     if @requirements.size == 0

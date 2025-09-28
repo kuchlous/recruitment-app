@@ -89,15 +89,14 @@ class Resume < ActiveRecord::Base
   end
 
   def rejected?
-    return "REJECTED" == self.status if self.status != ""
-    return false if (self.forwards.size == 0 && self.req_matches.size == 0)  # new resume
-
-    nreqs = ReqMatch.count_by_sql("select COUNT(*) FROM req_matches WHERE req_matches.resume_id = #{self.id} AND req_matches.status != \"REJECTED\"")
-    return false if nreqs != 0
-
-    nforwards = ReqMatch.count_by_sql("select COUNT(*) FROM forwards where forwards.resume_id = #{self.id} AND forwards.status != \"REJECTED\" AND forwards.status != \"ACTION TAKEN\" ")
-    return false if nforwards != 0
-
+    return self.status == "REJECTED" if self.status.present?
+  
+    has_non_rejected_req_matches = req_matches.where.not(status: "REJECTED").exists?
+    return false if has_non_rejected_req_matches
+  
+    has_non_rejected_forwards = forwards.where.not(status: ["REJECTED", "ACTION TAKEN"]).exists?
+    return false if has_non_rejected_forwards
+  
     return true
   end
 
@@ -132,42 +131,22 @@ class Resume < ActiveRecord::Base
   def calculate_overall_status
     return self.status.upcase if self.status != ""
 
-    status_array = []
-    self.req_matches.each do |match|
-      status_array << match.status
-    end
+    req_statuses = req_matches.pluck(:status)
+    forward_statuses = forwards.where.not(status: "ACTION TAKEN").pluck(:status)
+    all_statuses = req_statuses + forward_statuses
 
-    self.forwards.each do |fwd|
-      if (fwd.status != "ACTION TAKEN")
-        status_array << fwd.status
-      end
-    end
-
-    reject_array = Array.new(status_array.size, "REJECTED")
-    if status_array.include?("JOINING")
-      return "JOINING"
-    elsif status_array.include?("OFFERED")
-      return "OFFERED"
-    elsif status_array.include?("YTO")
-      return "YTO"
-    elsif status_array.include?("HAC")
-      return "HAC"
-    elsif status_array.include?("ENG_SELECT")
-      return "ENG_SELECT"
-    elsif status_array.include?("HOLD")
-      return "HOLD"
-    elsif status_array.include?("SCHEDULED")
-      return "SCHEDULED"
-    elsif status_array.include?("SHORTLISTED")
-      return "SHORTLISTED"
-    elsif status_array.include?("FORWARDED")
-      return "FORWARDED"
-    elsif status_array.size == 0
-      return "NEW"
-    elsif status_array.eql?(reject_array)
-      return "REJECTED"
-    else
-    end
+    # Priority-based status determination
+    return "JOINING" if all_statuses.include?("JOINING")
+    return "OFFERED" if all_statuses.include?("OFFERED")
+    return "YTO" if all_statuses.include?("YTO")
+    return "HAC" if all_statuses.include?("HAC")
+    return "ENG_SELECT" if all_statuses.include?("ENG_SELECT")
+    return "HOLD" if all_statuses.include?("HOLD")
+    return "SCHEDULED" if all_statuses.include?("SCHEDULED")
+    return "SHORTLISTED" if all_statuses.include?("SHORTLISTED")
+    return "FORWARDED" if all_statuses.include?("FORWARDED")
+    return "NEW" if all_statuses.empty?
+    return "REJECTED" if all_statuses.all? { |s| s == "REJECTED" }
   end
 
   def Resume.get_resume_statuses

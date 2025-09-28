@@ -590,6 +590,7 @@ class ResumesController < ApplicationController
     months_table
   end
 
+  # TODO: Can we use resume status instead of comment?
   def find_offered_resumes
     offered_comments = Comment.all.find_all {|c| c.comment.include?("OFFERED") }
     sorted_offered_comments = offered_comments.sort_by { |c| [c.created_at] }

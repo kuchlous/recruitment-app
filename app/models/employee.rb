@@ -33,27 +33,6 @@ class Employee < ActiveRecord::Base
               :class_name => "Employee",
               :foreign_key => "manager_id"
 
-  def Employee.get_manager_array_for_select
-    manager_array = []
-    all_managers = Employee.all.find_all { |e| 
-      e.is_manager? &&
-      e.employee_status == "ACTIVE" 
-    }
-    all_managers.each do |manager|
-      manager_array.push([manager.login, manager.id])
-    end
-    manager_array
-  end
-
-  def Employee.get_employee_array_for_select
-    emp_array = []
-    all_emps = Employee.where(:employee_status => "ACTIVE" ).order(:name)
-    all_emps.each do |emp|
-      emp_array.push([emp.name, emp.id])
-    end
-    emp_array
-  end
-
   def is_HR?
     if /HR/.match(employee_type) || /BUSDEV/.match(employee_type)
       return self
