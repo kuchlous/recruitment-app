@@ -655,9 +655,8 @@ class ResumesController < ApplicationController
   def my_resumes
     @employee = get_current_employee
     @status   = params[:status] ? params[:status]            : "New"
-    @resumes = Resume.where(referral_type: "EMPLOYEE", referral_id: @employee.id)
+    @resumes = Resume.where(referral_type: "EMPLOYEE", referral_id: @employee.id).order(change_date: :desc)
     @status  = "Referral"
-    @resumes = sort_resumes_by_date(@resumes)
   end
 
   ####################################################################################################
