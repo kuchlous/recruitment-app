@@ -24,7 +24,7 @@
     </tbody>
   </table>
 
-  <%= form_with url: resumes_feedback_path, method: :post, local: true, id: "feedback_form", class: "modern-form" do |form| %>
+  <%= form_with url: { controller: 'resumes', action: 'feedback' }, method: :post, local: true, id: "feedback_form", class: "modern-form" do |form| %>
     <div class="form-group">
       <label for="feedback_rating">Rating *</label>
       <select name="feedback[rating]" id="feedback_rating" class="form-control" required style="max-width: 300px;">
