@@ -113,6 +113,7 @@ Rails.application.routes.draw do
   match 'resumes/mark_active',to: 'resumes#mark_active'                    , via: :post
   match 'resumes/add_interview',to: 'resumes#add_interview'              ,via: :post
   match 'resumes/feedback',to: 'resumes#feedback'                          ,via: :post
+  match 'resumes/feedback_form',to: 'resumes#feedback_form', as: :resumes_feedback_form, via: :get
   match 'resumes/show_resume_feedback',to: 'resumes#show_resume_feedback'  ,via: :post
   match 'resumes/decline_interview',to: 'resumes#decline_interview'        ,via: :post
   match 'resumes/add_manual_status_to_resume',to: 'resumes#add_manual_status_to_resume'  ,via: :post

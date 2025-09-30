@@ -655,7 +655,8 @@ class ResumesController < ApplicationController
   def my_resumes
     @employee = get_current_employee
     @status   = params[:status] ? params[:status]            : "New"
-    @resumes = Resume.where(referral_type: "EMPLOYEE", referral_id: @employee.id).order(change_date: :desc)
+    @resumes = Resume.where(referral_type: "EMPLOYEE", referral_id: @employee.id)
+    @resumes = sort_resumes_by_date(@resumes)
     @status  = "Referral"
   end
 
@@ -1607,6 +1608,17 @@ class ResumesController < ApplicationController
     @offered_comments.uniq { |c| c.resume }
 
     render "resumes/_show_quarterly_offered"
+  end
+
+  ####################################################################################################
+  # FUNCTION    : feedback_form                                                                      #
+  # DESCRIPTION : Display feedback form page for interviewers                                        #
+  ####################################################################################################
+  def feedback_form
+    @interview_id = params[:interview_id]
+    @interview = Interview.find(@interview_id)
+    @resume = @interview.req_match.resume
+    @requirement = @interview.req_match.requirement
   end
 
   ####################################################################################################
