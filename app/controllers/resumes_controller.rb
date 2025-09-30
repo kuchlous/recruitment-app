@@ -1658,7 +1658,7 @@ class ResumesController < ApplicationController
       flash[:warning] = "Please select rating also"
     end
 
-    redirect_back(fallback_location: root_path)
+    redirect_to({ controller: 'resumes', action: 'interview_requests' })
   end
 
   ####################################################################################################
