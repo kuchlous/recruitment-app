@@ -201,11 +201,7 @@ class Employee < ActiveRecord::Base
   end
 
   def teams_email
-    if self.group.name.include?('SWE')
-      self.login + "@mirafra.onmicrosoft.com"
-    else
-      self.login + "@mirafra2.onmicrosoft.com"
-    end
+    self.login + "@mirafra2.onmicrosoft.com"
   end
 
   def current_email

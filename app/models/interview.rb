@@ -139,7 +139,7 @@ class Interview < ActiveRecord::Base
     Rails.logger.info "Interview date: #{self.interview_date}"
     Rails.logger.info "Interview time: #{self.interview_time}"
     begin
-      service = MicrosoftGraphService.new(employee.group)
+      service = MicrosoftGraphService.new
       
       # Get calendar events for the interview date
       start_date = self.interview_date.beginning_of_day
