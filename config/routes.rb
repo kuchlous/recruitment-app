@@ -140,7 +140,8 @@ Rails.application.routes.draw do
   resources :officelocations, only: [:index, :new, :create, :edit, :update]
   resources :requirements do
     member do
-      get :suggested_resumes
+      get :suggested_resumes_by_requirement
+      get :suggested_resumes_by_resumes
     end
   end
 
