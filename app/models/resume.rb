@@ -373,10 +373,10 @@ class Resume < ActiveRecord::Base
       worksheet.each do |row|
         resume = Resume.new
         if row_index == 0
-					resume.write_header_to_status_file(status_sheet, row)
-				else
+          resume.write_header_to_status_file(status_sheet, row) 
+        else
           resume.create_resume_from_XL_row(row, logged_employee, current_employee)
-        	resume.write_to_status_file(status_sheet, row, row_index)
+          resume.write_to_status_file(status_sheet, row, row_index)
         end
         row_index = row_index + 1
       end
