@@ -324,12 +324,14 @@ class RequirementsController < ApplicationController
     render json: requirements.map { |req| { id: req.id, name: req.name } }
   end
 
-  def suggested_resumes
+  def suggested_resumes_by_requirement
     @requirement = Requirement.find(params[:id])
     
-    # Get the requirement's embedding
+    # Use requirement's embedding for search
     requirement_embedding = @requirement.get_embedding
     existing_resume_ids = @requirement.forwards.pluck(:resume_id) + @requirement.req_matches.pluck(:resume_id)
+    
+    Rails.logger.info "Using requirement embedding for requirement #{@requirement.id}"
     
     if requirement_embedding.present?
       # Find similar resumes using KNN search with exclusion
@@ -343,10 +345,119 @@ class RequirementsController < ApplicationController
       @results = []
     end
     
-    render 'resumes/_search_results_table', locals: { title: "Suggested Resumes for #{@requirement.name}" }
+    render 'resumes/_search_results_table', locals: { title: "Suggested Resumes (by Requirement) for #{@requirement.name}" }
+  end
+
+  def suggested_resumes_by_resumes
+    @requirement = Requirement.find(params[:id])
+    
+    # Get resumes in priority order for average embedding calculation
+    priority_resumes = get_priority_resumes_for_average(@requirement)
+    
+    # Determine which embedding to use for search
+    search_embedding = if priority_resumes.size > 1
+      # Calculate average embedding from priority resumes
+      Rails.logger.info "Using average embedding from #{priority_resumes.size} priority resumes for requirement #{@requirement.id}"
+      calculate_average_embedding(priority_resumes)
+    else
+      search_embedding = nil
+    end
+    
+    existing_resume_ids = @requirement.forwards.pluck(:resume_id) + @requirement.req_matches.pluck(:resume_id)
+    
+    if search_embedding.present?
+      # Find similar resumes using KNN search with exclusion
+      @results = Resume.similar_resumes(
+        search_embedding,
+        where_conditions: { id: { not: existing_resume_ids } },
+        page: params[:page],
+        per_page: get_per_page
+      )
+    else
+      @results = []
+    end
+    
+    render 'resumes/_search_results_table', locals: { title: "Suggested Resumes (by Similar Resumes) for #{@requirement.name}" }
   end
 
 private
+
+  def get_priority_resumes_for_average(requirement)
+    # Get resumes in priority order: joining, offered, yto, eng_select, scheduled, shortlisted
+    # Limit to maximum 10 resumes
+    priority_resumes = []
+    
+    # 1. Joining resumes
+    joining_resumes = requirement.joining.includes(:resume).map(&:resume)
+    priority_resumes.concat(joining_resumes)
+    
+    # 2. Offered resumes
+    if priority_resumes.size < 10
+      offered_resumes = requirement.offered.includes(:resume).map(&:resume)
+      priority_resumes.concat(offered_resumes)
+    end
+    
+    # 3. YTO resumes
+    if priority_resumes.size < 10
+      yto_resumes = requirement.yto.includes(:resume).map(&:resume)
+      priority_resumes.concat(yto_resumes)
+    end
+    
+    # 4. Eng Select resumes
+    if priority_resumes.size < 10
+      eng_select_resumes = requirement.eng_select.includes(:resume).map(&:resume)
+      priority_resumes.concat(eng_select_resumes)
+    end
+    
+    # 5. Scheduled resumes
+    if priority_resumes.size < 10
+      scheduled_resumes = requirement.scheduled.includes(:resume).map(&:resume)
+      priority_resumes.concat(scheduled_resumes)
+    end
+    
+    # 6. Shortlisted resumes
+    if priority_resumes.size < 10
+      shortlisted_resumes = requirement.shortlists.includes(:resume).map(&:resume)
+      priority_resumes.concat(shortlisted_resumes)
+    end
+    
+    # Limit to 10 resumes and remove duplicates
+    priority_resumes.uniq.first(10)
+  end
+
+  def calculate_average_embedding(resumes)
+    return nil if resumes.empty?
+    
+    # Get all valid embeddings from the resumes
+    embeddings = resumes.map(&:get_embedding).compact
+    
+    Rails.logger.info "Found #{embeddings.length} valid embeddings out of #{resumes.length} shortlisted resumes"
+    
+    return nil if embeddings.empty?
+    
+    # Calculate the average of each dimension
+    dimension_count = embeddings.first.length
+    average_embedding = Array.new(dimension_count, 0.0)
+    
+    embeddings.each do |embedding|
+      embedding.each_with_index do |value, index|
+        average_embedding[index] += value
+      end
+    end
+    
+    # Divide by the number of embeddings to get the average
+    average_embedding.map! { |sum| sum / embeddings.length }
+    
+    # Normalize the average embedding to unit length for cosine similarity
+    magnitude = Math.sqrt(average_embedding.map { |x| x * x }.sum)
+    if magnitude > 0
+      average_embedding.map! { |x| x / magnitude }
+    end
+    
+    Rails.logger.info "Calculated and normalized average embedding with #{dimension_count} dimensions"
+    
+    average_embedding
+  end
 
   def email_for_adding_requirement(req)
     Emailer.requirement(get_current_employee, req).deliver_now

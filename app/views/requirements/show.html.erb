@@ -103,7 +103,8 @@
             <h3 class="card-title">Resume Statistics</h3>
             <div class="card-actions">
               <%= link_to "Export All Resumes", url_for(:controller => "resumes", :action => "export_as_xls_requirement", :requirement_id => @requirement.id), class: "card-action", data: {turbolinks: false} %>
-              <%= link_to "Suggested Resumes", url_for(controller: "requirements", action: "suggested_resumes", id: @requirement.id), class: "card-action primary", title: "Find resumes that match this requirement" %>
+              <%= link_to "Suggested by JD", url_for(controller: "requirements", action: "suggested_resumes_by_requirement", id: @requirement.id), class: "card-action primary", title: "Find resumes that match this requirement's description" %>
+              <%= link_to "Suggested by Similar", url_for(controller: "requirements", action: "suggested_resumes_by_resumes", id: @requirement.id), class: "card-action secondary", title: "Find resumes similar to successful candidates for this requirement" %>
             </div>
           </div>
           

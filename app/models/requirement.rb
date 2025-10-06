@@ -259,6 +259,10 @@ class Requirement < ActiveRecord::Base
 
   # Prepare text for embedding generation
   def prepare_text_for_embedding
+    # No point in embedding if the text is too short
+    if description.length + name.length + skill.length < 100
+      return ""
+    end 
     text_parts = []
     
     text_parts << "Requirement Name: #{name}" if name.present?
