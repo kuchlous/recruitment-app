@@ -677,6 +677,18 @@ class Resume < ActiveRecord::Base
     end
   end
 
+  # Retrieve embedding from database
+  def get_embedding
+    return nil if embedding.blank?
+    
+    begin
+      JSON.parse(embedding)
+    rescue JSON::ParserError
+      Rails.logger.error "Error parsing embedding for resume #{id}"
+      nil
+    end
+  end
+
 private
 
   def expire_joined_cache
@@ -752,20 +764,6 @@ private
     
     # Join all parts with spaces and clean up
     text_parts.compact.join(" ").strip
-  end
-
-
-
-  # Retrieve embedding from database
-  def get_embedding
-    return nil if embedding.blank?
-    
-    begin
-      JSON.parse(embedding)
-    rescue JSON::ParserError
-      Rails.logger.error "Error parsing embedding for resume #{id}"
-      nil
-    end
   end
 
   # Class method for KNN similarity search with optional filters
