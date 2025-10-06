@@ -48,13 +48,20 @@ module OpenaiUtils
           temperature: 0.3
         )
 
-        summary = response.dig("choices", 0, "message", "content")&.strip
-        return summary if summary.present?
+        # Debug: Log the response structure
+        Rails.logger.info "OpenAI Response: #{response.inspect}"
+
+        if response && response[:choices] && response[:choices][0] && response[:choices][0][:message]
+          summary = response[:choices][0][:message][:content]
+          summary = summary.strip if summary
+          return summary if summary.present?
+        end
         
-        Rails.logger.error "OpenAI returned empty summary for resume"
+        Rails.logger.error "OpenAI returned empty or invalid response for resume"
         return nil
       rescue => e
         Rails.logger.error "Error generating resume summary: #{e.message}"
+        Rails.logger.error "Response was: #{response.inspect}" if response
         return nil
       end
     end

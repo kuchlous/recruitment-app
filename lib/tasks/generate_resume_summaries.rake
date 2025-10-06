@@ -47,7 +47,7 @@ namespace :resume do
     error_count = 0
     skipped_count = 0
 
-    resumes_to_process.find_each do |resume|
+    resumes_to_process.each do |resume|
       begin
         puts "\n📄 Processing: #{resume.name} (ID: #{resume.id})"
         
