@@ -2,7 +2,7 @@
   display: flex;
   line-height: normal;
   padding: 20px;
-  background-color: rgb(227, 228, 250);
+  background-color: rgb(240, 248, 241);
   width: 100%;
 }
 .resume__info {
@@ -62,13 +62,6 @@
   padding: 10px;
   border-left: 3px solid grey;
 }
-.resume__summary {
-    border-top: 3px solid grey;
-    border-bottom: 3px solid grey;
-    padding: 5px;
-    text-align: center;
-    font-size: 16px;
-}
 .resume__summary-heading {
   font-weight: bold;
   padding-bottom: 5px;
@@ -105,35 +98,225 @@
 .section {
   padding: 10px;
 }
-.section__title {
-  font-size: 20px;
-  font-weight: bold;
-  border-bottom: 3px solid gray;
-  padding: 10px 0px;
-  margin-bottom: 10px;
-}
-.section__subtitle {
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 10px;
-    color: #393535;
-}
+/* ==========================================================
+   Comment Styling - Modern Design
+   Description - Enhanced styling for comments, feedbacks, and messages
+   ========================================================== */
+
 .comment {
-  border-bottom: 1px solid gray;
-  margin-bottom: 10px;
-  background-color: white;
-  padding: 5px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-left: 3px solid rgb(59, 133, 81);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
 }
+
+.comment:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-left-color: rgb(34, 85, 52);
+}
+
+.comment__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .comment__author {
-  font-size: 16px;
-  color: black;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
+
+.comment__author::before {
+  content: '👤';
+  font-size: 12px;
+  opacity: 0.6;
+}
+
 .comment__date {
-   font-size: 12px;
-   color: #6c6868
+  font-size: 11px;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+  white-space: nowrap;
 }
+
 .comment__body {
-    padding-top: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #495057;
+  margin-top: 4px;
+}
+
+.comment__body p {
+  margin: 0 0 8px 0;
+}
+
+.comment__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Comment Type Variations */
+.comment--hr {
+  border-left: 3px solid #dc3545;
+}
+
+.comment--hr .comment__author::before {
+  content: '🏢';
+}
+
+.comment--feedback {
+  border-left: 3px solid #17a2b8;
+}
+
+.comment--feedback .comment__author::before {
+  content: '⭐';
+}
+
+.comment--message {
+  border-left: 3px solid #6f42c1;
+}
+
+.comment--message .comment__author::before {
+  content: none;
+}
+
+
+/* Message Flow Styling */
+.message__flow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.message__from,
+.message__to {
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.message__arrow {
+  font-size: 14px;
+  color: #6c757d;
+  font-weight: bold;
+}
+
+/* Comment Section Headers */
+.section__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+  border-bottom: 2px solid rgb(59, 133, 81);
+  padding: 10px 0;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section__title::before {
+  content: '📋';
+  font-size: 16px;
+}
+
+/* Specific icons for different section types */
+#feedback .section__title::before {
+  content: '📋';
+}
+
+#message .section__title::before {
+  content: '💬';
+}
+
+#comment .section__title::before {
+  content: '💭';
+}
+
+.section__subtitle {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #495057;
+  background: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid rgb(59, 133, 81);
+}
+
+.section__body {
+  margin-top: 12px;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .comment {
+    padding: 10px;
+    margin-bottom: 6px;
+  }
+  
+  .comment__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .comment__author {
+    font-size: 13px;
+  }
+  
+  .comment__date {
+    font-size: 10px;
+    align-self: flex-start;
+  }
+  
+  .comment__body {
+    font-size: 12px;
+  }
+  
+  .message__flow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  
+  .message__arrow {
+    transform: rotate(90deg);
+  }
+  
+  .section__title {
+    font-size: 16px;
+    padding: 8px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .comment {
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  .comment__body {
+    font-size: 11px;
+  }
+  
+  .section__title {
+    font-size: 15px;
+  }
 }
 
 #embed_resume {
@@ -148,27 +331,6 @@
   font-size: 15px;
 }
 
-.rating {
-  text-align: center;
-}
-
-.rating--green {
-  background-color: green;
-}
-
-.rating--yellow {
-  background-color: yellow;
-}
-
-.rating--red {
-  background-color: red;
-}
-
-.rating--orange {
-  background-color: orange;
-}
-
-/* Resume Details Container - Modern replacement for common_class */
 .resume-details-container {
   max-width: 95%;
   margin: 0 auto;
