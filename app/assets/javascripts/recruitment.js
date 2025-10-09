@@ -1581,10 +1581,6 @@ function replaceTDvalue(event, whichTD, value)
   cell.className = "cell_after_changing_status";
 }
 
-function openResumeInNewTab(resume_uniqid) {
-  window.open ( prepend_with_image_path + "/resumes/show/" + resume_uniqid);
-  return false;
-}
 
 // Function to show manual status box
 // Will replace the innerHTML of "ajax_request_tr" with the manual status box
@@ -1955,5 +1951,3 @@ function showBootstrapAlert(message, type) {
 function closeBootstrapAlert() {
   jQuery('.bootstrap-alert, #background_shader').remove();
 }
-
-// =========Functions moved from application.js END========
