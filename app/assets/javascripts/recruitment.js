@@ -743,7 +743,6 @@ function getJoiningDateBox(div_element)
   });
 }
 
-
 // Get the autocomplete input text box which will be used for 
 // autocompletion for the names of employees
 // The names will come from file "jquery_autocomplete/localdata.js"
@@ -759,7 +758,7 @@ function getAutoCompleteTextBox(tdElement)
   txtElement.setAttribute("autocomplete", "off");
 
   // Change color on Onfocus of autocomplete input box
-  jQuery(txtElement).bind("focus",
+  $(txtElement).bind("focus",
     function(txtElement)
     {
       textBoxContentsOnFocus(this.id, 'Enter employee name');
@@ -767,7 +766,7 @@ function getAutoCompleteTextBox(tdElement)
   );
 
   // Change color on Onblur of autocomplete input box
-   jQuery(txtElement).bind("blur",
+  $(txtElement).bind("blur",
     function(txtElement)
     {
       textBoxContentsOnBlur(this.id, 'Enter employee name');
@@ -945,29 +944,28 @@ function showMessageBoxAtTop(event, resume_id)
 // Will replace the innerHTML of "ajax_request_tr" with the message box
 function showMessageBox(cur_element, resume_id)
 {
-  // Create "ajax_request_tr" row
-  var elements = createRow(cur_element);
+  var elements = createRowNew(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Get autocomplete text box for employee names
-  getAutoCompleteTextBox(elements[0]);
+  getAutoCompleteTextBox(elements.tdElement);
 
   // Creating text area element
-  createTextAreaElement(elements[0], "Message");
+  createTextAreaElement(elements.tdElement, "Message");
 
   // Creating an image inside the tr
-  var element   = imageForGoIcon(10, 70);
+  var go_icon   = imageForGoIcon(10, 70);
 
   // Onclick ajax request to send message
-  jQuery(element).bind("click",
-    function(element)
+  $(go_icon).on("click",
+    function()
     {
       document.getElementById("loader").style.display="flex";
       jQuery.ajax({
         url: prepend_with_image_path + "/resumes/add_message?resume_id=" + resume_id + "&counter_value=0" + "&req_match=0",
-        data: 'resume[comment]=' + jQuery('#comment_textarea').val() + "&employee_id=" + jQuery('#message_emp_name').val(),
+        data: 'resume[comment]=' + $('#comment_textarea').val() + "&employee_id=" + $('#message_emp_name').val(),
         type: 'POST',
         success: function (result) {
           document.getElementById("loader").style.display="none";
@@ -984,7 +982,7 @@ function showMessageBox(cur_element, resume_id)
       return false;
      }
   );
-  elements[0].appendChild(element);
+  elements.tdElement.appendChild(go_icon);
 }
 
 // =========Functions used for new_resumes page START========
@@ -1026,35 +1024,39 @@ function showActionBoxReqMatchInternal(cur_element, req_match_id, action, req_ma
 function showForwardBox(cur_element, req_names, req_ids, resume_id)
 {
   // Creates the ajax row under the current element
-  var elements = createRow(cur_element);
+  var elements = createRowNew(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   div             = document.createElement("div");
   div.className   = "multi_selected_qualification_with_no_border";
   div.style.width = "800px";
-  table           = document.createElement("table");
-  tr              = document.createElement("tr");
-  count           = 0;
+  
+  // Create text input for requirements autocomplete
+  var input_div = document.createElement("div");
+  input_div.style.marginBottom = "10px";
+  
+  var text_input = document.createElement("input");
+  text_input.type = "text";
+  text_input.id = "requirement_autocomplete_input";
+  text_input.name = "requirement_names";
+  text_input.className = "form-control requirements-autocomplete";
+  text_input.placeholder = "Type requirement names to search...";
+  text_input.style.width = "100%";
+  text_input.setAttribute("data-autocomplete-url", prepend_with_image_path + "/requirements/autocomplete_requirements");
+  
+  // Store the original requirement data for fallback
+  text_input.setAttribute("data-original-req-names", JSON.stringify(req_names));
+  text_input.setAttribute("data-original-req-ids", JSON.stringify(req_ids));
+  
+  input_div.appendChild(text_input);
+  div.appendChild(input_div);
+  elements.tdElement.appendChild(div);
 
-  // This code chunk is used to display four reqs in a line
-  // and if there are more than 4 reqs then those will comes in
-  // another line
-  for ( i = 0; i < req_names.length; i++ )
-  {
-    if (count == 4)
-    {
-      table.appendChild(tr);
-      tr    = document.createElement("tr");
-      count = 0;
-    }
-    createRequirementsRow(tr, req_ids, req_names);
-    count = count + 1;
-  }
-  table.appendChild(tr);
-  div.appendChild(table);
-  elements[0].appendChild(div);
+  // Initialize autocomplete for the text input using existing function
+  // We need to use a selector string, so we'll use the ID
+  createCommaSeparatedAutocomplete('#' + text_input.id);
 
   // Image for Go-Icon
   var link_element  = document.createElement("a");
@@ -1063,23 +1065,35 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
   var img_element = imageForGoIcon(10, 0);
   img_element.style.paddingBottom = "10px";
 
-  var req_details = document.getElementsByName("req_names[]");
-  jQuery(link_element).bind("click",
-    function(img_element)
+  $(link_element).on("click",
+    function()
     {
       document.getElementById("loader").style.display="flex";
       var selected_req_array   = new Array();
       var index                = 0;
       var display_value        = "Forwarded";
-      for ( i = 0; i < req_details.length; i++) {
-        if (req_details[i].checked) {
-          ivalue = req_details[i].value;
-          if ( ivalue != "undefined" ) {
-            selected_req_array[index] = req_details[i].value;
-            index = index + 1;
+      
+      // Get selected requirements from the text input
+      var input_value = text_input.value.trim();
+      if (input_value) {
+        // Split by comma and get requirement IDs
+        var requirement_names = input_value.split(',').map(function(name) {
+          return name.trim();
+        });
+        
+        // For each requirement name, find the corresponding ID
+        for (var i = 0; i < requirement_names.length; i++) {
+          var req_name = requirement_names[i];
+          for (var j = 0; j < req_names.length; j++) {
+            if (req_names[j] === req_name) {
+              selected_req_array[index] = req_ids[j];
+              index = index + 1;
+              break;
+            }
           }
         }
       }
+      
       if ( selected_req_array.length == 0 ) {
         display_value = "Not Forwarded";
       }
@@ -1089,8 +1103,8 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
         success: function (result) {
           document.getElementById("loader").style.display="none";
           value = findProperValueToBeDisplayed(display_value);
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          deleteAndCreateTDAfterAction(elements.num_tds, value);
+          changeCurrentRowColor(elements.trElement);
         },
         error: function (err) {
           document.getElementById("loader").style.display="none";
@@ -1101,8 +1115,8 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
     }
   );
   link_element.appendChild(img_element);
-  elements[0].appendChild(link_element);
-  containing_tr.after( elements[1]);
+  elements.tdElement.appendChild(link_element);
+  elements.containing_tr.after(elements.trElement);
 }
 
 // This chunk of code will be used to display the req_names
@@ -1360,6 +1374,7 @@ function replyToBox(event, message, parent_message, message_id)
   // Create hidden element to pass message id
   createHiddenElement(elements[0], "message_id", "message_id", message_id);
 }
+
 function createRowNew(cur_element)
 {
   // Remove existing ajax_request_tr if it exists
@@ -1683,3 +1698,262 @@ function showAllImagesForLikelyToJoin(event, resume_id) {
   }
   return false;
 }
+
+// Helper function to create comma-separated autocomplete with filtering
+function createCommaSeparatedAutocomplete(selector, options) {
+  var defaultOptions = {
+    minLength: 0,
+    delay: 300,
+    autoFocus: true,
+    position: { my: "left top", at: "left bottom", collision: "flip" }
+  };
+  
+  var config = $.extend({}, defaultOptions, options);
+  
+  $(selector).autocomplete({
+    source: function(request, response) {
+      // Extract the current word being typed (after the last comma)
+      var terms = request.term.split(',');
+      var currentTerm = terms[terms.length - 1].trim();
+      
+      // Only proceed if current term has at least 2 characters
+      if (currentTerm.length < 2) {
+        response([]);
+        return;
+      }
+      
+      // Get all currently selected names (excluding the current term being typed)
+      var selectedNames = [];
+      if (terms.length > 1) {
+        selectedNames = terms.slice(0, -1).map(function(name) {
+          return name.trim();
+        });
+      }
+      
+      $.ajax({
+        url: $(this.element).data('autocomplete-url'),
+        dataType: 'json',
+        data: {
+          query: currentTerm
+        },
+        success: function(data) {
+          // Handle both old format (array of strings) and new format (array of objects)
+          var names = data.map(function(item) {
+            return typeof item === 'string' ? item : item.name;
+          });
+          
+          // Filter out already selected names
+          var filteredData = names.filter(function(name) {
+            return selectedNames.indexOf(name) === -1;
+          });
+          response(filteredData);
+        }
+      });
+    },
+    minLength: config.minLength,
+    delay: config.delay,
+    autoFocus: config.autoFocus,
+    position: config.position,
+    select: function(event, ui) {
+      // Get the current value and split by commas
+      var terms = this.value.split(',');
+      // Replace the last term with the selected value
+      terms[terms.length - 1] = ui.item.value;
+      // Join back with commas and update the field
+      this.value = terms.join(', ');
+      return false; // Prevent default behavior
+    }
+  });
+}
+
+// for employees available in our database
+function fillInputBoxWithContents()
+{
+  element = $("#message_emp_name");
+  element.autocomplete({source: empNames["listedEmployees"]});
+}
+
+// Function to initialize all components
+function initializeComponents() {
+  console.log('Initializing components...');
+  
+  $('.hidden_by_default').hide();
+  
+  // Debug: Check if jQuery is loaded
+  console.log('jQuery version:', $.fn.jquery);
+  
+  // Debug: Check if jQuery UI is loaded
+  console.log('jQuery UI datepicker available:', typeof $.fn.datepicker);
+  
+  // Initialize datepicker for all elements with datepicker class
+  $('.datepicker').datepicker({
+    dateFormat: 'dd-mm-yy',
+    showOn: "focus",
+    buttonText: "Select date"
+  });
+  
+  // Debug: Log datepicker elements
+  console.log('Datepicker elements found:', $('.datepicker').length);
+  
+  // Debug: Test datepicker functionality
+  $('.datepicker').on('focus', function() {
+    console.log('Datepicker focused:', $(this).attr('id') || $(this).attr('name'));
+  });
+  
+  // Initialize location autocomplete for both location and preferred location fields
+  $('.location-autocomplete').autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: $(this.element).data('autocomplete-url'),
+        dataType: 'json',
+        data: {
+          query: request.term
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    },
+    minLength: 1,
+    delay: 300,
+    autoFocus: true,
+    position: { my: "left top", at: "left bottom", collision: "flip" }
+  });
+
+  // Initialize comma-separated autocomplete fields using the helper function
+  createCommaSeparatedAutocomplete('.eng-leads-autocomplete');
+  createCommaSeparatedAutocomplete('.ta-leads-autocomplete');
+  createCommaSeparatedAutocomplete('.requirements-autocomplete');
+
+  // File upload label update
+  $('.file-input').on('change', function() {
+    var fileName = $(this).val().split('\\').pop();
+    var label = $(this).siblings('.file-input-label');
+    if (fileName) {
+      label.find('span').text(fileName);
+    } else {
+      label.find('span').text('Choose File');
+    }
+  });
+
+  // Initialize Bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+}
+
+// Ensure jQuery is available as $ for our main code
+jQuery(document).ready(function($) {
+  console.log('jQuery noConflict ready fired');
+  initializeComponents();
+});
+
+// Handle Turbolinks page loads
+$(document).on('turbolinks:load', function() {
+  console.log('Turbolinks load fired');
+  initializeComponents();
+});
+
+function showEventDetails(event)
+{
+  $('#event_desc').html(event.description);
+  $('#desc_dialog').dialog({
+      title: event.title,
+      width: 400,
+      close: function(event, ui) { $('#desc_dialog').dialog('destroy') }
+  });
+}
+
+function redirectToResumeDetails(path, event)
+{
+  window.open(path + "/resumes/show/" + event.resume_uniqid);
+}
+
+function show_column_for_date_when_resume_moved_to_joining()
+{
+  $('.hidden_by_default').toggle();
+}
+
+// Single-value autocomplete function for employee names
+function createEmployeeAutocomplete(selector, options) {
+  var defaultOptions = {
+    minLength: 2,
+    delay: 300,
+    autoFocus: true,
+    position: { my: "left top", at: "left bottom", collision: "flip" }
+  };
+  
+  var config = $.extend({}, defaultOptions, options);
+  
+  $(selector).autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: prepend_with_image_path + '/employees/autocomplete_employees',
+        dataType: 'json',
+        data: {
+          query: request.term
+        },
+        success: function(data) {
+          response(data);
+        }
+      });
+    },
+    minLength: config.minLength,
+    delay: config.delay,
+    autoFocus: config.autoFocus,
+    position: config.position
+  });
+}
+
+// Bootstrap alert styled like alert_box with different types
+function showBootstrapAlert(message, type) {
+  // Remove any existing alerts and background shader
+  jQuery('.bootstrap-alert, #background_shader').remove();
+  
+  // Create background shader (like the original alert_box)
+  var backgroundShader = '<div id="background_shader"></div>';
+  
+  // Get alert type class
+  var alertClass = 'bootstrap-alert';
+  
+  switch(type) {
+    case 'success':
+      alertClass += ' alert-success';
+      break;
+    case 'warning':
+      alertClass += ' alert-warning';
+      break;
+    case 'danger':
+    case 'error':
+      alertClass += ' alert-danger';
+      break;
+    case 'info':
+      alertClass += ' alert-info';
+      break;
+    default:
+      alertClass += ' alert-success';
+  }
+  
+  // Create alert box with type-specific styling
+  var alertHtml = '<div class="' + alertClass + '">' +
+    '<div class="alert-content">' +
+    '<span class="alert-message">' + message + '</span>' +
+    '</div>' +
+    '<div class="alert-ok-button">' +
+    '<img src="' + prepend_with_image_path + '/assets/Ok.png" onclick="closeBootstrapAlert(); return false;">' +
+    '</div>' +
+    '</div>';
+  
+  // Add background shader and alert to body
+  jQuery('body').append(backgroundShader);
+  jQuery('body').append(alertHtml);
+  
+  // Auto-hide after 5 seconds
+  setTimeout(function() {
+    closeBootstrapAlert();
+  }, 5000);
+}
+
+function closeBootstrapAlert() {
+  jQuery('.bootstrap-alert, #background_shader').remove();
+}
+
+// =========Functions moved from application.js END========
