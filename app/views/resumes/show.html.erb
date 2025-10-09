@@ -135,6 +135,13 @@
         <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
       </div>
    </div>
+   
+   <% if @resume.ai_summary && @resume.ai_summary != "" %>
+     <div class="resume__ai-summary">
+       <div class="resume__ai-summary-heading">AI Summary</div>
+       <div class="resume__ai-summary-content"><%= @resume.ai_summary %></div>
+     </div>
+   <% end %>
  </div>
  <div class="resume__actions">
     <h2 class="resume__actions-goto"> Go To: </h2>
