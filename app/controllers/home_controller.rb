@@ -3,6 +3,7 @@ class HomeController < ApplicationController
 
   # check_for_login redirects to index for login
   before_action :check_for_login, :except => ["index"]
+  layout 'login', only: [:index]
 
   before_action :check_for_ADMIN_or_GM, :only => ["show_summary_per_manager", 
                                             "show_summary_per_recruiter",

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+ <head>
+    <title>Mirafra - Recruitment Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%= javascript_tag "prepend_with_image_path = '#{APP_CONFIG['subdomain']}'" %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbo-track': 'reload' %>
+
+    <link href="/assets/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <%= yield :head %>
+  </head>
+  <body class="login-page">
+    <div class="login-container">
+      <!-- Logo Section -->
+      <div class="login-logo">
+        <h1>Mirafra Recruitment</h1>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="login-content">
+        <%= yield %>
+      </div>
+      
+      <!-- Footer -->
+      <div class="login-footer">
+        <p>&copy; <%= Date.current.year %> Mirafra Technologies. All rights reserved.</p>
+        <p class="confidential">Confidential</p>
+      </div>
+    </div>
+    
+    <!-- Flash Messages -->
+    <% unless flash[:success].nil? -%>
+      <script>
+        showBootstrapAlert('<%= j flash[:success] %>', 'success');
+      </script>
+      <% flash[:success] = nil %>
+    <% end %>
+
+    <% unless flash[:warning].nil? -%>
+      <script>
+        showBootstrapAlert('<%= j flash[:warning] %>', 'warning');
+      </script>
+      <% flash[:warning] = nil %>
+    <% end %>
+    
+    <% unless flash[:error].nil? -%>
+      <script>
+        showBootstrapAlert('<%= j flash[:error] %>', 'danger');
+      </script>
+      <% flash[:error] = nil %>
+    <% end %>
+    
+    <% unless flash[:info].nil? -%>
+      <script>
+        showBootstrapAlert('<%= j flash[:info] %>', 'info');
+      </script>
+      <% flash[:info] = nil %>
+    <% end %>
+  </body>
+</html>

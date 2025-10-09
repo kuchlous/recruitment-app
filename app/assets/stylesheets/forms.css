@@ -653,4 +653,418 @@ select.form-control option {
   margin-right: 15px;
 }
 
+/* ==========================================================
+   Login Page Specific Styles
+   Description - Modern login form styling matching app branding
+   ========================================================== */
+
+/* Login Form Container */
+.login-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+}
+
+/* Login Form Header */
+.login-form .form-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid rgb(59, 133, 81);
+}
+
+.login-form .form-header h2 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.login-form .form-header p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* Login Form Groups */
+.login-form .form-group {
+  margin-bottom: 25px;
+}
+
+.login-form .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Login Form Controls */
+.login-form .form-control {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+  background: #fff;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.login-form .form-control:focus {
+  outline: none;
+  border-color: rgb(59, 133, 81);
+  box-shadow: 0 0 0 3px rgba(59, 133, 81, 0.1);
+  transform: translateY(-1px);
+}
+
+.login-form .form-control::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+/* Login Button */
+.login-form .login-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(56, 142, 60) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  margin-top: 10px;
+}
+
+.login-form .login-btn:hover {
+  background: linear-gradient(135deg, rgb(56, 142, 60) 0%, rgb(45, 125, 50) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.login-form .login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.login-form .login-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+}
+
+/* Login Form Actions */
+.login-form .form-actions {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Login Page Background */
+body.login-page {
+  background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Login Container */
+.login-container {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Login Logo Section */
+.login-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-logo h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Login Content */
+.login-content {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Login Footer */
+.login-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.login-footer p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.login-footer .confidential {
+  color: #999;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Login Container Centering */
+.login-page .form-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Enhanced Focus States */
+.login-form .form-control:focus {
+  border-color: rgb(59, 133, 81);
+  box-shadow: 0 0 0 3px rgba(59, 133, 81, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Loading State for Login Button */
+.login-form .login-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.login-form .login-btn:disabled:hover {
+  background: #ccc;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Error State for Form Controls */
+.login-form .form-control.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.login-form .form-control.is-valid {
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+/* Success Message */
+.login-success {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Error Message */
+.login-error {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ==========================================================
+   Login Page Responsive Design
+   Description - Mobile-first responsive design for login page
+   ========================================================== */
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .login-container {
+    max-width: 100%;
+    padding: 15px;
+  }
+  
+  .login-logo h1 {
+    font-size: 24px;
+  }
+  
+  .login-logo {
+    margin-bottom: 30px;
+  }
+  
+  .login-form {
+    max-width: 100%;
+    padding: 25px 20px;
+    margin: 0;
+    border-radius: 8px;
+  }
+  
+  .login-form .form-header h2 {
+    font-size: 24px;
+  }
+  
+  .login-form .form-header p {
+    font-size: 14px;
+  }
+  
+  .login-form .form-group label {
+    font-size: 13px;
+  }
+  
+  .login-form .form-control {
+    padding: 10px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .login-form .login-btn {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+  
+  body.login-page {
+    padding: 10px;
+  }
+  
+  .login-footer {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 10px;
+  }
+  
+  .login-logo h1 {
+    font-size: 22px;
+  }
+  
+  .login-logo {
+    margin-bottom: 25px;
+  }
+  
+  .login-form {
+    padding: 20px 15px;
+    margin: 0;
+  }
+  
+  .login-form .form-header h2 {
+    font-size: 22px;
+  }
+  
+  .login-form .form-header p {
+    font-size: 13px;
+  }
+  
+  .login-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .login-form .form-group label {
+    font-size: 12px;
+  }
+  
+  .login-form .form-control {
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+  
+  .login-form .login-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .login-form .form-actions {
+    margin-top: 25px;
+    padding-top: 15px;
+  }
+  
+  .login-footer {
+    margin-top: 25px;
+  }
+  
+  .login-footer p {
+    font-size: 12px;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .login-container {
+    max-width: 600px;
+  }
+  
+  .login-logo h1 {
+    font-size: 26px;
+  }
+  
+  .login-form {
+    max-width: 450px;
+    padding: 35px;
+  }
+  
+  .login-form .form-header h2 {
+    font-size: 26px;
+  }
+}
+
+/* Large Desktop Styles */
+@media (min-width: 1200px) {
+  .login-container {
+    max-width: 700px;
+  }
+  
+  .login-logo h1 {
+    font-size: 32px;
+  }
+  
+  .login-form {
+    max-width: 500px;
+    padding: 40px;
+  }
+  
+  .login-form .form-header h2 {
+    font-size: 30px;
+  }
+  
+  .login-form .form-header p {
+    font-size: 18px;
+  }
+}
+
 /* Form Submit Buttons */
