@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   match 'home/actions', to: 'home#actions'                                     , via: :get
   match 'home/actions_page', to: 'home#actions_page'                , via: :get
   match 'home/dashboard', to: 'home#dashboard'                      , via: :get
+  match 'home/dashboard_category', to: 'home#dashboard_category'    , via: :get
   match 'home/summaries', to: 'home#summaries'                      , via: :get
   match 'designations/index', to: 'designations#index'              , via: :get
   match 'groups/index', to: 'groups#index'                          , via: :get
