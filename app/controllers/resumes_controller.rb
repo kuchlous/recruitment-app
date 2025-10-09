@@ -2344,27 +2344,6 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
-  # FUNCTIONS   : get_hr_matches                                                                     #
-  # DESCRIPTION : Function to be used by HR/ADMIN when we need to show all requirement's status.     #
-  #               Resumes corresponding to all requirements.                                         #
-  ####################################################################################################
-  def get_hr_matches(status, employee = nil)
-    @row_id_prefix = get_row_id_prefix(status)
-    forwards = []
-    if employee
-      resumes = employee_owned_resumes(employee, status)
-    else
-      resumes = Resume.where(overall_status: status)
-    end
-    resumes.each do |r|
-      forwards += r.forwards.where(status: status)
-      forwards += r.req_matches.where(status: status)
-    end
-    uniq_forwards = uniqify_forwards(forwards)
-    uniq_forwards
-  end
-
-  ####################################################################################################
   # FUNCTIONS   : get_req_matches_of_status                                                          #
   # DESCRIPTION : Function to be used to find req matches of current employee. First we are finding  #
   #               all the requirements of current employee and then from those reqs we are finding   #

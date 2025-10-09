@@ -1,38 +1,117 @@
-<div class="table-container">
-  <div class="table-header">
+<div class="dashboard-container">
+  <div class="dashboard-header">
     <h2>Dashboard</h2>
   </div>
   
-  <table class="modern-table">
-    <thead>
-      <tr>
-        <th>New</th>
-        <th>Forwards</th>
-        <th>Shortlisted</th>
-        <th>Scheduled</th>
-        <th>Rejected</th>
-        <th>Holds</th>
-        <th>Eng Select</th>
-        <th>HAC</th>
-        <th>YTO</th>
-        <th>Offered</th>
-        <th>Joining</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><%= link_to @new.size, :controller=> "resumes", :action => "new_resumes", :mine => "true" %></td>
-        <td><%= link_to @forwards.size, :controller => "resumes", :action => "forwarded", :mine => "true"%></td>
-        <td><%= link_to @shortlists.size, :controller => "resumes", :action => "shortlisted", :mine => "true"%></td>
-        <td><%= link_to @scheduled.size, :controller => "resumes", :action => "interviews_status", :mine => "true"%></td>
-        <td><%= link_to @rejected.size, :controller => "resumes", :action => "rejected", :mine => "true"%></td>
-        <td><%= link_to @holds.size, :controller => "resumes", :action => "hold", :mine => "true"%></td>
-        <td><%= link_to @eng_selects.size, :controller => "resumes", :action => "eng_select", :mine => "true"%></td>
-        <td><%= link_to @hacs.size, :controller => "resumes", :action => "hac", :mine => "true"%></td>
-        <td><%= link_to @ytos.size, :controller => "resumes", :action => "yto", :mine => "true"%></td>
-        <td><%= link_to @offered.size, :controller => "resumes", :action => "offered", :mine => "true"%></td>
-        <td><%= link_to @joining.size, :controller => "resumes", :action => "joined", :mine => "true"%></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="stats-container">
+    <div class="stat-card" data-status="New" data-action="dashboard_category">
+      <div class="stat-number"><%= @new.size %></div>
+      <div class="stat-label">New</div>
+    </div>
+    
+    <div class="stat-card" data-status="Forwarded" data-action="dashboard_category">
+      <div class="stat-number"><%= @forwards.size %></div>
+      <div class="stat-label">Forwards</div>
+    </div>
+    
+    <div class="stat-card" data-status="Shortlisted" data-action="dashboard_category">
+      <div class="stat-number"><%= @shortlists.size %></div>
+      <div class="stat-label">Shortlisted</div>
+    </div>
+    
+    <div class="stat-card" data-status="Scheduled" data-action="dashboard_category">
+      <div class="stat-number"><%= @scheduled.size %></div>
+      <div class="stat-label">Scheduled</div>
+    </div>
+    
+    <div class="stat-card" data-status="Rejected" data-action="dashboard_category">
+      <div class="stat-number"><%= @rejected.size %></div>
+      <div class="stat-label">Rejected</div>
+    </div>
+    
+    <div class="stat-card" data-status="Hold" data-action="dashboard_category">
+      <div class="stat-number"><%= @holds.size %></div>
+      <div class="stat-label">Holds</div>
+    </div>
+    
+    <div class="stat-card" data-status="Eng Select" data-action="dashboard_category">
+      <div class="stat-number"><%= @eng_selects.size %></div>
+      <div class="stat-label">Eng Select</div>
+    </div>
+    
+    <div class="stat-card" data-status="HAC" data-action="dashboard_category">
+      <div class="stat-number"><%= @hacs.size %></div>
+      <div class="stat-label">HAC</div>
+    </div>
+    
+    <div class="stat-card" data-status="Yto" data-action="dashboard_category">
+      <div class="stat-number"><%= @ytos.size %></div>
+      <div class="stat-label">YTO</div>
+    </div>
+    
+    <div class="stat-card" data-status="Offered" data-action="dashboard_category">
+      <div class="stat-number"><%= @offered.size %></div>
+      <div class="stat-label">Offered</div>
+    </div>
+    
+    <div class="stat-card" data-status="Joining" data-action="dashboard_category">
+      <div class="stat-number"><%= @joining.size %></div>
+      <div class="stat-label">Joining</div>
+    </div>
+  </div>
+  
+  <!-- Content area for displaying partials -->
+  <div id="dashboard-content" class="dashboard-content" style="display: none;">
+    <div class="content-header">
+      <h3 id="content-title"></h3>
+      <button id="close-content" class="close-btn">&times;</button>
+    </div>
+    <div id="content-body" class="content-body">
+      <!-- Partial content will be loaded here -->
+    </div>
+  </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  // Stat card click handler
+  $('.stat-card[data-action="dashboard_category"]').on('click', function() {
+    const $this = $(this);
+    const status = $this.data('status');
+    const statNumber = $this.find('.stat-number').text();
+    
+    // Show loading state
+    $('#content-body').html('<div class="loading-spinner">Loading...</div>');
+    $('#dashboard-content').show();
+    
+    // Make AJAX request
+    $.ajax({
+      url: '/home/dashboard_category',
+      method: 'GET',
+      data: { status: status },
+      dataType: 'html',
+      success: function(html) {
+        $('#content-title').text(`${status} (${statNumber})`);
+        $('#content-body').html(html);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error loading content:', error);
+        $('#content-title').text(`${status} (${statNumber}) - Error`);
+        $('#content-body').html('<div class="error-message">Error loading content. Please try again.</div>');
+      }
+    });
+  });
+  
+  // Close button functionality
+  $('#close-content').on('click', function() {
+    $('#dashboard-content').hide();
+  });
+  
+  // Close on escape key
+  $(document).on('keydown', function(e) {
+    if (e.key === 'Escape' && $('#dashboard-content').is(':visible')) {
+      $('#dashboard-content').hide();
+    }
+  });
+});
+</script>

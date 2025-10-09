@@ -214,6 +214,130 @@ class HomeController < ApplicationController
     classify_resumes(resumes)
     @employee = e
   end
+
+  def dashboard_category
+    @status = params[:status]
+    e = get_current_employee
+    @employee = e
+    
+    # Initialize variables for resume display
+    @resumes = []
+    @forwards = []
+    @matches = []
+    @id_prefix = "dashboard_description_row"
+    @counter_value = ""
+    @hold_on_req_page = 0
+    @offer_on_req_page = 0
+    @join_on_req_page = 0
+    @after_shortlist_page = false
+    
+    # Use get_hr_matches for most statuses
+    case @status
+    when "New"
+      @resumes = employee_owned_resumes(e).select { |r| r.overall_status == "NEW" }
+      @render = "manager_index"
+      @is_req_match = 0
+    when "Forwarded"
+      @forwards = get_hr_matches("FORWARDED", e)
+      @render = "manager_index"
+      @is_req_match = 0
+    when "Shortlisted"
+      @forwards = get_hr_matches("SHORTLISTED", e)
+      @render = "manager_index"
+      @is_req_match = 1
+      @after_shortlist_page = true
+    when "Scheduled"
+      @matches = get_hr_matches("SCHEDULED", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Scheduled-L1"
+      @matches = get_hr_matches("SCHEDULED-L1", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Scheduled-L2"
+      @matches = get_hr_matches("SCHEDULED-L2", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Scheduled-L3"
+      @matches = get_hr_matches("SCHEDULED-L3", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Completed-L1"
+      @matches = get_hr_matches("COMPLETED-L1", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Completed-L2"
+      @matches = get_hr_matches("COMPLETED-L2", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Completed-L3"
+      @matches = get_hr_matches("COMPLETED-L3", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "HAC"
+      @matches = get_hr_matches("HAC", e)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Rejected"
+      @forwards = get_hr_matches("REJECTED", e)
+      @render = "manager_index"
+      @is_req_match = 1
+      @after_shortlist_page = true
+    when "Hold"
+      @matches = get_hr_matches("HOLD", e)
+      @render = "interview_table"
+      @hold_on_req_page = 1
+      @is_req_match = 1
+    when "Offered"
+      @matches = get_hr_matches("OFFERED", e)
+      @render = "joining_offered_hold_form"
+      @offer_on_req_page = 1
+      @is_req_match = 1
+    when "Yto"
+      @matches = get_hr_matches("YTO", e)
+      @interviews_late, @interviews_done, @under_process = ResumesController.find_interviews_status(@matches)
+      @render = "interview_table"
+      @is_req_match = 1
+    when "Joining"
+      @matches = get_hr_matches("JOINING", e)
+      @render = "joining_offered_hold_form"
+      @join_on_req_page = 1
+      @is_req_match = 1
+    when "Not Joined"
+      @matches = get_hr_matches("NOT JOINED", e)
+      @render = "manager_index"
+      @is_req_match = 1
+    when "Not Accepted"
+      @matches = get_hr_matches("NOT ACCEPTED", e)
+      @render = "manager_index"
+      @is_req_match = 1
+    when "Eng Select"
+      @matches = get_hr_matches("ENG_SELECT", e)
+      @render = "manager_index"
+      @is_req_match = 1
+    end
+    
+    # Convert forwards to resumes for display
+    @forwards.each do |f| 
+      @resumes.push(f.resume)
+    end
+    
+    @resumes.uniq!
+    
+    # Handle AJAX requests
+    if request.xhr?
+      render partial: "dashboard_category"
+    else
+      render partial: "dashboard_category"
+    end
+  end
  
 private
   def get_summary_for_reqs(reqs, row, totalrow)
