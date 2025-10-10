@@ -86,7 +86,7 @@ $(document).ready(function() {
     
     // Make AJAX request
     $.ajax({
-      url: '/home/dashboard_category',
+      url: prepend_with_image_path + '/home/dashboard_category',
       method: 'GET',
       data: { status: status },
       dataType: 'html',
