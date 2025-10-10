@@ -249,7 +249,7 @@
                   <div class="comment__header">
                     <div class="comment__author"> 
                       By <%= feedback.employee.name %> :: 
-                      <%= get_rating(feedback) %>
+                      <%= feedback.rating %>
                     </div>
                     <div class="comment__date">
                       <%= print_date(feedback.created_at) %>

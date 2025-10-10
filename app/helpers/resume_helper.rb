@@ -122,10 +122,6 @@ module ResumeHelper
     end
   end
 
-  def get_rating(feedback)
-    return feedback.rating
-  end
-
   def get_feedback_rating_average(feedbacks)
     feedback_avg = 0;
     feedbacks.each do |f|
