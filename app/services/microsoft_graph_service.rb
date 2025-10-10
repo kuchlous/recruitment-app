@@ -189,10 +189,21 @@ class MicrosoftGraphService
     }
 
     # Format dates for calendarView (requires specific format)
-    # Convert local dates to UTC for Microsoft Graph
-    start_time = start_date.beginning_of_day.utc.iso8601
-    end_time = end_date.end_of_day.utc.iso8601
-
+    # For calendar overlap checking, we need to ensure we get events for the full day
+    # in the user's local timezone. We'll expand the range slightly to account for
+    # timezone differences and ensure we don't miss any events.
+    
+    # Convert to local timezone first, then to UTC for Microsoft Graph
+    # This ensures we capture the full day in the user's local timezone
+    local_start = start_date.beginning_of_day
+    local_end = end_date.end_of_day
+    
+    # Convert to UTC for Microsoft Graph API
+    # Use the application's configured timezone for proper conversion
+    # New Delhi timezone is UTC+5:30
+    start_time = local_start.in_time_zone('Asia/Kolkata').utc.iso8601
+    end_time = local_end.in_time_zone('Asia/Kolkata').utc.iso8601
+    
     response = self.class.get(
       "/users/#{user_email}/calendarView",
       headers: {

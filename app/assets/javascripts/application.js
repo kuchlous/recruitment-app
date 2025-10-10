@@ -9,6 +9,7 @@
 //= require fullcalendar/gcal
 //= require twitter/bootstrap/modal
 //= require twitter/bootstrap/tooltip
+//= require twitter/bootstrap/popover
 //= require open_requirements_grid
 
 //= require_tree .

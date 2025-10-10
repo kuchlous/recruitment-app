@@ -14,3 +14,92 @@
 .truncated-text-with-tooltip {
   cursor: help;
 }
+
+/* Enhanced resume popover styling */
+.resume-tooltip {
+  text-align: left;
+  line-height: 1.4;
+  font-size: 13px;
+  width: 100%;
+  max-width: none;
+}
+
+.resume-tooltip .tooltip-section {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.resume-tooltip .tooltip-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.resume-tooltip .tooltip-section strong {
+  color: #333;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+}
+
+.resume-tooltip .ai-summary {
+  background: rgba(0, 123, 255, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+  border-left: 3px solid #007bff;
+}
+
+.resume-tooltip .ai-summary em {
+  font-style: italic;
+  color: #495057;
+  line-height: 1.3;
+}
+
+/* Enhanced popover styling for resume links */
+.popover {
+  max-width: 500px !important;
+  min-width: 350px !important;
+  z-index: 1060 !important;
+}
+
+.popover .popover-content {
+  padding: 15px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Specific styling for resume popovers */
+.resume-link-with-popover + .popover {
+  max-width: 600px !important;
+  min-width: 400px !important;
+  z-index: 1060 !important;
+}
+
+.resume-link-with-popover + .popover .popover-content {
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* Ensure popovers are not clipped by parent containers */
+.popover {
+  position: absolute !important;
+  z-index: 1060 !important;
+}
+
+/* Additional positioning fixes for popovers */
+.popover.top {
+  margin-top: -10px;
+}
+
+.popover.bottom {
+  margin-top: 10px;
+}
+
+.popover.left {
+  margin-left: -10px;
+}
+
+.popover.right {
+  margin-left: 10px;
+}

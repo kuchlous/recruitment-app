@@ -532,18 +532,36 @@ module ApplicationHelper
 
 
 
-  def resume_link(resume, placement: "top")
+  def resume_link(resume, placement: "bottom")
     return '' unless resume
     company = resume.current_company ? resume.current_company : ""
     uniqid_name = resume.uniqid.name
     year, month = resume.get_current_experience
     
-    tooltip_html = "Qualification: #{resume.qualification}<br>Experience: #{year}.#{month}<br>Company: #{company}"
+    # Create styled tooltip HTML
+    tooltip_html = "<div class='resume-tooltip'>"
+    tooltip_html += "<div class='tooltip-section'><strong>Qualification:</strong> #{resume.qualification}</div>"
+    tooltip_html += "<div class='tooltip-section'><strong>Experience:</strong> #{year}.#{month} years</div>"
+    tooltip_html += "<div class='tooltip-section'><strong>Company:</strong> #{company}</div>"
+    
+    # Add AI summary to tooltip if present
+    if resume.ai_summary.present?
+      tooltip_html += "<div class='tooltip-section ai-summary'><strong>AI Summary:</strong><br><em>#{resume.ai_summary}</em></div>"
+    end
+    
+    tooltip_html += "</div>"
     
     link_to resume.name, resume_url(uniqid_name, host: APP_CONFIG['host_name']),
-            data: { toggle: "tooltip", placement: placement, html: true },
-            title: tooltip_html,
-            target: "_blank"
+            data: { 
+              toggle: "popover", 
+              placement: placement, 
+              html: true,
+              content: tooltip_html,
+              trigger: "hover focus",
+              container: "body"
+            },
+            target: "_blank",
+            class: "resume-link-with-popover"
   end
 
   def requirement_link(requirement, placement: "top")
