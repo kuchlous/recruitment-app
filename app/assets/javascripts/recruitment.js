@@ -1834,6 +1834,12 @@ function initializeComponents() {
 
   // Initialize Bootstrap tooltips
   $('[data-toggle="tooltip"]').tooltip();
+  
+  // Initialize Bootstrap popovers with body container to avoid clipping
+  $('[data-toggle="popover"]').popover({
+    container: 'body',
+    boundary: 'viewport'
+  });
 }
 
 // Ensure jQuery is available as $ for our main code
