@@ -97,7 +97,6 @@
                hac        = "hac"
                shortlisted = "shortlisted"
                forwarded  = "forwarded"
-               rejected   = "rejected"
                future     = "future"
            elsif is_REQ_MANAGER? 
                hold       = "manager_hold"
@@ -109,7 +108,6 @@
                hac        = "manager_hac"
                shortlisted = "manager_shortlisted"
                forwarded  = "manager_index"
-               rejected   = "manager_rejected"
                future     = "future"
            end
         %>
@@ -128,7 +126,6 @@
         <% if hac         %> <td> <%= link_to "HAC",         :controller => "resumes", :action => "#{hac}"         %>    </td> <% end %>
         <% if yto         %> <td> <%= link_to "YTO",         :controller => "resumes", :action => "#{yto}"         %>    </td> <% end %>
         <% if hold        %> <td> <%= link_to "Hold",        :controller => "resumes", :action => "#{hold}"        %>    </td> <% end %>
-        <% if rejected    %> <td> <%= link_to "Rejected",    :controller => "resumes", :action => "#{rejected}"    %>    </td> <% end %>
         <% if offered     %> <td> <%= link_to "Offered",     :controller => "resumes", :action => "#{offered}"     %>    </td> <% end %>
         <% if joined      %> <td> <%= link_to "Joining",     :controller => "resumes", :action => "#{joined}"      %>    </td> <% end %>
         <% if future      %> <td> <%= link_to "Future",      :controller => "resumes", :action => "#{future}"      %>    </td> <% end %>

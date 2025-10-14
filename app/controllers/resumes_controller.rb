@@ -9,7 +9,6 @@ class ResumesController < ApplicationController
   :offered,
   :recent,
   :joined,
-  :rejected,
   :shortlisted,
   :forwarded,
   :new_resumes,
@@ -352,7 +351,7 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
-  # FUNCTIONS   : manager_index,  manager_shortlisted, manager_rejected, manager_hold                #
+  # FUNCTIONS   : manager_index,  manager_shortlisted, manager_hold                                  #
   #               manager_joined, manager_offered                                                    #
   # DESCRIPTION : Manager functions which are used by the req managers.                              #
   #               These functions are used to display all reqmatches of the requirements which       #
@@ -373,14 +372,6 @@ class ResumesController < ApplicationController
     render "manager_index"
   end
 
-  def manager_rejected
-    @status               = "REJECTED"
-    @is_req_match         = 1
-    @after_shortlist_page = true
-    @forwards = get_matches(@status, false)
-    @forwards = @forwards.paginate(:page => params[:page], :per_page => 100)
-    render "manager_index"
-  end
 
   def manager_hold
     @status           = "HOLD"
@@ -442,7 +433,7 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
-  # FUNCTIONS   : forwarded, shortlisted, rejected, hold, joined, offered, future                    #
+  # FUNCTIONS   : forwarded, shortlisted, hold, joined, offered, future                              #
   # DESCRIPTION : Hr functions which are used by the ADMIN/HR.                                       #
   #               These functions are used when HR/ADMIN wants to see all the reqmatches of specified#
   #               status.                                                                            #
@@ -463,15 +454,6 @@ class ResumesController < ApplicationController
     render "manager_index"
   end
 
-  def rejected
-    @status         = "REJECTED"
-    @row_id_prefix  = "rejected_resume_row"
-    @is_req_match   = 1
-    @after_shortlist_page = true
-    @forwards = get_hr_matches(@status, params[:mine] ? get_current_employee : nil)
-    @forwards = @forwards.paginate(:page => params[:page], :per_page => 100)
-    render "manager_index"
-  end
 
   def hold
     @status           = "HOLD"
