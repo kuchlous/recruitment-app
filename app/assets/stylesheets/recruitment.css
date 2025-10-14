@@ -402,7 +402,6 @@ table
 #resume_details_comments_table td,
 #resume_details_feedback_table td,
 #resume_details_messages_table td,
-#resume_form_table   td,
 #req_breif_details_table td,
 #edit_resume_joining_table td,
 #req_analysis_table td,
@@ -477,7 +476,6 @@ table
 #agency_from_table   td input, 
 #summaries_recruiter_table td input,
 #login_form_table    td input,
-#resume_form_table   td input,
 #search_box          td input,
 #edit_resume_joining_table td input,
 #upload_xls_table td input
@@ -498,7 +496,6 @@ table
 #group_form_table   td select,
 #req_form_table     td select,
 #agency_from_table  td select,
-#resume_form_table  td select,
 #edit_resume_joining_table td select
 {
   height:           30px;
@@ -506,12 +503,6 @@ table
   font-size:        12pt;
 }
 
-#resume_form_table .two_tds_same_line
-{
-  height:           30px;
-  width:            100px;
-  font-size:        12pt;
-}
 
 /* ==========================================================
    Styling Rules - Submit buttons
@@ -549,43 +540,18 @@ table
    Styling Rules - Td for radio buttons
    Description   - Styling the td/cell for radio buttons to come in only one line at upload page.
    ========================================================== */
-#resume_form_table .radio_buttons_one_liner
-{
-  height:           10px;
-  width:            230px;
-  font-size:        8pt;
-  vertical-align:   left;
-  cursor:           default;
-  padding-top:      10px;
-}
 
 /* ==========================================================
    Styling Rules - Radio buttons
    Description   - Styling the radio buttons to come in only one line at upload page.
                    Setting width to 20px so that 4 radio buttons can come.
    ========================================================== */
-#resume_form_table .radio_buttons_one_liner input
-{
-  cursor:           default;
-  width:            20px;
-}
 
-#resume_form_table .radio_buttons_one_liner label
-{
-  vertical-align:   top;
-}
 
 /* ==========================================================
    Styling Rules - Multiple drop down list
    Description   - Styling multiple drop down list for upload page
    ========================================================== */
-#resume_form_table .ddl_with_multiples select
-{
-  height:           100px;
-  width:            230px;
-  font-size:        12pt;
-  background-color: #E6E6E6;
-}
 
 /* ==========================================================
    Styling Rules - Error messsages div
