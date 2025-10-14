@@ -1,4 +1,5 @@
 <% unless @forwards.nil? || @forwards.size == 0 %>
+<form name="form" method="post">
   <table id="resume_list_table" class="modern-table">
     <thead>
       <tr>
@@ -44,6 +45,7 @@
        <% end %>
     </tbody>
   </table>
+</form>
 <% else %>
   <br /> No <%= @status.downcase %> resumes.
 <% end %>

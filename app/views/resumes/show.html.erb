@@ -361,8 +361,10 @@
           </tbody>
         </table>
       <% end %>
-      <% @status    = "FORWARDED"
-         @forwards  = get_resume_req_matches_of_employee(@resume, @status) %>
+    </form>
+    <% 
+      @status    = "FORWARDED"
+      @forwards  = get_resume_req_matches_of_employee(@resume, @status) %>
       <% unless @forwards.nil? || @forwards.empty? %>
         <% @resumes  = get_forwards_resumes(@forwards)
            @is_req_match = 0
@@ -372,8 +374,9 @@
         <%= render "manager_index" %>
         <br /> <br />
       <% end %>
-      <% @status   = "SHORTLISTED"
-         @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
+    <% 
+      @status   = "SHORTLISTED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
       <% unless @forwards.nil? || @forwards.empty? %>
         <% @resumes       = get_reqmatches_resumes(@forwards)
            @is_req_match  = 1
@@ -383,8 +386,9 @@
         <%= render "manager_index" %>
         <br /> <br />
       <% end %>
-      <% @status   = "SCHEDULED"
-         @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
+    <% 
+      @status   = "SCHEDULED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
       <% unless @forwards.nil? || @forwards.empty? %>
         <% @resumes       = get_reqmatches_resumes(@forwards)
            @is_req_match  = 1
@@ -393,9 +397,9 @@
         %>
         <%= render "manager_index" %>
       <% end %>
-    </form>
   <% end %>
 </div>
+
 <div class="modal fade" id="hr-comment-modal" role="dialog" style="display: none;">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
