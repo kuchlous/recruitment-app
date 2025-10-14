@@ -316,11 +316,6 @@
       </div>
     <% end %>
   <% end %>
-  <div id="error_messages_div" class="error_messages_div"> </div>
-  <script>
-    var all_req_ids = [ <%=raw all_reqs_ids().join(",") %>];
-    var all_req_names = [ <%=raw all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
-  </script>
   <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
     <form name="form" method="post">
       <% matches = @resume.req_matches.find_all { |m| 
@@ -366,8 +361,10 @@
           </tbody>
         </table>
       <% end %>
-      <% @status    = "FORWARDED"
-         @forwards  = get_resume_req_matches_of_employee(@resume, @status) %>
+    </form>
+    <% 
+      @status    = "FORWARDED"
+      @forwards  = get_resume_req_matches_of_employee(@resume, @status) %>
       <% unless @forwards.nil? || @forwards.empty? %>
         <% @resumes  = get_forwards_resumes(@forwards)
            @is_req_match = 0
@@ -375,21 +372,10 @@
            @after_shortlist_page = false 
         %>
         <%= render "manager_index" %>
-        <br /> <br />
       <% end %>
-      <% @status   = "SHORTLISTED"
-         @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
-      <% unless @forwards.nil? || @forwards.empty? %>
-        <% @resumes       = get_reqmatches_resumes(@forwards)
-           @is_req_match  = 1
-           @row_id_prefix = "reqmatches_show_index" 
-           @after_shortlist_page = true 
-        %>
-        <%= render "manager_index" %>
-        <br /> <br />
-      <% end %>
-      <% @status   = "SCHEDULED"
-         @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
+    <% 
+      @status   = "SHORTLISTED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
       <% unless @forwards.nil? || @forwards.empty? %>
         <% @resumes       = get_reqmatches_resumes(@forwards)
            @is_req_match  = 1
@@ -398,9 +384,20 @@
         %>
         <%= render "manager_index" %>
       <% end %>
-    </form>
+    <% 
+      @status   = "SCHEDULED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
+      <% unless @forwards.nil? || @forwards.empty? %>
+        <% @resumes       = get_reqmatches_resumes(@forwards)
+           @is_req_match  = 1
+           @row_id_prefix = "reqmatches_show_index" 
+           @after_shortlist_page = true 
+        %>
+        <%= render "manager_index" %>
+      <% end %>
   <% end %>
 </div>
+
 <div class="modal fade" id="hr-comment-modal" role="dialog" style="display: none;">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">

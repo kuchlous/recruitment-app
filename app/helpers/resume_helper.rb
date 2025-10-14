@@ -85,14 +85,10 @@ module ResumeHelper
   end
 
   def is_display_form
-    if params[:action] == "manager_index"       ||
+    params[:action] == "manager_index"       ||
       params[:action]  == "manager_shortlisted" ||
       params[:action]  == "shortlisted"         ||
       params[:action]  == "forwarded"
-      return 1
-    else
-      return 0
-    end
   end
 
   def get_date_when_resume_moved_to_joining(resume)

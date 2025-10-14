@@ -1,8 +1,7 @@
 <div id="inbox_div" class="common_class">
-  <span class="span_with_13_with_padding_0"> InBox </span>
+  <span class="section-header"> InBox </span>
   <br />
   <form name="form" method="post">
-    <div id="error_messages_div" class="error_messages_div"> </div>
     <% if @inbox && @inbox.size > 0 %>
       <%= will_paginate @inbox %> <br />
       <table id="resume_list_table">

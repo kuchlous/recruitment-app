@@ -65,7 +65,6 @@ Rails.application.routes.draw do
   match 'resumes/show/:id',to: 'resumes#show'                , via: :get
   match 'resumes/hold',to: 'resumes#hold'                    , via: :get
   match 'resumes/offered',to: 'resumes#offered'              , via: :get
-  match 'resumes/rejected',to: 'resumes#rejected'            , via: :get
   match 'resumes/future',to: 'resumes#future'                , via: :get
   match 'resumes/submit_ph_rating',to: 'resumes#submit_ph_rating'                , via: :post
   match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
@@ -82,7 +81,6 @@ Rails.application.routes.draw do
   match 'resumes/interviews_status_new',to: 'resumes#interviews_status_new' , via: :get
   match 'resumes/manager_index',to: 'resumes#manager_index'                 , via: :get
   match 'resumes/manager_shortlisted',to: 'resumes#manager_shortlisted'     , via: :get
-  match 'resumes/manager_rejected',to: 'resumes#manager_rejected'           , via: :get
   match 'resumes/manager_interviews_status',to: 'resumes#manager_interviews_status'   , via: :get
   match 'resumes/interview_calendar',to: 'resumes#interview_calendar'       , via: :get
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get 

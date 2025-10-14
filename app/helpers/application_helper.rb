@@ -507,8 +507,7 @@ module ApplicationHelper
   def get_actions_ddl(resume, req_match, status)
     select_tag "actions_name", options_for_select(get_actions_drop_down(status)),
                                                   :class    => "actions_drop_down_list_small",
-                                                  :onchange => "actionBox(this.value, event, all_req_ids,
-                                                                                             all_req_names,
+                                                  :onchange => "actionBox(this.value, event,
                                                                                                #{req_match.id},
                                                                                                #{resume.id});"
   end
@@ -516,8 +515,7 @@ module ApplicationHelper
   def get_manager_actions_dropdownlist(resume, fwd, counter_value, is_shortlist_page = false)
     select_tag "manager_actions_name#{counter_value}", options_for_select(get_manager_actions_drop_down(is_shortlist_page)),
                                                        :class    => "manager_actions_drop_down_list",
-                                                       :onchange => "actionBoxManager(this.value, event, all_req_ids,
-                                                                                                         all_req_names,
+                                                       :onchange => "actionBoxManager(this.value, event,
                                                                                                            #{fwd.id},
                                                                                                            #{resume.id}, #{is_shortlist_page});"
   end

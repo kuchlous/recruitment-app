@@ -1,6 +1,6 @@
 <!---
 <div id="show_requirements_description_div_<%= @status %>">
-  <span class="span_with_13_with_padding_0"> <%= @status.titleize %>
+  <span class="section-header"> <%= @status.titleize %>
   (<% if @render == "manager_index" %>
     <%= @forwards.size %>
    <% else %>

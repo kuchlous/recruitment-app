@@ -141,7 +141,6 @@ class Interview < ActiveRecord::Base
     begin
       service = MicrosoftGraphService.new
       
-      # Get calendar events for the interview date
       start_date = self.interview_date.beginning_of_day
       end_date = self.interview_date.end_of_day
       

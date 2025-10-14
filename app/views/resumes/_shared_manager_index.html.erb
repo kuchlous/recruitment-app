@@ -1,9 +1,5 @@
-<script>
-  var all_req_ids = [ <%= raw all_reqs_ids().join(",") %>];
-  var all_req_names = [ <%= raw all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
-</script>
-<div id="error_messages_div"> </div>
 <% unless @forwards.nil? || @forwards.size == 0 %>
+<form name="form" method="post">
   <table id="resume_list_table" class="modern-table">
     <thead>
       <tr>
@@ -49,6 +45,7 @@
        <% end %>
     </tbody>
   </table>
+</form>
 <% else %>
   <br /> No <%= @status.downcase %> resumes.
 <% end %>
