@@ -45,11 +45,13 @@ function findProperValueToBeDisplayed(value)
 
 // Function used to replace the last td of the "ajax_request_tr" row to the actiont taken(In bold)
 // Used to remove the "ajax_request_tr" row as well.
-function deleteAndCreateTDAfterAction(num_tds, value)
+function deleteAndCreateTDAfterAction(value, containing_tr)
 {
-  // Replacing the last TD after finding the num_tds
+  var num_tds = containing_tr.cells.length;
+  
+  // Replacing the last td 
   containing_tr.deleteCell(num_tds - 1);
-  var cell       = containing_tr.insertCell(num_tds - 1);
+  var cell = containing_tr.insertCell(num_tds - 1);
   cell.innerHTML = value;
   cell.className = "cell_after_changing_status";
 
@@ -439,7 +441,7 @@ function hideReferrals()
 
 // Create the appropriate forms for actions based upon the value of drop down list
 // This is for HR/ADMIN
-function actionBox(value, event, req_id_array, req_name_array, req_match_id, resume_id)
+function actionBox(value, event, req_match_id, resume_id)
 {
   // Finding element where mouse(which td/tr) is clicked
   cur_element = event.target;
@@ -451,7 +453,7 @@ function actionBox(value, event, req_id_array, req_name_array, req_match_id, res
   else if ( value == "Forward to" )
   {
     // Show the forward to box
-    showForwardBox(cur_element, req_name_array, req_id_array, resume_id);
+    showForwardBox(cur_element, resume_id);
   }
   else if ( value == "Message" )
   {
@@ -513,7 +515,7 @@ function actionBox(value, event, req_id_array, req_name_array, req_match_id, res
 
 // Create the appropriate forms for actions based upon the value of drop down list
 // This is for Manager
-function actionBoxManager(value, event, req_id_array, req_name_array, req_match_id, resume_id, is_shortlist_page)
+function actionBoxManager(value, event, req_match_id, resume_id, is_shortlist_page)
 {
   if ( is_shortlist_page )
   {
@@ -562,7 +564,7 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
   else if ( value == "Forward to" )
   {
     // Show the forward to box
-    showForwardBox(cur_element, req_name_array, req_id_array, resume_id);
+    showForwardBox(cur_element, resume_id);
   }
   else if ( value == "Message" )
   {
@@ -629,13 +631,13 @@ function actionBoxManager(value, event, req_id_array, req_name_array, req_match_
       var elements = createRow(cur_element);
 
       // Close box link
-      closeBoxLink(elements[0]);
+      closeBoxLink(elements.tdElement);
 
       span = document.createElement('span');
       span.className = "span_with_13";
       span.style.fontWeight = "bold";
       span.innerHTML = "Please select one requirement";
-      elements[0].appendChild(span);
+      elements.tdElement.appendChild(span);
 
     }
   }
@@ -799,10 +801,10 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
   var elements = createRow(cur_element);
   
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Creating text area element
-  createTextAreaElement(elements[0], "Set Status");
+  createTextAreaElement(elements.tdElement, "Set Status");
 
   // Creating an image inside the tr
   var element   = imageForGoIcon(-22, 70);
@@ -820,8 +822,8 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
           document.getElementById("loader").style.display="none";
           value = "Status";
           value = findProperValueToBeDisplayed(value);
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          deleteAndCreateTDAfterAction(value, elements.containing_tr);
+          changeCurrentRowColor(elements.containing_tr);
         },
         error: function (err) {
           document.getElementById("loader").style.display="none";
@@ -831,7 +833,7 @@ function showAddStatusBox(cur_element, resume_id, req_match_id, req_match_id_or_
       return false;
     }
   );
-  elements[0].appendChild(element);
+  elements.tdElement.appendChild(element);
 }
 
 function showEditJoiningBox(event, resume_id, req_match_id)
@@ -845,19 +847,19 @@ function showEditJoiningBox(event, resume_id, req_match_id)
   var elements = createRow(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Joining date box
-  getJoiningDateBox(elements[0]);
+  getJoiningDateBox(elements.tdElement);
 
   // Drop down list for statuses
   var value   = [ "SELECT", "JOINED", "NOT JOINED", "REJECTED", "FUTURE" ];
   var html    = [ "Select", "Joined", "Not Joined", "Rejected", "Future" ];
-  var select  = createDropDownList(elements[0], "resume[status]", "resume_status", value, html, "");
+  var select  = createDropDownList(elements.tdElement, "resume[status]", "resume_status", value, html, "");
 
-  createLineBreakElement(elements[0], 3);
+  createLineBreakElement(elements.tdElement, 3);
   // Creating text area element
-  createTextAreaElement(elements[0], "edit joining date");
+  createTextAreaElement(elements.tdElement, "edit joining date");
 
   // Creating an image inside the tr
   var element   = imageForGoIcon(10, 70);
@@ -875,8 +877,8 @@ function showEditJoiningBox(event, resume_id, req_match_id)
           document.getElementById("loader").style.display="none";
           value = "Action Taken"
           value = findProperValueToBeDisplayed(value);
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          deleteAndCreateTDAfterAction(value, elements.containing_tr);
+          changeCurrentRowColor(elements.containing_tr);
         },
         error: function (err) {
           document.getElementById("loader").style.display="none";
@@ -886,7 +888,7 @@ function showEditJoiningBox(event, resume_id, req_match_id)
       return false;
     }
   );
-  elements[0].appendChild(element);
+  elements.tdElement.appendChild(element);
 }
 
 function declineInterviewBox(event, interview_id)
@@ -899,10 +901,10 @@ function declineInterviewBox(event, interview_id)
   var elements = createRow(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Creating text area element
-  createTextAreaElement(elements[0], "decline interview");
+  createTextAreaElement(elements.tdElement, "decline interview");
 
   // Creating an image inside the tr
   var element   = imageForGoIcon(-22, 70);
@@ -920,8 +922,8 @@ function declineInterviewBox(event, interview_id)
           document.getElementById("loader").style.display="none";
           value = "Declined";
           value = findProperValueToBeDisplayed(value);
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          deleteAndCreateTDAfterAction(value, elements.containing_tr);
+          changeCurrentRowColor(elements.containing_tr);
         },
         error: function (err) {
           document.getElementById("loader").style.display="none";
@@ -931,7 +933,7 @@ function declineInterviewBox(event, interview_id)
       return false;
     }
   );
-  elements[0].appendChild(element);
+  elements.tdElement.appendChild(element);
 }
 
 function showMessageBoxAtTop(event, resume_id)
@@ -944,7 +946,7 @@ function showMessageBoxAtTop(event, resume_id)
 // Will replace the innerHTML of "ajax_request_tr" with the message box
 function showMessageBox(cur_element, resume_id)
 {
-  var elements = createRowNew(cur_element);
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements.tdElement);
@@ -1005,11 +1007,11 @@ function RejectBox(event, resume_id, action)
 }
 
 // Function used to display the forward box under current row
-function ForwardBox(event, req_names, req_ids, resume_id)
+function ForwardBox(event, resume_id)
 {
   event.preventDefault();
   cur_element = event.target;
-  showForwardBox(cur_element, req_names, req_ids, resume_id);
+  showForwardBox(cur_element, resume_id);
 }
 // =========Functions used for new_resumes page END========
 
@@ -1021,10 +1023,10 @@ function showActionBoxReqMatchInternal(cur_element, req_match_id, action, req_ma
 }
 
 // Function used to show the forward to box filled with requirements
-function showForwardBox(cur_element, req_names, req_ids, resume_id)
+function showForwardBox(cur_element, resume_id)
 {
   // Creates the ajax row under the current element
-  var elements = createRowNew(cur_element);
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements.tdElement);
@@ -1046,9 +1048,8 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
   text_input.style.width = "100%";
   text_input.setAttribute("data-autocomplete-url", prepend_with_image_path + "/requirements/autocomplete_requirements");
   
-  // Store the original requirement data for fallback
-  text_input.setAttribute("data-original-req-names", JSON.stringify(req_names));
-  text_input.setAttribute("data-original-req-ids", JSON.stringify(req_ids));
+  // Store selected IDs (will be populated as user selects from autocomplete)
+  text_input.setAttribute("data-selected-ids", JSON.stringify([]));
   
   input_div.appendChild(text_input);
   div.appendChild(input_div);
@@ -1069,41 +1070,23 @@ function showForwardBox(cur_element, req_names, req_ids, resume_id)
     function()
     {
       document.getElementById("loader").style.display="flex";
-      var selected_req_array   = new Array();
-      var index                = 0;
-      var display_value        = "Forwarded";
+      // Get selected IDs directly from stored data
+      let selected_req_ids = JSON.parse(text_input.getAttribute("data-selected-ids"));
       
-      // Get selected requirements from the text input
-      var input_value = text_input.value.trim();
-      if (input_value) {
-        // Split by comma and get requirement IDs
-        var requirement_names = input_value.split(',').map(function(name) {
-          return name.trim();
-        });
-        
-        // For each requirement name, find the corresponding ID
-        for (var i = 0; i < requirement_names.length; i++) {
-          var req_name = requirement_names[i];
-          for (var j = 0; j < req_names.length; j++) {
-            if (req_names[j] === req_name) {
-              selected_req_array[index] = req_ids[j];
-              index = index + 1;
-              break;
-            }
-          }
-        }
+      if (selected_req_ids.length === 0) {
+        document.getElementById("loader").style.display="none";
+        alert("Please select at least one requirement to forward the resume.");
+        return false;
       }
       
-      if ( selected_req_array.length == 0 ) {
-        display_value = "Not Forwarded";
-      }
+      let url = prepend_with_image_path + "/resumes/create_multiple_forwards?";
+      url += "resume_id=" + resume_id + "&req_ids=" + selected_req_ids;
       jQuery.ajax({
-        url: prepend_with_image_path + "/resumes/create_multiple_forwards?" + "resume_id=" + resume_id + "&req_names=" + selected_req_array,
+        url: url,
         type: 'POST',
         success: function (result) {
           document.getElementById("loader").style.display="none";
-          value = findProperValueToBeDisplayed(display_value);
-          deleteAndCreateTDAfterAction(elements.num_tds, value);
+          deleteAndCreateTDAfterAction("Forwarded", elements.containing_tr);
           changeCurrentRowColor(elements.trElement);
         },
         error: function (err) {
@@ -1160,17 +1143,17 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
   var elements = createRow(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   if ( value == "Joining" )
   {
-    getJoiningDateBox(elements[0]);
+    getJoiningDateBox(elements.tdElement);
     join_align_var = 32;
-    createLineBreakElement(elements[0], 3);
+    createLineBreakElement(elements.tdElement, 3);
   }
 
   // Creating text area
-  createTextAreaElement(elements[0], value);
+  createTextAreaElement(elements.tdElement, value);
 
   // Creating an image and append it to the td
   var element = imageForGoIcon(-22 + join_align_var, 70);
@@ -1217,8 +1200,8 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
         success: function (result) {
           document.getElementById("loader").style.display = "none";
           value = findProperValueToBeDisplayed(value);
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          deleteAndCreateTDAfterAction(value, elements.containing_tr);
+          changeCurrentRowColor(elements.containing_tr);
         },
         error: function (err) {
           document.getElementById("loader").style.display = "none";
@@ -1229,8 +1212,8 @@ function createAjaxRequest(cur_element, req_match_id, value, resume_id, req_matc
       return false;
      }
   );
-  elements[0].appendChild(element);
-  containing_tr.after(elements[1]);
+  elements.tdElement.appendChild(element);
+  elements.containing_tr.after(elements.trElement);
 }
 
 // Show the div
@@ -1323,7 +1306,7 @@ function replyToBox(event, message, parent_message, message_id)
   var elements = createRow(cur_element);
 
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Displays message inside a div
   var div       = document.createElement("div");
@@ -1355,10 +1338,10 @@ function replyToBox(event, message, parent_message, message_id)
     div.appendChild(span);
   }
 
-  elements[0].appendChild(div);
+  elements.tdElement.appendChild(div);
 
   // Creating text area element
-  createTextAreaElement(elements[0], "Message");
+  createTextAreaElement(elements.tdElement, "Message");
 
   // Creating an image inside show resumes comments div.
   var img_element   = imageForGoIcon(10, 70);
@@ -1369,13 +1352,13 @@ function replyToBox(event, message, parent_message, message_id)
       document.form.submit();
     }
   );
-  elements[0].appendChild(img_element);
+  elements.tdElement.appendChild(img_element);
 
   // Create hidden element to pass message id
-  createHiddenElement(elements[0], "message_id", "message_id", message_id);
+  createHiddenElement(elements.tdElement, "message_id", "message_id", message_id);
 }
 
-function createRowNew(cur_element)
+function createRow(cur_element)
 {
   // Remove existing ajax_request_tr if it exists
   $("#ajax_request_tr").remove();
@@ -1395,30 +1378,9 @@ function createRowNew(cur_element)
   $trElement.append($tdElement);
   $containing_tr.after($trElement);
 
-  return {tdElement: $tdElement[0], trElement: $trElement[0], num_tds: num_tds, containing_tr: $containing_tr[0] };
+  return {tdElement: $tdElement[0], trElement: $trElement[0], containing_tr: $containing_tr[0] };
 }
 
-// Function used to create extra row after the current row.
-// Wherever the mouse is clicked, the row will be created just after it
-function createRow(cur_element,num_tds)
-{
-  old_tr              = document.getElementById("ajax_request_tr");
-  if (old_tr)
-  {
-    old_tr.remove();
-  }
-  containing_tr       = cur_element.parentNode.parentNode;
-  num_tds             = containing_tr.children.length;
-  var trElement       = document.createElement("tr");
-  trElement.id        = "ajax_request_tr";
-  var tdElement       = document.createElement("td");
-  tdElement.colSpan   = num_tds;
-  trElement.appendChild(tdElement);
-  containing_tr.after(trElement);
-
-  // Way to return the multiple values in javascript
-  return [ tdElement, trElement, num_tds, containing_tr ];
-}
 
 // Function used for displaying the Go-Icon
 function imageForGoIcon(mright, mtop)
@@ -1442,9 +1404,6 @@ function imageforCrossIcon()
   return img_element;
 }
 
-
-
-
 function viewFeedback(event, resume_id, action, cols)
 {
   document.getElementById("loader").style.display="flex";
@@ -1455,9 +1414,9 @@ function viewFeedback(event, resume_id, action, cols)
   cur_element = event.target;
 
   // Create "ajax_reuest_tr" Row
-  var elements = createRowNew(cur_element);
+  var elements = createRow(cur_element);
   // Sending ajax request to get interviews
-  // The interviews will replace innerHTML of the row created by createRowNew
+  // The interviews will replace innerHTML of the row created by createRow
   jQuery.ajax({
     url: prepend_with_image_path + "/resumes/" + action + "?resume_id=" + resume_id + "&columns=" + cols,
     type: 'POST',
@@ -1479,7 +1438,7 @@ function createFeedbackBox(event, interviewId, resumeId, req_name)
 
   cur_element = event.target;
 
-  var elements = createRowNew(cur_element);
+  var elements = createRow(cur_element);
 
   // Close box link
   closeBoxLink(elements.tdElement);
@@ -1571,9 +1530,9 @@ function showHide(elem)
 function replaceTDvalue(event, whichTD, value)
 {
   // Finding element where mouse(which td/tr) is clicked
-  cur_element   = event.target;
-  containing_tr = cur_element.up('tr');
-  num_tds       = containing_tr.childElements().length;
+  var cur_element   = event.target;
+  var containing_tr = cur_element.up('tr');
+  var num_tds       = containing_tr.childElements().length;
   // Replacing the last TD after finding the num_tds
   containing_tr.deleteCell(num_tds - whichTD);
   var cell       = containing_tr.insertCell(num_tds - whichTD);
@@ -1595,10 +1554,10 @@ function showManualStatusBox(event, resume_id)
   var elements = createRow(cur_element);
   
   // Close box link
-  closeBoxLink(elements[0]);
+  closeBoxLink(elements.tdElement);
 
   // Creating text area element
-  createTextAreaElement(elements[0], "Set manual status");
+  createTextAreaElement(elements.tdElement, "Set manual status");
 
   // Creating an image inside the tr
   var element   = imageForGoIcon(-22, 70);
@@ -1617,8 +1576,8 @@ function showManualStatusBox(event, resume_id)
           value = "Manual Status";
           value = findProperValueToBeDisplayed(value);
           var textbox_value = jQuery('#comment_textarea').val();
-          deleteAndCreateTDAfterAction(elements[2], value);
-          changeCurrentRowColor(elements[3]);
+          deleteAndCreateTDAfterAction(value, elements.containing_tr);
+          changeCurrentRowColor(elements.containing_tr);
           cur_element.innerHTML = textbox_value;
         },
         error: function (err) {
@@ -1629,7 +1588,7 @@ function showManualStatusBox(event, resume_id)
       return false;
     }
   );
-  elements[0].appendChild(element);
+  elements.tdElement.appendChild(element);
 }
 
 function get_image_name(likely_to_join) {
@@ -1733,14 +1692,14 @@ function createCommaSeparatedAutocomplete(selector, options) {
           query: currentTerm
         },
         success: function(data) {
-          // Handle both old format (array of strings) and new format (array of objects)
-          var names = data.map(function(item) {
-            return typeof item === 'string' ? item : item.name;
+          // Process autocomplete data (all endpoints now return {id, name} objects)
+          var processedData = data.map(function(item) {
+            return { label: item.name, value: item.name, id: item.id };
           });
           
           // Filter out already selected names
-          var filteredData = names.filter(function(name) {
-            return selectedNames.indexOf(name) === -1;
+          var filteredData = processedData.filter(function(item) {
+            return selectedNames.indexOf(item.value) === -1;
           });
           response(filteredData);
         }
@@ -1757,6 +1716,14 @@ function createCommaSeparatedAutocomplete(selector, options) {
       terms[terms.length - 1] = ui.item.value;
       // Join back with commas and update the field
       this.value = terms.join(', ');
+      
+      // Store the selected ID if available
+      if (ui.item.id) {
+        var selectedIds = JSON.parse(this.getAttribute("data-selected-ids") || "[]");
+        selectedIds.push(ui.item.id);
+        this.setAttribute("data-selected-ids", JSON.stringify(selectedIds));
+      }
+      
       return false; // Prevent default behavior
     }
   });

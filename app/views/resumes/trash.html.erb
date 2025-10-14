@@ -2,7 +2,6 @@
   <span class="span_with_13_with_padding_0"> Trash </span>
   <br />
   <form name="form" method="post">
-    <div id="error_messages_div" class="error_messages_div"> </div>
     <% if @trash && @trash.size > 0 %>
       <%= will_paginate @trash %> <br />
       <table id="resume_list_table">

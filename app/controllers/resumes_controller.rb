@@ -167,7 +167,7 @@ class ResumesController < ApplicationController
     
     locations = locations.uniq.sort.first(10)
     
-    render json: locations.map { |loc| { value: loc, label: loc } }
+    render json: locations.map { |loc| { id: loc, name: loc } }
   end
 
   def edit
@@ -1046,14 +1046,10 @@ class ResumesController < ApplicationController
   # DESCRIPTION : Used if somebody forwards resume to more than one requirements                     #
   ####################################################################################################
   def create_multiple_forwards
-    resume         = Resume.find(params[:resume_id])
-    req_ids        = []
+    resume = Resume.find(params[:resume_id])
 
-    if (params[:req_names] && params[:req_names].size > 0) 
-      req_ids_array  = params[:req_names].split(",")
-      req_ids_array.each do |r|
-        req_ids << r
-      end
+    if (params[:req_ids] && params[:req_ids].size > 0) 
+      req_ids = params[:req_ids].split(",")
       mesg = Resume.create_reqs(resume, req_ids, get_logged_employee, get_current_employee)
       resume.update_overall_status
       flash[:success] = mesg

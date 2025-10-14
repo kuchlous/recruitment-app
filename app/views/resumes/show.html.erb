@@ -316,11 +316,6 @@
       </div>
     <% end %>
   <% end %>
-  <div id="error_messages_div" class="error_messages_div"> </div>
-  <script>
-    var all_req_ids = [ <%=raw all_reqs_ids().join(",") %>];
-    var all_req_names = [ <%=raw all_reqs_names().map{ |r| '"' + r + '"' }.join(",") %>];
-  </script>
   <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
     <form name="form" method="post">
       <% matches = @resume.req_matches.find_all { |m| 

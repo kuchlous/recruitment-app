@@ -20,9 +20,9 @@ class EmployeesController < ApplicationController
     active_employees = Employee.where(employee_status: "ACTIVE")
                               .where("LOWER(name) LIKE LOWER(?) OR LOWER(login) LIKE LOWER(?)", "%#{query}%", "%#{query}%")
                               .limit(10)
-                              .pluck(:name)
+                              .select(:id, :name)
     
-    render json: active_employees
+    render json: active_employees.map { |emp| { id: emp.id, name: emp.name } }
   end
 
   def autocomplete_hr_employees
@@ -31,8 +31,9 @@ class EmployeesController < ApplicationController
                           .where("employee_type LIKE ?", "%HR%")
                           .where("LOWER(name) LIKE LOWER(?) OR LOWER(login) LIKE LOWER(?)", "%#{query}%", "%#{query}%")
                           .limit(10)
-                          .pluck(:name)
-    render json: hr_employees
+                          .select(:id, :name)
+    
+    render json: hr_employees.map { |emp| { id: emp.id, name: emp.name } }
   end
 
   def list_my_employees
