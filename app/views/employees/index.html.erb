@@ -1,5 +1,5 @@
 <div id="employees_index_div" class="common_class">
-  <span class="span_with_13_with_padding_0"> List of all employees </span>
+  <span class="section-header"> List of all employees </span>
   ( <% ('A'..'Z').each do |a| %>
       <%= link_to a, :action => "list_my_employees", :character_name => a, :page => "with_alphabet" %>
     <% end %>

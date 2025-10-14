@@ -2,7 +2,7 @@
    row_id_prefix = get_row_id_prefix("NEW") %>
 
 <div id="new_resumes_div" class="common_class">
-  <span class="span_with_13_with_padding_0"> New Resumes (<%= @resumes.size %>)</span>
+  <span class="section-header"> New Resumes (<%= @resumes.size %>)</span>
   <form name="form" method="post">
     <table id="resume_list_table" class="sortable">
       <% unless @resumes.nil? || @resumes.size == 0 %>
