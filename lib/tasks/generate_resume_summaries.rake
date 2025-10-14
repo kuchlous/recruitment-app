@@ -141,4 +141,99 @@ namespace :resume do
     puts "Without AI summaries: #{resumes_without_ai_summaries}"
     puts "Coverage: #{(resumes_with_ai_summaries.to_f / total_resumes * 100).round(1)}%"
   end
+
+  desc "Generate AI summaries for last 100 resumes (for nightly processing)"
+  task :generate_last_100_summaries => :environment do
+    puts "🌙 Starting nightly processing of last 100 resumes..."
+    puts "=" * 60
+    
+    # Check if OpenAI API key is configured
+    unless ENV['OPENAI_API_KEY'].present?
+      puts "❌ Error: OPENAI_API_KEY environment variable is not set"
+      puts "Please set your OpenAI API key: export OPENAI_API_KEY='your-api-key-here'"
+      exit 1
+    end
+    
+    # Process last 100 resumes without AI summaries
+    resumes_to_process = Resume.where(ai_summary: [nil, ""])
+                               .order(created_at: :desc)
+                               .limit(100)
+    
+    if resumes_to_process.empty?
+      puts "✅ No resumes to process - all resumes already have AI summaries"
+      exit 0
+    end
+    
+    puts "📋 Found #{resumes_to_process.count} resumes to process"
+    
+    # Process resumes
+    success_count = 0
+    error_count = 0
+    skipped_count = 0
+
+    resumes_to_process.each do |resume|
+      begin
+        puts "\n📄 Processing: #{resume.name} (ID: #{resume.id})"
+        
+        # Skip if resume already has an AI summary
+        if resume.ai_summary.present?
+          puts "⏭️  Skipping - already has AI summary"
+          skipped_count += 1
+          next
+        end
+
+        # Check if resume has text content
+        unless resume.resume_text_content.present?
+          puts "⚠️  Skipping - no text content available"
+          skipped_count += 1
+          next
+        end
+
+        # Prepare data for summary generation
+        resume_text = resume.resume_text_content
+        candidate_name = resume.name
+        skills = resume.skills
+        experience = resume.experience
+
+        # Generate summary using OpenAI
+        puts "🔄 Generating summary..."
+        summary = OpenaiUtils.generate_resume_summary(
+          resume_text, 
+          candidate_name, 
+          skills, 
+          experience
+        )
+
+        if summary.present?
+          # Update resume with generated AI summary
+          resume.update!(ai_summary: summary)
+          puts "✅ AI summary generated and saved (#{summary.length} characters)"
+          puts "📝 AI Summary: #{summary[0..100]}#{'...' if summary.length > 100}"
+          success_count += 1
+        else
+          puts "❌ Failed to generate AI summary"
+          error_count += 1
+        end
+
+      rescue => e
+        puts "❌ Error processing resume #{resume.id}: #{e.message}"
+        error_count += 1
+      end
+    end
+
+    # Print summary
+    puts "\n" + "=" * 60
+    puts "🌙 Nightly Processing Complete"
+    puts "=" * 60
+    puts "✅ Successfully processed: #{success_count} resumes"
+    puts "⏭️  Skipped: #{skipped_count} resumes"
+    puts "❌ Errors: #{error_count} resumes"
+    puts "📄 Total processed: #{success_count + skipped_count + error_count} resumes"
+    
+    if error_count > 0
+      puts "\n⚠️  Some resumes failed to process. Check the logs above for details."
+    end
+    
+    puts "\n🕐 Processing completed at: #{Time.current.strftime('%Y-%m-%d %H:%M:%S')}"
+  end
 end
