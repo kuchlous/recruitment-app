@@ -537,23 +537,6 @@ table
 }
 
 /* ==========================================================
-   Styling Rules - Td for radio buttons
-   Description   - Styling the td/cell for radio buttons to come in only one line at upload page.
-   ========================================================== */
-
-/* ==========================================================
-   Styling Rules - Radio buttons
-   Description   - Styling the radio buttons to come in only one line at upload page.
-                   Setting width to 20px so that 4 radio buttons can come.
-   ========================================================== */
-
-
-/* ==========================================================
-   Styling Rules - Multiple drop down list
-   Description   - Styling multiple drop down list for upload page
-   ========================================================== */
-
-/* ==========================================================
    Styling Rules - Error messsages div
    Description   - Styling error messages div. Used when HR/ADMIN tries to add more than 
                    5 employees for an candidate.

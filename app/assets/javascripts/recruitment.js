@@ -1773,7 +1773,11 @@ function initializeComponents() {
           query: request.term
         },
         success: function(data) {
-          response(data);
+          // Process autocomplete data (endpoint returns {id, name} objects)
+          var processedData = data.map(function(item) {
+            return { label: item.name, value: item.name, id: item.id };
+          });
+          response(processedData);
         }
       });
     },
@@ -1861,7 +1865,11 @@ function createEmployeeAutocomplete(selector, options) {
           query: request.term
         },
         success: function(data) {
-          response(data);
+          // Process autocomplete data (endpoint now returns {id, name} objects)
+          var processedData = data.map(function(item) {
+            return { label: item.name, value: item.name, id: item.id };
+          });
+          response(processedData);
         }
       });
     },
