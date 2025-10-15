@@ -1,6 +1,4 @@
 <div id="dashboard_category_div_<%= @status %>">
-  <% 
-    render_type = (@render == "interview_table") ? @render : "shared_" + @render
-  %>
+  <% render_type = (@render == "interview_table" || @render == "manager_index") ? @render : "shared_" + @render %>
   <%= render "resumes/#{render_type}" %>
 </div>
