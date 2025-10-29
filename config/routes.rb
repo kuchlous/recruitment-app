@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   match 'resumes/offered',to: 'resumes#offered'              , via: :get
   match 'resumes/future',to: 'resumes#future'                , via: :get
   match 'resumes/submit_ph_rating',to: 'resumes#submit_ph_rating'                , via: :post
-  match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get
+  match 'resumes/interview_requests',to: 'resumes#interview_requests'       , via: :get, as: :interview_requests
   match 'resumes/get_interviews',to: 'resumes#get_interviews'               , via: :get
   match 'resumes/download_resume',to: 'resumes#download_resume'             , via: :get
   match 'resumes/delete_file',to: 'resumes#delete_file'                 , via: :delete, as: :delete_file
@@ -114,6 +114,9 @@ Rails.application.routes.draw do
   match 'resumes/feedback',to: 'resumes#feedback'                          ,via: :post
   match 'resumes/feedback_form',to: 'resumes#feedback_form', as: :resumes_feedback_form, via: :get
   match 'resumes/show_resume_feedback',to: 'resumes#show_resume_feedback'  ,via: :post
+  get 'feedback/:id', to: 'feedbacks#view', as: 'view_feedback'
+  patch 'feedback/:id', to: 'feedbacks#update', as: 'feedback'
+  post 'feedback/submit', to: 'feedbacks#submit', as: 'submit_feedback'
   match 'resumes/decline_interview',to: 'resumes#decline_interview'        ,via: :post
   match 'resumes/add_manual_status_to_resume',to: 'resumes#add_manual_status_to_resume'  ,via: :post
   match 'resumes/create_multiple_forwards',to: 'resumes#create_multiple_forwards'  ,via: :post
@@ -147,6 +150,11 @@ Rails.application.routes.draw do
   namespace :api do
     resources :requirements, only: [:index]
   end
+
+  match 'form_preview',to: 'resumes#form_preview', via: :get
+  match 'get_form_config',to: 'resumes#get_form_config', via: :get
+
+
   # Handle Chrome DevTools specific requests
   get '/.well-known/appspecific/com.chrome.devtools.json', to: proc { [404, {}, ['']] }
 end

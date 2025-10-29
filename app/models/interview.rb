@@ -4,6 +4,7 @@ class Interview < ActiveRecord::Base
   belongs_to :req_match
   belongs_to :employee
   belongs_to :officelocation, optional: true
+  belongs_to :form_config, optional: true
   has_many :feedbacks, dependent: :destroy
 
   validates_presence_of :employee_id

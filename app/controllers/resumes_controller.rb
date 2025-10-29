@@ -60,6 +60,10 @@ class ResumesController < ApplicationController
     @resumes = resumes
   end
 
+  def get_form_config
+    render json: FormConfig.find(params[:id] || 1).config
+  end
+
   def show_by_id
     unless params[:id].nil?
       # Use Elasticsearch to find resume by ID with load: false
@@ -1596,6 +1600,7 @@ class ResumesController < ApplicationController
     @interview_id = params[:interview_id]
     @interview = Interview.find(@interview_id)
     @resume = @interview.req_match.resume
+    @form_config = @interview.form_config
     @requirement = @interview.req_match.requirement
   end
 
@@ -1747,6 +1752,7 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
     officelocation_id = params[:officelocation_id]
+    form_config_id = params[:interview_feedback_form]
     i_time = Time.zone.parse (int_date + " " + int_time)
     
     # Look up employee by name
@@ -1762,7 +1768,8 @@ class ResumesController < ApplicationController
                                 :req_match      => match,
                                 :interview_level => interview_level,
                                 :duration       => duration.to_i,
-                                :officelocation_id => officelocation_id)
+                                :officelocation_id => officelocation_id,
+                                :form_config_id => form_config_id)
       if interview.save
         # Scheduled only when interview get saved
         match.update!(:status => "SCHEDULED")
@@ -1802,6 +1809,7 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
     officelocation_id = params[:officelocation_id]
+    form_config_id = params[:interview_feedback_form]
     interview = Interview.find(int_id)
 
     # Look up employee by name
@@ -1814,7 +1822,8 @@ class ResumesController < ApplicationController
                                 :focus => int_focus,
                                 :interview_level => interview_level,
                                 :duration => duration.to_i,
-                                :officelocation_id => officelocation_id
+                                :officelocation_id => officelocation_id,
+                                :form_config_id => form_config_id
                               )
 
     match     = interview.req_match
@@ -1847,6 +1856,7 @@ class ResumesController < ApplicationController
     logger.info("Req Match: #{@req_match.inspect}")
     @interviews = @req_match.interviews
     logger.info("Interviews: #{@interviews.inspect}")
+    @form_configs = FormConfig.select(:id, :title)
 
     respond_to do |format|
       format.js

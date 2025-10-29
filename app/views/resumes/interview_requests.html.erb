@@ -37,7 +37,7 @@
             <%= focus[0..25] %>
           </td>
           <td>
-            <%= link_to "Add Feedback", "", onclick:"createFeedbackBox(event, '#{i.id}', '#{resume.id}', '#{req.name_for_js}');" %> |
+            <%= link_to "Add Feedback", resumes_feedback_form_path(interview_id: i.id), target: "_blank" %> |
             <%= link_to "Decline", "", onclick: "declineInterviewBox(event, #{i.id})" %>
             <span class="float_right_with_10_padding" style="padding-bottom: 0px;">
               <%= get_view_feedback_icon(resume, 6) %>

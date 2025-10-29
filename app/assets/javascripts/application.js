@@ -11,5 +11,6 @@
 //= require twitter/bootstrap/tooltip
 //= require twitter/bootstrap/popover
 //= require open_requirements_grid
+//= require dynamic_form_generator
 
 //= require_tree .

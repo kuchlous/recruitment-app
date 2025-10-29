@@ -5,7 +5,7 @@
 
 /* Main Container */
 .show-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 15px;
   background: #f8f9fa;
@@ -338,3 +338,11 @@
     padding: 20px;
   }
 } 
+
+.header-centered {
+  text-align: center;
+}
+
+.title-centered {
+  margin: 0 auto;
+}
