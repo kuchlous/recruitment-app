@@ -1752,7 +1752,7 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
     officelocation_id = params[:officelocation_id]
-    form_config_id = params[:interview_feedback_form]
+    form_config_id = params[:interview_feedback_form].present? ? params[:interview_feedback_form] : nil
     i_time = Time.zone.parse (int_date + " " + int_time)
     
     # Look up employee by name
@@ -1809,7 +1809,7 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
     officelocation_id = params[:officelocation_id]
-    form_config_id = params[:interview_feedback_form]
+    form_config_id = params[:interview_feedback_form].present? ? params[:interview_feedback_form] : nil
     interview = Interview.find(int_id)
 
     # Look up employee by name
