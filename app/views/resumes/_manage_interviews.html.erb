@@ -52,6 +52,14 @@
                <% end %>
              </td>
              <td>
+                <%= 
+                  select_tag "interview_feedback_form_#{index}",
+                  options_for_select(@form_configs.map { |config| [config.title, config.id] }, i.form_config_id),
+                  { 
+                    :class => "form-control select-box-small", 
+                    :include_blank => "Select Feedback Form" 
+                  } 
+                %>
                <%= text_area_tag "interview_focus#{index}", i.focus, :class => "form-control focus-textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');", :rows => 2 %>
              </td>
              <td>
@@ -64,8 +72,8 @@
          <% end %>
          <% if @interviews.size < 5 %>
            <tr class="add-interview-row">
-             <td colspan="6" class="text-center">
-               <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@req_match.id}, ['#{get_time_slot_array.join("', '")}']);", :class => "action-link success", :style => "font-weight: bold;" %>
+             <td colspan="7" class="text-center">
+               <%= link_to "Add Interviews",'',:onclick => "addInterviewRow(event, #{@req_match.id}, ['#{get_time_slot_array.join("', '")}'], [#{@form_configs.map { |config| "'#{config.id}'" }.join(', ')}], [#{@form_configs.map { |config| "'#{config.title}'" }.join(', ')}]);", :class => "action-link success", :style => "font-weight: bold;" %>
              </td>
            </tr>
          <% end %>

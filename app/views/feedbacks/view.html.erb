@@ -1,0 +1,49 @@
+<div class="show-container">
+  <div class="show-header header-centered">
+    <div class="show-title title-centered">
+      <h1>Interview Feedback</h1>
+      <div class="show-meta">
+        <span class="meta-badge primary">Candidate: <%= @resume.name %></span>
+        <span class="meta-badge">Interviewer: <%= @interview.employee.name %></span>
+        <span class="meta-badge">Date: <%= @interview.interview_date.strftime("%B %d, %Y") %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="show-content">
+    <% if @feedback.rating.present? %>
+    <div class="info-card">
+      <div class="card-title">Overall Rating</div>
+      <div class="info-value"><%= @feedback.rating %></div>
+    </div>
+    <% end %>
+
+    <div class="info-card">
+      <div class="card-title">Feedback Comments</div>
+      <div class="description-text">
+        <%= simple_format @feedback.feedback %>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div id="form_feedback_<%= @feedback.id %>" data-feedback-json='<%= @feedback.feedback_form_json.to_json %>'>
+      </div>
+    </div>
+  </div>
+
+
+    </div>
+  </div>
+
+  <div class="show-footer">
+    <%= link_to interview_requests_path, class: 'back-link' do %>
+      ← Back to Interview Requests
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('turbolinks:load', function() {
+    renderAllFeedbackTables();
+  });
+</script>

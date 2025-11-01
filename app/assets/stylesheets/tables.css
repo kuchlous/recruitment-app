@@ -5,8 +5,8 @@
 
 /* CSS Custom Properties for consistent spacing */
 :root {
-  --table-cell-padding-horizontal: 10px;
-  --table-cell-padding-vertical: 8px;
+  --table-cell-padding-horizontal: 3px;
+  --table-cell-padding-vertical: 2px;
   --table-cell-padding: var(--table-cell-padding-vertical) var(--table-cell-padding-horizontal);
   --table-cell-padding-mobile-horizontal: 10px;
   --table-cell-padding-mobile-vertical: 8px;
@@ -647,6 +647,7 @@
   cursor: help;
   position: relative;
   flex-shrink: 0;
+  padding-bottom: 0 !important;
 }
 
 .interview-type-icons:hover {
