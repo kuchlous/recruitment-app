@@ -120,11 +120,16 @@ module ResumeHelper
 
   def get_feedback_rating_average(feedbacks)
     feedback_avg = 0;
+    valid_feedbacks_count = 0;
     feedbacks.each do |f|
-      feedback_avg += f.numerical_rating
+      numerical_rating = f.numerical_rating
+      if numerical_rating
+        feedback_avg += numerical_rating
+        valid_feedbacks_count += 1
+      end
     end
     logger.info(feedback_avg)
-    return (feedbacks.size == 0) ? 0 : (feedback_avg.to_f/(feedbacks.size)).round(2)
+    return (valid_feedbacks_count == 0) ? 0 : (feedback_avg.to_f/valid_feedbacks_count).round(2)
   end
 
   def format_truncated_text_with_tooltip(text, max_items = 3)

@@ -2,7 +2,7 @@
   <div class="form-header">
     <h2>Feedback for <%= @resume.name %></h2>
   </div>
-  
+
   <table class="modern-table">
     <thead>
       <tr class="header_row">
@@ -24,36 +24,24 @@
     </tbody>
   </table>
 
-  <%= form_with url: { controller: 'resumes', action: 'feedback' }, method: :post, local: true, id: "feedback_form", class: "modern-form" do |form| %>
-    <div class="form-group">
-      <label for="feedback_rating">Rating *</label>
-      <select name="feedback[rating]" id="feedback_rating" class="form-control" required style="max-width: 300px;">
-        <option value="">Select</option>
-        <option value="Poor">Poor</option>
-        <option value="Below Average">Below Average</option>
-        <option value="Average">Average</option>
-        <option value="Good">Good</option>
-        <option value="Very Good">Very Good</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="resume_comment">Feedback Comments</label>
-      <textarea name="resume[comment]" id="resume_comment" class="form-control" rows="6" placeholder="Add Feedback"></textarea>
-    </div>
-
+  <div id="feedback_form" class="modern-form">
+    <div id="dynamic_feedback_form"></div>
     <!-- Hidden fields -->
-    <%= form.hidden_field :resume_id, value: @resume.id, name: "feedback[resume_id]" %>
+    <input type="hidden" name="feedback[resume_id]" value="<%= @resume.id %>" />
     <% if @interview.present? %>
-      <%= form.hidden_field :interview_id, value: @interview.id, name: "feedback[interview_id]" %>
+    <input type="hidden" name="feedback[interview_id]" value="<%= @interview.id %>" />
     <% end %>
     <% if @requirement.present? %>
-      <%= form.hidden_field :requirement_name, value: @requirement.name, name: "requirement_name" %>
+    <input type="hidden" name="requirement_name" value="<%= @requirement.name %>" />
     <% end %>
 
-    <div class="form-actions">
-      <%= form.submit "Submit Feedback", class: "btn btn-primary" %>
-      <%= link_to "Cancel", { controller: 'resumes', action: 'interview_requests' }, class: "btn btn-secondary" %>
-    </div>
-  <% end %>
+  </div>
 </div>
+
+<script>
+
+  document.addEventListener('turbolinks:load', function() {
+      // Generate the dynamic form when the page loads
+    generateDynamicForm('dynamic_feedback_form', <%= raw @form_config&.config&.to_json %>);
+  });
+</script>
