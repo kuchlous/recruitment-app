@@ -655,9 +655,6 @@ function getInterviews(cur_element, req_match_id)
 {
   $('#loader').show();
   var $table = $(cur_element).closest('table');
-  var form = $(cur_element).closest('form');
-  form.attr("action", prepend_with_image_path + "/resumes/add_interview");
-  form.attr("method", "POST");
 
   $('#ajax_request_tr').remove();
   var $tr = $('<tr>').attr("id", "ajax_request_tr");
