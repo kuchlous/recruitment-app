@@ -344,7 +344,13 @@ function addInterviewRow(event, req_match_id, time_array, feedback_form_ids, fee
 
   $td = $('<td>');
   $row.append($td);
-  var $title_select = createDropDownListNew($td, "interview_feedback_form", "interview_feedback_form", feedback_form_ids, feedback_form_titles, "form-control select-box-small");
+  // Create select with "No form_config" as first option
+  var $title_select = $('<select>').attr("name", "interview_feedback_form").attr("id", "interview_feedback_form").addClass("form-control select-box-small");
+  $title_select.append($('<option>').attr("value", "").text("No Template"));
+  // Add form config options
+  for (var i = 0; i < feedback_form_ids.length; i++) {
+    $title_select.append($('<option>').attr("value", feedback_form_ids[i]).text(feedback_form_titles[i]));
+  }
   $td.append($title_select);
 
   var $textarea = $('<textarea>').attr("name", "interview_focus").attr("id", "interview_focus").attr("class", "form-control focus_textarea");
@@ -1465,7 +1471,7 @@ function changeInterview(interview_id, index)
     '&interview_focus=' + encodeURIComponent(int_focus) +
     '&interview_level=' + encodeURIComponent(interview_level) +
     '&duration=' + encodeURIComponent(duration) +
-    '&officelocation_id=' + encodeURIComponent(officelocation_id);
+    '&officelocation_id=' + encodeURIComponent(officelocation_id) +
     '&interview_feedback_form=' + encodeURIComponent(form_config_id);
 
   // Redirect to the constructed URL
