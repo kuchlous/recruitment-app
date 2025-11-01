@@ -877,8 +877,14 @@ table
    Description   - Styling the div for displaying the comments/feedbacks of resume.
                    These will be displayed in ajax_request_tr
    ========================================================== */
+.feedback_entry {
+  border:    1px solid rgb(39, 36, 36);
+  margin-bottom:    10px;
+  padding:   10px;
+}
+
 #resume_comments div,
-#resume_feedback div
+#resume_feedback
 {
   background-color: #F2F2F2;
   color:            #000000;

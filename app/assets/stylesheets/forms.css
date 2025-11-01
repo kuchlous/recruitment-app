@@ -137,6 +137,10 @@ select.form-control {
   overflow: visible;
 }
 
+select.form-control option:checked {
+  background-color: rgb(188, 206, 222);
+}
+
 select.form-control option {
   color: #333;
   background-color: #fff;
@@ -650,6 +654,7 @@ select.form-control option {
 
 /* Radio Button Labels */
 .radio-label-spaced {
+  margin-left: 5px;
   margin-right: 15px;
 }
 

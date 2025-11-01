@@ -237,13 +237,12 @@ function createLastRow($row, req_match_id) {
   $row.after($last_row);
 
   var $stage_cell = $('<td>');
-  $stage_cell.attr("colspan", "2");
+  $stage_cell.attr("colspan", "3");
   $last_row.append($stage_cell);
   var $screening_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_screening").attr("value", "SCREENING");
   $stage_cell.append($screening_option);
   var $screening_label = $('<label>').attr("for", "interview_stage_screening").text("Screening").addClass("radio-label-spaced");
   $stage_cell.append($screening_label);
-
   var $fullpanel_option = $('<input>').attr("type", "radio").attr("name", "interview_stage").attr("id", "interview_stage_fullpanel").attr("value", "FULLPANEL").attr("checked", true);
   $stage_cell.append($fullpanel_option);
   var $fullpanel_label = $('<label>').attr("for", "interview_stage_fullpanel").text("Full Panel").addClass("radio-label-spaced");
@@ -251,13 +250,13 @@ function createLastRow($row, req_match_id) {
 
 
   var $type_cell = $('<td>');
-  $type_cell.attr("colspan", "4");
+  $type_cell.attr("colspan", "5");
   $last_row.append($type_cell);
   var $facetoface_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_facetoface").attr("value", "FACETOFACE").attr("checked", true);
   $type_cell.append($facetoface_option);
   var $facetoface_label = $('<label>').attr("for", "interview_stage_facetoface").text("Face To Face").addClass("radio-label-spaced");
+  
   $type_cell.append($facetoface_label);
-
   var $telephonic_option = $('<input>').attr("type", "radio").attr("name", "interview_type").attr("id", "interview_stage_telephonic").attr("value", "TELECONF");
   $type_cell.append($telephonic_option);
   var $telephonic_label = $('<label>').attr("for", "interview_stage_telephonic").text("Telephone Conf.").addClass("radio-label-spaced");
@@ -286,7 +285,7 @@ function createLastRow($row, req_match_id) {
   toggleOfficeLocationField($last_row, defaultType);
 }   
 
-function addInterviewRow(event, req_match_id, time_array)
+function addInterviewRow(event, req_match_id, time_array, feedback_form_ids, feedback_form_titles)
 {
   var $table = $("#manage_interviews_table");
   event.preventDefault();
@@ -309,7 +308,7 @@ function addInterviewRow(event, req_match_id, time_array)
   
   $td = $('<td>');
   $row.append($td);
-  var $date_input = $('<input>').attr("name", "interview_date").attr("type", "text").attr("id", "interview_date").addClass('form-control datepicker');
+  var $date_input = $('<input>').attr("name", "interview_date").attr("autocomplete", "off").attr("type", "text").attr("id", "interview_date").addClass('form-control datepicker');
   $date_input.datepicker({
     dateFormat: 'dd-mm-yy',
     showOn: "focus",
@@ -345,6 +344,9 @@ function addInterviewRow(event, req_match_id, time_array)
 
   $td = $('<td>');
   $row.append($td);
+  var $title_select = createDropDownListNew($td, "interview_feedback_form", "interview_feedback_form", feedback_form_ids, feedback_form_titles, "form-control select-box-small");
+  $td.append($title_select);
+
   var $textarea = $('<textarea>').attr("name", "interview_focus").attr("id", "interview_focus").attr("class", "form-control focus_textarea");
   $textarea.value = "Enter focus";
   $textarea.on("focus",
@@ -1430,46 +1432,6 @@ function viewFeedback(event, resume_id, action, cols)
   });
 }
 
-// Basically we use this function to create/send feedback
-function createFeedbackBox(event, interviewId, resumeId, req_name)
-{
-  event.preventDefault();
-  setFormAction("feedback");
-
-  cur_element = event.target;
-
-  var elements = createRow(cur_element);
-
-  // Close box link
-  closeBoxLink(elements.tdElement);
-
-  // Create ratings drop down list
-  var ratings = [ "Select", "Poor", "Below Average", "Average", "Good", "Very Good" ];
-  createDropDownListNew(elements.tdElement, "feedback[rating]", "feedback[rating]", ratings, ratings, "feedback_fields");
-
-  createLineBreakElement(elements.tdElement, 2);
-
-  // Create text area
-  createTextAreaElement(elements.tdElement, "Add Feedback");
-
-  // Image for go-icon
-  var element   = imageForGoIcon(10, 64);
-
-  // Onclick event for image element
-  jQuery(element).bind("click",
-    function(element)
-    {
-      document.form.submit();
-    }
-  );
-  elements.tdElement.appendChild(element);
-
-  // Pass resume id as hidden element
-  createHiddenElement(elements.tdElement, "feedback[resume_id]", "feedback_resume_id", resumeId);
-  createHiddenElement(elements.tdElement, "feedback[interview_id]", "feedback_interview_id", interviewId);
-  createHiddenElement(elements.tdElement, "requirement_name",    "requirement_name",   req_name);
-}
-
 function closeShowCommentsBox(elementId)
 { 
   var elem = document.getElementById(elementId);
@@ -1493,6 +1455,7 @@ function changeInterview(interview_id, index)
   interview_level = jQuery("#interview_level_" + index).val();
   duration = jQuery("#duration" + index).val();
   officelocation_id = jQuery("#officelocation_id" + index).val();
+  form_config_id = jQuery("#interview_feedback_form_" + index).val();
   // Construct URL with parameters
   var url = prepend_with_image_path + '/resumes/update_interview?' + 
     'interview_id=' + interview_id + 
@@ -1503,6 +1466,7 @@ function changeInterview(interview_id, index)
     '&interview_level=' + encodeURIComponent(interview_level) +
     '&duration=' + encodeURIComponent(duration) +
     '&officelocation_id=' + encodeURIComponent(officelocation_id);
+    '&interview_feedback_form=' + encodeURIComponent(form_config_id);
 
   // Redirect to the constructed URL
   window.location.href = url;
