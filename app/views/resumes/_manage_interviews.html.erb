@@ -6,6 +6,7 @@
     </div>
   </div>
   
+<%= form_tag url_for(controller: "resumes", action: "add_interview"), method: :post, id: "add_interview_form" do %>
   <table id="manage_interviews_table" class="modern-table">
     <thead>
       <tr>
@@ -79,6 +80,7 @@
          <% end %>
     </tbody>
   </table>
+<% end %>
 </td>
 <script>
   $(function() {
