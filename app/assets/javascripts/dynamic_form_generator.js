@@ -559,9 +559,6 @@ window.renderTable = function renderTable(data, elementId) {
   // Create a container for the table
   let containerHtml = `
     <div class="table-container">
-      <div class="table-header">
-        <b> Detailed Feedback </b>
-      </div>
       <table class="modern-table">
         <thead>
           <tr class="header_row">

@@ -35,7 +35,7 @@
       <div>
         <p class="text-muted">
           <%= link_to(
-                "View Feedback",
+                "View Feedback#{" - #{feedback.interview&.form_config&.title}" if feedback.interview&.form_config&.title.present?}",
                 feedback_path(feedback.id),
                 target: '_blank'
               ) %>

@@ -26,6 +26,7 @@
     </div>
 
     <div class="info-card">
+      <div class="card-title"><%= @feedback.interview&.form_config&.title if @feedback.interview&.form_config&.title.present? %></div>
       <div id="form_feedback_<%= @feedback.id %>" data-feedback-json='<%= @feedback.feedback_form_json.to_json %>'>
       </div>
     </div>
