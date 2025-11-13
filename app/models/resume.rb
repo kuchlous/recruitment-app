@@ -268,16 +268,10 @@ class Resume < ActiveRecord::Base
   end
 
   def rating
-    total = 0
-    feedbacks.each do |f|
-      total += f.numerical_rating
-    end
-    if feedbacks.size > 0
-      total /= feedbacks.size
-    else
-      total = "N/A"
-    end
-    total
+    numeric_feedbacks = feedbacks.filter_map(&:numerical_rating)
+    return "N/A" if numeric_feedbacks.empty?
+
+    numeric_feedbacks.sum / numeric_feedbacks.size
   end
 
   def referral_name
