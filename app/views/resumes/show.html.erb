@@ -1,105 +1,109 @@
 <div class="resume">
- <div class="resume__info">
-  <div class="resume__edit">
-    <% if is_HR_ADMIN? %>
-      <%= link_to image_tag("edit.svg", :size => "20x20"), :controller => "resumes", :action => "edit", :id => @resume.id %>
-    <% end %>
-  </div>
-   <div class="resume__name">
-    <%= @resume.name.split(' ').map{|part| part.capitalize}.join(' ') %>
-   </div>
-   <div class="resume__status">
-     <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %> 
-        (Status : <%= @resume.get_resume_overall_status_title %>) 
-     <% end %>
-     <% if is_HR_ADMIN? || is_GM? || is_GROUP_HEAD?%>
-       <% if @resume.summary && @resume.summary != "" %>
-         <div class= "resume__summary-heading">Summary</div>
-         <div class="resume__summary-content"> <%= @resume.summary %></div>
-       <% end %>
-     <% end %>
-   </div>
-   <div class="resume__communication">
-     <div class="resume__communication-1">
-       <div class="item item--center"><%= image_tag("phone.svg", :size => "25x25")  %> 
+  <div class="resume__info">
+    <div class="resume__edit">
+      <% if is_HR_ADMIN? %>
+        <%= link_to image_tag("edit.svg", :size => "20x20"), :controller => "resumes", :action => "edit", :id => @resume.id %>
+      <% end %>
+    </div>
+    <div class="resume__name">
+      <%= @resume.name.split(' ').map { |part| part.capitalize }.join(' ') %>
+    </div>
+    <div class="resume__status">
+      <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
+        (Status: <%= @resume.get_resume_overall_status_title %>)
+      <% end %>
+      <% if is_HR_ADMIN? || is_GM? || is_GROUP_HEAD? %>
+        <% if @resume.summary && @resume.summary != "" %>
+          <div class="resume__summary-heading">Summary</div>
+          <div class="resume__summary-content"><%= @resume.summary %></div>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="resume__communication">
+      <div class="resume__communication-1">
+        <div class="item item--center">
+          <%= image_tag("phone.svg", :size => "25x25") %>
           <span class="item__value item__value--normal"><%= @resume.phone %></span>
-       </div>
-       <div class="item item--center"><%= image_tag("location.svg", title:"Current Location", :size => "25x25", :alt => "Current Location")  %> 
-         <span class="item__value item__value--normal"><%= @resume.location %></span>
-       </div>
-       <% if @resume.preferred_location %>
-         <div class="item item--center"><%= image_tag("location_preferred.svg", title:"Preferred Location", :size => "25x25", :alt => "Preferred Location")  %> 
-           <span class="item__value item__value--normal"><%= @resume.preferred_location.titleize  %></span>
-         </div>
-       <% end %>
-     </div>
-     <div class="resume__communication-2">
-       <div class="item item--center"><%= image_tag("mail.svg",  :size => "25x25")  %> 
-         <span  class="item__value item__value--normal">
-           <%= mail_to "#{@resume.email}" %>
-         </span>
-       </div>
-       <div>
-          <h2 class= "attachment_title">Resumes</h2>
-            <%= render "download_box", :filenames => @resume.resume_path %>
-          <h2 class= "attachment_title">Other Docs</h2>
-            <%= render "download_box", :filenames => @resume.other_docs_path %>
-       </div>  
-     </div>
-   </div>
-   <div class= "resume__other-info">
+        </div>
+        <div class="item item--center">
+          <%= image_tag("location.svg", title: "Current Location", :size => "25x25", :alt => "Current Location") %>
+          <span class="item__value item__value--normal"><%= @resume.location %></span>
+        </div>
+        <% if @resume.preferred_location %>
+          <div class="item item--center">
+            <%= image_tag("location_preferred.svg", title: "Preferred Location", :size => "25x25", :alt => "Preferred Location") %>
+            <span class="item__value item__value--normal"><%= @resume.preferred_location.titleize %></span>
+          </div>
+        <% end %>
+      </div>
+      <div class="resume__communication-2">
+        <div class="item item--center">
+          <%= image_tag("mail.svg", :size => "25x25") %>
+          <span class="item__value item__value--normal">
+            <%= mail_to "#{@resume.email}" %>
+          </span>
+        </div>
+        <div>
+          <h2 class="attachment_title">Resumes</h2>
+          <%= render "download_box", :filenames => @resume.resume_path %>
+          <h2 class="attachment_title">Other Docs</h2>
+          <%= render "download_box", :filenames => @resume.other_docs_path %>
+        </div>
+      </div>
+    </div>
+    <div class="resume__other-info">
       <% if is_HR_ADMIN? || is_BD? %>
         <div class="item item--center">
-          <span  class="item__label item__label--center"> Resume Id: </span>
-          <span  class="item__value item__value--center"> <%= @resume.id %> </span>
+          <span class="item__label item__label--center">Resume Id:</span>
+          <span class="item__value item__value--center"><%= @resume.id %></span>
         </div>
       <% end %>
       <div class="item item--center">
-        <span class="item__label item__label--center"> Skype Id: </span>
-        <span class="item__value item__value--center"> <%= @resume.skype_id %> </span>
+        <span class="item__label item__label--center">Skype Id:</span>
+        <span class="item__value item__value--center"><%= @resume.skype_id %></span>
       </div>
       <div class="item item--center">
-        <span class="item__label item__label--center"> Qualification: </span>
-        <span class="item__value item__value--center"> <%= @resume.qualification %> </span>
+        <span class="item__label item__label--center">Qualification:</span>
+        <span class="item__value item__value--center"><%= @resume.qualification %></span>
       </div>
       <div class="item item--center">
-         <span class="item__label item__label--center"> Experience: </span>
-         <span class="item__value item__value--center"> <%= get_current_experience_string(@resume) %> </span>
+        <span class="item__label item__label--center">Experience:</span>
+        <span class="item__value item__value--center"><%= get_current_experience_string(@resume) %></span>
       </div>
       <div class="item item--center">
-         <span class="item__label item__label--center"> Skills: </span>
-         <span class="item__value item__value--center"> <%= @resume.skills %> </span>
+        <span class="item__label item__label--center">Skills:</span>
+        <span class="item__value item__value--center"><%= @resume.skills %></span>
       </div>
       <div class="item item--center">
-        <span class="item__label item__label--center"> Current Company: </span>
-        <span class="item__value item__value--center"> <%= @resume.current_company %> </span>
+        <span class="item__label item__label--center">Current Company:</span>
+        <span class="item__value item__value--center"><%= @resume.current_company %></span>
       </div>
-      
+
       <% if @show_ctc %>
         <div class="item item--center">
-          <span class="item__label item__label--center"> Current CTC: </span>
+          <span class="item__label item__label--center">Current CTC:</span>
           <span class="item__value item__value--center">
-              <%= @resume.ctc.present? ? @resume.ctc.to_s + " Lakhs" : "N/A" %> 
+            <%= @resume.ctc.present? ? @resume.ctc.to_s + " Lakhs" : "N/A" %>
           </span>
         </div>
         <div class="item item--center">
-          <span class="item__label item__label--center"> Expected CTC: </span>
+          <span class="item__label item__label--center">Expected CTC:</span>
           <span class="item__value item__value--center">
-              <%= @resume.expected_ctc.present? ? @resume.expected_ctc.to_s + " Lakhs" : "N/A" %> 
+            <%= @resume.expected_ctc.present? ? @resume.expected_ctc.to_s + " Lakhs" : "N/A" %>
           </span>
         </div>
       <% end %>
       <% if is_HR_ADMIN? || is_BD? || is_GM? || is_REQ_MANAGER? || is_MANAGER? %>
         <div class="item item--center">
-          <span class="item__label item__label--center"> Notice Period: </span>
-          <span class="item__value item__value--center"> <%= @resume.notice %> days </span>
+          <span class="item__label item__label--center">Notice Period:</span>
+          <span class="item__value item__value--center"><%= @resume.notice %> days</span>
         </div>
         <div class="item item--center">
-          <span class="item__label item__label--center"> Referral Type: </span>
-          <span class="item__value item__value--center"> <%= @resume.referral_type.titleize %> </span>
+          <span class="item__label item__label--center">Referral Type:</span>
+          <span class="item__value item__value--center"><%= @resume.referral_type.titleize %></span>
         </div>
         <div class="item item--center">
-          <span class="item__label item__label--center"> Referral Name: </span>
+          <span class="item__label item__label--center">Referral Name:</span>
           <span class="item__value item__value--center">
             <% unless @resume.referral_type == "DIRECT" || @resume.referral_id == 0 %>
               <%= get_referral_name(@resume.referral_type, @resume.referral_id).name %>
@@ -108,138 +112,136 @@
         </div>
         <% if @resume.joining_date %>
           <div class="item item--center">
-            <span class="item__label item__label--center"> Joining date:  </span>
-            <span class="item__value item__value--center"> <%= print_date(@resume.joining_date) %> </span>
+            <span class="item__label item__label--center">Joining date:</span>
+            <span class="item__value item__value--center"><%= print_date(@resume.joining_date) %></span>
           </div>
         <% end %>
       <% end %>
       <div class="item item--center">
-        <span class="item__label item__label--center"> Uploaded at: </span>
-        <span class="item__value item__value--center"> <%= print_date_and_time(@resume.created_at) %> </span>
+        <span class="item__label item__label--center">Uploaded at:</span>
+        <span class="item__value item__value--center"><%= print_date_and_time(@resume.created_at) %></span>
       </div>
 
       <div class="item item--center">
-        <span class="item__label item__label--center"> TA Owner: </span>
-        <span class="item__value item__value--center"><%=@resume.ta_owner.try(:name) %></span>
+        <span class="item__label item__label--center">TA Owner:</span>
+        <span class="item__value item__value--center"><%= @resume.ta_owner.try(:name) %></span>
       </div>
 
-      <% if is_GM? && @resume.practice_head_rating.present? %> 
-      <div class="item item--center">
-        <span class="item__label item__label--center"> Practice Head Rating: </span>
-        <span class="item__value item__value--center"> <%= @resume.practice_head_rating %>
-        </span>
-      </div>
+      <% if is_GM? && @resume.practice_head_rating.present? %>
+        <div class="item item--center">
+          <span class="item__label item__label--center">Practice Head Rating:</span>
+          <span class="item__value item__value--center"><%= @resume.practice_head_rating %></span>
+        </div>
       <% end %>
       <div class="resume__mail">
-        
-        <%= link_to image_tag("MailIcon.png"),'#',onclick:"showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
+        <%= link_to image_tag("MailIcon.png"), '#', onclick: "showMessageBoxAtTop(event, #{@resume.id}); return false;", :title => "Send Message" %>
       </div>
-   </div>
-   
-   <% if @resume.ai_summary && @resume.ai_summary != "" %>
-     <div class="resume__ai-summary">
-       <div class="resume__ai-summary-heading">AI Summary</div>
-       <div class="resume__ai-summary-content"><%= @resume.ai_summary %></div>
-     </div>
-   <% end %>
- </div>
- <div class="resume__actions">
-    <h2 class="resume__actions-goto"> Go To: </h2>
-        <div class="goto-links">
-          <a  href="#feedback">Feedbacks</a>
-          <a href="#message">Messages</a>
-          <a href="#comment">Comments</a>
-        </div>
-      
-     <div id="resume_actions_div">
-     <div class="actions">
+    </div>
+
+    <% if @resume.ai_summary && @resume.ai_summary != "" %>
+      <div class="resume__ai-summary">
+        <div class="resume__ai-summary-heading">AI Summary</div>
+        <div class="resume__ai-summary-content"><%= @resume.ai_summary %></div>
+      </div>
+    <% end %>
+  </div>
+  <div class="resume__actions">
+    <h2 class="resume__actions-goto">Go To:</h2>
+    <div class="goto-links">
+      <a href="#feedback">Feedbacks</a>
+      <a href="#message">Messages</a>
+      <a href="#comment">Comments</a>
+    </div>
+
+    <div id="resume_actions_div">
+      <div class="actions">
         <% if is_HR_ADMIN? %>
           <% unless @resume.status == "JOINED" %>
-            <%= form_tag url_for(:action => "send_for_eng_decision" ) do %>
+            <%= form_tag url_for(:action => "send_for_eng_decision") do %>
               <div>
                 <%= submit_tag "Send for Engg. Decision", :class => "action__field" %>
                 <%= hidden_field_tag "resume_id", @resume.id %>
               </div>
-              <br /> <br />
+              <br /><br />
             <% end %>
-            <%= form_tag url_for(:action => "send_for_decision" ) do %>
+            <%= form_tag url_for(:action => "send_for_decision") do %>
               <div>
                 <%= submit_tag "Send for Mgmt. Decision", :class => "action__field" %>
                 <%= hidden_field_tag "resume_id", @resume.id %>
               </div>
-              <br /> <br />
+              <br /><br />
             <% end %>
             <% if is_HR_ADMIN? %>
-            <button class="action__field hr_comment_button" data-target="#hr-comment-modal" data-toggle="modal" > Add HR Comment </button>
-            <br /> <br />
+              <button class="action__field hr_comment_button" data-target="#hr-comment-modal" data-toggle="modal">Add HR Comment</button>
+              <br /><br />
             <% end %>
           <% end %>
         <% end %>
-        <button class="action__field add_comment_button" data-target="#add-comment-modal" data-toggle="modal" > Add Comment </button>
-            <br /> <br />
+        <button class="action__field add_comment_button" data-target="#add-comment-modal" data-toggle="modal">Add Comment</button>
+        <br /><br />
         <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
-            <% unless @resume.status == "FUTURE" %>
-              <%= form_tag url_for(:action => "move_to_future" ) do %>
-                <div>
-                  <%= submit_tag "Move to Future", :class => "action__field" %>
-                  <%= hidden_field_tag "resume_id", @resume.id %>
-                </div>
-              <% end %>
-            <br /> <br />
-            <% end %>
-            <% if @resume.status == "REJECTED" ||
-                  @resume.status == "FUTURE"   ||
-                  @resume.status == "NOT JOINED" ||
-                  @resume.status == "N_ACCEPTED" ||
-                  @resume.status == "JOINED" %>
-              <%= form_tag url_for(:action => "mark_active" ) do %>
-                <div>
-                  <%= submit_tag "Mark Active", :class => "action__field" %>
-                  <%= hidden_field_tag "resume_id", @resume.id %>
-                </div>
-              <% end %>
-              <br /> <br />
-            <% end %>
-            <%= form_tag url_for(:action => "reject_all_forwards_req_matches" ) do %>
+          <% unless @resume.status == "FUTURE" %>
+            <%= form_tag url_for(:action => "move_to_future") do %>
               <div>
-                <%= submit_tag "Reject all Forwards/Req matches", :class => "action__field" %>
+                <%= submit_tag "Move to Future", :class => "action__field" %>
                 <%= hidden_field_tag "resume_id", @resume.id %>
               </div>
             <% end %>
+            <br /><br />
+          <% end %>
+          <% if @resume.status == "REJECTED" ||
+                @resume.status == "FUTURE" ||
+                @resume.status == "NOT JOINED" ||
+                @resume.status == "N_ACCEPTED" ||
+                @resume.status == "JOINED" %>
+            <%= form_tag url_for(:action => "mark_active") do %>
+              <div>
+                <%= submit_tag "Mark Active", :class => "action__field" %>
+                <%= hidden_field_tag "resume_id", @resume.id %>
+              </div>
+            <% end %>
+            <br /><br />
+          <% end %>
+          <%= form_tag url_for(:action => "reject_all_forwards_req_matches") do %>
+            <div>
+              <%= submit_tag "Reject all Forwards/Req matches", :class => "action__field" %>
+              <%= hidden_field_tag "resume_id", @resume.id %>
+            </div>
+          <% end %>
         <% end %>
-          </div>
       </div>
-      <div class="column-center">
-        <p class="item">Click on the "Choose File" to upload more documents:</p>
-        <%= form_tag url_for(:action => "upload_document" ), :method => 'POST', :enctype => "multipart/form-data" do %>
-          <input class="item" type="file" id="myFile" size="31" name="resume[upload_resume]">
-          <%= hidden_field_tag "id", @resume.id %>
-          <input type="submit" value="Upload">
-        <% end %>
-      </div>
-      <% if is_GM? %> 
+    </div>
+    <div class="column-center">
+      <p class="item">Click on the "Choose File" to upload more documents:</p>
+      <%= form_tag url_for(:action => "upload_document"), :method => 'POST', :enctype => "multipart/form-data" do %>
+        <input class="item" type="file" id="myFile" size="31" name="resume[upload_resume]">
+        <%= hidden_field_tag "id", @resume.id %>
+        <input type="submit" value="Upload">
+      <% end %>
+    </div>
+    <% if is_GM? %>
       <div class="column-center">
         <%= form_tag url_for(:action => "submit_ph_rating"), :method => 'POST' do %>
-         <label for="ratings">Practice Head Rating:</label>
-         <select name="rating" id="rating">
+          <label for="ratings">Practice Head Rating:</label>
+          <select name="rating" id="rating">
             <option value="red">Red</option>
             <option value="orange">Orange</option>
             <option value="yellow">Yellow</option>
             <option value="green">Green</option>
-         </select>
-         <%= hidden_field_tag "id", @resume.id %>
-         <input type="submit" value="Submit">
+          </select>
+          <%= hidden_field_tag "id", @resume.id %>
+          <input type="submit" value="Submit">
         <% end %>
       </div>
-      <% end %> 
-    </div>
+    <% end %>
+  </div>
 </div>
 <div id="resume_details_div" class="resume-details-container">
   <% if (@resume.overall_status != "JOINED") || is_ADMIN? || is_HR_MANAGER? || is_GM? %>
     <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
       <div class="section" id="feedback">
         <div class="section__title">
-          Feedbacks (<%= @feedbacks.size %>) - Average Rating: <%= get_feedback_rating_average(@feedbacks) %>
+          Feedbacks (<%= @feedbacks.size %>) - Average Rating: <%= get_feedback_rating_average(@feedbacks) %> / 5
         </div>
         <% unless @feedbacks.size == 0 %>
           <div class="section__body">
@@ -247,26 +249,42 @@
               <% @feedbacks.each do |feedback| %>
                 <div class="comment comment--feedback">
                   <div class="comment__header">
-                    <div class="comment__author"> 
-                      By <%= feedback.employee.name %> :: 
-                      <%= feedback.rating %>
+                    <div class="comment__author">
+                      Interviewer: <%= feedback.employee.name %>
+                      <br />
                     </div>
                     <div class="comment__date">
                       <%= print_date(feedback.created_at) %>
                     </div>
                   </div>
-                  <div class="comment__body"> <%= simple_format feedback.feedback %> </div>
+                  <div class="comment__body">
+                    <u><b>Rating:</b> <%= feedback.rating %></u>
+                    <br /><br />
+                    <b>Overall feedback / observations:</b>
+                    <%= simple_format feedback.feedback %>
+                    <% if feedback.feedback_form_json.present? && feedback.feedback_form_json != {} %>
+                      <div>
+                        <p class="text-muted">
+                          <%= link_to(
+                                "View Feedback#{' - ' + feedback.interview.form_config.title if feedback.interview&.form_config&.title.present?}",
+                                feedback_path(feedback.id),
+                                target: '_blank'
+                              ) %>
+                        </p>
+                      </div>
+                    <% end %>
+                  </div>
                 </div>
               <% end %>
             </div>
-          </div> 
+          </div>
         <% end %>
-      </div>          
+      </div>
     <% end %>
     <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_BD? || is_GM? %>
       <div class="section" id="message">
-        <div class="section__title"> 
-          Messages (<%= @messages.size %>): 
+        <div class="section__title">
+          Messages (<%= @messages.size %>):
         </div>
         <% unless @messages.size == 0 %>
           <div class="section__body">
@@ -279,37 +297,37 @@
                       <span class="message__arrow">→</span>
                       <span class="message__to"><%= message.sent_to.name %></span>
                     </div>
-                  </div> 
+                  </div>
                   <div class="comment__date">
-                    <%= print_date(message.created_at) %> 
+                    <%= print_date(message.created_at) %>
                   </div>
                 </div>
-                <div class="comment__body"> <%= simple_format message.message %> </div>
+                <div class="comment__body"><%= simple_format message.message %></div>
               </div>
             <% end %>
           </div>
         <% end %>
       </div>
-      <div class= "section" id="comment">
+      <div class="section" id="comment">
         <div class="section__title">
-          Comments (<%=@comments.size %>) 
+          Comments (<%= @comments.size %>)
         </div>
         <% unless @comments.size == 0 %>
           <div class="section__body">
             <% @comments.each do |comment| %>
-            <div class="comment">
-              <div class="comment__header">
-                <div class="comment__author">
-                  <%= comment.employee.name %>
+              <div class="comment">
+                <div class="comment__header">
+                  <div class="comment__author">
+                    <%= comment.employee.name %>
+                  </div>
+                  <div class="comment__date">
+                    <%= print_date_and_time_and_year(comment.created_at) %>
+                  </div>
                 </div>
-                <div class="comment__date">
-                  <%= print_date_and_time_and_year(comment.created_at)%>
+                <div class="comment__body" id="comment_<%= comment.id %>">
+                  <%= simple_format comment.comment %>
                 </div>
               </div>
-              <div class="comment__body" id="comment_<%=comment.id %>">
-                <%= simple_format comment.comment %> 
-              </div>
-            </div>
             <% end %>
           </div>
         <% end %>
@@ -318,7 +336,7 @@
   <% end %>
   <% if is_HR_ADMIN? || is_MANAGER? || is_REQ_MANAGER? || is_GM? %>
     <form name="form" method="post">
-      <% matches = @resume.req_matches.find_all { |m| 
+      <% matches = @resume.req_matches.find_all { |m|
            m.status != "SHORTLISTED" && m.status != "SCHEDULED"
          }
          matches += @resume.forwards.find_all { |f|
@@ -329,9 +347,9 @@
         <table id="resume_list_table" class="modern-table">
           <thead>
             <tr>
-              <th> Req Name/Forwarded to </th>
-              <th> Req Status   </th>
-              <th> Action   </th>
+              <th>Req Name/Forwarded to</th>
+              <th>Req Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -342,10 +360,11 @@
                     <%= requirement_link(m.requirement) %>
                     <% status = "REQMATCH" %>
                   <% else %>
-                    <%= m.emp_forwarded_to.name %> <br />
-                    ( <%  m.requirements.each do |r| %>
+                    <%= m.emp_forwarded_to.name %>
+                    <br />
+                    (<% m.requirements.each do |r| %>
                       <%= r.name %>,
-                    <% end %> )
+                    <% end %>)
                     <% status = "FORWARDED" %>
                   <% end %>
                 </td>
@@ -362,39 +381,42 @@
         </table>
       <% end %>
     </form>
-    <% 
-      @status    = "FORWARDED"
-      @forwards  = get_resume_req_matches_of_employee(@resume, @status) %>
-      <% unless @forwards.nil? || @forwards.empty? %>
-        <% @resumes  = get_forwards_resumes(@forwards)
-           @is_req_match = 0
-           @row_id_prefix = "forwards_show_index" 
-           @after_shortlist_page = false 
-        %>
-        <%= render "manager_index" %>
-      <% end %>
-    <% 
-      @status   = "SHORTLISTED"
-      @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
-      <% unless @forwards.nil? || @forwards.empty? %>
-        <% @resumes       = get_reqmatches_resumes(@forwards)
-           @is_req_match  = 1
-           @row_id_prefix = "reqmatches_show_index" 
-           @after_shortlist_page = true 
-        %>
-        <%= render "manager_index" %>
-      <% end %>
-    <% 
-      @status   = "SCHEDULED"
-      @forwards = get_resume_req_matches_of_employee(@resume, @status) %>
-      <% unless @forwards.nil? || @forwards.empty? %>
-        <% @resumes       = get_reqmatches_resumes(@forwards)
-           @is_req_match  = 1
-           @row_id_prefix = "reqmatches_show_index" 
-           @after_shortlist_page = true 
-        %>
-        <%= render "manager_index" %>
-      <% end %>
+    <%
+      @status = "FORWARDED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status)
+    %>
+    <% unless @forwards.nil? || @forwards.empty? %>
+      <% @resumes = get_forwards_resumes(@forwards)
+         @is_req_match = 0
+         @row_id_prefix = "forwards_show_index"
+         @after_shortlist_page = false
+      %>
+      <%= render "manager_index" %>
+    <% end %>
+    <%
+      @status = "SHORTLISTED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status)
+    %>
+    <% unless @forwards.nil? || @forwards.empty? %>
+      <% @resumes = get_reqmatches_resumes(@forwards)
+         @is_req_match = 1
+         @row_id_prefix = "reqmatches_show_index"
+         @after_shortlist_page = true
+      %>
+      <%= render "manager_index" %>
+    <% end %>
+    <%
+      @status = "SCHEDULED"
+      @forwards = get_resume_req_matches_of_employee(@resume, @status)
+    %>
+    <% unless @forwards.nil? || @forwards.empty? %>
+      <% @resumes = get_reqmatches_resumes(@forwards)
+         @is_req_match = 1
+         @row_id_prefix = "reqmatches_show_index"
+         @after_shortlist_page = true
+      %>
+      <%= render "manager_index" %>
+    <% end %>
   <% end %>
 </div>
 
@@ -403,14 +425,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button class="close" data-dismiss="modal" type="button">×</button>
-        <div class="modal-title">Add HR Comment for <%= @resume.name %> </div>
+        <div class="modal-title">Add HR Comment for <%= @resume.name %></div>
       </div>
       <div class="modal-body">
         <%= form_tag url_for(:action => "add_hr_comment") do %>
-          <%= text_area_tag "comment", nil, :id => "hr_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
+          <%= text_area_tag "comment", nil, :id => "hr_comment", :style => "margin-bottom:15px; display:block; width:100%;" %>
           <%= hidden_field_tag "id", @resume.id %>
           <%= submit_tag "Submit", :class => "btn btn-primary" %>
-        <% end %>  
+        <% end %>
       </div>
     </div>
   </div>
@@ -421,31 +443,30 @@
     <div class="modal-content">
       <div class="modal-header">
         <button class="close" data-dismiss="modal" type="button">×</button>
-        <div class="modal-title">Add Comment for <%= @resume.name %> </div>
+        <div class="modal-title">Add Comment for <%= @resume.name %></div>
       </div>
       <div class="modal-body">
         <%= form_tag url_for(:action => "add_comment") do %>
-          <%= text_area_tag "comment", nil, :id => "add_comment", :style => "margin-bottom:15px; display:block; width:100%;"; %>
+          <%= text_area_tag "comment", nil, :id => "add_comment", :style => "margin-bottom:15px; display:block; width:100%;" %>
           <%= hidden_field_tag "id", @resume.id %>
           <%= submit_tag "Submit", :class => "btn btn-primary" %>
-        <% end %>  
+        <% end %>
       </div>
     </div>
   </div>
 </div>
 
-
 </div>
 
 <script>
-  function toggleComment(commentDiv,iconDiv,event) {
+  function toggleComment(commentDiv, iconDiv, event) {
     event.preventDefault();
     if (commentDiv.style.display === "none") {
       commentDiv.style.display = "block";
-      iconDiv.src = "<%= image_path("minus.svg")%>";
+      iconDiv.src = "<%= image_path("minus.svg") %>";
     } else {
       commentDiv.style.display = "none";
-      iconDiv.src = "<%= image_path("add.svg")%>" ;
+      iconDiv.src = "<%= image_path("add.svg") %>";
     }
-}
+  }
 </script>

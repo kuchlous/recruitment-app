@@ -560,43 +560,6 @@ data = {
         "placeholder": "Enter comments about Digital Logic skills..."
       },
       {
-        "name" => "observations",
-        "type" => "textarea",
-        "label" => "Observations (Mandatory to be filled)",
-        "required" => true,
-        "placeholder" => "Enter your observations...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Observations are required"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "type" => "number",
-        "label" => "Overall Rating (Mandatory to be filled)",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -1171,42 +1134,6 @@ data = {
         "required" => false
       },
       {
-        "name" => "overall_observations",
-        "type" => "textarea",
-        "label" => "Overall Observations (Mandatory to be filled)",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observations are required"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "type" => "number",
-        "label" => "Overall Rating (Mandatory to be filled)",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -1531,42 +1458,6 @@ data = {
         ]
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_impression",
-        "type" => "textarea",
-        "label" => "Overall Impression and Recommendation: Final comments and recommendations for proceeding with the candidate.",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall impression is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -1827,19 +1718,6 @@ data = {
         ]
       },
       {
-        "name" => "overall_impression",
-        "type" => "textarea",
-        "label" => "Overall Impression and Recommendation: Final comments and recommendations for proceeding with the candidate.",
-        "required" => true,
-        "placeholder" => "Enter your overall impression and recommendation...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall impression is required"
-          }
-        ]
-      },
-      {
         "name" => "proceed_recommendation",
         "type" => "select",
         "label" => "Recommendation",
@@ -1859,31 +1737,6 @@ data = {
           {
             "type" => "required",
             "message" => "Recommendation is required"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall Rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
           }
         ]
       },
@@ -2495,44 +2348,6 @@ data = {
         ]
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall Rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observations",
-        "type" => "textarea",
-        "label" => "Overall Observations",
-        "required" => true,
-        "placeholder" => "Enter your overall observations...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observations are required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -2780,44 +2595,6 @@ data = {
             "type" => "max",
             "value" => 10,
             "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
           }
         ]
       },
@@ -3080,44 +2857,6 @@ data = {
         "placeholder" => "Enter comments about communication skills..."
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -3365,44 +3104,6 @@ data = {
             "type" => "max",
             "value" => 10,
             "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
           }
         ]
       },
@@ -3658,44 +3359,6 @@ data = {
         ]
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -3947,44 +3610,6 @@ data = {
         ]
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -4232,44 +3857,6 @@ data = {
             "type" => "max",
             "value" => 10,
             "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
           }
         ]
       },
@@ -4733,44 +4320,6 @@ data = {
         ]
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall observation (Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -5037,44 +4586,6 @@ data = {
         "label" => "Comment",
         "required" => false,
         "placeholder" => "Enter additional comments..."
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall Rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
       },
       {
         "name" => "decision",
@@ -5345,44 +4856,6 @@ data = {
         "placeholder" => "Enter additional comments..."
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall Ratings",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -5624,44 +5097,6 @@ data = {
         "label" => "Comment",
         "required" => false,
         "placeholder" => "Enter additional comments..."
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall ratings",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
       },
       {
         "name" => "decision",
@@ -5955,44 +5390,6 @@ data = {
         "label" => "Comment",
         "required" => false,
         "placeholder" => "Enter additional comments..."
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
       },
       {
         "name" => "decision",
@@ -6317,44 +5714,6 @@ data = {
         "placeholder" => "Enter comments about communication skills..."
       },
       {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Over all rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -6581,44 +5940,6 @@ data = {
         "label" => "Comment",
         "required" => false,
         "placeholder" => "Enter additional comments..."
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall Rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
       },
       {
         "name" => "decision",
@@ -6941,44 +6262,6 @@ data = {
         "label" => "Comments",
         "required" => false,
         "placeholder" => "Enter comments about communication skills..."
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall rating",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
-      },
-      {
-        "name" => "overall_observation",
-        "type" => "textarea",
-        "label" => "Overall Observation(Comments)",
-        "required" => true,
-        "placeholder" => "Enter your overall observations and comments...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall observation is required"
-          }
-        ]
       },
       {
         "name" => "decision",
@@ -7320,44 +6603,6 @@ data = {
         "label" => "Online Score",
         "required" => false,
         "placeholder" => "Enter online score for C-programming"
-      },
-      {
-        "name" => "observations",
-        "type" => "textarea",
-        "label" => "Observations (Mandatory to be filled)",
-        "required" => true,
-        "placeholder" => "Enter your observations...",
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Observations are required"
-          }
-        ]
-      },
-      {
-        "max" => 10,
-        "min" => 0,
-        "name" => "overall_rating",
-        "step" => 1,
-        "type" => "number",
-        "label" => "Overall Rating (Mandatory to be filled)",
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Overall rating is required"
-          },
-          {
-            "type" => "min",
-            "value" => 0,
-            "message" => "Rating must be at least 0"
-          },
-          {
-            "type" => "max",
-            "value" => 10,
-            "message" => "Rating cannot exceed 10"
-          }
-        ]
       },
       {
         "name" => "decision",
