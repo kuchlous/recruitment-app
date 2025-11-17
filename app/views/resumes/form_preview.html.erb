@@ -1,36 +1,11 @@
-<%= select_tag :form_config_id, options_from_collection_for_select(FormConfig.all, :id, :title), prompt: 'Select Form Config' %>
-
-<div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
-  <table class="table table-bordered table-sm mb-4" style="max-width: 400px;">
-    <caption class="text-left" style="caption-side: top; font-weight: bold;">Rating (Reference chart)</caption>
-    <tbody>
-      <tr>
-        <td>1-2</td>
-        <td>Poor</td>
-      </tr>
-      <tr>
-        <td>3-4</td>
-        <td>Fair</td>
-      </tr>
-      <tr>
-        <td>5-6</td>
-        <td>Good</td>
-      </tr>
-      <tr>
-        <td>7-8</td>
-        <td>Very Good</td>
-      </tr>
-      <tr>
-        <td>9-10</td>
-        <td>Excellent</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container">
+  <div>
+    <%= select_tag :form_config_id, options_from_collection_for_select(FormConfig.all, :id, :title), prompt: 'Select Form Config' %>
+  </div>
+  <br />
+  <div id="formPreviewContainer"></div>
+  <div id="formPreviewTable"></div>
 </div>
-
-<div id="formPreviewContainer"></div>
-<div id="formPreviewTable"></div>
-
 <script>
   document.addEventListener('turbolinks:load', () => {
     const formPreviewContainerFound = document.querySelector('#formPreviewContainer');
