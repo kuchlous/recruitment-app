@@ -38,9 +38,9 @@
               <td class="table-cell-secondary"> <%= print_date_no_year (fwd.created_at) %> </td>
               <td class="table-cell-secondary"> 
                 <% if reqs.size == 1 %>
-                  <%= select_tag "requirement_ids", options_for_select(reqs, reqs.first[1]), :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %>
+                  <%= select_tag "requirement_ids", options_for_select(reqs, reqs.first[1]), :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_requirement_select" %>
                 <% else %>
-                  <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :size => reqs.size, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %>
+                  <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :size => reqs.size, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_requirement_select" %>
                 <% end %>
               </td>
               <td class="table-cell-secondary"> <%= resume.preferred_location %> </td>
