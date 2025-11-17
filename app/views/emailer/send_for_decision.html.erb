@@ -4,30 +4,53 @@
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
   </head>
   <body>
-  <p> Hi, </p>
-  <% if @hire_action %>
-    <p> <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> has been selected by engineering as <%= @hire_action %> and is waiting for a decision. </p>
-  <% else %>
-    <p> <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> is waiting for a <%= @eng_decision ? "engineering" : "management" %> decision. </p>
-  <% end %>
-  <p> Requirement: <%= @requirement.name %> </p>
-  <p>
-  ============================================================== 
-  </br>
-  The feedbacks are:- 
-  </br>
-  <% @resume.feedbacks.each do |feedback| %>
-    Interviewer: <%= feedback.employee.name %> </br>
-    Rating: <%= feedback.rating %> </br>
-    <%= simple_format feedback.feedback %>  </br>
-    </br>
-  <% end %>
-  ============================================================== 
-  </p>
-  <p>
-  This is a system generated message. Please do not reply to this email. Instead login into
-  the recruitment system. Here is a link to the resume
-  <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %>
-  </p>
+    <p>Hi,</p>
+    <% if @hire_action %>
+      <p>
+        <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> has been selected by engineering as <%= @hire_action %> and is waiting for a decision.
+      </p>
+    <% else %>
+      <p>
+        <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %> is waiting for a <%= @eng_decision ? "engineering" : "management" %> decision.
+      </p>
+    <% end %>
+    <p>Requirement: <%= @requirement.name %></p>
+    <p>
+      ==============================================================
+      <br />
+      The feedbacks are:-
+      <br />
+      <% @resume.feedbacks.order(created_at: :desc).each do |feedback| %>
+        Interviewer: <%= feedback.employee.name %>, added on: <%= feedback.created_at.strftime('%b %d, %Y') if feedback.created_at %>
+        <br />
+        Rating: <%= feedback.rating %>
+        <br />
+        <b>Overall feedback / observations:</b> <%= simple_format feedback.feedback %>
+        <br />
+        <% if feedback.feedback_form_json.present? && feedback.feedback_form_json != {} %>
+          <div>
+            <p class="text-muted">
+              <% feedback_text = "View Feedback" %>
+              <% if feedback.interview.present? && feedback.interview.form_config.present? && feedback.interview.form_config.title.present? %>
+                <% feedback_text += " - #{feedback.interview.form_config.title}" %>
+              <% end %>
+              <%= link_to(
+                      feedback_text,
+                      url_for(:protocol => "https", :controller => "feedbacks", :action => "view", :id => feedback.id),
+                      target: '_blank'
+                    ) %>
+            </p>
+          </div>
+        <% end %>
+        <hr>
+        <br />
+      <% end %>
+      ==============================================================
+    </p>
+    <p>
+      This is a system generated message. Please do not reply to this email. Instead login into
+      the recruitment system. Here is a link to the resume
+      <%= link_to @resume.name, {:protocol => "https", :controller => "resumes", :action => "show", :id => @resume.uniqid.name} %>
+    </p>
   </body>
 </html>

@@ -25,6 +25,8 @@ class FeedbacksController < ApplicationController
     feedback.feedback = params[:feedback_common_comment]
     
     if feedback.save
+      # Sending email about feedback
+      Emailer.feedback(get_current_employee, feedback.resume, feedback.interview.requirement, feedback).deliver_now
       render json: { 
         status: 'success', 
         message: 'Feedback submitted successfully',

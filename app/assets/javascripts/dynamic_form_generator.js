@@ -8,7 +8,8 @@ function createCommonFeedbackElements(containerId) {
 
   const ratingLabel = document.createElement('label');
   ratingLabel.htmlFor = 'feedback_rating';
-  ratingLabel.textContent = 'Rating *';
+  ratingLabel.className = 'control-label';
+  ratingLabel.textContent = 'Overall Rating *';
 
   const ratingSelect = document.createElement('select');
   ratingSelect.name = 'feedback[rating]';
@@ -16,6 +17,13 @@ function createCommonFeedbackElements(containerId) {
   ratingSelect.className = 'form-control';
   ratingSelect.required = true;
   ratingSelect.style.maxWidth = '300px';
+
+  const placeholderOption = document.createElement('option');
+  placeholderOption.value = '';
+  placeholderOption.textContent = 'Please select...';
+  placeholderOption.disabled = true;
+  placeholderOption.selected = true;
+  ratingSelect.appendChild(placeholderOption);
 
   const ratingOptions = [
     { value: 'Poor', label: 'Poor' },
@@ -29,14 +37,17 @@ function createCommonFeedbackElements(containerId) {
     const optionElement = document.createElement('option');
     optionElement.value = option.value;
     optionElement.textContent = option.label;
-    if (option.value === 'Average') {
-      optionElement.selected = true;
-    }
     ratingSelect.appendChild(optionElement);
   });
 
+  // Add validation error container for rating field
+  const ratingErrorDiv = document.createElement('span');
+  ratingErrorDiv.className = 'help-block text-danger';
+  ratingErrorDiv.id = 'feedback_rating-error';
+
   ratingGroup.appendChild(ratingLabel);
   ratingGroup.appendChild(ratingSelect);
+  ratingGroup.appendChild(ratingErrorDiv);
 
   // Create Comment Textarea Group
   const commentGroup = document.createElement('div');
@@ -44,7 +55,8 @@ function createCommonFeedbackElements(containerId) {
 
   const commentLabel = document.createElement('label');
   commentLabel.htmlFor = 'resume_comment';
-  commentLabel.textContent = 'Feedback Comments';
+  commentLabel.className = 'control-label';
+  commentLabel.textContent = 'Overall feedback / observations *';
 
   const commentTextarea = document.createElement('textarea');
   commentTextarea.name = 'feedback[comment]';
@@ -52,13 +64,120 @@ function createCommonFeedbackElements(containerId) {
   commentTextarea.className = 'form-control';
   commentTextarea.rows = 6;
   commentTextarea.placeholder = 'Add Feedback';
+  commentTextarea.required = true;
+
+  // Add validation error container for comment field
+  const commentErrorDiv = document.createElement('span');
+  commentErrorDiv.className = 'help-block text-danger';
+  commentErrorDiv.id = 'resume_comment-error';
 
   commentGroup.appendChild(commentLabel);
   commentGroup.appendChild(commentTextarea);
+  commentGroup.appendChild(commentErrorDiv);
 
   // Append both groups to container
   container.appendChild(ratingGroup);
   container.appendChild(commentGroup);
+}
+
+// Helper function to validate rating field
+function validateRatingField() {
+  const ratingField = document.querySelector('[name="feedback[rating]"]');
+  if (!ratingField) return true;
+
+  const ratingValue = ratingField.value ? ratingField.value.trim() : '';
+  const ratingGroup = ratingField.closest('.form-group');
+  
+  if (!ratingValue) {
+    if (ratingGroup) {
+      ratingGroup.classList.add('has-error');
+    }
+    let errorElement = document.getElementById('feedback_rating-error');
+    if (!errorElement) {
+      errorElement = document.createElement('span');
+      errorElement.className = 'help-block text-danger';
+      errorElement.id = 'feedback_rating-error';
+      if (ratingGroup) {
+        ratingGroup.appendChild(errorElement);
+      }
+    }
+    errorElement.textContent = 'This field is required';
+    return false;
+  } else {
+    if (ratingGroup) {
+      ratingGroup.classList.remove('has-error');
+    }
+    const errorElement = document.getElementById('feedback_rating-error');
+    if (errorElement) {
+      errorElement.textContent = '';
+    }
+    return true;
+  }
+}
+
+// Helper function to clear rating field validation
+function clearRatingFieldValidation() {
+  const ratingField = document.querySelector('[name="feedback[rating]"]');
+  if (!ratingField) return;
+  
+  const ratingGroup = ratingField.closest('.form-group');
+  if (ratingGroup) {
+    ratingGroup.classList.remove('has-error');
+  }
+  const errorElement = document.getElementById('feedback_rating-error');
+  if (errorElement) {
+    errorElement.textContent = '';
+  }
+}
+
+// Helper function to validate comment field
+function validateCommentField() {
+  const commentField = document.querySelector('[name="feedback[comment]"]');
+  if (!commentField) return true;
+
+  const commentValue = commentField.value ? commentField.value.trim() : '';
+  const commentGroup = commentField.closest('.form-group');
+  
+  if (!commentValue) {
+    if (commentGroup) {
+      commentGroup.classList.add('has-error');
+    }
+    let errorElement = document.getElementById('resume_comment-error');
+    if (!errorElement) {
+      errorElement = document.createElement('span');
+      errorElement.className = 'help-block text-danger';
+      errorElement.id = 'resume_comment-error';
+      if (commentGroup) {
+        commentGroup.appendChild(errorElement);
+      }
+    }
+    errorElement.textContent = 'This field is required';
+    return false;
+  } else {
+    if (commentGroup) {
+      commentGroup.classList.remove('has-error');
+    }
+    const errorElement = document.getElementById('resume_comment-error');
+    if (errorElement) {
+      errorElement.textContent = '';
+    }
+    return true;
+  }
+}
+
+// Helper function to clear comment field validation
+function clearCommentFieldValidation() {
+  const commentField = document.querySelector('[name="feedback[comment]"]');
+  if (!commentField) return;
+  
+  const commentGroup = commentField.closest('.form-group');
+  if (commentGroup) {
+    commentGroup.classList.remove('has-error');
+  }
+  const errorElement = document.getElementById('resume_comment-error');
+  if (errorElement) {
+    errorElement.textContent = '';
+  }
 }
 
 window.generateDynamicForm = function generateDynamicForm(containerId, formConfig) {
@@ -188,6 +307,9 @@ window.generateDynamicForm = function generateDynamicForm(containerId, formConfi
         placeholderOption.value = '';
         placeholderOption.textContent = 'Please select...';
         placeholderOption.disabled = true;
+        if (!field.multiple) {
+          placeholderOption.selected = true;
+        }
         inputElement.appendChild(placeholderOption);
 
         if (field.multiple) {
@@ -329,7 +451,11 @@ window.generateDynamicForm = function generateDynamicForm(containerId, formConfi
       el.classList.remove('has-error');
     });
 
-    if (validateForm(form, formConfig?.fields)) {
+    // Validate rating and comment fields (created separately, not in formConfig)
+    const isRatingValid = validateRatingField();
+    const isCommentValid = validateCommentField();
+
+    if (validateForm(form, formConfig?.fields) && isRatingValid && isCommentValid) {
       handleFormSubmission(form, formConfig);
     }
   });
@@ -352,6 +478,20 @@ window.generateDynamicForm = function generateDynamicForm(containerId, formConfi
       }
     });
   });
+
+  // Add validation for rating field (created separately, not in form config)
+  const ratingField = document.querySelector('[name="feedback[rating]"]');
+  if (ratingField) {
+    ratingField.addEventListener('blur', validateRatingField);
+    ratingField.addEventListener('change', validateRatingField);
+  }
+
+  // Add validation for comment field (created separately, not in form config)
+  const commentField = document.querySelector('[name="feedback[comment]"]');
+  if (commentField) {
+    commentField.addEventListener('blur', validateCommentField);
+    commentField.addEventListener('input', clearCommentFieldValidation);
+  }
 
   console.log('Form generated successfully.');
 };
@@ -559,9 +699,6 @@ window.renderTable = function renderTable(data, elementId) {
   // Create a container for the table
   let containerHtml = `
     <div class="table-container">
-      <div class="table-header">
-        <b> Detailed Feedback </b>
-      </div>
       <table class="modern-table">
         <thead>
           <tr class="header_row">

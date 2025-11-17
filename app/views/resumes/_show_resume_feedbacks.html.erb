@@ -1,49 +1,51 @@
 <td colspan="<%= @cols %>" style="text-align: left;">
   <div id="resume_feedback">
     <div id="feedback_tagline">
-      <u> Resume Feedback </u>
+      <u>Resume Feedback</u>
       <span class="close_box_link">
         <%= link_to image_tag("RedCross.png", :size => "22x22"), "",
-          :onclick => "deleteAjaxRequestTr('ajax_request_tr')" %>
-      </span> <br />
+            :onclick => "deleteAjaxRequestTr('ajax_request_tr')" %>
+      </span>
+      <br />
       <span class="span_with_8">
         ( Latest first )
       </span>
     </div>
     <% if @resume_feedback.blank? %>
-    <div>
-      Sorry no feedback for this resume.
-    </div>
-    <% else %>
-    <% @resume_feedback.each do |feedback| %>
-    <div class="feedback_entry">
-      <% if feedback.rating.present? %>
-      <u> Rating: <%= feedback.rating  %> </u> <br />
-      <% end %>
-      <%= simple_format feedback.feedback %> <br />
-
-      <% if feedback&.interview.present? %>
-      <div class="">
-        Interview taken by: <%= feedback.interview.employee.name %> |
-        Resume: <%= feedback.resume.name %> |
-        Date: <%= feedback.interview.interview_date.strftime("%B %d, %Y") %>
-      </div>
-      <% end %>
-      <br />
-
-      <% if feedback.feedback_form_json.present? && feedback.feedback_form_json != {} %>
       <div>
-        <p class="text-muted">
-          <%= link_to(
-                "View Feedback",
-                feedback_path(feedback.id),
-                target: '_blank'
-              ) %>
-        </p>
+        Sorry no feedback for this resume.
       </div>
+    <% else %>
+      <% @resume_feedback.each do |feedback| %>
+        <div class="feedback_entry">
+          <% if feedback&.interview.present? %>
+            <div class="">
+              Interviewer: <%= feedback.interview.employee.name %> |
+              Resume: <%= feedback.resume.name %> |
+              added on: <%= print_date(feedback.created_at) %>
+            </div>
+          <% end %>
+          <% if feedback.rating.present? %>
+            <u><b>Rating:</b> <%= feedback.rating %></u>
+            <br />
+            <br />
+          <% end %>
+          <b>Overall feedback / observations:</b> <%= simple_format feedback.feedback %>
+          <br />
+
+          <% if feedback.feedback_form_json.present? && feedback.feedback_form_json != {} %>
+            <div>
+              <p class="text-muted">
+                <%= link_to(
+                      "View Feedback#{' - ' + feedback.interview.form_config.title if feedback.interview&.form_config&.title.present?}",
+                      feedback_path(feedback.id),
+                      target: '_blank'
+                    ) %>
+              </p>
+            </div>
+          <% end %>
+        </div>
       <% end %>
-    </div>
-    <% end %>
     <% end %>
   </div>
 </td>
