@@ -39,7 +39,7 @@ class ResumesController < ApplicationController
     unless params[:id].nil? || Uniqid.find_by_name(params[:id]).nil?
       @resume         = Uniqid.find_by_name(params[:id]).resume
       @comments       = get_resume_comments(@resume, get_current_employee)
-      @feedbacks      = @resume.feedbacks
+      @feedbacks      = @resume.feedbacks.order(created_at: :desc)
       @messages       = @resume.messages
       
       # Check if current employee should see CTC information
