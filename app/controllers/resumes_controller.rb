@@ -20,7 +20,7 @@ class ResumesController < ApplicationController
 ]
   before_action :check_for_HR_or_ADMIN, :only => [ :edit ]
 
-  caches_action :joined, layout: false, cache_path: 'joined', expires_in: 30.minutes
+  caches_action :joined, layout: false, cache_path: proc { |c| "joined_#{c.params[:group_id]}_#{c.params[:mine]}" }, expires_in: 30.minutes
 
   ####################################################################################################
   # FUNCTIONS   : new, edit, create, update, show                                                    #
