@@ -1,5 +1,16 @@
 <div class="table-actions date-range-form-container">
   <form action="<%= url %>" method="get" class="date-range-form">
+    <% if defined?(@groups) && @groups.present? %>
+      <div class="date-range-form-group">
+        <label for="group_id" class="date-range-form-label">Filter by Group</label>
+        <%= select_tag :group_id, 
+            options_for_select([["All", ""]] + @groups.map { |g| [g.name, g.id] }, (defined?(@selected_group_id) ? @selected_group_id : params[:group_id]) || ""),
+            { class: 'form-control' } %>
+      </div>
+    <% elsif params[:group_id].present? %>
+      <%= hidden_field_tag :group_id, params[:group_id] %>
+    <% end %>
+    
     <div class="date-range-form-group">
       <label for="start_month" class="date-range-form-label">Start Month</label>
       <%= select_month(Date.today, {prefix: 'start'}, {class: 'form-control'}) %>

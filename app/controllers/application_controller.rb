@@ -357,22 +357,12 @@ require 'will_paginate/array'
     end
   end
 
-  def rescue_action(exception)
-    case exception
-    when ActiveRecord::RecordNotFound
-      render_optional_error_file :not_found
-    when ActionController::UnknownAction
-      render_optional_error_file :not_found
-    when ActionController::RoutingError
-      render_optional_error_file :not_found
-    else
-      # Log the full error details
-      Rails.logger.error "Exception: #{exception.class.name}: #{exception.message}"
-      Rails.logger.error "Backtrace: #{exception.backtrace.join("\n")}"
-      
-      # Call the original rescue_action
-      super
-    end
+  # Use rescue_from for Rails 5+ error handling
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+  rescue_from ActionController::RoutingError, with: :render_404
+  
+  def render_404
+    render_optional_error_file :not_found
   end
 
   # Add method to log view errors

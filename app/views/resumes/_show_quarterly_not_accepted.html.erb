@@ -1,10 +1,16 @@
 <% if params[:action] == "show_quarterly_not_accepted"
-     month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @year.to_s
+     month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + " " + @start_year.to_s + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @end_year.to_s
    end %>
 
 <div class="table-header">
   <% if params[:action] == "show_quarterly_not_accepted" %>
-    <h2><%= month_year_str %> (<%= @not_accepted_comments.size %>)</h2>
+    <h2>Not Accepted: <%= month_year_str %> (<%= @not_accepted_comments.size %>)</h2>
+    <% if defined?(@selected_group) && @selected_group %>
+      <p style="margin-top: 10px;">
+        <strong>Selected Group:</strong> <%= @selected_group.name %>
+      </p>
+    <% end %>
+    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_not_accepted') %>
   <% elsif params[:action] == "show_all_not_accepted" %>
     <h2>ALL <%= @status.titleize %> Resumes (<%= @not_accepted_comments.size %>)</h2>
   <% else %>

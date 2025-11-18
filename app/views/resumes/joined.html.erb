@@ -1,9 +1,23 @@
 <% @status = "JOINING" %>
 <div id="resumes_joined" class="table-container">
   <div class="table-header">
+    <div style="margin-top: 15px;">
+      <%= form_tag url_for(controller: 'resumes', action: 'joined'), method: 'get', style: 'display: inline-block;' do %>
+        <%= label_tag :group_id, "Filter by Group:", style: 'margin-right: 10px;' %>
+        <%= select_tag :group_id, 
+            options_for_select([["All", ""]] + @groups.map { |g| [g.name, g.id] }, @selected_group_id || ""),
+            { onchange: 'this.form.submit();', style: 'min-width: 200px; padding: 5px;' } %>
+        <%= hidden_field_tag :mine, params[:mine] if params[:mine].present? %>
+      <% end %>
+    </div>
+      <p style="margin-top: 10px;">
+        <strong>Selected Group:</strong> <%= @selected_group ?  @selected_group.name : "All" %>
+      </p>
+  </div>
+
+  <div class="table-header">
     <h2>Monthly Summary</h2>
   </div>
-  
   <table id="summary_table" class="modern-table">
     <thead>
       <tr>
