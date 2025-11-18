@@ -1372,7 +1372,7 @@ class ResumesController < ApplicationController
   # FUNCTION    : create_xls_sheet_for_requirement                                                   #
   # DESCRIPTION : Create the excel sheet for a requirement with given status                         #
   ####################################################################################################
-  def create_xls_sheet_for_requirement(status)
+  def create_xls_sheet_for_requirement(status, requirement)
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet :name => status
@@ -1402,7 +1402,7 @@ class ResumesController < ApplicationController
       return
     end
 
-    sheet, book, output = create_xls_sheet_for_requirement(status)
+    sheet, book, output = create_xls_sheet_for_requirement(status, requirement)
 
     if status == "JOINING"
       joining_matches, joined_resumes, not_joined_resumes = get_joining_data
