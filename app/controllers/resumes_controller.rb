@@ -2730,15 +2730,16 @@ class ResumesController < ApplicationController
     requirement.ta_leads.each do |lead|
       recipients << lead
     end
+    # Add all engineering leads from HABTM association
+    requirement.eng_leads.each do |lead|
+      recipients << lead
+    end
     if eng_decision
-      # Add all engineering leads from HABTM association
-      requirement.eng_leads.each do |lead|
-        recipients << lead
-      end
       to = requirement.ta_leads.first if requirement.ta_leads.any?
       recipients << requirement.employee if requirement.employee.present? # Requirement Owner
     else
       to = gm_for_decision
+      recipients << requirement.group.employee if requirement.group.present?
     end
     # Get ta_head from first ta_lead (assuming they all have the same ta_head)
     ta_head = requirement.ta_leads.first.ta_head if requirement.ta_leads.any?
