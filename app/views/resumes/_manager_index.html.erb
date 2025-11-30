@@ -1,18 +1,17 @@
-<span class="section-header"> <%= @status.titleize %> (<%= @forwards.size %>) </span>
 <% unless @forwards.nil? || @forwards.size == 0 %>
   <form name="form" method="post">
-    <table id="resume_list_table" class="modern-table">
+    <table id="resume_list_table" class="modern-table sortable">
       <thead>
         <tr>
           <th> Name </th>
           <th> Exp </th>
-          <th> Skills </th>
+          <th class="sorttable_nosort"> Skills </th>
           <th> Notice Period </th>
           <th> Status </th>
           <th> Upload Date </th>
-          <th> Requirements </th>
+          <th class="sorttable_nosort"> Requirements </th>
           <th> Preferred Location </th>
-          <th> Actions </th>
+          <th class="sorttable_nosort"> Actions </th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +24,7 @@
             else
               reqs = resume.get_resume_req_matches(get_current_employee)
             end %>
-            <tr id="<%= @row_id_prefix %><%= counter_value %>">
+            <tr>
               <td class="table-cell-primary"> <%= resume_link(resume) %>  </td>
               <% year, month = resume.get_current_experience %>
               <td class="table-cell-secondary"> <%= "#{year}-#{month}" %> </td>

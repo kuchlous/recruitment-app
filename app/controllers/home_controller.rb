@@ -224,7 +224,6 @@ class HomeController < ApplicationController
     @resumes = []
     @forwards = []
     @matches = []
-    @id_prefix = "dashboard_description_row"
     @counter_value = ""
     @hold_on_req_page = 0
     @offer_on_req_page = 0
@@ -311,15 +310,15 @@ class HomeController < ApplicationController
       @join_on_req_page = 1
       @is_req_match = 1
     when "Not Joined"
-      @matches = get_hr_matches("NOT JOINED", e)
+      @forwards = get_hr_matches("NOT JOINED", e)
       @render = "manager_index"
       @is_req_match = 1
     when "Not Accepted"
-      @matches = get_hr_matches("NOT ACCEPTED", e)
+      @forwards = get_hr_matches("NOT ACCEPTED", e)
       @render = "manager_index"
       @is_req_match = 1
     when "Eng Select"
-      @matches = get_hr_matches("ENG_SELECT", e)
+      @forwards = get_hr_matches("ENG_SELECT", e)
       @render = "manager_index"
       @is_req_match = 1
     end

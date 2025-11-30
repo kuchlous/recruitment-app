@@ -127,7 +127,6 @@ class RequirementsController < ApplicationController
     get_forwards_matches_to_reqs(@requirement) unless @status.nil?
 
     if is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_leads.include?(get_current_employee)
-      # @accounts    = @requirement.accounts  # Removed accounts reference
       @forwarded   = @requirement.open_forwards
       @shortlisted = @requirement.shortlists
       @scheduled   = @requirement.scheduled
@@ -155,11 +154,27 @@ class RequirementsController < ApplicationController
     end
   end
 
+  def requirement_category
+    @requirement = Requirement.find(params[:id])
+    @status = params[:status]
+    
+    # Check permissions
+    unless is_HR? || is_BD? || is_ADMIN? || @requirement.employee.provides_visibility_to?(get_current_employee) || @requirement.eng_leads.include?(get_current_employee)
+      render plain: "Unauthorized", status: :unauthorized
+      return
+    end
+    
+    # Finding matches/forwards/interviews based upon the parameter coming from the url
+    get_forwards_matches_to_reqs(@requirement) unless @status.nil?
+    
+    # Render partial for AJAX requests
+    render partial: "show_category"
+  end
+
   def get_forwards_matches_to_reqs(req)
     @resumes           = []
     @forwards          = []
     @matches           = []
-    @id_prefix         = "requirement_description_row"
     @counter_value     = ""
     @hold_on_req_page  = 0
     @offer_on_req_page = 0
@@ -169,12 +184,10 @@ class RequirementsController < ApplicationController
     if @status       == "Forwarded"
       @forwards      = req.open_forwards
       @render        = "manager_index"
-      @row_id_prefix = "req_forwards"
       @is_req_match  = 0
     elsif @status    == "Shortlisted"
       @forwards      = req.shortlists
       @render        = "manager_index"
-      @row_id_prefix = "req_shortlists"
       @is_req_match  = 1
       @after_shortlist_page  = true
     elsif @status    == "Scheduled"
@@ -242,15 +255,15 @@ class RequirementsController < ApplicationController
       @join_on_req_page  = 1
       @is_req_match  = 1
     elsif @status    == "Not Joined"
-      @matches       = req.not_joined
+      @forwards      = req.not_joined
       @render        = "manager_index"
       @is_req_match  = 1
     elsif @status    == "Not Accepted"
-      @matches       = req.not_accepted
+      @forwards      = req.not_accepted
       @render        = "manager_index"
       @is_req_match  = 1
     elsif @status    == "Eng Select"
-      @matches       = req.eng_select
+      @forwards      = req.eng_select
       @render        = "manager_index"
       @is_req_match  = 1
     end
