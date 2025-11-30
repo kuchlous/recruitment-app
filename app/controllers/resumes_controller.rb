@@ -2196,8 +2196,7 @@ class ResumesController < ApplicationController
     # Handle requirement_filter_id from requirement filter autocomplete
     if params[:filter_requirement_id].present?
       begin
-        filter_requirement = Requirement.find(params[:filter_requirement_id])
-        @filter_requirement = filter_requirement.name
+        @filter_requirement = params[:filter_requirement_id]
       rescue ActiveRecord::RecordNotFound
         @filter_requirement = nil
       end
@@ -2207,7 +2206,6 @@ class ResumesController < ApplicationController
     @uploaded_at_start = params[:uploaded_at_start].present? ? Date.parse(params[:uploaded_at_start]) : nil
     @uploaded_at_end = params[:uploaded_at_end].present? ? Date.parse(params[:uploaded_at_end]) : nil
     @exclude_keywords = params[:exclude_keywords]
-    @requirement_id = params[:requirement_id]
     
     # Build where conditions for filters
     where_conditions = {}
@@ -2234,7 +2232,7 @@ class ResumesController < ApplicationController
                               per_page: get_per_page)
     elsif params[:search_type] == 'requirement'
       # Requirement-based search: Use requirement embedding for KNN search
-      if @requirement_id.present?
+      if params[:search_requirement_id].present?
         begin
           requirement = Requirement.find(params[:search_requirement_id])
           requirement_embedding = requirement.get_embedding
