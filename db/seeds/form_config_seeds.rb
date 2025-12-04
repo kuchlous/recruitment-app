@@ -370,7 +370,7 @@ data = {
         "step": 1,
         "type": "number",
         "label": "UVM",
-        "required": false,
+        "required": true,
         "validations": [
           {
             "type": "min",
