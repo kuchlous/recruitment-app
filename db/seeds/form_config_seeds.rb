@@ -370,7 +370,7 @@ data = {
         "step": 1,
         "type": "number",
         "label": "UVM",
-        "required": false,
+        "required": true,
         "validations": [
           {
             "type": "min",
@@ -1460,7 +1460,7 @@ data = {
       {
         "name" => "decision",
         "type" => "select",
-        "label" => "Decision (Mandatory to be filled)",
+        "label" => "Decision",
         "options" => [
           {
             "label" => "Hire",
@@ -1471,7 +1471,7 @@ data = {
             "value" => "no-hire"
           }
         ],
-        "required" => true,
+        "required" => false,
         "validations" => [
           {
             "type" => "required",
