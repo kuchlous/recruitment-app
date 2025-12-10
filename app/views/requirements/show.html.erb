@@ -90,6 +90,10 @@
           <label>Management Comment</label>
           <div class="description-text"><%= @requirement.mgt_comment.present? ? @requirement.mgt_comment : '<span class="text-muted">No comments</span>'.html_safe %></div>
         </div>
+        <div class="description-section">
+          <label>Capture Feedback based on these Skill Keywords</label>
+          <div class="description-text"><%= @requirement.feedback_skill_keywords.present? ? @requirement.feedback_skill_keywords : '<span class="text-muted">NA</span>'.html_safe %></div>
+        </div>
       </div>
     </div>
 

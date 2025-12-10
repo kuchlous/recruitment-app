@@ -771,4 +771,94 @@ window.renderAllFeedbackTables = function () {
   });
 };
 
+/**
+ * Generates a dynamic form from a comma-separated list of skill keywords.
+ * Each keyword will have a Rating field (mandatory) and a Comment field (optional).
+ * 
+ * @param {string} containerId - The ID of the container element where the form will be rendered
+ * @param {string} feedbackSkillKeywords - Comma-separated list of skill keywords (e.g., "JavaScript, Python, React")
+ */
+window.generateSkillFeedbackForm = function generateSkillFeedbackForm(containerId, feedbackSkillKeywords) {
+  if (!feedbackSkillKeywords || typeof feedbackSkillKeywords !== 'string') {
+    console.error('feedbackSkillKeywords must be a non-empty string');
+    return;
+  }
+
+  // Parse the comma-separated keywords
+  const skills = feedbackSkillKeywords
+    .split(',')
+    .map(skill => skill.trim())
+    .filter(skill => skill.length > 0);
+
+  if (skills.length === 0) {
+    console.error('No valid skills found in feedbackSkillKeywords');
+    return;
+  }
+
+  const minRating = 0;
+  const maxRating = 10;
+
+  // Generate field name from skill (sanitize for use as field name)
+  function generateFieldName(skill) {
+    return skill
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '');
+  }
+
+  // Generate form fields for each skill
+  const fields = [];
+  skills.forEach(skill => {
+    const fieldName = generateFieldName(skill);
+
+    // Rating field (mandatory)
+    fields.push({
+      name: `${fieldName}_rating`,
+      type: 'number',
+      label: skill,
+      required: true,
+      min: minRating,
+      max: maxRating,
+      step: 1,
+      placeholder: `${minRating}-${maxRating}`,
+      validations: [
+        {
+          type: 'required',
+          message: 'Rating is required'
+        },
+        {
+          type: 'min',
+          value: minRating,
+          message: `Rating must be at least ${minRating}`
+        },
+        {
+          type: 'max',
+          value: maxRating,
+          message: `Rating cannot exceed ${maxRating}`
+        }
+      ]
+    });
+
+    // Comment field (optional)
+    fields.push({
+      name: `${fieldName}_comment`,
+      type: 'textarea',
+      label: 'Comment',
+      required: false,
+      placeholder: `Enter comments about ${skill}...`,
+      rows: 3
+    });
+  });
+
+  // Create formConfig object
+  const formConfig = {
+    form_name: 'skill-feedback-form',
+    form_title: 'Skill Feedback Form',
+    fields: fields
+  };
+
+  // Call generateDynamicForm with the generated formConfig
+  generateDynamicForm(containerId, formConfig);
+};
+
 

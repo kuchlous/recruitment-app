@@ -81,6 +81,11 @@
         <label for="requirement_mgt_comment">Management Comment</label>
         <%= f.text_area :mgt_comment, class: "form-control", rows: 3, placeholder: "Enter management comments" %>
       </div>
+
+      <div class="form-group">
+        <label for="requirement_feedback_skill_keywords">Capture Feedback based on these Skill Keywords (Comma Separated)</label>
+        <%= f.text_area :feedback_skill_keywords, class: "form-control", rows: 3, placeholder: "Enter feedback skill keywords (Comma Separated)" %>
+      </div>
     </div>
 
     <div class="form-section">
