@@ -360,7 +360,7 @@ data = {
         "name": "sv_advanced_comments",
         "type": "textarea",
         "label": "Comments",
-        "required": false,
+        "required": true,
         "placeholder": "Enter comments about SV (Advanced) skills..."
       },
       {
@@ -388,7 +388,7 @@ data = {
         "name": "uvm_comments",
         "type": "textarea",
         "label": "Comments",
-        "required": false,
+        "required": true,
         "placeholder": "Enter comments about UVM skills (Mandatory if candidate claims knowledge)..."
       },
       {
@@ -416,7 +416,7 @@ data = {
         "name": "tb_coding_comments",
         "type": "textarea",
         "label": "Comments",
-        "required": false,
+        "required": true,
         "placeholder": "Enter comments about TB Coding skills..."
       },
       {
@@ -528,7 +528,7 @@ data = {
         "name": "verification_concepts_comments",
         "type": "textarea",
         "label": "Comments",
-        "required": false,
+        "required": true,
         "placeholder": "Enter comments about Verification Concepts skills..."
       },
       {
@@ -556,7 +556,7 @@ data = {
         "name": "digital_logic_comments",
         "type": "textarea",
         "label": "Comments",
-        "required": false,
+        "required": true,
         "placeholder": "Enter comments about Digital Logic skills..."
       },
       {
@@ -1718,29 +1718,6 @@ data = {
         ]
       },
       {
-        "name" => "proceed_recommendation",
-        "type" => "select",
-        "label" => "Recommendation",
-        "options" => [
-          {
-            "label" => "Yes",
-            "value" => "yes"
-          },
-          {
-            "label" => "No",
-            "value" => "no"
-          }
-        ],
-        "multiple" => false,
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Recommendation is required"
-          }
-        ]
-      },
-      {
         "name" => "decision",
         "type" => "select",
         "label" => "Decision (Mandatory to be filled)",
@@ -1919,7 +1896,7 @@ data = {
         "name" => "project_knowledge_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about project knowledge...",
         "validations" => [
           {
@@ -1957,7 +1934,7 @@ data = {
         "name" => "project_complexity_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about project complexity...",
         "validations" => [
           {
@@ -1995,7 +1972,7 @@ data = {
         "name" => "digital_logic_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about digital logic...",
         "validations" => [
           {
@@ -2033,7 +2010,7 @@ data = {
         "name" => "verilog_rtl_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about Verilog/RTL...",
         "validations" => [
           {
@@ -2071,7 +2048,7 @@ data = {
         "name" => "asic_rtl_cdc_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about ASIC RTL-LINT/CDC/RDC...",
         "validations" => [
           {
@@ -2109,7 +2086,7 @@ data = {
         "name" => "asic_integration_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about ASIC integration...",
         "validations" => [
           {
@@ -2300,7 +2277,7 @@ data = {
         "name" => "communication_attitude_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about communication, attitude and sharpness...",
         "validations" => [
           {
@@ -2338,7 +2315,7 @@ data = {
         "name" => "memory_interface_comments",
         "type" => "textarea",
         "label" => "Comments",
-        "required" => true,
+        "required" => false,
         "placeholder" => "Enter comments about memory interface & protocols...",
         "validations" => [
           {
@@ -5750,16 +5727,243 @@ data = {
       {
         "max" => 10,
         "min" => 0,
+        "name" => "communication_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "Communication",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "attitude_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "Attitude",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "energy_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "Energy",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "soc_arch_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "SOC arch",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "name" => "communication_attitude_energy_soc_comment",
+        "type" => "textarea",
+        "label" => "Comment",
+        "required" => false,
+        "placeholder" => "Enter comments about Communication, Attitude, Energy, and SOC arch..."
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "basic_electrical_knowledge_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "Basic electrical knowledge/Power and clk tree undertanding",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "name" => "basic_electrical_knowledge_comment",
+        "type" => "textarea",
+        "label" => "Comment",
+        "required" => false,
+        "placeholder" => "Enter comments about basic electrical knowledge..."
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "basic_common_tests_setup_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "Basic and common tests setup",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "name" => "basic_common_tests_setup_comment",
+        "type" => "textarea",
+        "label" => "Comment",
+        "required" => false,
+        "placeholder" => "Enter comments about basic and common tests setup..."
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "test_blocks_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "Test Blocks (Digital/Memory/Analaog/Power)",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "name" => "test_blocks_comment",
+        "type" => "textarea",
+        "label" => "Comment",
+        "required" => false,
+        "placeholder" => "Enter comments about test blocks..."
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "pvt_char_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "PVT char",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "name" => "pvt_char_comment",
+        "type" => "textarea",
+        "label" => "Comment",
+        "required" => false,
+        "placeholder" => "Enter comments about PVT char..."
+      },
+      {
+        "max" => 10,
+        "min" => 0,
+        "name" => "v93k_ets_ultraflex_rating",
+        "step" => 1,
+        "type" => "number",
+        "label" => "V93k/ETS/ultraflex",
+        "required" => false,
+        "validations" => [
+          {
+            "type" => "min",
+            "value" => 0,
+            "message" => "Rating must be at least 0"
+          },
+          {
+            "type" => "max",
+            "value" => 10,
+            "message" => "Rating cannot exceed 10"
+          }
+        ]
+      },
+      {
+        "name" => "v93k_ets_ultraflex_comment",
+        "type" => "textarea",
+        "label" => "Comment",
+        "required" => false,
+        "placeholder" => "Enter comments about V93k/ETS/ultraflex..."
+      },
+      {
+        "max" => 10,
+        "min" => 0,
         "name" => "test_plan_generation_rating",
         "step" => 1,
         "type" => "number",
         "label" => "Test plan generation",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -5786,12 +5990,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "Basic C++/Java knowledge",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -5818,12 +6018,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "Test flow creation/Debugging",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -5850,12 +6046,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "Performance analysis tools(TP360, STDF analyser)",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -5882,12 +6074,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "ATE Loadboard design as per the test requirements(Site config/Max power/SI analysis/layout review)",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -5926,13 +6114,7 @@ data = {
           }
         ],
         "multiple" => false,
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Interview mode is required"
-          }
-        ]
+        "required" => false
       },
       {
         "name" => "general_comment",
@@ -6266,7 +6448,7 @@ data = {
       {
         "name" => "decision",
         "type" => "select",
-        "label" => "Decision (Mandatory to be filled)",
+        "label" => "Decision",
         "options" => [
           {
             "label" => "Hire",
@@ -6277,12 +6459,9 @@ data = {
             "value" => "no-hire"
           }
         ],
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Decision is required"
-          }
+
         ]
       }
     ],
@@ -6336,13 +6515,7 @@ data = {
           }
         ],
         "multiple" => false,
-        "required" => true,
-        "validations" => [
-          {
-            "type" => "required",
-            "message" => "Engineering branch is required"
-          }
-        ]
+        "required" => false,
       },
       {
         "max" => 10,
@@ -6515,12 +6688,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "Verilog / RTL",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -6547,12 +6716,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "Linux Basics / Analytics",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
@@ -6579,12 +6744,8 @@ data = {
         "step" => 1,
         "type" => "number",
         "label" => "C-programming",
-        "required" => true,
+        "required" => false,
         "validations" => [
-          {
-            "type" => "required",
-            "message" => "Rating is required"
-          },
           {
             "type" => "min",
             "value" => 0,
