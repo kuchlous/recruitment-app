@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   get 'employees/autocomplete_employees', to: 'employees#autocomplete_employees', as: :employees_autocomplete_employees
   get 'employees/autocomplete_hr_employees', to: 'employees#autocomplete_hr_employees', as: :employees_autocomplete_hr_employees
   get 'requirements/autocomplete_requirements', to: 'requirements#autocomplete_requirements', as: :requirements_autocomplete_requirements
+  get 'requirements/autocomplete_feedback_skills', to: 'requirements#autocomplete_feedback_skills', as: :requirements_autocomplete_feedback_skills
   match 'add_interviewer', to: 'interview_skills#add_interviewer'              ,via: :post
   match 'interview_skills/create', to: 'interview_skills#create'                             ,via: :post
   match 'interview_skills/:id', to: 'interview_skills#destroy'                                       , via: :delete

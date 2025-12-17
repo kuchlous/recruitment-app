@@ -324,6 +324,19 @@ class RequirementsController < ApplicationController
     render json: requirements.map { |req| { id: req.id, name: req.name } }
   end
 
+  def autocomplete_feedback_skills
+    query = params[:query].to_s.strip
+
+    skills = InterviewSkill.all
+    if query.present?
+      skills = skills.where("LOWER(name) LIKE LOWER(?)", "%#{query.downcase}%")
+    end
+
+    skills = skills.order(:name).limit(10).select(:id, :name)
+
+    render json: skills.map { |skill| { id: skill.id, name: skill.name } }
+  end
+
   def suggested_resumes_by_requirement
     @requirement = Requirement.find(params[:id])
     

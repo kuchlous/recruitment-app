@@ -84,7 +84,14 @@
 
       <div class="form-group">
         <label for="requirement_feedback_skill_keywords">Capture Feedback based on these Skill Keywords (Comma Separated)</label>
-        <%= f.text_area :feedback_skill_keywords, class: "form-control", rows: 3, placeholder: "Enter feedback skill keywords (Comma Separated)" %>
+        <%= f.text_area :feedback_skill_keywords,
+                        class: "form-control feedback-skills-autocomplete",
+                        rows: 3,
+                        placeholder: "Enter feedback skill keywords (Comma Separated)",
+                        data: { autocomplete_url: url_for(controller: "requirements", action: "autocomplete_feedback_skills") } %>
+        <small class="form-text text-muted">
+          Start typing to see existing skill keywords and avoid misspellings. Multiple skills can be separated by commas.
+        </small>
       </div>
     </div>
 

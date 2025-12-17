@@ -1758,6 +1758,7 @@ function initializeComponents() {
   createCommaSeparatedAutocomplete('.eng-leads-autocomplete');
   createCommaSeparatedAutocomplete('.ta-leads-autocomplete');
   createCommaSeparatedAutocomplete('.requirements-autocomplete');
+  createCommaSeparatedAutocomplete('.feedback-skills-autocomplete');
 
   // File upload label update
   $('.file-input').on('change', function() {

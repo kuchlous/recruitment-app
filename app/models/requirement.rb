@@ -45,6 +45,8 @@ class Requirement < ActiveRecord::Base
   # Uniqueness stuff
   validates_uniqueness_of :name, :case_sensitive => false
 
+  after_save :sync_feedback_skill_keywords_to_interview_skills
+
   def Requirement.get_experience_array
     exp_array = []
     for i in 1..20
@@ -342,6 +344,26 @@ class Requirement < ActiveRecord::Base
       },
       limit: limit
     )
+  end
+
+  private
+
+  # Keep InterviewSkill list in sync with feedback_skill_keywords so autocomplete
+  # suggestions grow automatically as users add new keywords.
+  def sync_feedback_skill_keywords_to_interview_skills
+    # Nothing to sync if field is blank or column not present
+    return unless respond_to?(:feedback_skill_keywords)
+    return if feedback_skill_keywords.blank?
+
+    feedback_skill_keywords.split(",").map(&:strip).reject(&:blank?).each do |kw|
+      # Normalize keyword with consistent capitalization to avoid duplicates
+      canonical_kw = kw.titleize
+      begin
+        InterviewSkill.find_or_create_by(name: canonical_kw)
+      rescue StandardError => e
+        Rails.logger.error "Failed syncing feedback skill keyword '#{canonical_kw}' for requirement #{id}: #{e.message}"
+      end
+    end
   end
 
 end
