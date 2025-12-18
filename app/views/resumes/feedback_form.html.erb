@@ -42,6 +42,10 @@
 
   document.addEventListener('turbolinks:load', function() {
       // Generate the dynamic form when the page loads
-    generateDynamicForm('dynamic_feedback_form', <%= raw @form_config&.config&.to_json %>);
+      <% if(@form_config.present?)  %>
+        generateDynamicForm('dynamic_feedback_form', <%= raw @form_config&.config&.to_json %>);
+      <% else %>
+        generateSkillFeedbackForm('dynamic_feedback_form', <%= raw @requirement&.feedback_skill_keywords&.to_json %>);
+      <% end %>
   });
 </script>
