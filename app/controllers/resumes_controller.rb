@@ -1600,7 +1600,8 @@ class ResumesController < ApplicationController
     @interview_id = params[:interview_id]
     @interview = Interview.find(@interview_id)
     @resume = @interview.req_match.resume
-    @form_config = @interview.form_config
+    # Only set form_config if interview is not skills_based
+    @form_config = @interview.skills_based? ? nil : @interview.form_config
     @requirement = @interview.req_match.requirement
   end
 
@@ -1752,7 +1753,20 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
     officelocation_id = params[:officelocation_id]
-    form_config_id = params[:interview_feedback_form].present? ? params[:interview_feedback_form] : nil
+    
+    # Handle feedback form selection: "skills_based", form_config_id, or nil
+    feedback_form_value = params[:interview_feedback_form]
+    if feedback_form_value == "skills_based"
+      skills_based = true
+      form_config_id = nil
+    elsif feedback_form_value.present? && feedback_form_value != ""
+      skills_based = false
+      form_config_id = feedback_form_value.to_i
+    else
+      skills_based = false
+      form_config_id = nil
+    end
+    
     i_time = Time.zone.parse (int_date + " " + int_time)
     
     # Look up employee by name
@@ -1769,7 +1783,8 @@ class ResumesController < ApplicationController
                                 :interview_level => interview_level,
                                 :duration       => duration.to_i,
                                 :officelocation_id => officelocation_id,
-                                :form_config_id => form_config_id)
+                                :form_config_id => form_config_id,
+                                :skills_based   => skills_based)
       if interview.save
         # Scheduled only when interview get saved
         match.update!(:status => "SCHEDULED")
@@ -1809,7 +1824,20 @@ class ResumesController < ApplicationController
     interview_level = params[:interview_level]
     duration = params[:duration] || 60
     officelocation_id = params[:officelocation_id]
-    form_config_id = params[:interview_feedback_form].present? ? params[:interview_feedback_form] : nil
+    
+    # Handle feedback form selection: "skills_based", form_config_id, or nil
+    feedback_form_value = params[:interview_feedback_form]
+    if feedback_form_value == "skills_based"
+      skills_based = true
+      form_config_id = nil
+    elsif feedback_form_value.present? && feedback_form_value != ""
+      skills_based = false
+      form_config_id = feedback_form_value.to_i
+    else
+      skills_based = false
+      form_config_id = nil
+    end
+    
     interview = Interview.find(int_id)
 
     # Look up employee by name
@@ -1823,7 +1851,8 @@ class ResumesController < ApplicationController
                                 :interview_level => interview_level,
                                 :duration => duration.to_i,
                                 :officelocation_id => officelocation_id,
-                                :form_config_id => form_config_id
+                                :form_config_id => form_config_id,
+                                :skills_based => skills_based
                               )
 
     match     = interview.req_match

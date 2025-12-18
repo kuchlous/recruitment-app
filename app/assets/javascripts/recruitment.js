@@ -347,6 +347,7 @@ function addInterviewRow(event, req_match_id, time_array, feedback_form_ids, fee
   // Create select with "No form_config" as first option
   var $title_select = $('<select>').attr("name", "interview_feedback_form").attr("id", "interview_feedback_form").addClass("form-control select-box-small");
   $title_select.append($('<option>').attr("value", "").text("No Template"));
+  $title_select.append($('<option>').attr("value", "skills_based").text("Skills Based"));
   // Add form config options
   for (var i = 0; i < feedback_form_ids.length; i++) {
     $title_select.append($('<option>').attr("value", feedback_form_ids[i]).text(feedback_form_titles[i]));

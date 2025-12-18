@@ -42,10 +42,12 @@
 
   document.addEventListener('turbolinks:load', function() {
       // Generate the dynamic form when the page loads
-      <% if(@form_config.present?)  %>
-        generateDynamicForm('dynamic_feedback_form', <%= raw @form_config&.config&.to_json %>);
-      <% else %>
+      <% if(@interview.skills_based?) %>
+        // Skills-based interview: generate form from requirement's skill keywords
         generateSkillFeedbackForm('dynamic_feedback_form', <%= raw @requirement&.feedback_skill_keywords&.to_json %>);
+      <% else %>
+        // Template-based interview: use the selected form config
+        generateDynamicForm('dynamic_feedback_form', <%= raw @form_config&.config&.to_json %>);
       <% end %>
   });
 </script>
