@@ -620,7 +620,7 @@ class ResumesController < ApplicationController
     @offered_comments = group_ids_to_filter ? filter_comments_by_group(offered_comments, group_ids_to_filter) : offered_comments
     
     not_accepted_comments = get_quarterly_comments_not_accepted_new(Date.today)
-    @not_accepted_comments = group_ids_to_filter ? filter_comments_by_group(not_accepted_comments, group_ids_to_filter) : not_accepted_comments
+    @not_accepted_comments = group_ids_to_filter ? filter_na_comments_by_group(not_accepted_comments, group_ids_to_filter) : not_accepted_comments
   end
 
   def offered
@@ -2919,6 +2919,14 @@ class ResumesController < ApplicationController
   def filter_comments_by_group(comments, group_ids)
     comments.select { |comment|
       comment.resume && comment.resume.req_matches.any? { |match|
+        match.requirement && group_ids.include?(match.requirement.group_id)
+      }
+    }
+  end
+
+  def filter_na_comments_by_group(not_accepted_comments, group_ids)
+    not_accepted_comments.select { |comment|
+      comment[:not_accepted].resume && comment[:not_accepted].resume.req_matches.any? { |match|
         match.requirement && group_ids.include?(match.requirement.group_id)
       }
     }
