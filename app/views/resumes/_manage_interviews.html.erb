@@ -54,8 +54,9 @@
              </td>
              <td>
                 <%= 
+                  selected_value = i.skills_based ? "skills_based" : (i.form_config_id || "")
                   select_tag "interview_feedback_form_#{index}",
-                  options_for_select(@form_configs.map { |config| [config.title, config.id] }, i.form_config_id),
+                  options_for_select([["Skills Based", "skills_based"]] + @form_configs.map { |config| [config.title, config.id] }, selected_value),
                   { 
                     :class => "form-control select-box-small", 
                     :include_blank => "No Template" 

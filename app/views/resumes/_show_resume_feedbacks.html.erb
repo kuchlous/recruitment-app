@@ -38,7 +38,7 @@
               <p class="text-muted">
                 <%= link_to(
                       "View Feedback#{' - ' + feedback.interview.form_config.title if feedback.interview&.form_config&.title.present?}",
-                      feedback_path(feedback.id),
+                      { host: APP_CONFIG['host_name'], controller: "feedbacks", action: "view", id: feedback.id },
                       target: '_blank'
                     ) %>
               </p>
