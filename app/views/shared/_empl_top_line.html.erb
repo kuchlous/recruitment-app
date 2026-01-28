@@ -52,6 +52,9 @@
       <% if is_HR_ADMIN? %>
         | <%= link_to "Export XLS", :controller => "resumes", :action => "export_as_xls" %>
       <% end %>
+      <% if is_HR? %>
+        | <%= link_to "Reports", reports_weekly_path, :class => "primary_action", :id => "reports_home", :onmouseover => "showSecondaryActions('reports_home');", :onfocus => "showSecondaryActions('reports_home');" %>
+      <% end %>
     </div>
     <div id="user_secondary_action_list">
       <div id="messages_home_actions">
@@ -77,6 +80,12 @@
           <% if is_HR_ADMIN? %>
             <%= link_to "Office Locations",      {  :controller => "officelocations", :action => "index"}, :class => "secondary_action" %>
           <% end %>
+        </div>
+      <% end %>
+      <% if is_HR? %>
+        <div id="reports_home_actions">
+          <%= link_to "Requirement Reports", reports_weekly_path, :class => "secondary_action" %>
+          <%= link_to "TA Owner Reports", reports_ta_owner_path, :class => "secondary_action" %>
         </div>
       <% end %>
     </div>
