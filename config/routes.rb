@@ -34,6 +34,12 @@ Rails.application.routes.draw do
   match 'home/dashboard', to: 'home#dashboard'                      , via: :get
   match 'home/dashboard_category', to: 'home#dashboard_category'    , via: :get
   match 'home/summaries', to: 'home#summaries'                      , via: :get
+
+  # Report Generator Routes
+  match 'reports/weekly', to: 'report_generator#reports', via: :get, as: :reports_weekly
+  match 'reports/export_weekly', to: 'report_generator#export_reports', via: :get, as: :export_reports_weekly
+  match 'reports/ta_owner', to: 'report_generator#ta_owner_reports', via: :get, as: :reports_ta_owner
+  match 'reports/export_ta_owner', to: 'report_generator#export_ta_owner_reports', via: :get, as: :export_reports_ta_owner
   match 'designations/index', to: 'designations#index'              , via: :get
   match 'groups/index', to: 'groups#index'                          , via: :get
   match 'portals/index', to: 'portals#index'                        , via: :get

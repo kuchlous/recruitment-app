@@ -1,0 +1,74 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>Reports</h2>
+    <div class="dashboard-header-links">
+      <%= link_to "TA Owner Reports", reports_ta_owner_path, class: "action-link" %>
+      <% if @report_data && @report_data.any? %>
+        <% 
+          export_params = { period: @period }
+          if @period == 'daily'
+            export_params[:date] = @start_date
+          else
+            export_params[:start_date] = @start_date
+          end
+        %>
+        <%= link_to "Export to Excel", export_reports_weekly_path(export_params), class: "action-link success", target: "_blank" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <%= render 'report_filter', path: reports_weekly_path %>
+  
+  <div class="table-container">
+    <% if @report_data && @report_data.any? %>
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Group Name</th>
+            <th>Requirement Name</th>
+            <th>Total Forward</th>
+            <th>Total Shortlists</th>
+            <th>Total Interviews (Candidates)</th>
+            <th>Total L1 Completed</th>
+            <th>Total L2 Completed</th>
+            <th>Total L3 Completed</th>
+            <th>Total YTO</th>
+            <th>Total HAC</th>
+            <th>Total Hold</th>
+            <th>Total Offered</th>
+            <th>Total Not Accepted</th>
+            <th>Total Joined</th>
+            <th>Total Not Joined</th>
+            <th>Total Rejects</th>
+            <th>TA Manager</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @report_data.each do |row| %>
+            <tr>
+              <td class="table-cell-secondary"><%= row['group_name'] %></td>
+              <td class="table-cell-primary"><%= row['requirement_name'] %></td>
+              <td class="table-cell-secondary"><%= row['total_forwards'] %></td>
+              <td class="table-cell-secondary"><%= row['total_shortlists'] %></td>
+              <td class="table-cell-secondary"><%= row['total_interviews'] %></td>
+              <td class="table-cell-secondary"><%= row['total_l1_completed'] %></td>
+              <td class="table-cell-secondary"><%= row['total_l2_completed'] %></td>
+              <td class="table-cell-secondary"><%= row['total_l3_completed'] %></td>
+              <td class="table-cell-secondary"><%= row['total_yto'] %></td>
+              <td class="table-cell-secondary"><%= row['total_hac'] %></td>
+              <td class="table-cell-secondary"><%= row['total_hold'] %></td>
+              <td class="table-cell-secondary"><%= row['total_offered'] %></td>
+              <td class="table-cell-secondary"><%= row['total_not_accepted'] %></td>
+              <td class="table-cell-secondary"><%= row['total_joined'] %></td>
+              <td class="table-cell-secondary"><%= row['total_not_joined'] %></td>
+              <td class="table-cell-secondary"><%= row['total_rejects'] %></td>
+              <td class="table-cell-secondary"><%= row['ta_manager_name'] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p style="text-align: center; padding: 40px; color: #6c757d; font-size: 16px;">No data available for the selected period.</p>
+    <% end %>
+  </div>
+</div>
