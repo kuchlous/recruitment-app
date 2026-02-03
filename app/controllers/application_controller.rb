@@ -78,6 +78,14 @@ require 'will_paginate/array'
     end
   end
 
+  def check_for_TA_HEAD(msg = "You do not have authorization to access this page")
+    @logged_employee = get_current_employee
+    unless @logged_employee.is_TA_HEAD? || @logged_employee.is_ADMIN?
+      flash[:warning] = msg
+      redirect_to :controller => "home", :action => "actions_page"
+    end
+  end
+
   def check_for_ADMIN(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
     unless @logged_employee.is_ADMIN?

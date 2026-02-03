@@ -4,59 +4,17 @@ class ReportGeneratorController < ApplicationController
 
   # check_for_login redirects to index for login
   before_action :check_for_login
-  before_action :check_for_HR_or_ADMIN
+  before_action :check_for_TA_HEAD
+  before_action :set_employee
+  before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports]
 
   def reports
-    @employee = get_current_employee
-    
-    # Get report period (weekly, daily, monthly)
-    @period = params[:period] || 'weekly'
-    
-    # Calculate date range based on period
-    case @period
-    when 'daily'
-      @start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
-      @end_date = @start_date
-    when 'weekly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-      @end_date = @start_date + 6.days # Add 7 days (including start date = 6 days added)
-    when 'monthly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
-      @end_date = @start_date.end_of_month
-    end
-    
-    # Generate report data using SQL queries
-    @report_data = generate_weekly_report(@start_date, @end_date)
+    @report_data = generate_requirements_report(@start_date, @end_date)
   end
 
   def export_reports
-    @employee = get_current_employee
+    report_data = generate_requirements_report(@start_date, @end_date)
     
-    # Get report period (weekly, daily, monthly)
-    @period = params[:period] || 'weekly'
-    
-    # Calculate date range based on period (same logic as reports action)
-    case @period
-    when 'daily'
-      @start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
-      @end_date = @start_date
-    when 'weekly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-      @end_date = @start_date + 6.days
-    when 'monthly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
-      @end_date = @start_date.end_of_month
-    end
-    
-    # Generate report data
-    report_data = generate_weekly_report(@start_date, @end_date)
-    
-    # Create Excel workbook
-    workbook = RubyXL::Workbook.new
-    worksheet = workbook[0]
-    worksheet.sheet_name = "Reports"
-    
-    # Define headers
     headers = [
       'Group Name', 'Requirement Name', 'Total Forward', 'Total Shortlists',
       'Total Interviews (Candidates)', 'Total L1 Completed', 'Total L2 Completed',
@@ -65,313 +23,146 @@ class ReportGeneratorController < ApplicationController
       'Total Rejects', 'TA Manager'
     ]
     
-    # Write headers
-    headers.each_with_index do |header, col_num|
-      cell = worksheet.add_cell(0, col_num, header)
-      cell.change_fill('FFCCCCCC') # Light gray background
-      cell.change_font_bold(true)
+    data_rows = report_data.map do |row|
+      [
+        row['group_name'], row['requirement_name'], row['total_forwards'], row['total_shortlists'],
+        row['total_interviews'], row['total_l1_completed'], row['total_l2_completed'],
+        row['total_l3_completed'], row['total_yto'], row['total_hac'], row['total_hold'],
+        row['total_offered'], row['total_not_accepted'], row['total_joined'], 
+        row['total_not_joined'], row['total_rejects'], row['ta_manager_name']
+      ]
     end
-    
-    # Write data rows
-    row_num = 1
-    report_data.each do |row|
-      worksheet.add_cell(row_num, 0, row['group_name'])
-      worksheet.add_cell(row_num, 1, row['requirement_name'])
-      worksheet.add_cell(row_num, 2, row['total_forwards'])
-      worksheet.add_cell(row_num, 3, row['total_shortlists'])
-      worksheet.add_cell(row_num, 4, row['total_interviews'])
-      worksheet.add_cell(row_num, 5, row['total_l1_completed'])
-      worksheet.add_cell(row_num, 6, row['total_l2_completed'])
-      worksheet.add_cell(row_num, 7, row['total_l3_completed'])
-      worksheet.add_cell(row_num, 8, row['total_yto'])
-      worksheet.add_cell(row_num, 9, row['total_hac'])
-      worksheet.add_cell(row_num, 10, row['total_hold'])
-      worksheet.add_cell(row_num, 11, row['total_offered'])
-      worksheet.add_cell(row_num, 12, row['total_not_accepted'])
-      worksheet.add_cell(row_num, 13, row['total_joined'])
-      worksheet.add_cell(row_num, 14, row['total_not_joined'])
-      worksheet.add_cell(row_num, 15, row['total_rejects'])
-      worksheet.add_cell(row_num, 16, row['ta_manager_name'])
-      row_num += 1
-    end
-    
-    # Generate filename
-    period_label = @period.capitalize
-    filename = "Reports_#{period_label}_#{@start_date.strftime('%Y%m%d')}_#{@end_date.strftime('%Y%m%d')}.xlsx"
-    
-    # Save to tmp directory (like other exports in the codebase)
-    output = "#{Rails.root}/tmp/#{filename}"
-    workbook.write(output)
-    
-    # Send file
-    send_file output,
-              filename: filename,
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-              disposition: 'attachment'
+
+    generate_and_send_excel("Reports", headers, data_rows)
   end
 
   def ta_owner_reports
-    @employee = get_current_employee
-    
-    # Get report period (weekly, daily, monthly)
-    @period = params[:period] || 'weekly'
-    
-    # Calculate date range based on period
-    case @period
-    when 'daily'
-      @start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
-      @end_date = @start_date
-    when 'weekly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-      @end_date = @start_date + 6.days # Add 7 days (including start date = 6 days added)
-    when 'monthly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
-      @end_date = @start_date.end_of_month
-    end
-    
-    # Generate report data using SQL queries
     @report_data = generate_ta_owner_report(@start_date, @end_date)
   end
 
   def export_ta_owner_reports
-    @employee = get_current_employee
-    
-    # Get report period (weekly, daily, monthly)
-    @period = params[:period] || 'weekly'
-    
-    # Calculate date range based on period (same logic as ta_owner_reports action)
-    case @period
-    when 'daily'
-      @start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
-      @end_date = @start_date
-    when 'weekly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
-      @end_date = @start_date + 6.days
-    when 'monthly'
-      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
-      @end_date = @start_date.end_of_month
-    end
-    
-    # Generate report data
     report_data = generate_ta_owner_report(@start_date, @end_date)
     
-    # Create Excel workbook
-    workbook = RubyXL::Workbook.new
-    worksheet = workbook[0]
-    worksheet.sheet_name = "TA Owner Reports"
-    
-    # Define headers
     headers = [
       'TA Owner', 'Forward Date', 'Candidate Name', 'Requirement Name', 'Skills',
       'Company Name', 'Total Experience', 'Current CTC', 'Expected CTC', 'Notice Period',
       'Serving Notice Period (Yes/No)', 'LWD', 'Current Location', 'Preferred Location', 'Link', 'Status'
     ]
     
+    data_rows = report_data.map do |row|
+      resume_url = "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}"
+      [
+        row['ta_owner_name'], row['forward_date'], row['candidate_name'], row['requirement_name'],
+        row['skills'], row['company_name'], row['total_experience'], row['current_ctc'],
+        row['expected_ctc'], row['notice_period'], row['serving_notice'], row['lwd'],
+        row['current_location'], row['preferred_location'], resume_url, row['status']
+      ]
+    end
+
+    generate_and_send_excel("TA_Owner_Reports", headers, data_rows)
+  end
+
+  private
+
+  def set_employee
+    @employee = get_current_employee
+  end
+
+  def set_date_range
+    @period = params[:period] || 'weekly'
+    
+    case @period
+    when 'daily'
+      @start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
+      @end_date = @start_date
+    when 'monthly'
+      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
+      @end_date = @start_date.end_of_month
+    else # Default to weekly
+      @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
+      @end_date = @start_date + 6.days
+    end
+  end
+
+  def generate_and_send_excel(base_filename, headers, data_rows)
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+    worksheet.sheet_name = base_filename.tr('_', ' ')
+    
     # Write headers
     headers.each_with_index do |header, col_num|
       cell = worksheet.add_cell(0, col_num, header)
-      cell.change_fill('FFCCCCCC') # Light gray background
+      cell.change_fill('FFCCCCCC')
       cell.change_font_bold(true)
     end
     
     # Write data rows
-    row_num = 1
-    report_data.each do |row|
-      # Build resume URL
-      resume_url = "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}"
-      
-      worksheet.add_cell(row_num, 0, row['ta_owner_name'])
-      worksheet.add_cell(row_num, 1, row['forward_date'])
-      worksheet.add_cell(row_num, 2, row['candidate_name'])
-      worksheet.add_cell(row_num, 3, row['requirement_name'])
-      worksheet.add_cell(row_num, 4, row['skills'])
-      worksheet.add_cell(row_num, 5, row['company_name'])
-      worksheet.add_cell(row_num, 6, row['total_experience'])
-      worksheet.add_cell(row_num, 7, row['current_ctc'])
-      worksheet.add_cell(row_num, 8, row['expected_ctc'])
-      worksheet.add_cell(row_num, 9, row['notice_period'])
-      worksheet.add_cell(row_num, 10, row['serving_notice'])
-      worksheet.add_cell(row_num, 11, row['lwd'])
-      worksheet.add_cell(row_num, 12, row['current_location'])
-      worksheet.add_cell(row_num, 13, row['preferred_location'])
-      worksheet.add_cell(row_num, 14, resume_url)
-      worksheet.add_cell(row_num, 15, row['status'])
-      row_num += 1
+    data_rows.each_with_index do |row_values, row_idx|
+      row_values.each_with_index do |value, col_idx|
+        worksheet.add_cell(row_idx + 1, col_idx, value)
+      end
     end
     
-    # Generate filename
-    period_label = @period.capitalize
-    filename = "TA_Owner_Reports_#{period_label}_#{@start_date.strftime('%Y%m%d')}_#{@end_date.strftime('%Y%m%d')}.xlsx"
+    filename = "#{base_filename}_#{@period.capitalize}_#{@start_date.strftime('%Y%m%d')}_#{@end_date.strftime('%Y%m%d')}.xlsx"
+    output_path = Rails.root.join('tmp', filename)
+    workbook.write(output_path)
     
-    # Save to tmp directory
-    output = "#{Rails.root}/tmp/#{filename}"
-    workbook.write(output)
-    
-    # Send file
-    send_file output,
+    send_file output_path,
               filename: filename,
               type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
               disposition: 'attachment'
   end
 
-private
-  def generate_weekly_report(start_date, end_date)
-    # Format dates for SQL
-    start_datetime = "#{start_date} 00:00:00"
-    end_datetime = "#{end_date} 23:59:59"
+  def generate_requirements_report(start_date, end_date)
+    start_dt = "#{start_date} 00:00:00"
+    end_dt = "#{end_date} 23:59:59"
     
-    # SQL query to get report data grouped by requirement
-    # Using subqueries for better performance and accuracy
     sql = <<-SQL
       SELECT 
         COALESCE(g.name, 'N/A') AS group_name,
         r.id AS requirement_id,
         r.name AS requirement_name,
         COALESCE(e.name, 'N/A') AS ta_manager_name,
-        COALESCE(forward_counts.total_forwards, 0) AS total_forwards,
-        COALESCE(shortlist_counts.total_shortlists, 0) AS total_shortlists,
-        COALESCE(interview_counts.total_interviews, 0) AS total_interviews,
-        COALESCE(l1_counts.total_l1_completed, 0) AS total_l1_completed,
-        COALESCE(l2_counts.total_l2_completed, 0) AS total_l2_completed,
-        COALESCE(l3_counts.total_l3_completed, 0) AS total_l3_completed,
-        COALESCE(yto_counts.total_yto, 0) AS total_yto,
-        COALESCE(hac_counts.total_hac, 0) AS total_hac,
-        COALESCE(hold_counts.total_hold, 0) AS total_hold,
-        COALESCE(offered_counts.total_offered, 0) AS total_offered,
-        COALESCE(not_accepted_counts.total_not_accepted, 0) AS total_not_accepted,
-        COALESCE(joined_counts.total_joined, 0) AS total_joined,
-        COALESCE(not_joined_counts.total_not_joined, 0) AS total_not_joined,
-        COALESCE(reject_counts.total_rejects, 0) AS total_rejects
+        COALESCE(SUM(CASE WHEN f.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS total_forwards,
+        COALESCE(SUM(CASE WHEN rm.status = 'SHORTLISTED' AND rm.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_shortlists,
+        COALESCE(COUNT(DISTINCT CASE WHEN i.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.resume_id END), 0) AS total_interviews,
+        COALESCE(COUNT(DISTINCT CASE WHEN i.interview_level = 1 AND fdb.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.id END), 0) AS total_l1_completed,
+        COALESCE(COUNT(DISTINCT CASE WHEN i.interview_level = 2 AND fdb.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.id END), 0) AS total_l2_completed,
+        COALESCE(COUNT(DISTINCT CASE WHEN i.interview_level = 3 AND fdb.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.id END), 0) AS total_l3_completed,
+        COALESCE(SUM(CASE WHEN rm.status = 'YTO' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_yto,
+        COALESCE(SUM(CASE WHEN rm.status = 'HAC' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hac,
+        COALESCE(SUM(CASE WHEN rm.status = 'HOLD' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hold,
+        COALESCE(SUM(CASE WHEN rm.status = 'OFFERED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_offered,
+        COALESCE(SUM(CASE WHEN rm.status = 'N_ACCEPTED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_accepted,
+        COALESCE(SUM(CASE WHEN rm.status = 'JOINING' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_joined,
+        COALESCE(SUM(CASE WHEN rm.status = 'NOT JOINED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_joined,
+        COALESCE(SUM(CASE WHEN rm.status = 'REJECTED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_rejects
       FROM requirements r
       LEFT JOIN groups g ON r.group_id = g.id
       LEFT JOIN employees e ON r.employee_id = e.id
-      LEFT JOIN (
-        SELECT fr.requirement_id, COUNT(DISTINCT f.id) AS total_forwards
-        FROM forwards_requirements fr
-        INNER JOIN forwards f ON f.id = fr.forward_id
-        WHERE f.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY fr.requirement_id
-      ) AS forward_counts ON forward_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_shortlists
-        FROM req_matches
-        WHERE status = 'SHORTLISTED' 
-          AND created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS shortlist_counts ON shortlist_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT rm.requirement_id, COUNT(DISTINCT rm.resume_id) AS total_interviews
-        FROM req_matches rm
-        INNER JOIN interviews i ON i.req_match_id = rm.id
-        WHERE i.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY rm.requirement_id
-      ) AS interview_counts ON interview_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT rm.requirement_id, COUNT(DISTINCT rm.id) AS total_l1_completed
-        FROM req_matches rm
-        INNER JOIN interviews i ON i.req_match_id = rm.id
-        INNER JOIN feedbacks fdb ON fdb.interview_id = i.id
-        WHERE i.interview_level = 1 
-          AND i.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY rm.requirement_id
-      ) AS l1_counts ON l1_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT rm.requirement_id, COUNT(DISTINCT rm.id) AS total_l2_completed
-        FROM req_matches rm
-        INNER JOIN interviews i ON i.req_match_id = rm.id
-        INNER JOIN feedbacks fdb ON fdb.interview_id = i.id
-        WHERE i.interview_level = 2 
-          AND i.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY rm.requirement_id
-      ) AS l2_counts ON l2_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT rm.requirement_id, COUNT(DISTINCT rm.id) AS total_l3_completed
-        FROM req_matches rm
-        INNER JOIN interviews i ON i.req_match_id = rm.id
-        INNER JOIN feedbacks fdb ON fdb.interview_id = i.id
-        WHERE i.interview_level = 3 
-          AND i.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY rm.requirement_id
-      ) AS l3_counts ON l3_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_yto
-        FROM req_matches
-        WHERE status = 'YTO' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS yto_counts ON yto_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_hac
-        FROM req_matches
-        WHERE status = 'HAC' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS hac_counts ON hac_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_hold
-        FROM req_matches
-        WHERE status = 'HOLD' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS hold_counts ON hold_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_offered
-        FROM req_matches
-        WHERE status = 'OFFERED' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS offered_counts ON offered_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_not_accepted
-        FROM req_matches
-        WHERE status = 'N_ACCEPTED' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS not_accepted_counts ON not_accepted_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_joined
-        FROM req_matches
-        WHERE status = 'JOINING' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS joined_counts ON joined_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_not_joined
-        FROM req_matches
-        WHERE status = 'NOT JOINED' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS not_joined_counts ON not_joined_counts.requirement_id = r.id
-      LEFT JOIN (
-        SELECT requirement_id, COUNT(DISTINCT id) AS total_rejects
-        FROM req_matches
-        WHERE status = 'REJECTED' 
-          AND updated_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        GROUP BY requirement_id
-      ) AS reject_counts ON reject_counts.requirement_id = r.id
+      LEFT JOIN req_matches rm ON r.id = rm.requirement_id
+      LEFT JOIN interviews i ON i.req_match_id = rm.id
+      LEFT JOIN feedbacks fdb ON fdb.interview_id = i.id
+      LEFT JOIN forwards_requirements fr ON r.id = fr.requirement_id
+      LEFT JOIN forwards f ON f.id = fr.forward_id AND f.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
       WHERE r.status = 'OPEN'
+      GROUP BY r.id, r.name, g.id, g.name, e.id, e.name
       ORDER BY g.name, r.name
     SQL
     
-    # Use select_all which returns ActiveRecord::Result (works with all adapters)
-    result = ActiveRecord::Base.connection.select_all(sql)
-    # Convert to array of hashes
-    result.map { |row| row }
+    ActiveRecord::Base.connection.select_all(sql).to_a
   end
 
   def generate_ta_owner_report(start_date, end_date)
-    # Format dates for SQL
-    start_datetime = "#{start_date} 00:00:00"
-    end_datetime = "#{end_date} 23:59:59"
+    start_dt = "#{start_date} 00:00:00"
+    end_dt = "#{end_date} 23:59:59"
     
-    # SQL query to get TA Owner report data
-    # Using UNION to combine forwards and req_matches
     sql = <<-SQL
       SELECT 
         ta_owner.name AS ta_owner_name,
-        DATE(activity_date) AS forward_date,
+        DATE(COALESCE(rm.created_at, f.created_at)) AS forward_date,
         r.name AS candidate_name,
-        req.name AS requirement_name,
+        COALESCE(req_rm.name, req_f.name) AS requirement_name,
         COALESCE(r.skills, '') AS skills,
         COALESCE(r.current_company, '') AS company_name,
         CASE 
@@ -387,36 +178,20 @@ private
         COALESCE(r.location, '') AS current_location,
         COALESCE(r.preferred_location, '') AS preferred_location,
         u.name AS uniqid_name,
-        activity_status AS status
-      FROM (
-        SELECT 
-          f.resume_id,
-          f.created_at AS activity_date,
-          f.status AS activity_status,
-          fr.requirement_id
-        FROM forwards f
-        INNER JOIN forwards_requirements fr ON f.id = fr.forward_id
-        WHERE f.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-        
-        UNION ALL
-        
-        SELECT 
-          rm.resume_id,
-          rm.created_at AS activity_date,
-          rm.status AS activity_status,
-          rm.requirement_id
-        FROM req_matches rm
-        WHERE rm.created_at BETWEEN '#{start_datetime}' AND '#{end_datetime}'
-      ) AS activities
-      INNER JOIN resumes r ON activities.resume_id = r.id
+        COALESCE(rm.status, f.status) AS status
+      FROM resumes r
       INNER JOIN employees ta_owner ON r.ta_owner_id = ta_owner.id
+      LEFT JOIN req_matches rm ON r.id = rm.resume_id AND rm.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
+      LEFT JOIN requirements req_rm ON rm.requirement_id = req_rm.id
+      LEFT JOIN forwards_requirements fr ON r.id = fr.requirement_id
+      LEFT JOIN forwards f ON f.id = fr.forward_id AND f.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
+      LEFT JOIN requirements req_f ON fr.requirement_id = req_f.id
       LEFT JOIN uniqids u ON r.uniqid_id = u.id
-      LEFT JOIN requirements req ON activities.requirement_id = req.id
       WHERE r.ta_owner_id IS NOT NULL
-      ORDER BY ta_owner.name, activity_date, r.name
+        AND (rm.id IS NOT NULL OR f.id IS NOT NULL)
+      ORDER BY ta_owner.name, COALESCE(rm.created_at, f.created_at), r.name
     SQL
     
-    result = ActiveRecord::Base.connection.select_all(sql)
-    result.map { |row| row }
+    ActiveRecord::Base.connection.select_all(sql).to_a
   end
 end

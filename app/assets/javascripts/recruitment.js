@@ -190,7 +190,7 @@ function showSecondaryActions(elementId)
     }
     else
     {
-      if (element.style.visibility == "visible")
+      if (element?.style?.visibility == "visible")
       {
         element.style.visibility = "hidden";
         element.style.display = "none";

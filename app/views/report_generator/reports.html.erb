@@ -17,28 +17,7 @@
     </div>
   </div>
   
-  <div class="table-actions">
-    <%= form_tag reports_weekly_path, method: :get, class: "date-range-form" do %>
-      <div class="date-range-form-group">
-        <label for="period" class="date-range-form-label">Period:</label>
-        <%= select_tag :period, options_for_select([['Daily', 'daily'], ['Weekly', 'weekly'], ['Monthly', 'monthly']], @period), class: "form-control" %>
-      </div>
-      
-      <% if @period == 'daily' %>
-        <div class="date-range-form-group">
-          <label for="date" class="date-range-form-label">Date:</label>
-          <%= date_field_tag :date, @start_date, class: "form-control" %>
-        </div>
-      <% else %>
-        <div class="date-range-form-group">
-          <label for="start_date" class="date-range-form-label">Start Date:</label>
-          <%= date_field_tag :start_date, @start_date, class: "form-control" %>
-        </div>
-      <% end %>
-      
-      <button type="submit" class="form-submit-btn">Generate Report</button>
-    <% end %>
-  </div>
+  <%= render 'report_filter', path: reports_weekly_path %>
   
   <div class="table-container">
     <% if @report_data && @report_data.any? %>
