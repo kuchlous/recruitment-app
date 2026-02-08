@@ -163,6 +163,7 @@ class ReportGeneratorController < ApplicationController
         DATE(COALESCE(rm.created_at, f.created_at)) AS forward_date,
         r.name AS candidate_name,
         COALESCE(req_rm.name, req_f.name) AS requirement_name,
+        COALESCE(req_rm.id, req_f.id) AS requirement_id,
         COALESCE(r.skills, '') AS skills,
         COALESCE(r.current_company, '') AS company_name,
         CASE 
