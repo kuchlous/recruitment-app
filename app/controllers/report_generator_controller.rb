@@ -138,7 +138,7 @@ class ReportGeneratorController < ApplicationController
         COALESCE(SUM(CASE WHEN rm.status = 'NOT JOINED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_joined,
         COALESCE(SUM(CASE WHEN rm.status = 'REJECTED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_rejects
       FROM requirements r
-      LEFT JOIN groups g ON r.group_id = g.id
+      LEFT JOIN `groups` g ON r.group_id = g.id
       LEFT JOIN employees e ON r.employee_id = e.id
       LEFT JOIN req_matches rm ON r.id = rm.requirement_id
       LEFT JOIN interviews i ON i.req_match_id = rm.id
