@@ -1,0 +1,39 @@
+<div class="table-actions">
+  <%= form_tag(
+    path,
+    method: :get,
+    class: "date-range-form"
+  ) do %>
+  <div class="date-range-form-group">
+    <label for="period" class="date-range-form-label">Period:</label>
+    <%= select_tag(
+      :period,
+      options_for_select([
+        ['Daily', 'daily'],
+        ['Weekly', 'weekly'],
+        ['Monthly', 'monthly']
+      ], @period),
+      class: "form-control"
+    ) %>
+  </div>
+
+  <div class="date-range-form-group">
+    <label for="start_date" class="date-range-form-label">Date:</label>
+    <%= date_field_tag(
+      :start_date,
+      @start_date,
+      class: "form-control"
+    ) %>
+  </div>
+
+  <button type="submit" class="form-submit-btn">Generate Report</button>
+  <% end %>
+</div>
+
+<% if @report_data&.any? %>
+<div style="margin: 20px 0; padding: 10px; background-color: #f8f9fa; border-radius: 4px; font-size: 14px;">
+  <strong>Report Period:</strong> <%= @period.capitalize %>
+  (<%= @start_date.strftime('%B %d, %Y') %>
+  <% if @period != 'daily' %> to <%= @end_date.strftime('%B %d, %Y') %><% end %>)
+</div>
+<% end %>

@@ -169,7 +169,7 @@ function createSpan(cell, isize)
 // Function used to display the corresponding secondary actions when hover on particular link.
 function showSecondaryActions(elementId)
 {
-  primaryActionIds = [ "messages_home", "misc_home" ];
+  primaryActionIds = [ "messages_home", "misc_home", "reports_home" ];
 
   for (i = 0; i < primaryActionIds.length; i++)
   {
@@ -190,7 +190,7 @@ function showSecondaryActions(elementId)
     }
     else
     {
-      if (element.style.visibility == "visible")
+      if (element?.style?.visibility == "visible")
       {
         element.style.visibility = "hidden";
         element.style.display = "none";

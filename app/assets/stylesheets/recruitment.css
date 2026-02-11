@@ -598,7 +598,8 @@ table
 }
 
 #user_secondary_action_list #messages_home_actions,
-#user_secondary_action_list #misc_home_actions
+#user_secondary_action_list #misc_home_actions,
+#user_secondary_action_list #reports_home_actions
 {
   display:          none;
   visibility:       hidden;
@@ -607,14 +608,16 @@ table
 
 #user_action_list a,
 #user_secondary_action_list #messages_home_actions a,
-#user_secondary_action_list #misc_home_actions a
+#user_secondary_action_list #misc_home_actions a,
+#user_secondary_action_list #reports_home_actions a
 {
   text-decoration:  none;
 }
 
 #user_action_list a:hover,
 #user_secondary_action_list #messages_home_actions a:hover,
-#user_secondary_action_list #misc_home_actions a:hover
+#user_secondary_action_list #misc_home_actions a:hover,
+#user_secondary_action_list #reports_home_actions a:hover
 {
   text-decoration:  underline;
 }

@@ -3,7 +3,8 @@
     <div class="show-title title-centered">
       <h1>Interview Feedback</h1>
       <div class="show-meta">
-        <span class="meta-badge primary">Candidate: <%= @resume.name %></span>
+        <span class="meta-badge primary">Candidate: <%= resume_link(@resume) %></span>
+        <span class="meta-badge">Requirement: <%= requirement_link(@feedback.interview&.req_match&.requirement) %></span>
         <span class="meta-badge">Interviewer: <%= @interview.employee.name %></span>
         <span class="meta-badge">Date: <%= @interview.interview_date.strftime("%B %d, %Y") %></span>
       </div>
