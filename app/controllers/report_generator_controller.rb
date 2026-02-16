@@ -46,7 +46,7 @@ class ReportGeneratorController < ApplicationController
     headers = [
       'TA Owner', 'Forward Date', 'Candidate Name', 'Requirement Name', 'Skills',
       'Company Name', 'Total Experience', 'Current CTC', 'Expected CTC', 'Notice Period',
-      'Serving Notice Period (Yes/No)', 'LWD', 'Current Location', 'Preferred Location', 'Link', 'Status'
+      'Serving Notice Period (Yes/No)', 'LWD', 'Current Location', 'Preferred Location', 'Link'
     ]
     
     data_rows = report_data.map do |row|
@@ -55,7 +55,7 @@ class ReportGeneratorController < ApplicationController
         row['ta_owner_name'], row['forward_date'], row['candidate_name'], row['requirement_name'],
         row['skills'], row['company_name'], row['total_experience'], row['current_ctc'],
         row['expected_ctc'], row['notice_period'], row['serving_notice'], row['lwd'],
-        row['current_location'], row['preferred_location'], resume_url, row['status']
+        row['current_location'], row['preferred_location'], resume_url
       ]
     end
 
@@ -73,7 +73,8 @@ class ReportGeneratorController < ApplicationController
     
     case @period
     when 'daily'
-      @start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
+      date_param = params[:date].present? ? params[:date] : params[:start_date]
+      @start_date = date_param.present? ? Date.parse(date_param.to_s) : Date.today
       @end_date = @start_date
     when 'monthly'
       @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
@@ -119,35 +120,35 @@ class ReportGeneratorController < ApplicationController
     
     sql = <<-SQL
       SELECT 
-        COALESCE(g.name, 'N/A') AS group_name,
-        r.id AS requirement_id,
-        r.name AS requirement_name,
-        COALESCE(e.name, 'N/A') AS ta_manager_name,
-        COALESCE(SUM(CASE WHEN f.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS total_forwards,
-        COALESCE(SUM(CASE WHEN rm.status = 'SHORTLISTED' AND rm.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_shortlists,
-        COALESCE(COUNT(DISTINCT CASE WHEN i.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.resume_id END), 0) AS total_interviews,
-        COALESCE(COUNT(DISTINCT CASE WHEN i.interview_level = 1 AND fdb.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.id END), 0) AS total_l1_completed,
-        COALESCE(COUNT(DISTINCT CASE WHEN i.interview_level = 2 AND fdb.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.id END), 0) AS total_l2_completed,
-        COALESCE(COUNT(DISTINCT CASE WHEN i.interview_level = 3 AND fdb.id IS NOT NULL AND i.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN rm.id END), 0) AS total_l3_completed,
-        COALESCE(SUM(CASE WHEN rm.status = 'YTO' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_yto,
-        COALESCE(SUM(CASE WHEN rm.status = 'HAC' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hac,
-        COALESCE(SUM(CASE WHEN rm.status = 'HOLD' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hold,
-        COALESCE(SUM(CASE WHEN rm.status = 'OFFERED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_offered,
-        COALESCE(SUM(CASE WHEN rm.status = 'N_ACCEPTED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_accepted,
-        COALESCE(SUM(CASE WHEN rm.status = 'JOINING' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_joined,
-        COALESCE(SUM(CASE WHEN rm.status = 'NOT JOINED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_joined,
-        COALESCE(SUM(CASE WHEN rm.status = 'REJECTED' AND rm.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_rejects
-      FROM requirements r
-      LEFT JOIN `groups` g ON r.group_id = g.id
-      LEFT JOIN employees e ON r.employee_id = e.id
-      LEFT JOIN req_matches rm ON r.id = rm.requirement_id
-      LEFT JOIN interviews i ON i.req_match_id = rm.id
-      LEFT JOIN feedbacks fdb ON fdb.interview_id = i.id
-      LEFT JOIN forwards_requirements fr ON r.id = fr.requirement_id
-      LEFT JOIN forwards f ON f.id = fr.forward_id AND f.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
-      WHERE r.status = 'OPEN'
-      GROUP BY r.id, r.name, g.id, g.name, e.id, e.name
-      ORDER BY g.name, r.name
+        COALESCE(grp.name, 'N/A') AS group_name,
+        requirement.id AS requirement_id,
+        requirement.name AS requirement_name,
+        COALESCE(ta_manager.name, 'N/A') AS ta_manager_name,
+        COALESCE(SUM(CASE WHEN forward.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS total_forwards,
+        COALESCE(SUM(CASE WHEN req_match.status = 'SHORTLISTED' AND req_match.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_shortlists,
+        COALESCE(COUNT(DISTINCT CASE WHEN interview.id IS NOT NULL AND interview.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN req_match.resume_id END), 0) AS total_interviews,
+        COALESCE(COUNT(DISTINCT CASE WHEN interview.interview_level = 1 AND feedback.id IS NOT NULL AND interview.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN req_match.id END), 0) AS total_l1_completed,
+        COALESCE(COUNT(DISTINCT CASE WHEN interview.interview_level = 2 AND feedback.id IS NOT NULL AND interview.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN req_match.id END), 0) AS total_l2_completed,
+        COALESCE(COUNT(DISTINCT CASE WHEN interview.interview_level = 3 AND feedback.id IS NOT NULL AND interview.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN req_match.id END), 0) AS total_l3_completed,
+        COALESCE(SUM(CASE WHEN req_match.status = 'YTO' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_yto,
+        COALESCE(SUM(CASE WHEN req_match.status = 'HAC' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hac,
+        COALESCE(SUM(CASE WHEN req_match.status = 'HOLD' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hold,
+        COALESCE(SUM(CASE WHEN req_match.status = 'OFFERED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_offered,
+        COALESCE(SUM(CASE WHEN req_match.status = 'N_ACCEPTED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_accepted,
+        COALESCE(SUM(CASE WHEN req_match.status = 'JOINING' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_joined,
+        COALESCE(SUM(CASE WHEN req_match.status = 'NOT JOINED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_joined,
+        COALESCE(SUM(CASE WHEN req_match.status = 'REJECTED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_rejects
+      FROM requirements requirement
+      LEFT JOIN `groups` grp ON requirement.group_id = grp.id
+      LEFT JOIN employees ta_manager ON requirement.employee_id = ta_manager.id
+      LEFT JOIN req_matches req_match ON requirement.id = req_match.requirement_id
+      LEFT JOIN interviews interview ON interview.req_match_id = req_match.id
+      LEFT JOIN feedbacks feedback ON feedback.interview_id = interview.id
+      LEFT JOIN forwards_requirements forward_req ON requirement.id = forward_req.requirement_id
+      LEFT JOIN forwards forward ON forward.id = forward_req.forward_id AND forward.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
+      WHERE requirement.status = 'OPEN'
+      GROUP BY requirement.id, requirement.name, grp.id, grp.name, ta_manager.id, ta_manager.name
+      ORDER BY grp.name, requirement.name
     SQL
     
     ActiveRecord::Base.connection.select_all(sql).to_a
@@ -160,37 +161,33 @@ class ReportGeneratorController < ApplicationController
     sql = <<-SQL
       SELECT 
         ta_owner.name AS ta_owner_name,
-        DATE(COALESCE(rm.created_at, f.created_at)) AS forward_date,
-        r.name AS candidate_name,
-        COALESCE(req_rm.name, req_f.name) AS requirement_name,
-        COALESCE(req_rm.id, req_f.id) AS requirement_id,
-        COALESCE(r.skills, '') AS skills,
-        COALESCE(r.current_company, '') AS company_name,
+        DATE(forward.created_at) AS forward_date,
+        resume.name AS candidate_name,
+        requirement.name AS requirement_name,
+        requirement.id AS requirement_id,
+        COALESCE(resume.skills, '') AS skills,
+        COALESCE(resume.current_company, '') AS company_name,
         CASE 
-          WHEN r.exp_in_months IS NOT NULL THEN CONCAT(FLOOR(r.exp_in_months / 12), '.', r.exp_in_months % 12, ' years')
-          WHEN r.experience IS NOT NULL THEN r.experience
+          WHEN resume.exp_in_months IS NOT NULL THEN CONCAT(FLOOR(resume.exp_in_months / 12), '.', resume.exp_in_months % 12, ' years')
+          WHEN resume.experience IS NOT NULL THEN resume.experience
           ELSE ''
         END AS total_experience,
-        COALESCE(r.ctc, 0) AS current_ctc,
-        COALESCE(r.expected_ctc, 0) AS expected_ctc,
-        COALESCE(r.notice, 0) AS notice_period,
-        CASE WHEN r.notice > 0 THEN 'Yes' ELSE 'No' END AS serving_notice,
-        COALESCE(DATE(r.joining_date), '') AS lwd,
-        COALESCE(r.location, '') AS current_location,
-        COALESCE(r.preferred_location, '') AS preferred_location,
-        u.name AS uniqid_name,
-        COALESCE(rm.status, f.status) AS status
-      FROM resumes r
-      INNER JOIN employees ta_owner ON r.ta_owner_id = ta_owner.id
-      LEFT JOIN req_matches rm ON r.id = rm.resume_id AND rm.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
-      LEFT JOIN requirements req_rm ON rm.requirement_id = req_rm.id
-      LEFT JOIN forwards_requirements fr ON r.id = fr.requirement_id
-      LEFT JOIN forwards f ON f.id = fr.forward_id AND f.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
-      LEFT JOIN requirements req_f ON fr.requirement_id = req_f.id
-      LEFT JOIN uniqids u ON r.uniqid_id = u.id
-      WHERE r.ta_owner_id IS NOT NULL
-        AND (rm.id IS NOT NULL OR f.id IS NOT NULL)
-      ORDER BY ta_owner.name, COALESCE(rm.created_at, f.created_at), r.name
+        COALESCE(resume.ctc, 0) AS current_ctc,
+        COALESCE(resume.expected_ctc, 0) AS expected_ctc,
+        COALESCE(resume.notice, 0) AS notice_period,
+        CASE WHEN resume.notice > 0 THEN 'Yes' ELSE 'No' END AS serving_notice,
+        COALESCE(DATE(resume.joining_date), '') AS lwd,
+        COALESCE(resume.location, '') AS current_location,
+        COALESCE(resume.preferred_location, '') AS preferred_location,
+        uniqid.name AS uniqid_name
+      FROM resumes resume
+      INNER JOIN employees ta_owner ON resume.ta_owner_id = ta_owner.id
+      INNER JOIN forwards forward ON resume.id = forward.resume_id AND forward.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
+      LEFT JOIN forwards_requirements forward_req ON forward.id = forward_req.forward_id
+      LEFT JOIN requirements requirement ON forward_req.requirement_id = requirement.id
+      LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
+      WHERE resume.ta_owner_id IS NOT NULL
+      ORDER BY ta_owner.name, forward.created_at, resume.name
     SQL
     
     ActiveRecord::Base.connection.select_all(sql).to_a
