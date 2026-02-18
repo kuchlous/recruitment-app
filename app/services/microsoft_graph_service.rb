@@ -277,7 +277,7 @@ class MicrosoftGraphService
 
   def build_event_data(interview)
     event_data = {
-      subject: "Interview - #{interview.resume.name} (#{interview.requirement.name})",
+      subject: "Interview - #{interview.resume.name} (Mirafra Technologies)",
       body: {
         contentType: "HTML",
         content: build_event_content(interview)
