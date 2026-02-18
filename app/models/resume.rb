@@ -65,6 +65,7 @@ class Resume < ActiveRecord::Base
 
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
+  validates_format_of      :phone, :with => /\A\d{10}\z/, :message => "must be exactly 10 digits"
   validate :notice_period_allowed_values
 
   def notice_period_allowed_values

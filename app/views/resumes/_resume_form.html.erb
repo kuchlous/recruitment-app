@@ -49,7 +49,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="resume_phone">Phone Number</label>
-          <%= f.text_field :phone, class: "form-control", placeholder: "Enter phone" %>
+          <%= f.text_field :phone, class: "form-control", placeholder: "Enter 10-digit phone number", maxlength: 10, pattern: "[0-9]{10}", id: "resume_phone" %>
         </div>
         <div class="form-group">
           <label for="resume_skype_id">Skype ID</label>
