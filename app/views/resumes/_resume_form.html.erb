@@ -123,7 +123,12 @@
       
       <div class="form-group">
         <label for="resume_notice">Notice Period (Days)</label>
-        <%= f.text_field :notice, class: "form-control", placeholder: "Enter notice period in days" %>
+        <% allowed_notice_days = [0, 15, 30, 45, 60, 90] %>
+        <% notice_options = allowed_notice_days.map { |d| [d.to_s, d] } %>
+        <% if @resume.notice.present? && !allowed_notice_days.include?(@resume.notice.to_i) %>
+          <% notice_options.unshift(["#{@resume.notice} (current)", @resume.notice]) %>
+        <% end %>
+        <%= f.select :notice, options_for_select(notice_options, @resume.notice), { include_blank: "Select notice period" }, class: "form-control", id: "resume_notice" %>
       </div>
     </div>
 

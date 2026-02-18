@@ -65,6 +65,16 @@ class Resume < ActiveRecord::Base
 
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
+  validate :notice_period_allowed_values
+
+  def notice_period_allowed_values
+    return if notice.nil?
+    allowed = [0, 15, 30, 45, 60, 90]
+    return if allowed.include?(notice.to_i)
+    # Allow existing value when editing without changing notice (preserve legacy data)
+    return if persisted? && notice_was.present? && notice.to_i == notice_was.to_i
+    errors.add(:notice, "must be 0, 15, 30, 45, 60, or 90 days")
+  end
 
   # Appending date-time to file names
   current_time      = Time.now
