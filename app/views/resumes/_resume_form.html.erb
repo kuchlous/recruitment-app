@@ -54,12 +54,9 @@
           <label for="resume_phone">Phone Number</label>
           <%= f.text_field :phone,
                            class: "form-control",
-                           placeholder: "Enter 10-digit phone number",
-                           maxlength: 10,
-                           pattern: "[0-9]{10}",
+                           placeholder: "Enter phone number",
                            id: "resume_phone",
                            readonly: (display_var == 1 && !is_TA_HEAD?) %>
-          <small class="form-text text-muted phone-hint">Enter exactly 10 digits (numbers only)</small>
         </div>
         <div class="form-group">
           <label for="resume_skype_id">Skype ID</label>
