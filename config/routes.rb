@@ -151,6 +151,7 @@ Rails.application.routes.draw do
     member do
       get :suggested_resumes_by_requirement
       get :suggested_resumes_by_resumes
+      get :requirement_category
     end
   end
 

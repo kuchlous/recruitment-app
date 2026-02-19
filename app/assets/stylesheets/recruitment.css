@@ -924,23 +924,6 @@ table
    Styling Rules - Search Page
    Description   - Styling for look and feel of search results page
    ========================================================== */
-#resume_search_div #search_results_summary
-{
-  color:            #222266;
-  text-align:       right;
-  padding-top:      3px;
-  margin-bottom:    5px;
-  font:             normal 10pt "Trebuchet MS";
-}
-
-#resume_search_div #searched_results_description
-{
-  text-align:       right;
-  color:            #222266;
-  font-weight:      bold;
-  font-size:        8pt;
-  margin:           0px 5px 0px 0px;
-}
 
 #result_list
 {
@@ -953,14 +936,6 @@ table
   list-style-type:  none;
 }
 
-#resume_search_div .download_description
-{
-  float:            right;
-  font-size:        8pt;
-}
-
-#resume_search_div .result_line_even,
-#resume_search_div .result_line_odd,
 #recent_resume_div .result_line_even,
 #recent_resume_div .result_line_odd
 {
@@ -968,8 +943,6 @@ table
   margin-top:       5px;
 }
 
-#resume_search_div .result_line_even,
-#resume_search_div .result_line_even a,
 #recent_resume_div .result_line_even,
 #recent_resume_div .result_line_even a
 {
@@ -977,8 +950,6 @@ table
   color:            #222266;
 }
 
-#resume_search_div .result_line_odd,
-#resume_search_div .result_line_odd a,
 #recent_resume_div .result_line_odd,
 #recent_resume_div .result_line_odd a
 {
@@ -986,22 +957,12 @@ table
   color:            #222266;
 }
 
-#resume_search_div .result_line_even:hover,
-#resume_search_div .result_line_odd:hover,
 #recent_resume_div .result_line_even:hover,
 #recent_resume_div .result_line_odd:hover
 {
   border:           1px solid #5b80ca;
 }
 
-#resume_search_div .search_resume_name,
-#resume_search_div .search_resume_status,
-#resume_search_div .search_resume_qual,
-#resume_search_div .search_resume_skills,
-#resume_search_div .search_resume_activity,
-
-/* Did not changed name of div into my_resumes_div page because it will lead to some more lines of code otherwise */
-#resume_search_div .my_resumes_label,
 #recent_resume_div .recent_resumes_label
 {
   width:            150px;
@@ -1014,24 +975,6 @@ table
   overflow:         hidden;
 }
 
-/* Did not changed name of div into my_resumes_div page because it will lead to some more lines of code otherwise */
-#resume_search_div .my_resumes_label_light
-{
-  width:            150px;
-  text-align:       left;
-  font-size:        12px;
-  margin:           5px 5px 5px 5px;
-  padding:          5px 5px 5px 5px;
-  font-family:      "Trebuchet MS", Verdana;
-  overflow:         hidden;
-}
-
-
-#resume_search_div .search_resume_name_div
-{
-  width:            150px;
-  overflow:         hidden;
-}
 
 /* ==========================================================
    Styling Rules - Table headers and their size
@@ -1526,7 +1469,7 @@ div.pagination .disabled:hover
   padding:          0px;
 }
 
-.manager_index_mutilple_ddl
+.manager_index_requirement_select
 {
   height:           20px;
   width:            100%;
@@ -1539,7 +1482,7 @@ div.pagination .disabled:hover
   font-size:        11px;
 }
 
-.manager_index_mutilple_ddl option
+.manager_index_requirement_select option
 {
   height:           18px;
   line-height:      18px;

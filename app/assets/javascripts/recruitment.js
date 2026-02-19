@@ -1901,3 +1901,4 @@ function showBootstrapAlert(message, type) {
 function closeBootstrapAlert() {
   jQuery('.bootstrap-alert, #background_shader').remove();
 }
+

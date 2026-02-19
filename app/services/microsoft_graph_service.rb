@@ -308,7 +308,6 @@ class MicrosoftGraphService
     content = <<~HTML
       <h3>Interview Details</h3>
       <p><strong>Candidate:</strong> <a href="#{Rails.application.routes.url_helpers.resume_url(interview.resume.uniqid.name, host: APP_CONFIG['host_name'])}">#{interview.resume.name}</a></p>
-      <p><strong>Position:</strong> #{interview.requirement.name}</p>
       <p><strong>Interviewer:</strong> #{interview.employee.name}</p>
     HTML
 

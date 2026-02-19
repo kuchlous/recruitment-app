@@ -1,6 +1,18 @@
 <% if params[:action] == "show_quarterly_offered"
-     month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @year.to_s
+     month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + " " + @start_year.to_s + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @end_year.to_s
    end %>
+
+<% if params[:action] == "show_quarterly_offered" %>
+  <div class="table-header">
+    <h2>Offered: <%= month_year_str %> (<%= @offered_comments.size %>)</h2>
+    <% if defined?(@selected_group) && @selected_group %>
+      <p style="margin-top: 10px;">
+        <strong>Selected Group:</strong> <%= @selected_group.name %>
+      </p>
+    <% end %>
+    <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_offered') %>
+  </div>
+<% end %>
 
 <table id="offered_resumes_table" class="sortable modern-table">
   <thead>

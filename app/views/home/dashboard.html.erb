@@ -73,44 +73,26 @@
 </div>
 
 <script>
-$(document).ready(function() {
-  // Stat card click handler
-  $('.stat-card[data-action="dashboard_category"]').on('click', function() {
-    const $this = $(this);
-    const status = $this.data('status');
-    const statNumber = $this.find('.stat-number').text();
-    
-    // Show loading state
-    $('#content-body').html('<div class="loading-spinner">Loading...</div>');
-    $('#dashboard-content').show();
-    
-    // Make AJAX request
-    $.ajax({
-      url: '/home/dashboard_category',
-      method: 'GET',
-      data: { status: status },
-      dataType: 'html',
-      success: function(html) {
-        $('#content-title').text(`${status} (${statNumber})`);
-        $('#content-body').html(html);
-      },
-      error: function(xhr, status, error) {
-        console.error('Error loading content:', error);
-        $('#content-title').text(`${status} (${statNumber}) - Error`);
-        $('#content-body').html('<div class="error-message">Error loading content. Please try again.</div>');
-      }
-    });
+jQuery(document).ready(function($) {
+  // Initialize AJAX stat loading for dashboard
+  initializeAjaxStatLoading({
+    selector: '.stat-card[data-action="dashboard_category"]',
+    url: function(status) {
+      return prepend_with_image_path + '/home/dashboard_category';
+    },
+    contentContainer: '#content-body',
+    titleContainer: '#content-title'
   });
   
   // Close button functionality
-  $('#close-content').on('click', function() {
-    $('#dashboard-content').hide();
+  jQuery('#close-content').on('click', function() {
+    jQuery('#dashboard-content').hide();
   });
   
   // Close on escape key
-  $(document).on('keydown', function(e) {
-    if (e.key === 'Escape' && $('#dashboard-content').is(':visible')) {
-      $('#dashboard-content').hide();
+  jQuery(document).on('keydown', function(e) {
+    if (e.key === 'Escape' && jQuery('#dashboard-content').is(':visible')) {
+      jQuery('#dashboard-content').hide();
     }
   });
 });

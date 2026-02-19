@@ -1,0 +1,6 @@
+<div id="show_requirements_description_div_<%= @status %>">
+  <%= link_to "Export", url_for(:controller => "resumes", :action => "export_as_xls_requirement_for_status", :requirement_id => @requirement.id, :status => @status), data: {turbolinks: false} %>
+  <% render_type = (@render == "interview_table" || @render == "manager_index") ? @render : "shared_" + @render %>
+  <%= render "resumes/#{render_type}" %>
+</div>
+

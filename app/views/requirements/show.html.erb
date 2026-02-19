@@ -110,7 +110,7 @@
       <div class="stats-container">
         <% ["Forwarded", "Shortlisted"].each do |status| %>
           <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
-            <div class="stat-card">
+            <div class="stat-card" data-status="<%= status %>" data-action="requirement_category">
               <div class="stat-number">
                 <%= instance_variable_get("@#{status.downcase}").size %>
               </div>
@@ -121,14 +121,14 @@
         
         <!-- Scheduled L1 -->
         <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Scheduled-L1"), class: "stat-link" do %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Scheduled-L1" data-action="requirement_category">
             <div class="stat-number"><%= @scheduled_l1.size %></div>
             <div class="stat-label">Scheduled-L1</div>
           </div>
         <% end %>
         <!-- Completed L1 -->
         <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Completed-L1"), class: "stat-link" do %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Completed-L1" data-action="requirement_category">
             <div class="stat-number"><%= @completed_l1.size %></div>
             <div class="stat-label">Completed-L1</div>
           </div>
@@ -137,14 +137,14 @@
           
         <!-- Scheduled L2 -->
         <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Scheduled-L2"), class: "stat-link" do %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Scheduled-L2" data-action="requirement_category">
             <div class="stat-number"><%= @scheduled_l2.size %></div>
             <div class="stat-label">Scheduled-L2</div>
           </div>
         <% end %>
         <!-- Completed L2 -->
         <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Completed-L2"), class: "stat-link" do %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Completed-L2" data-action="requirement_category">
             <div class="stat-number"><%= @completed_l2.size %></div>
             <div class="stat-label">Completed-L2</div>
           </div>
@@ -152,14 +152,14 @@
         
         <!-- Scheduled L3 -->
         <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Scheduled-L3"), class: "stat-link" do %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Scheduled-L3" data-action="requirement_category">
             <div class="stat-number"><%= @scheduled_l3.size %></div>
             <div class="stat-label">Scheduled-L3</div>
           </div>
         <% end %>
         <!-- Completed L3 -->
         <%= link_to url_for(:action => "show", :id => @requirement.id, :status => "Completed-L3"), class: "stat-link" do %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Completed-L3" data-action="requirement_category">
             <div class="stat-number"><%= @completed_l3.size %></div>
             <div class="stat-label">Completed-L3</div>
           </div>
@@ -167,7 +167,7 @@
         
         <% ["Eng Select", "Hold", "Yto", "Offered", "Joining", "HAC", "Not Joined", "Not Accepted"].each do |status| %>
           <%= link_to url_for(:action => "show", :id => @requirement.id, :status => status), class: "stat-link" do %>
-            <div class="stat-card">
+            <div class="stat-card" data-status="<%= status %>" data-action="requirement_category">
               <div class="stat-number">
                 <%= instance_variable_get("@#{status.gsub(" ", "_").downcase}").size %>
               </div>
@@ -178,13 +178,13 @@
         
         <% if get_current_employee.is_ADMIN? %>
           <%= link_to url_for(:controller => "resumes", :action => "export_as_xls_requirement_for_status", :requirement_id => @requirement.id, :status => "REJECTED"), class: "stat-link", data: {turbolinks: false} do %>
-            <div class="stat-card">
+            <div class="stat-card" data-status="Rejected" data-action="requirement_category">
               <div class="stat-number"><%= @rejected.size %></div>
               <div class="stat-label">Rejected</div>
             </div>
           <% end %>
         <% else %>
-          <div class="stat-card">
+          <div class="stat-card" data-status="Rejected" data-action="requirement_category">
             <div class="stat-number"><%= @rejected.size %></div>
             <div class="stat-label">Rejected</div>
           </div>
@@ -192,14 +192,17 @@
       </div>
     </div>
 
-    <% unless @status.nil? %>
-      <div class="info-card">
-        <h3 class="card-title">Resume Details</h3>
-        <div id="show_requirements_description_div">
-          <%= render "requirements/show_description" %>
-        </div>
+    <div class="info-card requirement-content" style="<%= 'display: none;' if @status.nil? %>">
+      <div class="content-header">
+        <h3 class="card-title content-title">Resume Details</h3>
+        <button id="close-requirement-content" class="close-btn">&times;</button>
       </div>
-    <% end %>
+      <div class="content-body" id="show_requirements_description_div">
+        <% unless @status.nil? %>
+          <%= render "requirements/show_description" %>
+        <% end %>
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -207,3 +210,31 @@
     <%= link_to "← Back to Requirements List", url_for(:controller => "requirements"), class: "back-link" %>
   </div>
 </div>
+
+<script>
+jQuery(document).ready(function($) {
+  var requirementId = <%= @requirement.id %>;
+  
+  // Initialize AJAX stat loading for requirement show page
+  initializeAjaxStatLoading({
+    selector: '.stat-card[data-action="requirement_category"]',
+    url: function(status) {
+      return prepend_with_image_path + '/requirements/' + requirementId + '/requirement_category';
+    },
+    contentContainer: '#show_requirements_description_div',
+    titleContainer: '.requirement-content .content-title'
+  });
+  
+  // Close button functionality
+  jQuery('#close-requirement-content').on('click', function() {
+    jQuery('.requirement-content').hide();
+  });
+  
+  // Close on escape key
+  jQuery(document).on('keydown', function(e) {
+    if (e.key === 'Escape' && jQuery('.requirement-content').is(':visible')) {
+      jQuery('.requirement-content').hide();
+    }
+  });
+});
+</script>

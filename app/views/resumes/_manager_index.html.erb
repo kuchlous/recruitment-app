@@ -1,18 +1,17 @@
-<span class="section-header"> <%= @status.titleize %> (<%= @forwards.size %>) </span>
 <% unless @forwards.nil? || @forwards.size == 0 %>
   <form name="form" method="post">
-    <table id="resume_list_table" class="modern-table">
+    <table id="resume_list_table" class="modern-table sortable">
       <thead>
         <tr>
           <th> Name </th>
           <th> Exp </th>
-          <th> Skills </th>
+          <th class="sorttable_nosort"> Skills </th>
           <th> Notice Period </th>
           <th> Status </th>
           <th> Upload Date </th>
-          <th> Requirements </th>
+          <th class="sorttable_nosort"> Requirements </th>
           <th> Preferred Location </th>
-          <th> Actions </th>
+          <th class="sorttable_nosort"> Actions </th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +24,7 @@
             else
               reqs = resume.get_resume_req_matches(get_current_employee)
             end %>
-            <tr id="<%= @row_id_prefix %><%= counter_value %>">
+            <tr>
               <td class="table-cell-primary"> <%= resume_link(resume) %>  </td>
               <% year, month = resume.get_current_experience %>
               <td class="table-cell-secondary"> <%= "#{year}-#{month}" %> </td>
@@ -36,7 +35,13 @@
                 <%= link_to (manual_status ? manual_status : "Add status"),"",:onclick => "showManualStatusBox(event, #{resume.id});" %>
               </td>
               <td class="table-cell-secondary"> <%= print_date_no_year (fwd.created_at) %> </td>
-              <td class="table-cell-secondary"> <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :size => reqs.size, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_mutilple_ddl" %> </td>
+              <td class="table-cell-secondary"> 
+                <% if reqs.size == 1 %>
+                  <%= select_tag "requirement_ids", options_for_select(reqs, reqs.first[1]), :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_requirement_select" %>
+                <% else %>
+                  <%= select_tag "requirement_ids", options_for_select(reqs), :multiple => true, :size => reqs.size, :id => "requirement_ids#{counter_value}", :name => "requirement_ids[]", :class => "manager_index_requirement_select" %>
+                <% end %>
+              </td>
               <td class="table-cell-secondary"> <%= resume.preferred_location %> </td>
               <td class="table-cell-secondary">
                 <%= get_manager_actions_dropdownlist(resume, fwd, counter_value, @after_shortlist_page) %>

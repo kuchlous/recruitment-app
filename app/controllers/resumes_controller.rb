@@ -20,7 +20,7 @@ class ResumesController < ApplicationController
 ]
   before_action :check_for_HR_or_ADMIN, :only => [ :edit ]
 
-  caches_action :joined, layout: false, cache_path: 'joined', expires_in: 30.minutes
+  caches_action :joined, layout: false, cache_path: proc { |c| "joined_#{c.params[:group_id]}_#{c.params[:mine]}" }, expires_in: 30.minutes
 
   ####################################################################################################
   # FUNCTIONS   : new, edit, create, update, show                                                    #
@@ -585,12 +585,42 @@ class ResumesController < ApplicationController
 
   def joined
     @join_on_req_page   = @offer_on_req_page = 0
+    
+    # Get all groups from requirements for the dropdown
+    @groups = Group.joins(:requirements).distinct.order(:name)
+    @selected_group_id = params[:group_id].present? && params[:group_id] != "" ? params[:group_id].to_i : nil
+    @selected_group = @selected_group_id ? Group.find_by(id: @selected_group_id) : nil
+    
+    # Get group IDs to filter (selected group + descendants, or all if "All" selected)
+    group_ids_to_filter = if @selected_group_id
+      [@selected_group_id] + (@selected_group ? @selected_group.descendants.map(&:id) : [])
+    else
+      nil # nil means show all
+    end
+    
     @joining_matches, @joined_resumes, @not_joined_resumes = find_joining_resumes(Date.today - 350, Date.today + 90, params[:mine])
+    
+    # Filter by group if selected
+    if group_ids_to_filter
+      @joining_matches = filter_req_matches_by_group(@joining_matches, group_ids_to_filter)
+      @joined_resumes = filter_resumes_by_group(@joined_resumes, group_ids_to_filter)
+      @not_joined_resumes = filter_resumes_by_group(@not_joined_resumes, group_ids_to_filter)
+    end
+    
     @months_table       = create_months_table(@joining_matches, @joined_resumes, @not_joined_resumes)
-    @joined_resumes     = get_current_quarter_resumes("JOINED")
-    @not_joined_resumes = get_current_quarter_resumes("NOT JOINED")
-    @offered_comments   = get_current_quarter_resumes_for_offered
-    @not_accepted_comments = get_quarterly_comments_not_accepted_new(Date.today)
+    
+    # Get quarterly resumes and filter by group if needed
+    joined_quarterly = get_current_quarter_resumes("JOINED")
+    @joined_resumes = group_ids_to_filter ? filter_resumes_by_group(joined_quarterly, group_ids_to_filter) : joined_quarterly
+    
+    not_joined_quarterly = get_current_quarter_resumes("NOT JOINED")
+    @not_joined_resumes = group_ids_to_filter ? filter_resumes_by_group(not_joined_quarterly, group_ids_to_filter) : not_joined_quarterly
+    
+    offered_comments = get_current_quarter_resumes_for_offered
+    @offered_comments = group_ids_to_filter ? filter_comments_by_group(offered_comments, group_ids_to_filter) : offered_comments
+    
+    not_accepted_comments = get_quarterly_comments_not_accepted_new(Date.today)
+    @not_accepted_comments = group_ids_to_filter ? filter_na_comments_by_group(not_accepted_comments, group_ids_to_filter) : not_accepted_comments
   end
 
   def offered
@@ -1342,7 +1372,7 @@ class ResumesController < ApplicationController
   # FUNCTION    : create_xls_sheet_for_requirement                                                   #
   # DESCRIPTION : Create the excel sheet for a requirement with given status                         #
   ####################################################################################################
-  def create_xls_sheet_for_requirement(status)
+  def create_xls_sheet_for_requirement(status, requirement)
     Spreadsheet.client_encoding = 'UTF-8'
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet :name => status
@@ -1372,7 +1402,7 @@ class ResumesController < ApplicationController
       return
     end
 
-    sheet, book, output = create_xls_sheet_for_requirement(status)
+    sheet, book, output = create_xls_sheet_for_requirement(status, requirement)
 
     if status == "JOINING"
       joining_matches, joined_resumes, not_joined_resumes = get_joining_data
@@ -1487,6 +1517,20 @@ class ResumesController < ApplicationController
     @end_year = end_year.present? ? end_year.to_i : Date.today.year
     @status = "JOINED"
 
+    # Get all groups from requirements for the dropdown
+    @groups = Group.joins(:requirements).distinct.order(:name)
+    @selected_group_id = params[:group_id].present? && params[:group_id] != "" ? params[:group_id].to_i : nil
+    @selected_group = @selected_group_id ? Group.find_by(id: @selected_group_id) : nil
+    
+    # Get group IDs to filter (selected group + descendants, or all if "All" selected)
+    group_ids_to_filter = if @selected_group_id && @selected_group
+      [@selected_group_id] + @selected_group.descendants.map(&:id)
+    elsif @selected_group_id
+      [@selected_group_id]
+    else
+      nil # nil means show all
+    end
+
     @joined_resumes = Resume.where(status: @status).find_all { |resume| 
       resume.joining_date && 
       resume.joining_date.month >= @smonth &&
@@ -1494,6 +1538,12 @@ class ResumesController < ApplicationController
       resume.joining_date.year >= @start_year &&
       resume.joining_date.year <= @end_year
     }
+    
+    # Filter by group if selected
+    if group_ids_to_filter
+      @joined_resumes = filter_resumes_by_group(@joined_resumes, group_ids_to_filter)
+    end
+    
     @joined_resumes = @joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
     
   end
@@ -1511,6 +1561,20 @@ class ResumesController < ApplicationController
     @end_year = end_year.present? ? end_year.to_i : Date.today.year
     @status = "NOT JOINED"
 
+    # Get all groups from requirements for the dropdown
+    @groups = Group.joins(:requirements).distinct.order(:name)
+    @selected_group_id = params[:group_id].present? && params[:group_id] != "" ? params[:group_id].to_i : nil
+    @selected_group = @selected_group_id ? Group.find_by(id: @selected_group_id) : nil
+    
+    # Get group IDs to filter (selected group + descendants, or all if "All" selected)
+    group_ids_to_filter = if @selected_group_id && @selected_group
+      [@selected_group_id] + @selected_group.descendants.map(&:id)
+    elsif @selected_group_id
+      [@selected_group_id]
+    else
+      nil # nil means show all
+    end
+
     not_joined_resumes = Resume.where(status: @status).find_all { |resume| 
       resume.joining_date && 
       resume.joining_date.month >= @smonth &&
@@ -1518,6 +1582,12 @@ class ResumesController < ApplicationController
       resume.joining_date.year >= @start_year &&
       resume.joining_date.year <= @end_year
     }
+    
+    # Filter by group if selected
+    if group_ids_to_filter
+      not_joined_resumes = filter_resumes_by_group(not_joined_resumes, group_ids_to_filter)
+    end
+    
     @not_joined_resumes = not_joined_resumes.sort_by { |r| [!r.joining_date.nil? ?  r.joining_date : Date.today ] }
 
   end
@@ -1548,6 +1618,20 @@ class ResumesController < ApplicationController
     @end_year = end_year.present? ? end_year.to_i : Date.today.year
     @status = params[:status] || "OFFERED"
 
+    # Get all groups from requirements for the dropdown
+    @groups = Group.joins(:requirements).distinct.order(:name)
+    @selected_group_id = params[:group_id].present? && params[:group_id] != "" ? params[:group_id].to_i : nil
+    @selected_group = @selected_group_id ? Group.find_by(id: @selected_group_id) : nil
+    
+    # Get group IDs to filter (selected group + descendants, or all if "All" selected)
+    group_ids_to_filter = if @selected_group_id && @selected_group
+      [@selected_group_id] + @selected_group.descendants.map(&:id)
+    elsif @selected_group_id
+      [@selected_group_id]
+    else
+      nil # nil means show all
+    end
+
     offered_comments = Comment.all.find_all { |c| 
       c.comment.include?("OFFERED") &&
       c.created_at.month >= @smonth &&
@@ -1555,6 +1639,12 @@ class ResumesController < ApplicationController
       c.created_at.year >= @start_year &&
       c.created_at.year <= @end_year
     }
+    
+    # Filter by group if selected
+    if group_ids_to_filter
+      offered_comments = filter_comments_by_group(offered_comments, group_ids_to_filter)
+    end
+    
     @offered_comments = offered_comments.sort_by { |c| [c.created_at] }
     @offered_comments.uniq { |c| c.resume }
 
@@ -1574,8 +1664,35 @@ class ResumesController < ApplicationController
     @start_year = start_year.present? ? start_year.to_i : Date.today.year
     @end_year = end_year.present? ? end_year.to_i : Date.today.year
     
+    # Get all groups from requirements for the dropdown
+    @groups = Group.joins(:requirements).distinct.order(:name)
+    @selected_group_id = params[:group_id].present? && params[:group_id] != "" ? params[:group_id].to_i : nil
+    @selected_group = @selected_group_id ? Group.find_by(id: @selected_group_id) : nil
+    
+    # Get group IDs to filter (selected group + descendants, or all if "All" selected)
+    group_ids_to_filter = if @selected_group_id && @selected_group
+      [@selected_group_id] + @selected_group.descendants.map(&:id)
+    elsif @selected_group_id
+      [@selected_group_id]
+    else
+      nil # nil means show all
+    end
+    
     date = Date.new(@start_year, @smonth, 1)
-    @not_accepted_comments = get_quarterly_comments_not_accepted_by_date_range(date, date.end_of_month)
+    not_accepted_comments = get_quarterly_comments_not_accepted_by_date_range(date, date.end_of_month)
+    
+    # Filter by group if selected
+    if group_ids_to_filter
+      # Filter comments by group - check if resume belongs to the selected groups
+      @not_accepted_comments = not_accepted_comments.select do |c|
+        c[:not_accepted].resume && c[:not_accepted].resume.req_matches.any? { |match|
+          match.requirement && group_ids_to_filter.include?(match.requirement.group_id)
+        }
+      end
+    else
+      @not_accepted_comments = not_accepted_comments
+    end
+    
     render "resumes/_show_quarterly_not_accepted"
   end
 
@@ -2108,8 +2225,7 @@ class ResumesController < ApplicationController
     # Handle requirement_filter_id from requirement filter autocomplete
     if params[:filter_requirement_id].present?
       begin
-        filter_requirement = Requirement.find(params[:filter_requirement_id])
-        @filter_requirement = filter_requirement.name
+        @filter_requirement = params[:filter_requirement_id]
       rescue ActiveRecord::RecordNotFound
         @filter_requirement = nil
       end
@@ -2119,7 +2235,6 @@ class ResumesController < ApplicationController
     @uploaded_at_start = params[:uploaded_at_start].present? ? Date.parse(params[:uploaded_at_start]) : nil
     @uploaded_at_end = params[:uploaded_at_end].present? ? Date.parse(params[:uploaded_at_end]) : nil
     @exclude_keywords = params[:exclude_keywords]
-    @requirement_id = params[:requirement_id]
     
     # Build where conditions for filters
     where_conditions = {}
@@ -2146,7 +2261,7 @@ class ResumesController < ApplicationController
                               per_page: get_per_page)
     elsif params[:search_type] == 'requirement'
       # Requirement-based search: Use requirement embedding for KNN search
-      if @requirement_id.present?
+      if params[:search_requirement_id].present?
         begin
           requirement = Requirement.find(params[:search_requirement_id])
           requirement_embedding = requirement.get_embedding
@@ -2759,15 +2874,16 @@ class ResumesController < ApplicationController
     requirement.ta_leads.each do |lead|
       recipients << lead
     end
+    # Add all engineering leads from HABTM association
+    requirement.eng_leads.each do |lead|
+      recipients << lead
+    end
     if eng_decision
-      # Add all engineering leads from HABTM association
-      requirement.eng_leads.each do |lead|
-        recipients << lead
-      end
       to = requirement.ta_leads.first if requirement.ta_leads.any?
       recipients << requirement.employee if requirement.employee.present? # Requirement Owner
     else
       to = gm_for_decision
+      recipients << requirement.group.employee if requirement.group.present?
     end
     # Get ta_head from first ta_lead (assuming they all have the same ta_head)
     ta_head = requirement.ta_leads.first.ta_head if requirement.ta_leads.any?
@@ -2810,6 +2926,39 @@ class ResumesController < ApplicationController
   def get_current_quarter_resumes_for_offered
     offered_comments = Comment.find_by_sql("select * FROM comments WHERE comments.comment LIKE \"OFFERED%\" AND comments.created_at >= \"#{Date.today.beginning_of_quarter.to_s}\"") 
     offered_comments.uniq{ |c| c.resume }
+  end
+
+  # Filter req_matches by group IDs
+  def filter_req_matches_by_group(req_matches, group_ids)
+    req_matches.select { |match| 
+      match.requirement && group_ids.include?(match.requirement.group_id)
+    }
+  end
+
+  # Filter resumes by group IDs (check through req_matches)
+  def filter_resumes_by_group(resumes, group_ids)
+    resumes.select { |resume|
+      resume.req_matches.any? { |match| 
+        match.requirement && group_ids.include?(match.requirement.group_id)
+      }
+    }
+  end
+
+  # Filter comments by group IDs (check through resume's req_matches)
+  def filter_comments_by_group(comments, group_ids)
+    comments.select { |comment|
+      comment.resume && comment.resume.req_matches.any? { |match|
+        match.requirement && group_ids.include?(match.requirement.group_id)
+      }
+    }
+  end
+
+  def filter_na_comments_by_group(not_accepted_comments, group_ids)
+    not_accepted_comments.select { |comment|
+      comment[:not_accepted].resume && comment[:not_accepted].resume.req_matches.any? { |match|
+        match.requirement && group_ids.include?(match.requirement.group_id)
+      }
+    }
   end
 
   def get_quarterly_comments_not_accepted_new(date)

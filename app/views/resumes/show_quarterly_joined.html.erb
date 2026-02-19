@@ -1,6 +1,11 @@
 <% month_year_str  = Date::ABBR_MONTHNAMES[@smonth] + " " + @start_year.to_s + ".." + Date::ABBR_MONTHNAMES[@emonth] + " " + @end_year.to_s %>
 <div class="table-header">
     <h2>Joined: <%= month_year_str %> (<%= @joined_resumes.size %>)</h2>
+    <% if @selected_group %>
+      <p style="margin-top: 10px;">
+        <strong>Selected Group:</strong> <%= @selected_group.name %>
+      </p>
+    <% end %>
     <%= render "resumes/month_year_selector", url: url_for(controller: 'resumes', action: 'show_quarterly_joined') %>
 </div>
 <%= render "resumes/show_quarterly_joined", :resumes => @joined_resumes, :status => "JOINED" %>
