@@ -42,14 +42,24 @@
         </div>
         <div class="form-group">
           <label for="resume_email">Email *</label>
-          <%= f.text_field :email, class: "form-control", placeholder: "Enter email" %>
+          <%= f.text_field :email,
+                           class: "form-control",
+                           placeholder: "Enter email",
+                           readonly: (display_var == 1 && !is_TA_HEAD?) %>
         </div>
       </div>
       
       <div class="form-row">
         <div class="form-group">
           <label for="resume_phone">Phone Number</label>
-          <%= f.text_field :phone, class: "form-control", placeholder: "Enter phone" %>
+          <%= f.text_field :phone,
+                           class: "form-control",
+                           placeholder: "Enter 10-digit phone number",
+                           maxlength: 10,
+                           pattern: "[0-9]{10}",
+                           id: "resume_phone",
+                           readonly: (display_var == 1 && !is_TA_HEAD?) %>
+          <small class="form-text text-muted phone-hint">Enter exactly 10 digits (numbers only)</small>
         </div>
         <div class="form-group">
           <label for="resume_skype_id">Skype ID</label>
@@ -123,7 +133,12 @@
       
       <div class="form-group">
         <label for="resume_notice">Notice Period (Days)</label>
-        <%= f.text_field :notice, class: "form-control", placeholder: "Enter notice period in days" %>
+        <% allowed_notice_days = [0, 15, 30, 45, 60, 90] %>
+        <% notice_options = allowed_notice_days.map { |d| [d.to_s, d] } %>
+        <% if @resume.notice.present? && !allowed_notice_days.include?(@resume.notice.to_i) %>
+          <% notice_options.unshift(["#{@resume.notice} (current)", @resume.notice]) %>
+        <% end %>
+        <%= f.select :notice, options_for_select(notice_options, @resume.notice), { include_blank: "Select notice period" }, class: "form-control", id: "resume_notice" %>
       </div>
     </div>
 

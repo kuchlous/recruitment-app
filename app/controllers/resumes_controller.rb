@@ -272,6 +272,15 @@ class ResumesController < ApplicationController
     # TODO:Change to strong parameters 
     resume_params_hash = params.require(:resume).permit!.to_h
     resume_params_hash.except!(:upload_resume)
+
+    # Only TA_HEAD (or ADMIN) can edit contact identifiers on existing resumes
+    unless get_current_employee&.is_TA_HEAD? || get_current_employee&.is_ADMIN?
+      resume_params_hash.delete("phone")
+      resume_params_hash.delete(:phone)
+      resume_params_hash.delete("email")
+      resume_params_hash.delete(:email)
+    end
+
     if @resume.update(resume_params_hash)
       if params[:resume][:upload_resume]
         @resume.cleanup_update_resume_data(params[:resume][:upload_resume])
@@ -2736,9 +2745,9 @@ class ResumesController < ApplicationController
       sheet.row(row).push r.referral_name
       row += 1
     end
- end
+  end
 
- def fill_forwarded_shortlisted_data(sheet, forwards)
+  def fill_forwarded_shortlisted_data(sheet, forwards)
     sheet.row(0).concat %w{Name Education Current\ Company Exp Req Email Phone\ Number Referral}
     blue = Spreadsheet::Format.new :weight => :bold,
                                    :size   => 12
