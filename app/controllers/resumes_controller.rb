@@ -279,6 +279,8 @@ class ResumesController < ApplicationController
       resume_params_hash.delete(:phone)
       resume_params_hash.delete("email")
       resume_params_hash.delete(:email)
+      resume_params_hash.delete("international_phone")
+      resume_params_hash.delete(:international_phone)
     end
 
     if @resume.update(resume_params_hash)

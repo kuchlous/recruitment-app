@@ -59,9 +59,20 @@
                            readonly: (display_var == 1 && !is_TA_HEAD?) %>
         </div>
         <div class="form-group">
+          <label for="resume_international_phone">International Phone Number</label>
+          <%= f.text_field :international_phone,
+                           class: "form-control",
+                           placeholder: "Enter international phone number",
+                           id: "resume_international_phone",
+                           readonly: (display_var == 1 && !is_TA_HEAD?) %>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label for="resume_skype_id">Skype ID</label>
           <%= f.text_field :skype_id, class: "form-control", placeholder: "Enter Skype ID" %>
         </div>
+        <div class="form-group"></div>
       </div>
       
       <div class="form-row">

@@ -115,6 +115,9 @@
 .item__value--normal  {
     font-weight: normal;
 }
+.item--international-phone img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(1000%) hue-rotate(210deg);
+}
 .section {
   padding: 10px;
 }
