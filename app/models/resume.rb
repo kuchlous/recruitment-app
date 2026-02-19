@@ -65,7 +65,7 @@ class Resume < ActiveRecord::Base
 
   # Format stuff
   validates_format_of      :email, :with => /([\w]+)@([\w]+)\./
-  validates_format_of      :phone, :with => /\A\d{10}\z/, :message => "must be exactly 10 digits"
+  validate :phone_format_for_new_or_changed_numbers
   validate :notice_period_allowed_values
 
   def notice_period_allowed_values
@@ -75,6 +75,21 @@ class Resume < ActiveRecord::Base
     # Allow existing value when editing without changing notice (preserve legacy data)
     return if persisted? && notice_was.present? && notice.to_i == notice_was.to_i
     errors.add(:notice, "must be 0, 15, 30, 45, 60, or 90 days")
+  end
+
+  # Enforce 10-digit format only for new or changed phone numbers,
+  # but allow legacy invalid values to pass if unchanged.
+  def phone_format_for_new_or_changed_numbers
+    return if phone.blank?
+
+    # For existing records, skip validation if the phone has not changed
+    if persisted? && !phone_changed?
+      return
+    end
+
+    unless /\A\d{10}\z/.match?(phone)
+      errors.add(:phone, "must be exactly 10 digits")
+    end
   end
 
   # Appending date-time to file names
