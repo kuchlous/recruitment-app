@@ -115,6 +115,9 @@
 .item__value--normal  {
     font-weight: normal;
 }
+.item--international-phone img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(1000%) hue-rotate(210deg);
+}
 .section {
   padding: 10px;
 }
@@ -360,5 +363,18 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   color: #333;
   line-height: 1.6;
+}
+
+/* Faded appearance when notice-period–dependent fields are disabled */
+#resume_last_working_day:disabled,
+#resume_notice_reason:disabled {
+  opacity: 0.4;
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+#last_working_day_group:has(#resume_last_working_day:disabled) label,
+#notice_reason_group:has(#resume_notice_reason:disabled) label {
+  opacity: 0.45;
 }
 

@@ -111,6 +111,7 @@ class Resume < ActiveRecord::Base
     self.location = self.location&.strip&.downcase
     self.name = self.name&.strip
     self.phone = self.phone&.strip
+    self.international_phone = self.international_phone&.strip
     self.email = self.email&.strip
   end
 
@@ -642,6 +643,7 @@ class Resume < ActiveRecord::Base
       name: name,
       email: email,
       phone: phone,
+      international_phone: international_phone,
       qualification: qualification,
       location: location,
       preferred_location: preferred_location,
@@ -744,6 +746,7 @@ private
     search_content << " qualification: " + self.qualification if self.qualification
     search_content << " email: " + self.email if self.email
     search_content << " phone: " + self.phone if self.phone
+    search_content << " international_phone: " + self.international_phone if self.international_phone
     search_content << " summary: " + self.summary if self.summary
 
     self.forwards.each do |fwd|
@@ -763,7 +766,8 @@ private
   end
 
   def remove_whitespaces
-    self.phone.gsub!(/\s+/, "")
+    self.phone.gsub!(/\s+/, "") if self.phone
+    self.international_phone = self.international_phone.gsub(/\s+/, "") if self.international_phone.present?
   end
 
   # Prepare text for embedding generation
