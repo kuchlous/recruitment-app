@@ -105,6 +105,22 @@
           <span class="item__value item__value--center"><%= @resume.notice %> days</span>
         </div>
         <div class="item item--center">
+          <span class="item__label item__label--center">Serving notice period:</span>
+          <span class="item__value item__value--center"><%= @resume.serving_notice_period? ? "Yes" : "No" %></span>
+        </div>
+        <% if @resume.last_working_day.present? %>
+          <div class="item item--center">
+            <span class="item__label item__label--center">Last Working Day:</span>
+            <span class="item__value item__value--center"><%= print_date(@resume.last_working_day) %></span>
+          </div>
+        <% end %>
+        <% if @resume.notice_reason.present? %>
+          <div class="item item--center">
+            <span class="item__label item__label--center">Reason:</span>
+            <span class="item__value item__value--center"><%= @resume.notice_reason %></span>
+          </div>
+        <% end %>
+        <div class="item item--center">
           <span class="item__label item__label--center">Referral Type:</span>
           <span class="item__value item__value--center"><%= @resume.referral_type.titleize %></span>
         </div>

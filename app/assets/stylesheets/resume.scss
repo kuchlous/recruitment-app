@@ -365,3 +365,16 @@
   line-height: 1.6;
 }
 
+/* Faded appearance when notice-period–dependent fields are disabled */
+#resume_last_working_day:disabled,
+#resume_notice_reason:disabled {
+  opacity: 0.4;
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+#last_working_day_group:has(#resume_last_working_day:disabled) label,
+#notice_reason_group:has(#resume_notice_reason:disabled) label {
+  opacity: 0.45;
+}
+

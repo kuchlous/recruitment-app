@@ -283,6 +283,13 @@ class ResumesController < ApplicationController
       resume_params_hash.delete(:international_phone)
     end
 
+    # When not serving notice period, clear last_working_day and notice_reason
+    serving = resume_params_hash["serving_notice_period"] || resume_params_hash[:serving_notice_period]
+    if serving.blank? || serving == false || serving == "0" || serving == "false"
+      resume_params_hash["last_working_day"] = nil
+      resume_params_hash["notice_reason"] = nil
+    end
+
     if @resume.update(resume_params_hash)
       if params[:resume][:upload_resume]
         @resume.cleanup_update_resume_data(params[:resume][:upload_resume])
