@@ -1036,10 +1036,9 @@ class ResumesController < ApplicationController
   #               date/time                                                                          #
   ####################################################################################################
   def decline_interview
-    # ACTION: Declined
-    interview        = Interview.find(params[:interview_id])
-    interview.status = "DECLINED"
-    interview.save!
+    # ACTION: Declined (update_columns to skip validations/calendar check)
+    interview = Interview.find(params[:interview_id])
+    interview.update_columns(status: Interview.statuses[:declined], updated_at: Time.current)
 
     # Sending mail
     send_email_for_declining(interview)
@@ -2070,6 +2069,28 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
+  # FUNCTIONS   : mark_interview_no_show                                                             #
+  # DESCRIPTION : Mark interview as no-show (Candidate No Show or Panel No Show). Keeps the record.  #
+  ####################################################################################################
+  def mark_interview_no_show
+    interview = Interview.find(params[:id])
+    no_show_type = params[:no_show_type]
+    unless %w[CANDIDATE_NO_SHOW PANEL_NO_SHOW].include?(no_show_type)
+      flash[:error] = "Invalid no-show type."
+      redirect_back(fallback_location: root_path)
+      return
+    end
+    # update_columns skips validations/callbacks so overlap and calendar checks don't run (they fail when only status changes)
+    interview.update_columns(status: no_show_type, updated_at: Time.current)
+    label = no_show_type == "CANDIDATE_NO_SHOW" ? "Candidate No Show" : "Panel No Show"
+    req_match = interview.req_match
+    comment = "Interview marked as #{label}. Interviewer: #{interview.employee.name} Requirement: #{req_match.requirement.name}."
+    req_match.resume.add_resume_comment("INTERVIEW NO SHOW: " + comment, "INTERNAL", get_current_employee)
+    flash[:success] = "Interview marked as #{label}."
+    redirect_back(fallback_location: root_path)
+  end
+
+  ####################################################################################################
   # FUNCTIONS   : add_interview_status_to_resume                                                     #
   # DESCRIPTION : Will add interview status to resume. We have provided a field(status) in           #
   #               req matches for better differentiating. This function to be used when somebody     #
@@ -2136,7 +2157,7 @@ class ResumesController < ApplicationController
         if i.interview_date
           if (i.interview_date >= Date.today)
             in_future = true
-          elsif !employees_with_feedback.include?(i.employee)
+          elsif !employees_with_feedback.include?(i.employee) && !i.declined_or_no_show?
             feedback_late = true
           end
         end

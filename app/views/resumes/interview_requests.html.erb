@@ -37,8 +37,12 @@
             <%= focus[0..25] %>
           </td>
           <td>
-            <%= link_to "Add Feedback", :controller => "resumes", :action => "feedback_form", interview_id: i.id, target: "_blank" %> |
-            <%= link_to "Decline", "", onclick: "declineInterviewBox(event, #{i.id})" %>
+            <% if i.declined_or_no_show? %>
+               <span><%= i.declined_or_no_show_status_label %></span>
+            <% else %>
+              <%= link_to "Add Feedback", :controller => "resumes", :action => "feedback_form", interview_id: i.id, target: "_blank" %> |
+              <%= link_to "Decline", "", onclick: "declineInterviewBox(event, #{i.id})" %>
+            <% end %>
             <span class="float_right_with_10_padding" style="padding-bottom: 0px;">
               <%= get_view_feedback_icon(resume, 6) %>
             </span>

@@ -1523,6 +1523,13 @@ div.pagination .disabled:hover
   border: medium none;
 }
 
+#manage_interviews_table .no-show-status
+{
+  font-size:   16px;
+  font-weight: 600;
+  color:       black;
+}
+
 .align_center
 {
   text-align:       center;
