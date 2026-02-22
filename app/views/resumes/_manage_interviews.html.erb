@@ -33,17 +33,17 @@
                  </div>
                </div>
              </td>
-             <td>
-               <%= select_tag "interview_level_#{index}", options_for_select(Interview.get_level_for_select, i.interview_level), :class => "form-control select-box-small" %>
+             <td style="min-width: 60px;">
+               <%= select_tag "interview_level_#{index}", options_for_select(Interview.get_level_for_select, i.interview_level), :class => "form-control" %>
              </td>
-             <td>
+             <td style="width: 140px;">
                <input type="text" class="datepicker form-control" id=<%="interview_date#{index}"%> value=<%= (i.interview_date).strftime("%d-%m-%Y") %>>
              </td>
-             <td>
+             <td style="min-width: 90px;">
                <%= select_tag "time_slot#{index}", options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]), :class => "form-control select-box-small" %>
              </td>
-             <td>
-               <%= select_tag "duration#{index}", options_for_select([['30 min', 30], ['45 min', 45], ['60 min', 60], ['90 min', 90], ['120 min', 120]], i.duration || 60), :class => "form-control select-box-small" %>
+             <td style="min-width: 100px;">
+               <%= select_tag "duration#{index}", options_for_select([['30 min', 30], ['45 min', 45], ['60 min', 60], ['90 min', 90], ['120 min', 120]], i.duration || 60), :class => "form-control" %>
              </td>
              <td>
                <% if i.face_to_face_interview? %>
@@ -67,8 +67,10 @@
                  <% if i.declined_or_no_show_status_label.present? %>
                    Status: <span class="no-show-status"><%= i.declined_or_no_show_status_label %></span>
                  <% else %>
-                   <%= link_to "Candidate No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "CANDIDATE_NO_SHOW" }, class: "btn btn-sm btn-primary", title: "Mark as Candidate No Show", data: { toggle: "tooltip", placement: "top" } %>
-                   <%= link_to "Panel No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "PANEL_NO_SHOW" }, class: "btn btn-sm btn-secondary", title: "Mark as Panel No Show", data: { toggle: "tooltip", placement: "top" } %>
+                   <div class="no-show-buttons">
+                      <%= link_to "Candidate No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "CANDIDATE_NO_SHOW" }, class: "btn btn-sm btn-primary", title: "Mark as Candidate No Show", data: { toggle: "tooltip", placement: "top" } %>
+                      <%= link_to "Panel No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "PANEL_NO_SHOW" }, class: "btn btn-sm btn-primary", title: "Mark as Panel No Show", data: { toggle: "tooltip", placement: "top" } %>
+                   </div>
                  <% end %>
                </div>
              </td>

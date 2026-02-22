@@ -191,6 +191,25 @@
   flex-wrap: wrap;
 }
 
+.no-show-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 5px;
+  width: 100%;
+}
+
+.no-show-buttons .btn {
+  color: white !important;
+  font-size: 12px;
+  min-width: 120px;
+  padding: 5px 10px;
+}
+
+.no-show-buttons .btn:hover,
+.no-show-buttons .btn:visited {
+  color: white !important;
+}
+
 /* Action Icons */
 .action-icon {
   transition: all 0.3s ease;

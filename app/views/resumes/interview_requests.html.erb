@@ -38,7 +38,7 @@
           </td>
           <td>
             <% if i.declined_or_no_show? %>
-               <span><%= i.declined_or_no_show_status_label %></span>
+               <div class="bold" style="display: inline-block;"><%= i.declined_or_no_show_status_label %></div>
             <% else %>
               <%= link_to "Add Feedback", :controller => "resumes", :action => "feedback_form", interview_id: i.id, target: "_blank" %> |
               <%= link_to "Decline", "", onclick: "declineInterviewBox(event, #{i.id})" %>
