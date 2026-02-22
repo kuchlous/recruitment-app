@@ -43,7 +43,7 @@
       <td title="<%= resume.manual_status %>" class="table-cell-truncated">
         <%= resume.manual_status ? resume.manual_status[0..25] : '' %>
       </td> 
-      <td class="table-actions">
+      <td class="table-secondary">
         <%= get_view_feedback_icon(resume, 10) %> 
         <%= get_actions_ddl(resume, match, "SCHEDULED") %>
       </td>

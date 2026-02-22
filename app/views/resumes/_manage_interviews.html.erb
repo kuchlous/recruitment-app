@@ -68,8 +68,8 @@
                    Status: <span class="no-show-status"><%= i.declined_or_no_show_status_label %></span>
                  <% else %>
                    <div class="no-show-buttons">
-                      <%= link_to "Candidate No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "CANDIDATE_NO_SHOW" }, class: "btn btn-sm btn-primary", title: "Mark as Candidate No Show", data: { toggle: "tooltip", placement: "top" } %>
-                      <%= link_to "Panel No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "PANEL_NO_SHOW" }, class: "btn btn-sm btn-primary", title: "Mark as Panel No Show", data: { toggle: "tooltip", placement: "top" } %>
+                      <%= link_to "Candidate No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "CANDIDATE_NO_SHOW", req_match_id: i.req_match.id }, class: "btn btn-sm btn-primary", title: "Mark as Candidate No Show", data: { toggle: "tooltip", placement: "top", remote: true } %>
+                      <%= link_to "Panel No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "PANEL_NO_SHOW", req_match_id: i.req_match.id }, class: "btn btn-sm btn-primary", title: "Mark as Panel No Show", data: { toggle: "tooltip", placement: "top", remote: true } %>
                    </div>
                  <% end %>
                </div>

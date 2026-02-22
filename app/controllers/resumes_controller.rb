@@ -2087,7 +2087,16 @@ class ResumesController < ApplicationController
     comment = "Interview marked as #{label}. Interviewer: #{interview.employee.name} Requirement: #{req_match.requirement.name}."
     req_match.resume.add_resume_comment("INTERVIEW NO SHOW: " + comment, "INTERNAL", get_current_employee)
     flash[:success] = "Interview marked as #{label}."
-    redirect_back(fallback_location: root_path)
+
+    respond_to do |format|
+      format.js do
+        @req_match = ReqMatch.find(params[:req_match_id])
+        @interviews = @req_match.interviews
+        @form_configs = FormConfig.select(:id, :title)
+        render "refresh_manage_interviews"
+      end
+      format.html { redirect_back(fallback_location: root_path) }
+    end
   end
 
   ####################################################################################################
