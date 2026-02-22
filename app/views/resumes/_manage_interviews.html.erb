@@ -65,7 +65,12 @@
                <%= text_area_tag "interview_focus#{index}", i.focus, :class => "form-control focus-textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');", :rows => 2 %>
                <div class="table-actions" style="margin-top: 6px;">
                  <% if i.declined_or_no_show_status_label.present? %>
-                   Status: <span class="no-show-status"><%= i.declined_or_no_show_status_label %></span>
+                   <div class="no-show-status-row">
+                     Status: <span class="no-show-status"><%= i.declined_or_no_show_status_label %></span>
+                     <% if i.candidate_no_show? || i.panel_no_show? %>
+                       <%= link_to "Clear", { host: APP_CONFIG['host_name'], controller: "resumes", action: "clear_interview_no_show", id: i.id, req_match_id: i.req_match.id }, class: "btn btn-sm btn-outline-secondary", title: "Clear no-show status", data: { toggle: "tooltip", placement: "top", remote: true } %>
+                     <% end %>
+                   </div>
                  <% else %>
                    <div class="no-show-buttons">
                       <%= link_to "Candidate No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "CANDIDATE_NO_SHOW", req_match_id: i.req_match.id }, class: "btn btn-sm btn-primary", title: "Mark as Candidate No Show", data: { toggle: "tooltip", placement: "top", remote: true } %>

@@ -1894,6 +1894,7 @@ function showBootstrapAlert(message, type) {
   
   // Auto-hide after 5 seconds
   setTimeout(function() {
+    console.log('Closing bootstrap alert');
     closeBootstrapAlert();
   }, 5000);
 }

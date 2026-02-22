@@ -2087,16 +2087,24 @@ class ResumesController < ApplicationController
     comment = "Interview marked as #{label}. Interviewer: #{interview.employee.name} Requirement: #{req_match.requirement.name}."
     req_match.resume.add_resume_comment("INTERVIEW NO SHOW: " + comment, "INTERNAL", get_current_employee)
     flash[:success] = "Interview marked as #{label}."
+    respond_to_refresh_manage_interviews
+  end
 
-    respond_to do |format|
-      format.js do
-        @req_match = ReqMatch.find(params[:req_match_id])
-        @interviews = @req_match.interviews
-        @form_configs = FormConfig.select(:id, :title)
-        render "refresh_manage_interviews"
-      end
-      format.html { redirect_back(fallback_location: root_path) }
+  ####################################################################################################
+  # FUNCTIONS   : clear_interview_no_show                                                             #
+  # DESCRIPTION : Clear no-show status (Candidate/Panel No Show) and set interview back to scheduled#
+  ####################################################################################################
+  def clear_interview_no_show
+    interview = Interview.find(params[:id])
+    if interview.candidate_no_show? || interview.panel_no_show?
+      interview.update_columns(status: nil, updated_at: Time.current)
+      req_match = interview.req_match
+      req_match.resume.add_resume_comment("INTERVIEW NO-SHOW CLEARED: Interviewer: #{interview.employee.name} Requirement: #{req_match.requirement.name}.", "INTERNAL", get_current_employee)
+      flash[:success] = "No-show status cleared."
+    else
+      flash[:error] = "Interview is not marked as no-show."
     end
+    respond_to_refresh_manage_interviews
   end
 
   ####################################################################################################
@@ -3113,6 +3121,25 @@ class ResumesController < ApplicationController
   end
 
   private
+
+  ####################################################################################################
+  # FUNCTIONS   : respond_to_refresh_manage_interviews                                                 #
+  # DESCRIPTION : Shared response for AJAX actions that refresh the manage interviews partial.        #
+  #               Sets @req_match, @interviews, @form_configs and renders refresh_manage_interviews  #
+  #               for format.js, redirect_back for format.html.                                      #
+  ####################################################################################################
+  def respond_to_refresh_manage_interviews
+    @req_match = ReqMatch.find(params[:req_match_id])
+    @interviews = @req_match.interviews
+    @form_configs = FormConfig.select(:id, :title)
+    respond_to do |format|
+      format.js do
+        flash.discard
+        render "refresh_manage_interviews"
+      end
+      format.html { redirect_back(fallback_location: root_path) }
+    end
+  end
 
   ####################################################################################################
   # FUNCTIONS   : should_show_ctc?                                                                   #

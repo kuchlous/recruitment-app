@@ -1523,6 +1523,13 @@ div.pagination .disabled:hover
   border: medium none;
 }
 
+#manage_interviews_table .no-show-status-row
+{
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
 #manage_interviews_table .no-show-status
 {
   font-size:   16px;

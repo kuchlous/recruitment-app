@@ -110,6 +110,7 @@ Rails.application.routes.draw do
   match 'resumes/show_all_not_accepted',to: 'resumes#show_all_not_accepted'                   , via: :get
   match 'resumes/delete_interview',to: 'resumes#delete_interview'                             , via: :get
   match 'resumes/mark_interview_no_show', to: 'resumes#mark_interview_no_show', via: :get
+  match 'resumes/clear_interview_no_show', to: 'resumes#clear_interview_no_show', via: :get
 
   match 'resumes/update_interview',to: 'resumes#update_interview'                                       , via: [:get, :post]
 
