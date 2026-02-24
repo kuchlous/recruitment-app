@@ -24,6 +24,24 @@ class Interview < ActiveRecord::Base
   # Delegate to get resume and requirement through req_match
   delegate :resume, :requirement, to: :req_match, allow_nil: true
 
+  enum :status, {
+    scheduled: nil,
+    declined: "DECLINED",
+    candidate_no_show: "CANDIDATE_NO_SHOW",
+    panel_no_show: "PANEL_NO_SHOW"
+  }
+
+  def declined_or_no_show?
+    status == "declined" || status == "candidate_no_show" || status == "panel_no_show"
+  end
+
+  def declined_or_no_show_status_label
+    return "Declined" if status == "declined"
+    return "Candidate No Show" if status == "candidate_no_show"
+    return "Panel No Show" if status == "panel_no_show"
+    nil
+  end
+
   def self.get_level_for_select
     level_array = []
     level_array.push(['L1', 1])

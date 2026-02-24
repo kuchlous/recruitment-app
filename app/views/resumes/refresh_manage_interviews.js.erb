@@ -1,0 +1,12 @@
+<% if flash[:success].present? %>
+  showBootstrapAlert('<%= j flash[:success] %>', 'success');
+<% end %>
+<% if flash[:error].present? %>
+  showBootstrapAlert('<%= j flash[:error] %>', 'danger');
+<% end %>
+jQuery('#ajax_request_tr').html('<%= j render "resumes/manage_interviews" %>');
+
+jQuery('#ajax_request_tr .employee-autocomplete').each(function() {
+  createEmployeeAutocomplete('#' + this.id);
+});
+jQuery('#ajax_request_tr [data-toggle="tooltip"]').tooltip();

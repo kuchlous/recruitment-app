@@ -70,7 +70,7 @@ module ResumeHelper
 
   def get_interview_row_class(req_match, interview)
     if interview.interview_date
-      if interview.status == "DECLINED"
+      if interview.declined_or_no_show?
         row_class = "red"
       elsif req_match.is_feedback_given(interview.employee)
         row_class = "green"

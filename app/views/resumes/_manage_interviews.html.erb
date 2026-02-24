@@ -22,7 +22,7 @@
     </thead>
     <tbody>
       <% @interviews.each_with_index do |i, index| %>
-           <tr class="<%= 'red' if i.status == 'DECLINED' %>">
+           <tr class="<%= 'red' if i.declined_or_no_show? %>">
              <td>
                <div class="interview-info">
                  <div class="interview-name-row">
@@ -33,17 +33,17 @@
                  </div>
                </div>
              </td>
-             <td>
-               <%= select_tag "interview_level_#{index}", options_for_select(Interview.get_level_for_select, i.interview_level), :class => "form-control select-box-small" %>
+             <td style="min-width: 60px;">
+               <%= select_tag "interview_level_#{index}", options_for_select(Interview.get_level_for_select, i.interview_level), :class => "form-control" %>
              </td>
-             <td>
+             <td style="width: 140px;">
                <input type="text" class="datepicker form-control" id=<%="interview_date#{index}"%> value=<%= (i.interview_date).strftime("%d-%m-%Y") %>>
              </td>
-             <td>
+             <td style="min-width: 90px;">
                <%= select_tag "time_slot#{index}", options_for_select(get_time_slot_array, i.interview_time.to_s[11..15]), :class => "form-control select-box-small" %>
              </td>
-             <td>
-               <%= select_tag "duration#{index}", options_for_select([['30 min', 30], ['45 min', 45], ['60 min', 60], ['90 min', 90], ['120 min', 120]], i.duration || 60), :class => "form-control select-box-small" %>
+             <td style="min-width: 100px;">
+               <%= select_tag "duration#{index}", options_for_select([['30 min', 30], ['45 min', 45], ['60 min', 60], ['90 min', 90], ['120 min', 120]], i.duration || 60), :class => "form-control" %>
              </td>
              <td>
                <% if i.face_to_face_interview? %>
@@ -63,13 +63,28 @@
                   } 
                 %>
                <%= text_area_tag "interview_focus#{index}", i.focus, :class => "form-control focus-textarea", :onfocus => "textBoxContentsOnFocus(this.id, 'Enter focus');", :onblur  => "textBoxContentsOnBlur(this.id, 'Enter focus');", :rows => 2 %>
-             </td>
-             <td>
-               <div class="table-actions">
-                 <%= link_to image_tag("RedCross.png", :size => "20x20"), { host: APP_CONFIG['host_name'], controller: "resumes", action: "delete_interview", id: i.id }, { class: "action-link danger", title: "Delete Interview", data: { toggle: "tooltip", placement: "top" } } %>
-                 <%= link_to image_tag("GoIcon.gif", :size => "20x20"), "", :onClick=> "changeInterview(#{i.id}, #{index});", :class => "action-link success", :title => "Update Interview", :data => { toggle: "tooltip", placement: "top" } %>
+               <div class="table-actions" style="margin-top: 6px;">
+                 <% if i.declined_or_no_show_status_label.present? %>
+                   <div class="no-show-status-row">
+                     Status: <span class="no-show-status"><%= i.declined_or_no_show_status_label %></span>
+                     <% if i.candidate_no_show? || i.panel_no_show? %>
+                       <%= link_to "Clear", { host: APP_CONFIG['host_name'], controller: "resumes", action: "clear_interview_no_show", id: i.id, req_match_id: i.req_match.id }, class: "btn btn-sm btn-outline-secondary", title: "Clear no-show status", data: { toggle: "tooltip", placement: "top", remote: true } %>
+                     <% end %>
+                   </div>
+                 <% else %>
+                   <div class="no-show-buttons">
+                      <%= link_to "Candidate No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "CANDIDATE_NO_SHOW", req_match_id: i.req_match.id }, class: "btn btn-sm btn-primary", title: "Mark as Candidate No Show", data: { toggle: "tooltip", placement: "top", remote: true } %>
+                      <%= link_to "Panel No Show", { host: APP_CONFIG['host_name'], controller: "resumes", action: "mark_interview_no_show", id: i.id, no_show_type: "PANEL_NO_SHOW", req_match_id: i.req_match.id }, class: "btn btn-sm btn-primary", title: "Mark as Panel No Show", data: { toggle: "tooltip", placement: "top", remote: true } %>
+                   </div>
+                 <% end %>
                </div>
              </td>
+            <td>
+              <div class="table-actions">
+                 <%= link_to image_tag("RedCross.png", :size => "20x20"), { host: APP_CONFIG['host_name'], controller: "resumes", action: "delete_interview", id: i.id }, { class: "action-link danger", title: "Delete Interview", data: { toggle: "tooltip", placement: "top" } } %>
+                 <%= link_to image_tag("GoIcon.gif", :size => "20x20"), "", :onClick=> "changeInterview(#{i.id}, #{index});", :class => "action-link success", :title => "Update Interview", :data => { toggle: "tooltip", placement: "top" } %>
+              </div>
+            </td>
            </tr>
          <% end %>
          <% if @interviews.size < 5 %>

@@ -1036,10 +1036,9 @@ class ResumesController < ApplicationController
   #               date/time                                                                          #
   ####################################################################################################
   def decline_interview
-    # ACTION: Declined
-    interview        = Interview.find(params[:interview_id])
-    interview.status = "DECLINED"
-    interview.save!
+    # ACTION: Declined (update_columns to skip validations/calendar check)
+    interview = Interview.find(params[:interview_id])
+    interview.update_columns(status: Interview.statuses[:declined], updated_at: Time.current)
 
     # Sending mail
     send_email_for_declining(interview)
@@ -2070,6 +2069,45 @@ class ResumesController < ApplicationController
   end
 
   ####################################################################################################
+  # FUNCTIONS   : mark_interview_no_show                                                             #
+  # DESCRIPTION : Mark interview as no-show (Candidate No Show or Panel No Show). Keeps the record.  #
+  ####################################################################################################
+  def mark_interview_no_show
+    interview = Interview.find(params[:id])
+    no_show_type = params[:no_show_type]
+    unless %w[CANDIDATE_NO_SHOW PANEL_NO_SHOW].include?(no_show_type)
+      flash[:error] = "Invalid no-show type."
+      redirect_back(fallback_location: root_path)
+      return
+    end
+    # update_columns skips validations/callbacks so overlap and calendar checks don't run (they fail when only status changes)
+    interview.update_columns(status: no_show_type, updated_at: Time.current)
+    label = no_show_type == "CANDIDATE_NO_SHOW" ? "Candidate No Show" : "Panel No Show"
+    req_match = interview.req_match
+    comment = "Interview marked as #{label}. Interviewer: #{interview.employee.name} Requirement: #{req_match.requirement.name}."
+    req_match.resume.add_resume_comment("INTERVIEW NO SHOW: " + comment, "INTERNAL", get_current_employee)
+    flash[:success] = "Interview marked as #{label}."
+    respond_to_refresh_manage_interviews
+  end
+
+  ####################################################################################################
+  # FUNCTIONS   : clear_interview_no_show                                                             #
+  # DESCRIPTION : Clear no-show status (Candidate/Panel No Show) and set interview back to scheduled#
+  ####################################################################################################
+  def clear_interview_no_show
+    interview = Interview.find(params[:id])
+    if interview.candidate_no_show? || interview.panel_no_show?
+      interview.update_columns(status: nil, updated_at: Time.current)
+      req_match = interview.req_match
+      req_match.resume.add_resume_comment("INTERVIEW NO-SHOW CLEARED: Interviewer: #{interview.employee.name} Requirement: #{req_match.requirement.name}.", "INTERNAL", get_current_employee)
+      flash[:success] = "No-show status cleared."
+    else
+      flash[:error] = "Interview is not marked as no-show."
+    end
+    respond_to_refresh_manage_interviews
+  end
+
+  ####################################################################################################
   # FUNCTIONS   : add_interview_status_to_resume                                                     #
   # DESCRIPTION : Will add interview status to resume. We have provided a field(status) in           #
   #               req matches for better differentiating. This function to be used when somebody     #
@@ -2136,7 +2174,7 @@ class ResumesController < ApplicationController
         if i.interview_date
           if (i.interview_date >= Date.today)
             in_future = true
-          elsif !employees_with_feedback.include?(i.employee)
+          elsif !employees_with_feedback.include?(i.employee) && !i.declined_or_no_show?
             feedback_late = true
           end
         end
@@ -3083,6 +3121,25 @@ class ResumesController < ApplicationController
   end
 
   private
+
+  ####################################################################################################
+  # FUNCTIONS   : respond_to_refresh_manage_interviews                                                 #
+  # DESCRIPTION : Shared response for AJAX actions that refresh the manage interviews partial.        #
+  #               Sets @req_match, @interviews, @form_configs and renders refresh_manage_interviews  #
+  #               for format.js, redirect_back for format.html.                                      #
+  ####################################################################################################
+  def respond_to_refresh_manage_interviews
+    @req_match = ReqMatch.find(params[:req_match_id])
+    @interviews = @req_match.interviews
+    @form_configs = FormConfig.select(:id, :title)
+    respond_to do |format|
+      format.js do
+        flash.discard
+        render "refresh_manage_interviews"
+      end
+      format.html { redirect_back(fallback_location: root_path) }
+    end
+  end
 
   ####################################################################################################
   # FUNCTIONS   : should_show_ctc?                                                                   #
