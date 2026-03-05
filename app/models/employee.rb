@@ -65,6 +65,10 @@ class Employee < ActiveRecord::Base
     /GM/.match(employee_type)
   end
 
+  def is_BenchManager?
+    /BENCH_MANAGER/.match(employee_type)
+  end
+
   def is_BD?
     /BD/.match(employee_type)
   end

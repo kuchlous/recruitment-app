@@ -4,7 +4,7 @@ class ResumesController < ApplicationController
   helper_method :safe_parse_date, :safe_parse_datetime
   
   before_action :check_for_login, :except => [ :get_summary_by_id, :get_resume_attachment ]
-  before_action :check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM, :only => [
+  before_action :check_for_HR_ADMIN_REQMANAGER_PM_BD_GM_BM, :only => [
   :hold,
   :offered,
   :recent,

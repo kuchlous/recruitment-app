@@ -82,6 +82,10 @@ module ApplicationHelper
     get_current_employee.is_BD?
   end
 
+  def is_BenchManager?
+    get_current_employee.is_BenchManager?
+  end
+
   def get_forwards_of_status(status)
     forwards = get_current_employee.forwards.find_all {
       |fwd| fwd.status == status

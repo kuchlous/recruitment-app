@@ -95,7 +95,7 @@
         <% if is_HR? %>
           <td> <%= link_to "New",         :controller => "resumes", :action => "new_resumes"         %> </td>
         <% end %>
-        <% if is_HR_ADMIN? || is_PM? || is_BD? || is_GM? 
+        <% if is_HR_ADMIN? || is_PM? || is_BD? || is_GM? || is_BenchManager?
                hold       = "hold"
                offered    = "offered"
                joined     = "joined"

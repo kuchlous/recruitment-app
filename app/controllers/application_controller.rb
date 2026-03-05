@@ -127,13 +127,14 @@ require 'will_paginate/array'
     end
   end
 
-  def check_for_HR_or_ADMIN_or_REQMANAGER_or_PM_or_BD_or_GM(msg = "You do not have authorization to access this page")
+  def check_for_HR_ADMIN_REQMANAGER_PM_BD_GM_BM(msg = "You do not have authorization to access this page")
     @logged_employee = get_current_employee
-    unless params[:key] == "26a79dtu" || is_HR? || @logged_employee.is_BD? || @logged_employee.is_ADMIN? || @logged_employee.is_GM? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM?
+    unless params[:key] == "26a79dtu" || is_HR? || @logged_employee.is_BD? || @logged_employee.is_ADMIN? || @logged_employee.is_GM? || @logged_employee.is_REQ_MANAGER? || @logged_employee.is_PM? || @logged_employee.is_BenchManager?
       flash[:warning] = msg
       redirect_to :controller => "home", :action => "actions_page"
     end
   end
+
 
   @@internal_IPs = [
     "192.168.0.1",
@@ -179,6 +180,10 @@ require 'will_paginate/array'
     else
       return false
     end
+  end
+
+  def is_BenchManager?
+    @logged_employee.is_BenchManager? ? @logged_employee : false
   end
 
   def is_GM?
