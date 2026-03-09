@@ -4,7 +4,8 @@ class ReportGeneratorController < ApplicationController
 
   # check_for_login redirects to index for login
   before_action :check_for_login
-  before_action :check_for_TA_HEAD
+  before_action :check_for_TA_HEAD, only: [:reports, :export_reports]
+  before_action :check_for_TA_HEAD_or_TA_LEAD, only: [:ta_owner_reports, :export_ta_owner_reports]
   before_action :set_employee
   before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports]
 
@@ -37,23 +38,23 @@ class ReportGeneratorController < ApplicationController
   end
 
   def ta_owner_reports
-    @report_data = generate_ta_owner_report(@start_date, @end_date)
+    @report_data = generate_ta_owner_report(@start_date, @end_date, @employee)
   end
 
   def export_ta_owner_reports
-    report_data = generate_ta_owner_report(@start_date, @end_date)
+    report_data = generate_ta_owner_report(@start_date, @end_date, @employee)
     
     headers = [
-      'TA Owner', 'Forward Date', 'Candidate Name', 'Requirement Name', 'Skills',
+      'TA Owner', 'Forward Date', 'Candidate Name', 'Requirement Name', 'TA Leads', 'Skills',
       'Company Name', 'Total Experience', 'Current CTC', 'Expected CTC', 'Notice Period',
       'Serving Notice Period (Yes/No)', 'LWD', 'Current Location', 'Preferred Location', 'Link'
     ]
-    
+
     data_rows = report_data.map do |row|
       resume_url = "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}"
       [
         row['ta_owner_name'], row['forward_date'], row['candidate_name'], row['requirement_name'],
-        row['skills'], row['company_name'], row['total_experience'], row['current_ctc'],
+        row['ta_leads'], row['skills'], row['company_name'], row['total_experience'], row['current_ctc'],
         row['expected_ctc'], row['notice_period'], row['serving_notice'], row['lwd'],
         row['current_location'], row['preferred_location'], resume_url
       ]
@@ -69,7 +70,7 @@ class ReportGeneratorController < ApplicationController
   end
 
   def set_date_range
-    @period = params[:period] || 'weekly'
+    @period = params[:period] || 'daily'
     
     case @period
     when 'daily'
@@ -154,10 +155,18 @@ class ReportGeneratorController < ApplicationController
     ActiveRecord::Base.connection.select_all(sql).to_a
   end
 
-  def generate_ta_owner_report(start_date, end_date)
+  def generate_ta_owner_report(start_date, end_date, current_employee = nil)
     start_dt = "#{start_date} 00:00:00"
     end_dt = "#{end_date} 23:59:59"
-    
+
+    ta_lead_filter = if current_employee && !current_employee.is_TA_HEAD? && !current_employee.is_ADMIN?
+      emp_id = current_employee.id.to_i
+      # ta_lead_id: legacy single TA lead per requirement; requirements_ta_leads: HABTM for multiple TA leads
+      " AND requirement.id IS NOT NULL AND (requirement.ta_lead_id = #{emp_id} OR requirement.id IN (SELECT requirement_id FROM requirements_ta_leads WHERE employee_id = #{emp_id}))"
+    else
+      ""
+    end
+
     sql = <<-SQL
       SELECT 
         ta_owner.name AS ta_owner_name,
@@ -165,6 +174,15 @@ class ReportGeneratorController < ApplicationController
         resume.name AS candidate_name,
         requirement.name AS requirement_name,
         requirement.id AS requirement_id,
+        COALESCE((
+          SELECT GROUP_CONCAT(DISTINCT emp.name ORDER BY emp.name SEPARATOR ', ')
+          FROM (
+            SELECT r.ta_lead_id AS employee_id FROM requirements r WHERE r.id = requirement.id AND r.ta_lead_id IS NOT NULL AND r.ta_lead_id != 0
+            UNION
+            SELECT rtl.employee_id FROM requirements_ta_leads rtl WHERE rtl.requirement_id = requirement.id
+          ) AS lead_ids
+          JOIN employees emp ON emp.id = lead_ids.employee_id
+        ), '') AS ta_leads,
         COALESCE(resume.skills, '') AS skills,
         COALESCE(resume.current_company, '') AS company_name,
         CASE 
@@ -186,10 +204,10 @@ class ReportGeneratorController < ApplicationController
       LEFT JOIN forwards_requirements forward_req ON forward.id = forward_req.forward_id
       LEFT JOIN requirements requirement ON forward_req.requirement_id = requirement.id
       LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
-      WHERE resume.ta_owner_id IS NOT NULL
+      WHERE resume.ta_owner_id IS NOT NULL#{ta_lead_filter}
       ORDER BY ta_owner.name, forward.created_at, resume.name
     SQL
-    
+
     ActiveRecord::Base.connection.select_all(sql).to_a
   end
 end
