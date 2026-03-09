@@ -77,6 +77,12 @@ class Employee < ActiveRecord::Base
     /TA_HEAD/.match(employee_type)
   end
 
+  def ta_lead?
+    # ta_lead_id: legacy single TA lead per requirement; ta_leads: HABTM join table for multiple TA leads
+    Requirement.where(ta_lead_id: id).exists? ||
+      Requirement.joins(:ta_leads).where(ta_leads: { id: id }).exists?
+  end
+
   def is_GROUP_HEAD?
     /GROUP_HEAD/.match(employee_type)
   end

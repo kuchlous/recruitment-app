@@ -57,8 +57,11 @@ module ApplicationHelper
   end
 
   def is_TA_HEAD?
-    p 'Reached helper method is_TA_HEAD?'
     get_current_employee.is_TA_HEAD? || is_ADMIN?
+  end
+
+  def is_TA_LEAD?
+    get_current_employee&.ta_lead?
   end
   
 

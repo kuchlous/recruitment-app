@@ -53,6 +53,7 @@
           <th>Forward Date</th>
           <th>Candidate Name</th>
           <th>Requirement Name</th>
+          <th>TA Leads</th>
           <th>Skills</th>
           <th>Company Name</th>
           <th>Total Experience</th>
@@ -104,6 +105,7 @@
             <%= row['requirement_name'] %>
             <% end %>
           </td>
+          <td class="table-cell-secondary"><%= row['ta_leads'] %></td>
           <td class="table-cell-secondary" title="<%= row['skills'] %>"><%= truncate(row['skills'] || '', length: 50) %></td>
           <td class="table-cell-secondary"><%= row['company_name'] %></td>
           <td class="table-cell-secondary"><%= row['total_experience'] %></td>
