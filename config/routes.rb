@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get 'resumes/email_autocomplete', to: 'resumes#email_autocomplete', as: :resumes_email_autocomplete
   get 'resumes/location_autocomplete', to: 'resumes#location_autocomplete', as: :resumes_location_autocomplete
   get 'resumes/get_summary_by_id', to: 'resumes#get_summary_by_id', as: :resumes_get_summary_by_id
+  get 'resumes/get_summaries_by_ids', to: 'resumes#get_summaries_by_ids', as: :resumes_get_summaries_by_ids
 
   get 'employees/autocomplete', to: 'employees#employees_autocomplete', as: :employees_autocomplete
   post 'extract_from_resume', to: 'resumes#extract_from_resume' 

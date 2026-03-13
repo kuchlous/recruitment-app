@@ -3,7 +3,7 @@ class ResumesController < ApplicationController
 
   helper_method :safe_parse_date, :safe_parse_datetime
   
-  before_action :check_for_login, :except => [ :get_summary_by_id, :get_resume_attachment ]
+  before_action :check_for_login, :except => [ :get_summary_by_id, :get_summaries_by_ids, :get_resume_attachment ]
   before_action :check_for_HR_ADMIN_REQMANAGER_PM_BD_GM_BM, :only => [
   :hold,
   :offered,
@@ -83,6 +83,31 @@ class ResumesController < ApplicationController
     else
       flash[:warning] = "No details available for this resume"
       redirect_back(fallback_location: root_path)
+    end
+  end
+
+  def get_summaries_by_ids
+    ids = Array(params[:ids]).map(&:to_i).select(&:positive?)
+    if ids.empty?
+      render text: "Empty resume ids", status: 403
+      return
+    end
+
+    search_results = Resume.search(where: {id: ids}, load: false, per_page: ids.size)
+    result = search_results.each_with_object({}) do |resume_data, hash|
+      hash[resume_data['id']] = {
+        name: resume_data['name'],
+        uniqid: resume_data['uniqid'],
+        status: resume_data['overall_status']&.titleize,
+        summary: resume_data['summary'],
+        email: resume_data['email'],
+        phone: resume_data['phone'],
+        notice: resume_data['notice']
+      }
+    end
+
+    respond_to do |format|
+      format.json { render json: result }
     end
   end
 
@@ -3148,8 +3173,11 @@ class ResumesController < ApplicationController
   ####################################################################################################
   def should_show_ctc?(resume)
     # Check role-based permissions first
+    # For Joined resumes, only HR and admin can see salaries
     if get_current_employee.is_HR? || get_current_employee.is_ADMIN? || get_current_employee.is_GM? || get_current_employee.is_GROUP_HEAD?
       return true
+    elsif resume.status == "JOINED"
+      return false
     end
     
     # Collect all requirements from req_matches and forwards
