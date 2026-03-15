@@ -4,10 +4,25 @@ class ReportGeneratorController < ApplicationController
 
   # check_for_login redirects to index for login
   before_action :check_for_login
-  before_action :check_for_TA_HEAD, only: [:reports, :export_reports, :pipeline_report, :export_pipeline_report, :interview_reports_per_requirement, :export_interview_reports_per_requirement]
-  before_action :check_for_TA_HEAD_or_TA_LEAD, only: [:ta_owner_reports, :export_ta_owner_reports, :interview_reports_ta_owner, :export_interview_reports_ta_owner]
+  before_action :check_for_TA_HEAD, only: [
+    :reports, :export_reports,
+    :pipeline_report, :export_pipeline_report,
+    :interview_reports_per_requirement, :export_interview_reports_per_requirement,
+    :interview_reports_per_panel, :export_interview_reports_per_panel
+  ]
+  before_action :check_for_TA_HEAD_or_TA_LEAD, only: [
+    :ta_owner_reports, :export_ta_owner_reports,
+    :interview_reports_ta_owner, :export_interview_reports_ta_owner
+  ]
   before_action :set_employee
-  before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports, :pipeline_report, :export_pipeline_report, :interview_reports_ta_owner, :export_interview_reports_ta_owner, :interview_reports_per_requirement, :export_interview_reports_per_requirement]
+  before_action :set_date_range, only: [
+    :reports, :export_reports,
+    :ta_owner_reports, :export_ta_owner_reports,
+    :pipeline_report, :export_pipeline_report,
+    :interview_reports_ta_owner, :export_interview_reports_ta_owner,
+    :interview_reports_per_requirement, :export_interview_reports_per_requirement,
+    :interview_reports_per_panel, :export_interview_reports_per_panel
+  ]
 
   def reports
     @report_data = generate_requirements_report(@start_date, @end_date)
@@ -145,6 +160,32 @@ class ReportGeneratorController < ApplicationController
     end
 
     generate_and_send_excel("Interview_Reports_Per_Requirement", headers, data_rows)
+  end
+
+  def interview_reports_per_panel
+    @report_data = generate_interview_per_panel_report(@start_date, @end_date)
+  end
+
+  def export_interview_reports_per_panel
+    report_data = generate_interview_per_panel_report(@start_date, @end_date)
+
+    headers = [
+      'Panel Name', 'Candidate Name', 'Interview Date', 'Interview Time',
+      'Interview Mode', 'Panel Name', 'Link', 'Rounds', 'Status',
+      'Interview Cancelled/Deleted', 'TA Owner'
+    ]
+
+    data_rows = report_data.map do |row|
+      resume_url = row['uniqid_name'].present? ? "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}" : ''
+      [
+        row['panel_name'], row['candidate_name'],
+        helpers.format_report_date(row['interview_date']), helpers.format_interview_time(row['interview_time']),
+        row['interview_mode'], row['panel_name'], resume_url, row['round_label'], row['status_label'],
+        row['cancelled_flag'], row['ta_owner_name']
+      ]
+    end
+
+    generate_and_send_excel("Interview_Reports_Per_Panel", headers, data_rows)
   end
 
   private
@@ -405,6 +446,30 @@ class ReportGeneratorController < ApplicationController
   end
 
   def generate_interview_per_requirement_report(start_date, end_date)
+    rows = base_interview_report_rows(start_date, end_date)
+    rows.sort_by do |r|
+      [
+        (r['requirement_name'] || '').to_s,
+        r['interview_date'].to_s,
+        r['interview_time'].to_s,
+        r['candidate_name'].to_s
+      ]
+    end
+  end
+
+  def generate_interview_per_panel_report(start_date, end_date)
+    rows = base_interview_report_rows(start_date, end_date)
+    rows.sort_by do |r|
+      [
+        (r['panel_name'] || '').to_s,
+        r['interview_date'].to_s,
+        r['interview_time'].to_s,
+        r['candidate_name'].to_s
+      ]
+    end
+  end
+
+  def base_interview_report_rows(start_date, end_date)
     start_dt = start_date
     end_dt = end_date
 
@@ -448,7 +513,6 @@ class ReportGeneratorController < ApplicationController
       LEFT JOIN employees interviewer ON interview.employee_id = interviewer.id
       LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
       WHERE interview.interview_date BETWEEN '#{start_dt}' AND '#{end_dt}'
-      ORDER BY requirement.name, interview.interview_date, interview.interview_time, resume.name
     SQL
 
     ActiveRecord::Base.connection.select_all(sql).to_a

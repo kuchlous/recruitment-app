@@ -38,6 +38,15 @@
         ),
         class: "action-link"
       ) %>
+      <%= link_to(
+        "Interview Reports (Per Panel)",
+        url_for(
+          host: APP_CONFIG['host_name'],
+          controller: "report_generator",
+          action: "interview_reports_per_panel"
+        ),
+        class: "action-link"
+      ) %>
       <% if @report_data && @report_data.any? %>
       <% 
           export_params = { period: @period }
