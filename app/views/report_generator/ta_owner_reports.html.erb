@@ -2,6 +2,7 @@
   <div class="dashboard-header">
     <h2>TA Owner Reports</h2>
     <div class="dashboard-header-links">
+      <% if is_TA_HEAD? %>
       <%= link_to(
         "Requirement Reports",
         url_for(
@@ -20,6 +21,7 @@
         ),
         class: "action-link"
       ) %>
+      <% end %>
       <%= link_to(
         "Interview Reports (TA Owner)",
         url_for(
@@ -88,7 +90,7 @@
         <% @report_data.each do |row| %>
         <tr>
           <td class="table-cell-secondary"><%= row['ta_owner_name'] %></td>
-          <td class="table-cell-secondary"><%= row['forward_date'] %></td>
+          <td class="table-cell-secondary"><%= format_report_date(row['forward_date']) %></td>
           <td class="table-cell-primary">
             <% if row['uniqid_name'] %>
             <%= link_to(

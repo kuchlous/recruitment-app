@@ -706,4 +706,17 @@ module ApplicationHelper
       value.to_s
     end
   end
+
+  def format_report_date(value)
+    return '' if value.blank?
+    if value.respond_to?(:strftime)
+      value.strftime('%d/%m/%Y')
+    elsif value.is_a?(String)
+      Date.parse(value).strftime('%d/%m/%Y')
+    else
+      value.to_s
+    end
+  rescue ArgumentError
+    value.to_s
+  end
 end

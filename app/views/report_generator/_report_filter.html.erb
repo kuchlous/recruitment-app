@@ -34,7 +34,7 @@
 <% if @report_data&.any? %>
 <div style="margin: 20px 0; padding: 10px; background-color: #f8f9fa; border-radius: 4px; font-size: 14px;">
   <strong>Report Period:</strong> <%= @period.capitalize %>
-  (<%= @start_date.strftime('%B %d, %Y') %>
-  <% if @period != 'daily' %> to <%= @end_date.strftime('%B %d, %Y') %><% end %>)
+  (<%= format_report_date(@start_date) %>
+  <% if @period != 'daily' %> to <%= format_report_date(@end_date) %><% end %>)
 </div>
 <% end %>

@@ -53,9 +53,9 @@ class ReportGeneratorController < ApplicationController
     data_rows = report_data.map do |row|
       resume_url = "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}"
       [
-        row['ta_owner_name'], row['forward_date'], row['candidate_name'], row['requirement_name'],
+        row['ta_owner_name'], helpers.format_report_date(row['forward_date']), row['candidate_name'], row['requirement_name'],
         row['ta_leads'], row['skills'], row['company_name'], row['total_experience'], row['current_ctc'],
-        row['expected_ctc'], row['notice_period'], row['serving_notice'], row['lwd'],
+        row['expected_ctc'], row['notice_period'], row['serving_notice'], helpers.format_report_date(row['lwd']),
         row['current_location'], row['preferred_location'], resume_url
       ]
     end
@@ -112,8 +112,8 @@ class ReportGeneratorController < ApplicationController
 
       [
         row['ta_owner_name'], row['candidate_name'], row['requirement_name'],
-        row['interview_date'], row['interview_time'], row['interview_mode'],
-        row['panel_name'], resume_url, row['round_label'], row['status_label'],
+        helpers.format_report_date(row['interview_date']), helpers.format_interview_time(row['interview_time']),
+        row['interview_mode'], row['panel_name'], resume_url, row['round_label'], row['status_label'],
         row['cancelled_flag']
       ]
     end
