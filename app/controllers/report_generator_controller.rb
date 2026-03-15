@@ -80,6 +80,10 @@ class ReportGeneratorController < ApplicationController
     when 'monthly'
       @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_month
       @end_date = @start_date.end_of_month
+    when 'annually'
+      base = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today
+      @start_date = base.beginning_of_year
+      @end_date = base.end_of_year
     else # Default to weekly
       @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : Date.today.beginning_of_week
       @end_date = @start_date + 6.days
