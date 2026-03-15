@@ -5,9 +5,9 @@ class ReportGeneratorController < ApplicationController
   # check_for_login redirects to index for login
   before_action :check_for_login
   before_action :check_for_TA_HEAD, only: [:reports, :export_reports, :pipeline_report, :export_pipeline_report]
-  before_action :check_for_TA_HEAD_or_TA_LEAD, only: [:ta_owner_reports, :export_ta_owner_reports]
+  before_action :check_for_TA_HEAD_or_TA_LEAD, only: [:ta_owner_reports, :export_ta_owner_reports, :interview_reports_ta_owner, :export_interview_reports_ta_owner]
   before_action :set_employee
-  before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports, :pipeline_report, :export_pipeline_report]
+  before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports, :pipeline_report, :export_pipeline_report, :interview_reports_ta_owner, :export_interview_reports_ta_owner]
 
   def reports
     @report_data = generate_requirements_report(@start_date, @end_date)
@@ -88,6 +88,37 @@ class ReportGeneratorController < ApplicationController
     end
 
     generate_and_send_excel("Requirement_Pipeline_Reports", headers, data_rows)
+  end
+
+  def interview_reports_ta_owner
+    @report_data = generate_interview_ta_owner_report(@start_date, @end_date, @employee)
+  end
+
+  def export_interview_reports_ta_owner
+    report_data = generate_interview_ta_owner_report(@start_date, @end_date, @employee)
+
+    headers = [
+      'TA Owner', 'Candidate Name', 'Requirement Name', 'Interview Date', 'Interview Time',
+      'Interview Mode', 'Panel Name', 'Apps Link', 'Rounds (L1/L2/L3)', 'Status',
+      'Interview Cancelled/Deleted'
+    ]
+
+    data_rows = report_data.map do |row|
+      resume_url = if row['uniqid_name'].present?
+        "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}"
+      else
+        ''
+      end
+
+      [
+        row['ta_owner_name'], row['candidate_name'], row['requirement_name'],
+        row['interview_date'], row['interview_time'], row['interview_mode'],
+        row['panel_name'], resume_url, row['round_label'], row['status_label'],
+        row['cancelled_flag']
+      ]
+    end
+
+    generate_and_send_excel("Interview_Reports_TA_Owner", headers, data_rows)
   end
 
   private
@@ -284,6 +315,64 @@ class ReportGeneratorController < ApplicationController
       WHERE requirement.status = 'OPEN'
       GROUP BY requirement.id, requirement.name, requirement.skill, grp.id, grp.name
       ORDER BY grp.name, requirement.name
+    SQL
+
+    ActiveRecord::Base.connection.select_all(sql).to_a
+  end
+
+  def generate_interview_ta_owner_report(start_date, end_date, current_employee = nil)
+    start_dt = start_date
+    end_dt = end_date
+
+    ta_lead_filter = if current_employee && !current_employee.is_TA_HEAD? && !current_employee.is_ADMIN?
+      emp_id = current_employee.id.to_i
+      " AND requirement.id IS NOT NULL AND (requirement.ta_lead_id = #{emp_id} OR requirement.id IN (SELECT requirement_id FROM requirements_ta_leads WHERE employee_id = #{emp_id}))"
+    else
+      ""
+    end
+
+    sql = <<-SQL
+      SELECT
+        ta_owner.name AS ta_owner_name,
+        resume.name AS candidate_name,
+        requirement.name AS requirement_name,
+        interview.interview_date,
+        interview.interview_time,
+        CASE interview.itype
+          WHEN 'TELECONF' THEN 'MS Teams Audio'
+          WHEN 'VIDEOCONF' THEN 'MS Teams Video'
+          WHEN 'TELEPHONE' THEN 'Telephone'
+          ELSE 'Face to Face'
+        END AS interview_mode,
+        interviewer.name AS panel_name,
+        uniqid.name AS uniqid_name,
+        CASE
+          WHEN interview.interview_level = 1 THEN 'L1'
+          WHEN interview.interview_level = 2 THEN 'L2'
+          WHEN interview.interview_level = 3 THEN 'L3'
+          ELSE ''
+        END AS round_label,
+        CASE interview.status
+          WHEN 'DECLINED' THEN 'Declined'
+          WHEN 'CANDIDATE_NO_SHOW' THEN 'Candidate No Show'
+          WHEN 'PANEL_NO_SHOW' THEN 'Panel No Show'
+          ELSE 'Scheduled'
+        END AS status_label,
+        CASE
+          WHEN interview.status IN ('DECLINED', 'CANDIDATE_NO_SHOW', 'PANEL_NO_SHOW') THEN 'Yes'
+          ELSE 'No'
+        END AS cancelled_flag
+      FROM interviews interview
+      INNER JOIN req_matches req_match ON interview.req_match_id = req_match.id
+      INNER JOIN resumes resume ON req_match.resume_id = resume.id
+      LEFT JOIN requirements requirement ON req_match.requirement_id = requirement.id
+      LEFT JOIN employees ta_owner ON resume.ta_owner_id = ta_owner.id
+      LEFT JOIN employees interviewer ON interview.employee_id = interviewer.id
+      LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
+      WHERE resume.ta_owner_id IS NOT NULL
+        AND interview.interview_date BETWEEN '#{start_dt}' AND '#{end_dt}'
+        #{ta_lead_filter}
+      ORDER BY ta_owner.name, interview.interview_date, interview.interview_time, resume.name
     SQL
 
     ActiveRecord::Base.connection.select_all(sql).to_a
