@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   match 'reports/export_weekly', to: 'report_generator#export_reports', via: :get, as: :export_reports_weekly
   match 'reports/ta_owner', to: 'report_generator#ta_owner_reports', via: :get, as: :reports_ta_owner
   match 'reports/export_ta_owner', to: 'report_generator#export_ta_owner_reports', via: :get, as: :export_reports_ta_owner
+  match 'reports/pipeline', to: 'report_generator#pipeline_report', via: :get, as: :reports_pipeline
+  match 'reports/export_pipeline', to: 'report_generator#export_pipeline_report', via: :get, as: :export_reports_pipeline
   match 'designations/index', to: 'designations#index'              , via: :get
   match 'groups/index', to: 'groups#index'                          , via: :get
   match 'portals/index', to: 'portals#index'                        , via: :get

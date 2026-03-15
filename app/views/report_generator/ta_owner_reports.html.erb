@@ -11,6 +11,15 @@
         ),
         class: "action-link"
       ) %>
+      <%= link_to(
+        "Requirement Pipeline Reports",
+        url_for(
+          host: APP_CONFIG['host_name'],
+          controller: "report_generator",
+          action: "pipeline_report"
+        ),
+        class: "action-link"
+      ) %>
       <% if @report_data && @report_data.any? %>
       <% 
           export_params = { period: @period }

@@ -4,10 +4,10 @@ class ReportGeneratorController < ApplicationController
 
   # check_for_login redirects to index for login
   before_action :check_for_login
-  before_action :check_for_TA_HEAD, only: [:reports, :export_reports]
+  before_action :check_for_TA_HEAD, only: [:reports, :export_reports, :pipeline_report, :export_pipeline_report]
   before_action :check_for_TA_HEAD_or_TA_LEAD, only: [:ta_owner_reports, :export_ta_owner_reports]
   before_action :set_employee
-  before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports]
+  before_action :set_date_range, only: [:reports, :export_reports, :ta_owner_reports, :export_ta_owner_reports, :pipeline_report, :export_pipeline_report]
 
   def reports
     @report_data = generate_requirements_report(@start_date, @end_date)
@@ -61,6 +61,33 @@ class ReportGeneratorController < ApplicationController
     end
 
     generate_and_send_excel("TA_Owner_Reports", headers, data_rows)
+  end
+
+  def pipeline_report
+    @report_data = generate_pipeline_report(@start_date, @end_date)
+  end
+
+  def export_pipeline_report
+    report_data = generate_pipeline_report(@start_date, @end_date)
+
+    headers = [
+      'TA Owner', 'Group Name', 'Requirement Name', 'Forwarded', 'Skills',
+      'Shortlisted', 'No of Candidates Interviewed', 'Total Rounds of Interviews', 'Total EHD Sent',
+      'Engineering Select', 'HAC', 'Total YTO', 'Offered', 'Not Accepted', 'Joined',
+      'Not Joined', 'Rejected'
+    ]
+
+    data_rows = report_data.map do |row|
+      [
+        row['ta_owner_name'], row['group_name'], row['requirement_name'], row['total_forwards'],
+        row['skills'],
+        row['total_shortlists'], row['total_interviews'], row['total_rounds'], row['total_ehd'],
+        row['total_eng_select'], row['total_hac'], row['total_yto'], row['total_offered'],
+        row['total_not_accepted'], row['total_joined'], row['total_not_joined'], row['total_rejects']
+      ]
+    end
+
+    generate_and_send_excel("Requirement_Pipeline_Reports", headers, data_rows)
   end
 
   private
@@ -210,6 +237,53 @@ class ReportGeneratorController < ApplicationController
       LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
       WHERE resume.ta_owner_id IS NOT NULL#{ta_lead_filter}
       ORDER BY ta_owner.name, forward.created_at, resume.name
+    SQL
+
+    ActiveRecord::Base.connection.select_all(sql).to_a
+  end
+
+  def generate_pipeline_report(start_date, end_date)
+    start_dt = "#{start_date} 00:00:00"
+    end_dt = "#{end_date} 23:59:59"
+
+    sql = <<-SQL
+      SELECT
+        COALESCE(grp.name, 'N/A') AS group_name,
+        requirement.id AS requirement_id,
+        requirement.name AS requirement_name,
+        COALESCE(requirement.skill, '') AS skills,
+        COALESCE((
+          SELECT GROUP_CONCAT(DISTINCT emp.name ORDER BY emp.name SEPARATOR ', ')
+          FROM (
+            SELECT r.ta_lead_id AS employee_id FROM requirements r WHERE r.id = requirement.id AND r.ta_lead_id IS NOT NULL AND r.ta_lead_id != 0
+            UNION
+            SELECT rtl.employee_id FROM requirements_ta_leads rtl WHERE rtl.requirement_id = requirement.id
+          ) AS lead_ids
+          JOIN employees emp ON emp.id = lead_ids.employee_id
+        ), 'N/A') AS ta_owner_name,
+        COALESCE(SUM(CASE WHEN forward.id IS NOT NULL THEN 1 ELSE 0 END), 0) AS total_forwards,
+        COALESCE(SUM(CASE WHEN req_match.status = 'SHORTLISTED' AND req_match.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_shortlists,
+        COALESCE(COUNT(DISTINCT CASE WHEN interview.id IS NOT NULL AND interview.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN req_match.resume_id END), 0) AS total_interviews,
+        COALESCE(COUNT(CASE WHEN interview.id IS NOT NULL AND interview.created_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 END), 0) AS total_rounds,
+        COALESCE(SUM(CASE WHEN req_match.status = 'EHD' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_ehd,
+        COALESCE(SUM(CASE WHEN req_match.status = 'ENG_SELECT' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_eng_select,
+        COALESCE(SUM(CASE WHEN req_match.status = 'HAC' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_hac,
+        COALESCE(SUM(CASE WHEN req_match.status = 'YTO' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_yto,
+        COALESCE(SUM(CASE WHEN req_match.status = 'OFFERED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_offered,
+        COALESCE(SUM(CASE WHEN req_match.status = 'N_ACCEPTED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_accepted,
+        COALESCE(COUNT(DISTINCT CASE WHEN resume.overall_status = 'JOINED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN req_match.id END), 0) AS total_joined,
+        COALESCE(SUM(CASE WHEN req_match.status = 'NOT JOINED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_not_joined,
+        COALESCE(SUM(CASE WHEN req_match.status = 'REJECTED' AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}' THEN 1 ELSE 0 END), 0) AS total_rejects
+      FROM requirements requirement
+      LEFT JOIN `groups` grp ON requirement.group_id = grp.id
+      LEFT JOIN req_matches req_match ON requirement.id = req_match.requirement_id
+      LEFT JOIN resumes resume ON req_match.resume_id = resume.id
+      LEFT JOIN interviews interview ON interview.req_match_id = req_match.id
+      LEFT JOIN forwards_requirements forward_req ON requirement.id = forward_req.requirement_id
+      LEFT JOIN forwards forward ON forward.id = forward_req.forward_id AND forward.created_at BETWEEN '#{start_dt}' AND '#{end_dt}'
+      WHERE requirement.status = 'OPEN'
+      GROUP BY requirement.id, requirement.name, requirement.skill, grp.id, grp.name
+      ORDER BY grp.name, requirement.name
     SQL
 
     ActiveRecord::Base.connection.select_all(sql).to_a
