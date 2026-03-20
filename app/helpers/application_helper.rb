@@ -696,4 +696,27 @@ module ApplicationHelper
     end
   end
 
+  def format_interview_time(value)
+    return '' if value.blank?
+    if value.respond_to?(:strftime)
+      value.strftime('%H:%M')
+    elsif value.is_a?(String)
+      value.length >= 5 ? value[0, 5] : value
+    else
+      value.to_s
+    end
+  end
+
+  def format_report_date(value)
+    return '' if value.blank?
+    if value.respond_to?(:strftime)
+      value.strftime('%d/%m/%Y')
+    elsif value.is_a?(String)
+      Date.parse(value).strftime('%d/%m/%Y')
+    else
+      value.to_s
+    end
+  rescue ArgumentError
+    value.to_s
+  end
 end
