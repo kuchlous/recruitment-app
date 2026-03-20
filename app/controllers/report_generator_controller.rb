@@ -12,7 +12,8 @@ class ReportGeneratorController < ApplicationController
   ]
   before_action :check_for_TA_HEAD_or_TA_LEAD, only: [
     :ta_owner_reports, :export_ta_owner_reports,
-    :interview_reports_ta_owner, :export_interview_reports_ta_owner
+    :interview_reports_ta_owner, :export_interview_reports_ta_owner,
+    :hiring_decision_report, :export_hiring_decision_report
   ]
   before_action :set_employee
   before_action :set_date_range, only: [
@@ -21,7 +22,8 @@ class ReportGeneratorController < ApplicationController
     :pipeline_report, :export_pipeline_report,
     :interview_reports_ta_owner, :export_interview_reports_ta_owner,
     :interview_reports_per_requirement, :export_interview_reports_per_requirement,
-    :interview_reports_per_panel, :export_interview_reports_per_panel
+    :interview_reports_per_panel, :export_interview_reports_per_panel,
+    :hiring_decision_report, :export_hiring_decision_report
   ]
 
   def reports
@@ -134,6 +136,33 @@ class ReportGeneratorController < ApplicationController
     end
 
     generate_and_send_excel("Interview_Reports_TA_Owner", headers, data_rows)
+  end
+
+  def hiring_decision_report
+    @report_data = generate_hiring_decision_report(@start_date, @end_date, @employee)
+  end
+
+  def export_hiring_decision_report
+    report_data = generate_hiring_decision_report(@start_date, @end_date, @employee)
+
+    headers = [
+      'TA Owner', 'Candidate Name', 'Exp', 'Requirement Name', 'Skill', 'Current Company', 'Link',
+      'EHD Sent Date', 'Notice Period', 'Serving Notice (Yes/No)', 'LWD'
+    ]
+
+    data_rows = report_data.map do |row|
+      resume_url = row['uniqid_name'].present? ? "#{APP_CONFIG['host_name']}/resumes/show/#{row['uniqid_name']}" : ''
+      [
+        row['ta_owner_name'], row['candidate_name'], row['exp'],
+        row['requirement_name'], row['skill'], row['current_company'], resume_url,
+        helpers.format_report_date(row['ehd_sent_date']),
+        row['notice_period'],
+        row['serving_notice'],
+        helpers.format_report_date(row['lwd'])
+      ]
+    end
+
+    generate_and_send_excel("Hiring_Decision_Report", headers, data_rows)
   end
 
   def interview_reports_per_requirement
@@ -513,6 +542,50 @@ class ReportGeneratorController < ApplicationController
       LEFT JOIN employees interviewer ON interview.employee_id = interviewer.id
       LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
       WHERE interview.interview_date BETWEEN '#{start_dt}' AND '#{end_dt}'
+    SQL
+
+    ActiveRecord::Base.connection.select_all(sql).to_a
+  end
+
+  def generate_hiring_decision_report(start_date, end_date, current_employee = nil)
+    start_dt = "#{start_date} 00:00:00"
+    end_dt = "#{end_date} 23:59:59"
+
+    ta_lead_filter = if current_employee && !current_employee.is_TA_HEAD? && !current_employee.is_ADMIN?
+      emp_id = current_employee.id.to_i
+      " AND (requirement.ta_lead_id = #{emp_id} OR requirement.id IN (SELECT requirement_id FROM requirements_ta_leads WHERE employee_id = #{emp_id}))"
+    else
+      ""
+    end
+
+    sql = <<-SQL
+      SELECT
+        COALESCE(ta_owner.name, '') AS ta_owner_name,
+        resume.name AS candidate_name,
+        CASE
+          WHEN resume.exp_in_months IS NOT NULL THEN CONCAT(FLOOR(resume.exp_in_months / 12), '.', resume.exp_in_months % 12, ' years')
+          WHEN resume.experience IS NOT NULL THEN resume.experience
+          ELSE ''
+        END AS exp,
+        COALESCE(requirement.name, '') AS requirement_name,
+        requirement.id AS requirement_id,
+        COALESCE(requirement.skill, '') AS skill,
+        COALESCE(resume.current_company, '') AS current_company,
+        uniqid.name AS uniqid_name,
+        DATE(req_match.updated_at) AS ehd_sent_date,
+        COALESCE(resume.notice, 0) AS notice_period,
+        CASE WHEN resume.serving_notice_period = 1 THEN 'Yes' ELSE 'No' END AS serving_notice,
+        resume.last_working_day AS lwd
+      FROM req_matches req_match
+      INNER JOIN resumes resume ON req_match.resume_id = resume.id
+      INNER JOIN requirements requirement ON req_match.requirement_id = requirement.id
+      LEFT JOIN employees ta_owner ON resume.ta_owner_id = ta_owner.id
+      LEFT JOIN uniqids uniqid ON resume.uniqid_id = uniqid.id
+      WHERE req_match.status = 'EHD'
+        AND req_match.updated_at BETWEEN '#{start_dt}' AND '#{end_dt}'
+        AND resume.ta_owner_id IS NOT NULL
+        #{ta_lead_filter}
+      ORDER BY ta_owner.name, req_match.updated_at, resume.name
     SQL
 
     ActiveRecord::Base.connection.select_all(sql).to_a

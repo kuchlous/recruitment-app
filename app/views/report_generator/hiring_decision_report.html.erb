@@ -1,7 +1,8 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h2>Interview Reports (Per Requirement)</h2>
+    <h2>Hiring Decision Report</h2>
     <div class="dashboard-header-links">
+      <% if is_TA_HEAD? %>
       <%= link_to(
         "Requirement Reports",
         url_for(
@@ -20,6 +21,7 @@
         ),
         class: "action-link"
       ) %>
+      <% end %>
       <%= link_to(
         "TA Owner Reports",
         url_for(
@@ -38,24 +40,6 @@
         ),
         class: "action-link"
       ) %>
-      <%= link_to(
-        "Interview Reports (Per Panel)",
-        url_for(
-          host: APP_CONFIG['host_name'],
-          controller: "report_generator",
-          action: "interview_reports_per_panel"
-        ),
-        class: "action-link"
-      ) %>
-      <%= link_to(
-        "Hiring Decision Report",
-        url_for(
-          host: APP_CONFIG['host_name'],
-          controller: "report_generator",
-          action: "hiring_decision_report"
-        ),
-        class: "action-link"
-      ) %>
       <% if @report_data && @report_data.any? %>
       <% 
           export_params = { period: @period }
@@ -70,7 +54,7 @@
         url_for(
           host: APP_CONFIG['host_name'],
           controller: "report_generator",
-          action: "export_interview_reports_per_requirement",
+          action: "export_hiring_decision_report",
           **export_params
         ),
         class: "action-link success",
@@ -85,7 +69,7 @@
     path: url_for(
       host: APP_CONFIG['host_name'],
       controller: "report_generator",
-      action: "interview_reports_per_requirement"
+      action: "hiring_decision_report"
     )
   ) %>
 
@@ -94,39 +78,23 @@
     <table class="modern-table">
       <thead>
         <tr>
-          <th>Requirement Name</th>
-          <th>Candidate Name</th>
-          <th>Interview Date</th>
-          <th>Interview Time</th>
-          <th>Interview Mode</th>
-          <th>Panel Name</th>
-          <th>Link</th>
-          <th>Rounds</th>
-          <th>Status</th>
-          <th>Interview Cancelled/Deleted</th>
           <th>TA Owner</th>
+          <th>Candidate Name</th>
+          <th>Exp</th>
+          <th>Requirement Name</th>
+          <th>Skill</th>
+          <th>Current Company</th>
+          <th>Link</th>
+          <th>EHD Sent Date</th>
+          <th>Notice Period</th>
+          <th>Serving Notice (Yes/No)</th>
+          <th>LWD</th>
         </tr>
       </thead>
       <tbody>
         <% @report_data.each do |row| %>
         <tr>
-          <td class="table-cell-primary">
-            <% if row['requirement_id'].present? %>
-              <%= link_to(
-                row['requirement_name'].presence || 'N/A',
-                url_for(
-                  host: APP_CONFIG['host_name'],
-                  controller: "requirements",
-                  action: "show",
-                  id: row['requirement_id']
-                ),
-                target: "_blank",
-                class: "action-link"
-              ) %>
-            <% else %>
-              <%= row['requirement_name'].presence || 'N/A' %>
-            <% end %>
-          </td>
+          <td class="table-cell-secondary"><%= row['ta_owner_name'] %></td>
           <td class="table-cell-primary">
             <% if row['uniqid_name'].present? %>
               <%= link_to(
@@ -144,10 +112,28 @@
               <%= row['candidate_name'] %>
             <% end %>
           </td>
-          <td class="table-cell-secondary"><%= format_report_date(row['interview_date']) %></td>
-          <td class="table-cell-secondary"><%= row['interview_time'].present? ? format_interview_time(row['interview_time']) : '' %></td>
-          <td class="table-cell-secondary"><%= row['interview_mode'] %></td>
-          <td class="table-cell-secondary"><%= row['panel_name'] %></td>
+          <td class="table-cell-secondary"><%= row['exp'] %></td>
+          <td class="table-cell-primary">
+            <% if row['requirement_id'].present? %>
+              <%= link_to(
+                row['requirement_name'].presence || 'N/A',
+                url_for(
+                  host: APP_CONFIG['host_name'],
+                  controller: "requirements",
+                  action: "show",
+                  id: row['requirement_id']
+                ),
+                target: "_blank",
+                class: "action-link"
+              ) %>
+            <% else %>
+              <%= row['requirement_name'].presence || 'N/A' %>
+            <% end %>
+          </td>
+          <td class="table-cell-secondary" title="<%= h(row['skill']) %>">
+            <%= truncate(row['skill'].to_s, length: 100) %>
+          </td>
+          <td class="table-cell-secondary"><%= row['current_company'] %></td>
           <td class="table-cell-primary">
             <% if row['uniqid_name'].present? %>
               <%= link_to(
@@ -165,10 +151,10 @@
               —
             <% end %>
           </td>
-          <td class="table-cell-secondary"><%= row['round_label'] %></td>
-          <td class="table-cell-secondary"><%= row['status_label'] %></td>
-          <td class="table-cell-secondary"><%= row['cancelled_flag'] %></td>
-          <td class="table-cell-secondary"><%= row['ta_owner_name'] %></td>
+          <td class="table-cell-secondary"><%= format_report_date(row['ehd_sent_date']) %></td>
+          <td class="table-cell-secondary"><%= row['notice_period'] %></td>
+          <td class="table-cell-secondary"><%= row['serving_notice'] %></td>
+          <td class="table-cell-secondary"><%= format_report_date(row['lwd']) %></td>
         </tr>
         <% end %>
       </tbody>

@@ -48,6 +48,8 @@ Rails.application.routes.draw do
   match 'reports/export_interview_per_requirement', to: 'report_generator#export_interview_reports_per_requirement', via: :get, as: :export_reports_interview_per_requirement
   match 'reports/interview_per_panel', to: 'report_generator#interview_reports_per_panel', via: :get, as: :reports_interview_per_panel
   match 'reports/export_interview_per_panel', to: 'report_generator#export_interview_reports_per_panel', via: :get, as: :export_reports_interview_per_panel
+  match 'reports/hiring_decision', to: 'report_generator#hiring_decision_report', via: :get, as: :reports_hiring_decision
+  match 'reports/export_hiring_decision', to: 'report_generator#export_hiring_decision_report', via: :get, as: :export_reports_hiring_decision
   match 'designations/index', to: 'designations#index'              , via: :get
   match 'groups/index', to: 'groups#index'                          , via: :get
   match 'portals/index', to: 'portals#index'                        , via: :get
