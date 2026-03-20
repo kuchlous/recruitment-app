@@ -3,7 +3,7 @@ class ResumesController < ApplicationController
 
   helper_method :safe_parse_date, :safe_parse_datetime
   
-  before_action :check_for_login, :except => [ :get_summary_by_id, :get_summaries_by_ids, :get_resume_attachment ]
+  before_action :check_for_login, :except => [ :get_summary_by_id, :get_summaries_by_ids, :get_resume_attachment, :get_resume_attachments_by_ids ]
   before_action :check_for_HR_ADMIN_REQMANAGER_PM_BD_GM_BM, :only => [
   :hold,
   :offered,
@@ -1634,12 +1634,28 @@ class ResumesController < ApplicationController
 
   end
 
+  def get_resume_attachments_by_ids
+    ids = Array(params[:ids]).map(&:to_i).select(&:positive?)
+    if ids.empty?
+      render text: "Empty resume ids", status: 403
+      return
+    end
+
+    result = Resume.where(id: ids).each_with_object({}) do |r, hash|
+      hash[r.id] = r.resume_path.map do |path|
+        { file_path: url_for(action: 'download_resume', name: path), type: File.extname(path)[1..] }
+      end
+    end
+
+    render json: result
+  end
+
   def get_resume_attachment
     r = Resume.find(params[:id])
     res = r.resume_path.map do |path|
               {"file_path": url_for(:action => 'download_resume', :name => path), "type":File.extname(path)[1..-1]}
     end
-    render json: res   
+    render json: res
   end
 
   ####################################################################################################
