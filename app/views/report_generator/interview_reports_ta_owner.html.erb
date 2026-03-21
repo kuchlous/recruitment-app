@@ -1,7 +1,17 @@
 <div class="dashboard-container">
   <div class="dashboard-header">
-    <h2>Reports</h2>
+    <h2>Interview Reports (TA Owner)</h2>
     <div class="dashboard-header-links">
+      <% if is_TA_HEAD? %>
+      <%= link_to(
+        "Requirement Reports",
+        url_for(
+          host: APP_CONFIG['host_name'],
+          controller: "report_generator",
+          action: "reports"
+        ),
+        class: "action-link"
+      ) %>
       <%= link_to(
         "Requirement Pipeline Reports",
         url_for(
@@ -11,21 +21,13 @@
         ),
         class: "action-link"
       ) %>
+      <% end %>
       <%= link_to(
         "TA Owner Reports",
         url_for(
           host: APP_CONFIG['host_name'],
           controller: "report_generator",
           action: "ta_owner_reports"
-        ),
-        class: "action-link"
-      ) %>
-      <%= link_to(
-        "Interview Reports (TA Owner)",
-        url_for(
-          host: APP_CONFIG['host_name'],
-          controller: "report_generator",
-          action: "interview_reports_ta_owner"
         ),
         class: "action-link"
       ) %>
@@ -70,7 +72,7 @@
         url_for(
           host: APP_CONFIG['host_name'],
           controller: "report_generator",
-          action: "export_reports",
+          action: "export_interview_reports_ta_owner",
           **export_params
         ),
         class: "action-link success",
@@ -85,7 +87,7 @@
     path: url_for(
       host: APP_CONFIG['host_name'],
       controller: "report_generator",
-      action: "reports"
+      action: "interview_reports_ta_owner"
     )
   ) %>
 
@@ -94,57 +96,65 @@
     <table class="modern-table">
       <thead>
         <tr>
-          <th>Group Name</th>
+          <th>TA Owner</th>
+          <th>Candidate Name</th>
           <th>Requirement Name</th>
-          <th>Total Forward</th>
-          <th>Total Shortlists</th>
-          <th>Total Interviews (Candidates)</th>
-          <th>Total L1 Completed</th>
-          <th>Total L2 Completed</th>
-          <th>Total L3 Completed</th>
-          <th>Total YTO</th>
-          <th>Total HAC</th>
-          <th>Total Hold</th>
-          <th>Total Offered</th>
-          <th>Total Not Accepted</th>
-          <th>Total Joined</th>
-          <th>Total Not Joined</th>
-          <th>Total Rejects</th>
-          <th>TA Manager</th>
+          <th>Interview Date</th>
+          <th>Interview Time</th>
+          <th>Interview Mode</th>
+          <th>Panel Name</th>
+          <th>Apps Link</th>
+          <th>Rounds (L1/L2/L3)</th>
+          <th>Status</th>
+          <th>Interview Cancelled/Deleted</th>
         </tr>
       </thead>
       <tbody>
         <% @report_data.each do |row| %>
         <tr>
-          <td class="table-cell-secondary"><%= row['group_name'] %></td>
+          <td class="table-cell-secondary"><%= row['ta_owner_name'] %></td>
           <td class="table-cell-primary">
-            <%= link_to(
-              row['requirement_name'],
-              url_for(
-                host: APP_CONFIG['host_name'],
-                controller: "requirements",
-                action: "show",
-                id: row['requirement_id']
-              ),
-              target: "_blank",
-              class: "action-link"
-            ) %>
+            <% if row['uniqid_name'].present? %>
+              <%= link_to(
+                row['candidate_name'],
+                url_for(
+                  host: APP_CONFIG['host_name'],
+                  controller: "resumes",
+                  action: "show",
+                  id: row['uniqid_name']
+                ),
+                target: "_blank",
+                class: "action-link"
+              ) %>
+            <% else %>
+              <%= row['candidate_name'] %>
+            <% end %>
           </td>
-          <td class="table-cell-secondary"><%= row['total_forwards'] %></td>
-          <td class="table-cell-secondary"><%= row['total_shortlists'] %></td>
-          <td class="table-cell-secondary"><%= row['total_interviews'] %></td>
-          <td class="table-cell-secondary"><%= row['total_l1_completed'] %></td>
-          <td class="table-cell-secondary"><%= row['total_l2_completed'] %></td>
-          <td class="table-cell-secondary"><%= row['total_l3_completed'] %></td>
-          <td class="table-cell-secondary"><%= row['total_yto'] %></td>
-          <td class="table-cell-secondary"><%= row['total_hac'] %></td>
-          <td class="table-cell-secondary"><%= row['total_hold'] %></td>
-          <td class="table-cell-secondary"><%= row['total_offered'] %></td>
-          <td class="table-cell-secondary"><%= row['total_not_accepted'] %></td>
-          <td class="table-cell-secondary"><%= row['total_joined'] %></td>
-          <td class="table-cell-secondary"><%= row['total_not_joined'] %></td>
-          <td class="table-cell-secondary"><%= row['total_rejects'] %></td>
-          <td class="table-cell-secondary"><%= row['ta_manager_name'] %></td>
+          <td class="table-cell-secondary"><%= row['requirement_name'] %></td>
+          <td class="table-cell-secondary"><%= format_report_date(row['interview_date']) %></td>
+          <td class="table-cell-secondary"><%= row['interview_time'].present? ? format_interview_time(row['interview_time']) : '' %></td>
+          <td class="table-cell-secondary"><%= row['interview_mode'] %></td>
+          <td class="table-cell-secondary"><%= row['panel_name'] %></td>
+          <td class="table-cell-primary">
+            <% if row['uniqid_name'].present? %>
+              <%= link_to(
+                "View",
+                url_for(
+                  host: APP_CONFIG['host_name'],
+                  controller: "resumes",
+                  action: "show",
+                  id: row['uniqid_name']
+                ),
+                target: "_blank",
+                class: "action-link"
+              ) %>
+            <% else %>
+              —
+            <% end %>
+          </td>
+          <td class="table-cell-secondary"><%= row['round_label'] %></td>
+          <td class="table-cell-secondary"><%= row['status_label'] %></td>
+          <td class="table-cell-secondary"><%= row['cancelled_flag'] %></td>
         </tr>
         <% end %>
       </tbody>
