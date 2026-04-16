@@ -191,6 +191,11 @@
   flex-wrap: wrap;
 }
 
+.table-actions.table-actions--toolbar-end {
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
 .no-show-buttons {
   display: flex;
   justify-content: space-evenly;
@@ -586,6 +591,10 @@
   .table-actions {
     flex-direction: column;
     gap: 4px;
+  }
+
+  .table-actions.table-actions--toolbar-end {
+    align-items: flex-end;
   }
   
   .action-link {
