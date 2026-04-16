@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 module ReportGeneratorHelper
+  def interview_reports_per_requirement_grid_rows(report_data)
+    Array(report_data).map do |row|
+      interview_time_raw = row['interview_time']
+      {
+        requirement_name: (row['requirement_name'].presence || 'N/A').to_s,
+        requirement_id: row['requirement_id'],
+        candidate_name: row['candidate_name'].to_s,
+        uniqid_name: row['uniqid_name'].to_s,
+        interview_date: format_report_date(row['interview_date']),
+        interview_time: interview_time_raw.present? ? format_interview_time(interview_time_raw) : '',
+        interview_mode: row['interview_mode'].to_s,
+        panel_name: row['panel_name'].to_s,
+        round_label: row['round_label'].to_s,
+        status_label: row['status_label'].to_s,
+        cancelled_flag: row['cancelled_flag'].to_s,
+        ta_owner_name: row['ta_owner_name'].to_s
+      }
+    end
+  end
+
   def interview_reports_ta_owner_grid_rows(report_data)
     Array(report_data).map do |row|
       interview_time_raw = row['interview_time']
