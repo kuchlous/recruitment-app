@@ -75,90 +75,12 @@
 
   <div class="table-container">
     <% if @report_data && @report_data.any? %>
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>TA Owner</th>
-          <th>Candidate Name</th>
-          <th>Exp</th>
-          <th>Requirement Name</th>
-          <th>Skill</th>
-          <th>Current Company</th>
-          <th>Link</th>
-          <th>EHD Sent Date</th>
-          <th>Notice Period</th>
-          <th>Serving Notice (Yes/No)</th>
-          <th>LWD</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @report_data.each do |row| %>
-        <tr>
-          <td class="table-cell-secondary"><%= row['ta_owner_name'] %></td>
-          <td class="table-cell-primary">
-            <% if row['uniqid_name'].present? %>
-              <%= link_to(
-                row['candidate_name'],
-                url_for(
-                  host: APP_CONFIG['host_name'],
-                  controller: "resumes",
-                  action: "show",
-                  id: row['uniqid_name']
-                ),
-                target: "_blank",
-                class: "action-link"
-              ) %>
-            <% else %>
-              <%= row['candidate_name'] %>
-            <% end %>
-          </td>
-          <td class="table-cell-secondary"><%= row['exp'] %></td>
-          <td class="table-cell-primary">
-            <% if row['requirement_id'].present? %>
-              <%= link_to(
-                row['requirement_name'].presence || 'N/A',
-                url_for(
-                  host: APP_CONFIG['host_name'],
-                  controller: "requirements",
-                  action: "show",
-                  id: row['requirement_id']
-                ),
-                target: "_blank",
-                class: "action-link"
-              ) %>
-            <% else %>
-              <%= row['requirement_name'].presence || 'N/A' %>
-            <% end %>
-          </td>
-          <td class="table-cell-secondary" title="<%= h(row['skill']) %>">
-            <%= truncate(row['skill'].to_s, length: 100) %>
-          </td>
-          <td class="table-cell-secondary"><%= row['current_company'] %></td>
-          <td class="table-cell-primary">
-            <% if row['uniqid_name'].present? %>
-              <%= link_to(
-                "View",
-                url_for(
-                  host: APP_CONFIG['host_name'],
-                  controller: "resumes",
-                  action: "show",
-                  id: row['uniqid_name']
-                ),
-                target: "_blank",
-                class: "action-link"
-              ) %>
-            <% else %>
-              —
-            <% end %>
-          </td>
-          <td class="table-cell-secondary"><%= format_report_date(row['ehd_sent_date']) %></td>
-          <td class="table-cell-secondary"><%= row['notice_period'] %></td>
-          <td class="table-cell-secondary"><%= row['serving_notice'] %></td>
-          <td class="table-cell-secondary"><%= format_report_date(row['lwd']) %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="table-actions table-actions--toolbar-end">
+      <button type="button" id="hiring-decision-clear-filters" class="form-submit-btn">Clear all filters</button>
+      <button type="button" id="hiring-decision-export-csv" class="form-submit-btn">Export filtered (CSV)</button>
+    </div>
+    <script type="application/json" id="hiring-decision-reports-json"><%= raw hiring_decision_report_grid_rows(@report_data).to_json %></script>
+    <div id="hiringDecisionReportsGrid" class="ag-theme-alpine" style="height: 560px; width: 100%;"></div>
     <% else %>
     <p style="text-align: center; padding: 40px; color: #6c757d; font-size: 16px;">No data available for the selected period.</p>
     <% end %>

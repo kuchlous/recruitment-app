@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 module ReportGeneratorHelper
+  def hiring_decision_report_grid_rows(report_data)
+    Array(report_data).map do |row|
+      {
+        ta_owner_name: row['ta_owner_name'].to_s,
+        candidate_name: row['candidate_name'].to_s,
+        uniqid_name: row['uniqid_name'].to_s,
+        exp: row['exp'].to_s,
+        requirement_name: (row['requirement_name'].presence || 'N/A').to_s,
+        requirement_id: row['requirement_id'],
+        skill: row['skill'].to_s,
+        skill_display: truncate(row['skill'].presence || '', length: 100),
+        current_company: row['current_company'].to_s,
+        ehd_sent_date: format_report_date(row['ehd_sent_date']),
+        notice_period: row['notice_period'].to_s,
+        serving_notice: row['serving_notice'].to_s,
+        lwd: format_report_date(row['lwd'])
+      }
+    end
+  end
+
   def interview_reports_per_panel_grid_rows(report_data)
     Array(report_data).map do |row|
       interview_time_raw = row['interview_time']
