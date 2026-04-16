@@ -1,6 +1,31 @@
 # frozen_string_literal: true
 
 module ReportGeneratorHelper
+  def requirement_reports_grid_rows(report_data)
+    Array(report_data).map do |row|
+      {
+        group_name: row['group_name'].to_s,
+        requirement_name: row['requirement_name'].to_s,
+        requirement_id: row['requirement_id'],
+        total_forwards: row['total_forwards'].to_i,
+        total_shortlists: row['total_shortlists'].to_i,
+        total_interviews: row['total_interviews'].to_i,
+        total_l1_completed: row['total_l1_completed'].to_i,
+        total_l2_completed: row['total_l2_completed'].to_i,
+        total_l3_completed: row['total_l3_completed'].to_i,
+        total_yto: row['total_yto'].to_i,
+        total_hac: row['total_hac'].to_i,
+        total_hold: row['total_hold'].to_i,
+        total_offered: row['total_offered'].to_i,
+        total_not_accepted: row['total_not_accepted'].to_i,
+        total_joined: row['total_joined'].to_i,
+        total_not_joined: row['total_not_joined'].to_i,
+        total_rejects: row['total_rejects'].to_i,
+        ta_manager_name: row['ta_manager_name'].to_s
+      }
+    end
+  end
+
   def ta_owner_reports_grid_rows(report_data)
     Array(report_data).map do |row|
       {
