@@ -4,7 +4,6 @@ document.addEventListener('turbolinks:load', () => {
   const gridDiv = document.querySelector('#openRequirementsGrid');
   const loaderDiv = document.querySelector('#gridLoader');
   const errorDiv = document.querySelector('#gridError');
-  console.log('Open Requirements Grid script loaded');
   function LinkCellRenderer() { }
   
   LinkCellRenderer.prototype.init = function (params) {

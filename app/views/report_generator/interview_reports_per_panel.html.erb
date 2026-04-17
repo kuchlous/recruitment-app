@@ -91,72 +91,12 @@
 
   <div class="table-container">
     <% if @report_data && @report_data.any? %>
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>Panel Name</th>
-          <th>Candidate Name</th>
-          <th>Interview Date</th>
-          <th>Interview Time</th>
-          <th>Interview Mode</th>
-          <th>Panel Name</th>
-          <th>Link</th>
-          <th>Rounds</th>
-          <th>Status</th>
-          <th>Interview Cancelled/Deleted</th>
-          <th>TA Owner</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @report_data.each do |row| %>
-        <tr>
-          <td class="table-cell-secondary"><%= row['panel_name'] %></td>
-          <td class="table-cell-primary">
-            <% if row['uniqid_name'].present? %>
-              <%= link_to(
-                row['candidate_name'],
-                url_for(
-                  host: APP_CONFIG['host_name'],
-                  controller: "resumes",
-                  action: "show",
-                  id: row['uniqid_name']
-                ),
-                target: "_blank",
-                class: "action-link"
-              ) %>
-            <% else %>
-              <%= row['candidate_name'] %>
-            <% end %>
-          </td>
-          <td class="table-cell-secondary"><%= format_report_date(row['interview_date']) %></td>
-          <td class="table-cell-secondary"><%= row['interview_time'].present? ? format_interview_time(row['interview_time']) : '' %></td>
-          <td class="table-cell-secondary"><%= row['interview_mode'] %></td>
-          <td class="table-cell-secondary"><%= row['panel_name'] %></td>
-          <td class="table-cell-primary">
-            <% if row['uniqid_name'].present? %>
-              <%= link_to(
-                "View",
-                url_for(
-                  host: APP_CONFIG['host_name'],
-                  controller: "resumes",
-                  action: "show",
-                  id: row['uniqid_name']
-                ),
-                target: "_blank",
-                class: "action-link"
-              ) %>
-            <% else %>
-              —
-            <% end %>
-          </td>
-          <td class="table-cell-secondary"><%= row['round_label'] %></td>
-          <td class="table-cell-secondary"><%= row['status_label'] %></td>
-          <td class="table-cell-secondary"><%= row['cancelled_flag'] %></td>
-          <td class="table-cell-secondary"><%= row['ta_owner_name'] %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="table-actions table-actions--toolbar-end">
+      <button type="button" id="interview-per-panel-clear-filters" class="form-submit-btn">Clear all filters</button>
+      <button type="button" id="interview-per-panel-export-csv" class="form-submit-btn">Export filtered (CSV)</button>
+    </div>
+    <script type="application/json" id="interview-per-panel-reports-json"><%= raw interview_reports_per_panel_grid_rows(@report_data).to_json %></script>
+    <div id="interviewPerPanelReportsGrid" class="ag-theme-alpine" style="height: 560px; width: 100%;"></div>
     <% else %>
     <p style="text-align: center; padding: 40px; color: #6c757d; font-size: 16px;">No data available for the selected period.</p>
     <% end %>

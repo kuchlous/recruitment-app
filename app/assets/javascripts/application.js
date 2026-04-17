@@ -12,5 +12,6 @@
 //= require twitter/bootstrap/popover
 //= require open_requirements_grid
 //= require dynamic_form_generator
+//= require report_grid_utils
 
 //= require_tree .
